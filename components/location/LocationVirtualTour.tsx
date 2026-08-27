@@ -19,7 +19,7 @@ export default function LocationVirtualTour({ location }: LocationVirtualTourPro
         // onClick={() => setShowTourModal(true)}
       >
         <Image
-          src={location.images.virtualTour}
+          src={"/cfc_ambience.jpg"}
           alt={`${location.name} Virtual Tour`}
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-105"
