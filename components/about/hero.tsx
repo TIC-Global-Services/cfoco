@@ -73,25 +73,25 @@ const Hero = () => {
 
         {/* Subtitles */}
         <div className="mt-8 sm:mt-2 text-center">
-          <p className="text-base sm:text-xl md:text-2xl font-normal tracking-wide text-[#F2F2F2]">
+          <p className="text-base sm:text-xl md:text-2xl font-medium tracking-wide text-[#F2F2F2]">
             A Recipe Born In{" "}
             <span className="text-[#CC1518] font-medium">Bordeaux</span>.
           </p>
-          <p className="text-base sm:text-xl md:text-2xl font-normal tracking-wide text-[#F2F2F2]">
+          <p className="text-base sm:text-xl md:text-2xl leading-no font-medium tracking-wide text-[#F2F2F2]">
             An Obsession That Never Cooled.
           </p>
         </div>
       </div>
 
       {/* Scroll Down Indicator */}
-      <div className="pt-8 pb-2 flex flex-col items-center justify-center gap-1.5 opacity-50 hover:opacity-90 transition-opacity duration-300">
+      {/* <div className="pt-8 pb-2 flex flex-col items-center justify-center gap-1.5 opacity-50 hover:opacity-90 transition-opacity duration-300">
         <span className="text-xs sm:text-sm tracking-wider text-neutral-400 font-light">
           Scroll To Continue
         </span>
         <div className="w-3.5 h-3.5 rounded-full border border-neutral-400/50 flex items-center justify-center">
           <div className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse" />
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };

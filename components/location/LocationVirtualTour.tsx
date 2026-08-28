@@ -31,13 +31,13 @@ export default function LocationVirtualTour({ location }: LocationVirtualTourPro
         {/* Center Content */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
           <div className="max-w-5xl">
-            <h2 className="text-3xl sm:text-5xl md:text-[4.375rem] font-bold text-[#F6B90B] tracking-tight drop-shadow-md">
+            <h2 className="text-3xl sm:text-5xl lg:text-[4.375rem] font-bold text-[#F6B90B] tracking-tight drop-shadow-md">
               {location.tourTitle}
             </h2>
 
             <button
               type="button"
-              className="mt-4 sm:mt-6 inline-flex items-center gap-2 text-xs sm:text-xl font-semibold text-white"
+              className="mt-4 sm:mt-6 inline-flex items-center gap-2 text-xs md:text-lg lg:text-xl font-semibold text-white"
             >
               <span>{location.tourSubtitle}</span>
             </button>

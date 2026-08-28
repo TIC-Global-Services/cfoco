@@ -34,13 +34,13 @@ export default function LocationHero({ location }: LocationHeroProps) {
       {/* Bottom Hero Content */}
       <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="max-w-4xl">
-          <span className="text-xl sm:text-[4.375rem] font-bold text-[#FFBF00] tracking-wide leading-none block">
+          <span className="text-xl md:text-[2rem] lg:text-[4.375rem] font-bold text-[#FFBF00] tracking-wide leading-none block">
             CFC Tasty
           </span>
-          <h1 className="text-3xl sm:text-5xl md:text-[6.25rem] font-extrabold text-[#FFBF00] tracking-tight leading-none whitespace-pre-line">
+          <h1 className="text-3xl md:text-[4rem] lg:text-[6.25rem] font-extrabold text-[#FFBF00] tracking-tight leading-none whitespace-pre-line">
             {location.name}
           </h1>
-          <p className="text-xs sm:text-sm md:text-2xl text-neutral-200 font-normal leading-none mt-2 sm:mt-3">
+          <p className="text-xs sm:text-base lg:text-2xl text-neutral-200 font-normal leading-none mt-2 sm:mt-3">
             {location.tagline.prefix}{" "}
             <span className="text-[#CC1518] font-bold">{location.tagline.highlight}</span>{" "}
             {location.tagline.description}
@@ -52,7 +52,7 @@ export default function LocationHero({ location }: LocationHeroProps) {
           href={location.mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="self-start md:self-end inline-flex items-center gap-2 bg-white text-black hover:bg-neutral-100 font-semibold px-5 py-2.5 sm:px-6 sm:py-2 rounded-full text-xs sm:text-lg transition-all duration-300 shadow-xl hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transform hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
+          className="self-start md:self-end inline-flex items-center gap-2 bg-white text-black hover:bg-neutral-100 font-semibold px-5 py-2.5 sm:px-6 sm:py-2 rounded-full text-xs md:text-lg lg:text-xl transition-all duration-300 shadow-xl hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transform hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
         >
           {/* <Navigation className="w-4 h-4 fill-black" /> */}
           <span>Get Directions</span>

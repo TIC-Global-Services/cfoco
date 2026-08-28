@@ -13,9 +13,9 @@ const NothingFrozen = () => {
   ];
 
   return (
-    <section className={`relative w-full py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-transparent select-none overflow-hidden ${matter.className}`}>
+    <section className={`relative w-full py-16 md:py-20 px-4 sm:px-0 lg:px-8 bg-transparent select-none overflow-hidden ${matter.className}`}>
       {/* Background Marquee Text */}
-      <div className="relative w-full overflow-hidden py-4 pointer-events-none z-0">
+      <div className="relative w-full overflow-hidden py-10 pointer-events-none z-0">
         <div className="animate-marquee flex items-center space-x-12 sm:space-x-16">
           {marqueePhrases.concat(marqueePhrases).map((phrase, idx) => (
             <span
@@ -35,7 +35,7 @@ const NothingFrozen = () => {
 
       {/* Bucket Image Area */}
       <div className="relative z-10 flex justify-center items-start -mt-[12%]">
-        <div className="w-full h-[100dvh] transition-transform duration-500 hover:scale-105">
+        <div className="w-full md:h-[50dvh] lg:h-[70dvh] transition-transform duration-500 hover:scale-105">
           <Image
             src="/cfc_bucket.png"
             alt="CFOCO Chicken Bucket with Dipping Sauce"
@@ -48,11 +48,11 @@ const NothingFrozen = () => {
 
       {/* Narrative Description */}
       <div className="relative z-10 max-w-4xl mx-auto text-center px-4 ">
-        <p className="text-base sm:text-lg md:text-xl font-normal leading-relaxed text-neutral-200/95 max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg md:text-xl font-normal leading-[1.2] text-neutral-200/95 max-w-4xl mx-auto">
           Great Chicken Has Nowhere To Hide. That&apos;s Why We Start With Fresh Cuts, Marinate In-House, And Hand-Breade Every Piece To Order. Our Oil Is Filtered Daily — Because Crispy Is Chemistry, And Chemistry Has Standards.
         </p>
 
-        <p className="text-base sm:text-lg md:text-xl font-medium tracking-wide text-[#E5A823] pt-1">
+        <p className="text-base sm:text-lg md:text-xl font-medium tracking-wide text-[#E5A823] pt-5">
           No Mystery. No Compromise. Just The Good Stuff, Done Right.
         </p>
       </div>

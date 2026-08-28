@@ -49,21 +49,21 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
           <Image src="/fried-chickens.png" alt="Fried Chicken" fill className="object-cover  w-full" />
         {/* </div> */}
 
-        <div className="relative z-10 flex w-full h-full items-end justify-end p-5 sm:p-8">
-          <div className="flex items-end gap-3 sm:gap-6">
-            <div className="text-right mb-[2px] sm:mb-1">
-              <p className="text-[#CC1518] font-normal text-sm sm:text-2xl">
+        <div className="relative z-10 flex w-full h-full items-end justify-end p-5 lg:p-8">
+          <div className="flex items-end gap-3 md:gap-4 lg:gap-6">
+            <div className="text-right mb-[2px] md:mb-1 lg:mb-1">
+              <p className="text-[#CC1518] font-normal text-sm md:text-lg lg:text-2xl">
                 {location.signatureDish.title}
               </p>
-              <p className="text-white font-medium text-xs sm:text-2xl">
+              <p className="text-white font-medium text-xs md:text-lg lg:text-2xl">
                 {location.signatureDish.subtitle}
               </p>
             </div>
-            <div className="text-right leading-[12]">
-              <span className="block text-3xl sm:text-[2.5rem] font-bold text-white tracking-tight">
+            <div className="text-right lg:leading-[12]">
+              <span className="block text-3xl lg:text-[2.5rem] font-bold text-white tracking-tight">
                 Signature
               </span>
-              <span className="block text-3xl sm:text-[2.5rem] font-bold text-white tracking-tight">
+              <span className="block text-3xl lg:text-[2.5rem] font-bold text-white tracking-tight">
                 Dish
               </span>
             </div>
@@ -84,14 +84,14 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         <div className="relative z-10 w-full h-full flex flex-col justify-end p-5 sm:p-8">
           <div className="flex items-end gap-4 sm:gap-4">
             <div className="text-left leading-none">
-              <h3 className="text-3xl sm:text-[2.5rem] font-bold text-[#F6B90B] tracking-tight">
+              <h3 className="text-3xl md:text-4xl lg:text-[2.5rem] font-bold text-[#F6B90B] tracking-tight">
                 Opening
               </h3>
-              <h3 className="text-3xl sm:text-[2.5rem] font-bold text-[#F6B90B] tracking-tight">
+              <h3 className="text-3xl md:text-4xl lg:text-[2.5rem] font-bold text-[#F6B90B] tracking-tight">
                 Hours
               </h3>
             </div>
-            <div className="text-sm sm:text-2xl leading-snug text-white font-medium mb-[2px] sm:mb-1">
+            <div className="text-sm md:text-lg lg:text-2xl leading-snug text-white font-medium mb-[2px] sm:mb-1">
               <p>
                 {location.openingHours.weekday} · {location.openingHours.weekend}
               </p>
