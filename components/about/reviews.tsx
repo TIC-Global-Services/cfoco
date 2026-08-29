@@ -128,7 +128,7 @@ const Reviews = ({
   useEffect(() => {
     const ctx = gsap.context(() => {
       const isMobile = window.matchMedia("(max-width: 1024px)").matches;
-      const staggerDelay = isMobile ? 1.0 : 0.8;
+      const staggerDelay = isMobile ? 1.2 : 0.7;
       const startY = isMobile ? "90vh" : "110vh";
       const endY = isMobile ? "-90vh" : "-110vh";
 
@@ -150,33 +150,35 @@ const Reviews = ({
         },
       });
 
-      // Animate left cards upward
-      leftCards.forEach((card, i) => {
+      // Animate left and right cards as PAIRS — both start at the same time
+      const pairCount = Math.max(leftCards.length, rightCards.length);
+      for (let i = 0; i < pairCount; i++) {
         const delay = i * staggerDelay;
-        tl.to(
-          card,
-          {
-            y: endY,
-            duration: 2.2,
-            ease: "none",
-          },
-          delay
-        );
-      });
 
-      // Animate right cards upward (offset stagger)
-      rightCards.forEach((card, i) => {
-        const delay = i * staggerDelay + (isMobile ? staggerDelay / 2 : 0.4);
-        tl.to(
-          card,
-          {
-            y: endY,
-            duration: 2.2,
-            ease: "none",
-          },
-          delay
-        );
-      });
+        if (leftCards[i]) {
+          tl.to(
+            leftCards[i],
+            {
+              y: endY,
+              duration: 2.2,
+              ease: "none",
+            },
+            delay
+          );
+        }
+
+        if (rightCards[i]) {
+          tl.to(
+            rightCards[i],
+            {
+              y: endY,
+              duration: 2.2,
+              ease: "none",
+            },
+            delay
+          );
+        }
+      }
     }, containerRef);
 
     return () => ctx.revert();

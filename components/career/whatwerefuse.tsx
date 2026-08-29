@@ -80,11 +80,28 @@ const WhatWeRefuse = () => {
                 </div>
               </div>
 
-              {/* BOTTOM BLOCK (Apply Now section) */}
-              <div className="w-[45%] bg-[#0a0a0f] border-b border-l border-r border-[#0066FF] rounded-b-[1.3rem] rounded-tr-none p-6 sm:p-8 pt-6 relative z-10">
+              {/* BOTTOM BLOCK (Apply Now section with inverted curve) */}
+              <div className="w-[45%] sm:w-[42%] bg-[#0a0a0f] border-b border-l border-r border-[#0066FF] rounded-b-[1.3rem] p-6 sm:p-8 pt-6 relative z-10">
                 
-                {/* Hide left half of Top Block's bottom border */}
-                <div className="absolute top-[-1px] left-[1px] right-[1px] h-[2px] bg-[#0a0a0f]" />
+                {/* Seamless top connection to hide top card's bottom border under tab */}
+                <div className="absolute -top-[2px] -left-[1px] -right-[1px] h-[4px] bg-[#0a0a0f]" />
+
+                {/* Inverted Concave Corner Curve */}
+                <svg
+                  className="absolute -top-[1px] left-full w-[24px] h-[24px] pointer-events-none"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  {/* Dark background fill to cover corner space */}
+                  <path d="M 0 0 L 0 24 A 24 24 0 0 1 24 0 Z" fill="#0a0a0f" />
+                  {/* Continuous blue border along the concave curve */}
+                  <path
+                    d="M 0 24 A 24 24 0 0 1 24 0"
+                    fill="none"
+                    stroke="#0066FF"
+                    strokeWidth="1.5"
+                  />
+                </svg>
 
                 <button className="relative z-20 text-white hover:text-[#F6B90B] transition-colors flex items-center gap-2 text-sm sm:text-lg font-medium group">
                   Apply Now 
@@ -93,7 +110,7 @@ const WhatWeRefuse = () => {
               </div>
 
               {/* JOB TITLE (In the notch) */}
-              <div className="absolute bottom-6 right-6 sm:right-2 flex items-start justify-start w-[50%] z-0 ">
+              <div className="absolute bottom-6 right-6 sm:right-12 flex items-end justify-end w-[50%] z-0 pointer-events-none">
                 <span className="text-[#F6B90B] font-bold text-lg sm:text-2xl text-right leading-tight">
                   {job.role}
                 </span>

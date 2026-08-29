@@ -104,8 +104,8 @@ const StepInside = () => {
 
        </div>
         {/* World Map with Animated Moving Pinpoint & Detail Card */}
-        <div className="relative w-full my-8 sm:my-20 flex items-center justify-center">
-          <div className="relative w-full aspect-[2/1] max-h-[420px]">
+        <div className="relative w-full my-8 sm:mt-20 flex items-center justify-center">
+          <div className="relative w-full aspect-[2/1] max-h-[380px]">
             <Image
               src="/step_inside.png"
               alt="CFC Global Locations World Map"
@@ -194,7 +194,7 @@ const StepInside = () => {
         </div>
 
         {/* INFINITE LOOPING CENTER-HIGHLIGHTED CAROUSEL */}
-        <div className="w-full relative py-8 px-4 sm:px-12 flex items-center justify-center max-w-5xl">
+        <div className="w-full relative py-0 px-4 sm:px-12 flex items-center justify-center max-w-5xl">
           {/* Previous / Next Arrow Controls */}
           <button
             type="button"

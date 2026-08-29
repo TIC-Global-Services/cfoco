@@ -44,7 +44,7 @@ const Hero = () => {
                   fontSize="150"
                   letterSpacing="-3%"
                 >
-                  let’s talk cravings
+                  Let’s Talk Cravings
                 </text>
               </mask>
             </defs>

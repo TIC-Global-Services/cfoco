@@ -6,17 +6,32 @@ import WhatWeRefuse from "@/components/about/whatwerefuse";
 import Showreel from "@/components/about/showreel";
 import Reviews from "@/components/about/reviews";
 import GetCrispy from "@/components/about/getcrispy";
+import Reveal from "@/reusable/Reveal";
 
 const page = () => {
   return (
     <main className="relative z-10 w-full flex-1 flex flex-col">
-      <Hero />
-      <Obsession />
-      <NothingFrozen />
-      <WhatWeRefuse />
-      <Showreel />
-      <Reviews />
-      <GetCrispy />
+      <Reveal>
+        <Hero />
+      </Reveal>
+      <Reveal>
+        <Obsession />
+      </Reveal>
+      <Reveal>
+        <NothingFrozen />
+      </Reveal>
+      <Reveal>
+        <WhatWeRefuse />
+      </Reveal>
+      <Reveal>
+        <Showreel />
+      </Reveal>
+      <Reveal>
+        <Reviews />
+      </Reveal>
+      <Reveal>
+        <GetCrispy />
+      </Reveal>
     </main>
   );
 };
