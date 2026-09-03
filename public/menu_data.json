@@ -1,0 +1,1306 @@
+{
+  "categories": [
+    {
+      "id": "poulet",
+      "name": "Poulet"
+    },
+    {
+      "id": "burgers",
+      "name": "Burgers"
+    },
+    {
+      "id": "riz-box",
+      "name": "Riz Box"
+    },
+    {
+      "id": "sides",
+      "name": "Sides"
+    },
+    {
+      "id": "tacos",
+      "name": "Tacos"
+    },
+    {
+      "id": "wraps",
+      "name": "Wraps"
+    },
+    {
+      "id": "desserts",
+      "name": "Desserts"
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "title": "Dynamic Wings",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/3_DYNAMIC_IWNGS_.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 2,
+      "title": "Dynamic Strips",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/3_DYNAMIC_STRIPS_.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 3,
+      "title": "Big Family",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/big_family.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 4,
+      "title": "Chicken Meal",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/chicken-meal.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 5,
+      "title": "Chicken Mixte",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/chicken-mixte.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 6,
+      "title": "Crousty Tenders",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/crousty-tenders.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 7,
+      "title": "Family Cfoco",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/FAMILY_CFOCO_.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 8,
+      "title": "Flaky Strips",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/flaky-strips.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 9,
+      "title": "Nuggets",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/nuggets.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 10,
+      "title": "Petit Family",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/petit-family.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 11,
+      "title": "Spicy Wings",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/spicy-wings.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 12,
+      "title": "Wings Flambe Epice",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/wings-flambe-epice.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 13,
+      "title": "Wings Flambe Pas Epice",
+      "description": "Fresh, Crispy Chicken, Served Hot And Packed With Flavour.",
+      "image": "/POULET/wings-flambe-pas-epice.png",
+      "category": "poulet",
+      "categoryName": "Poulet"
+    },
+    {
+      "id": 14,
+      "title": "Chicken Curry Miel Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chciken-curry-miel-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 15,
+      "title": "Chicken Tikka Mozza",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chcken-tikka-mozza.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 16,
+      "title": "Chicken Curry Meal Mozza Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-curry-meal-mozza-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 17,
+      "title": "Chicken Curry Miel Cheddar",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-curry-miel-cheddar.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 18,
+      "title": "Chicken Curry Miel Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-curry-miel-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 19,
+      "title": "Chicken Curry Miel Raclette",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-curry-miel-raclette.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 20,
+      "title": "Chicken Curry Miel",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-curry-miel.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 21,
+      "title": "Chicken Tikka Cheddar",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-tikka-cheddar.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 22,
+      "title": "Chicken Tikka Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-tikka-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 23,
+      "title": "Chicken Tikka Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-tikka-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 24,
+      "title": "Chicken Tikka Raclette",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-tikka-raclette.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 25,
+      "title": "Chicken Tikka",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-chicken-tikka.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 26,
+      "title": "Double Cheddar",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-double-cheddar.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 27,
+      "title": "Double Flambe Option Flambe Option",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-double-flambe-option.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 28,
+      "title": "Double Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-double-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 29,
+      "title": "Double Mozza Gratini Mozza Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-double-mozza-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 30,
+      "title": "Double Raclette",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-double-raclette.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 31,
+      "title": "Double Burger",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-double.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 32,
+      "title": "Menu Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/328-menu-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 33,
+      "title": "Buffalo Burger Cheddar Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/buffalo-burger-cheddar-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 34,
+      "title": "Buffalo Burger Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/buffalo-burger-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 35,
+      "title": "Buffalo Burger Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/buffalo-burger-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 36,
+      "title": "Buffalo Burger Mozza Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/buffalo-burger-mozza-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 37,
+      "title": "Buffalo Burger Raclette Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/buffalo-burger-raclette-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 38,
+      "title": "Buffalo Burger",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/buffalo-burger.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 39,
+      "title": "Burger Flambe Cheddar Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/burger-flambe-cheddar-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 40,
+      "title": "Burger Flambe Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/burger-flambe-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 41,
+      "title": "Burger Flambe Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/burger-flambe-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 42,
+      "title": "Burger Flambe Mozza Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/burger-flambe-mozza-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 43,
+      "title": "Burger Flambe Raclette Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/burger-flambe-raclette-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 44,
+      "title": "Burger Flambe",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/burger-flambe.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 45,
+      "title": "Chicken Filet Raclette",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/chcken-filet-raclette.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 46,
+      "title": "Cheese Burger Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/cheese-burger-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 47,
+      "title": "Cheese Burger",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/cheese-burger.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 48,
+      "title": "Cheeseburger Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/cheeseburger-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 49,
+      "title": "Chicken Burger Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/chicken-burger-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 50,
+      "title": "Chicken Burger Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/chicken-burger-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 51,
+      "title": "Chicken Burger",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/chicken-burger.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 52,
+      "title": "Chicken Filet Cheddar",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/chicken-filet-cheddar.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 53,
+      "title": "Chicken Filet Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/chicken-filet-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 54,
+      "title": "Chicken Filet Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/chicken-filet-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 55,
+      "title": "Chicken Filet",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/chicken-filet.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 56,
+      "title": "Combo Burger Cheddar Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-burger-cheddar-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 57,
+      "title": "Combo Burger Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-burger-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 58,
+      "title": "Combo Burger Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-burger-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 59,
+      "title": "Combo Burger Mozza Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-burger-mozza-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 60,
+      "title": "Combo Burger Raclette Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-burger-raclette-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 61,
+      "title": "Combo Burger",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-burger.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 62,
+      "title": "Combo King Cheddar Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-king-cheddar-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 63,
+      "title": "Combo King Flambe Option",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-king-flambe-option.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 64,
+      "title": "Combo King Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-king-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 65,
+      "title": "Combo King Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-king-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 66,
+      "title": "Combo King Mozza Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-king-mozza-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 67,
+      "title": "Combo King Raclette Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-king-raclette-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 68,
+      "title": "Combo King",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/combo-king.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 69,
+      "title": "Double Burger Cheddar Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/double-burger-cheddar-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 70,
+      "title": "Double Burger Flambe Option",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/double-burger-flambe-option.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 71,
+      "title": "Double Burger Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/double-burger-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 72,
+      "title": "Double Burger Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/double-burger-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 73,
+      "title": "Double Burger Mozza Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/double-burger-moza-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 74,
+      "title": "Double Burger Raclette Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/double-burger-raclette-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 75,
+      "title": "Double Burger",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/double-burger.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 76,
+      "title": "Kids Burger Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/kids-burger-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 77,
+      "title": "Kids Burger",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/kids-burger.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 78,
+      "title": "T W Burger Cheddar Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/t-w-burger-cheddar-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 79,
+      "title": "T W Burger Maxi",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/t-w-burger-maxi.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 80,
+      "title": "T W Burger Menu",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/t-w-burger-menu.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 81,
+      "title": "T W Burger Mozza Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/t-w-burger-mozza-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 82,
+      "title": "T W Burger Raclette Gratini",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/t-w-burger-raclette-gratini.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 83,
+      "title": "T W Burger",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/t-w-burger.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 84,
+      "title": "T W Flambe Option",
+      "description": "Juicy, Flame-Grilled Burgers Stacked With Premium Toppings.",
+      "image": "/burgers/t-w-flambe-option.png",
+      "category": "burgers",
+      "categoryName": "Burgers"
+    },
+    {
+      "id": 85,
+      "title": "Magic Bowl",
+      "description": "Tender Chicken Over Fragrant Rice, Bold Sauces, Full Satisfaction.",
+      "image": "/riz box/magic-bowl.png",
+      "category": "riz-box",
+      "categoryName": "Riz Box"
+    },
+    {
+      "id": 86,
+      "title": "Riz Box Mangoli Xl",
+      "description": "Tender Chicken Over Fragrant Rice, Bold Sauces, Full Satisfaction.",
+      "image": "/riz box/riz-box-mangoli-xl.png",
+      "category": "riz-box",
+      "categoryName": "Riz Box"
+    },
+    {
+      "id": 87,
+      "title": "Riz Box Mangoli",
+      "description": "Tender Chicken Over Fragrant Rice, Bold Sauces, Full Satisfaction.",
+      "image": "/riz box/riz-box-mangoli.png",
+      "category": "riz-box",
+      "categoryName": "Riz Box"
+    },
+    {
+      "id": 88,
+      "title": "Riz Box Xl",
+      "description": "Tender Chicken Over Fragrant Rice, Bold Sauces, Full Satisfaction.",
+      "image": "/riz box/riz-box-xl.png",
+      "category": "riz-box",
+      "categoryName": "Riz Box"
+    },
+    {
+      "id": 89,
+      "title": "Riz Box",
+      "description": "Tender Chicken Over Fragrant Rice, Bold Sauces, Full Satisfaction.",
+      "image": "/riz box/riz-box.png",
+      "category": "riz-box",
+      "categoryName": "Riz Box"
+    },
+    {
+      "id": 90,
+      "title": "Salade",
+      "description": "Tender Chicken Over Fragrant Rice, Bold Sauces, Full Satisfaction.",
+      "image": "/riz box/salade.png",
+      "category": "riz-box",
+      "categoryName": "Riz Box"
+    },
+    {
+      "id": 91,
+      "title": "Camembert",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/camembert.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 92,
+      "title": "Coleslaw",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/coleslaw.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 93,
+      "title": "Crevvettes",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/crevvettes.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 94,
+      "title": "Frites Cheddar Bacon",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/frites-cheddar-bacon.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 95,
+      "title": "Frites Cheddar Sauce",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/frites-cheddar-sauce.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 96,
+      "title": "Frites Peri Peri",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/frites-peri-peri.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 97,
+      "title": "Frites Sauce Blanche Maison",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/frites-sauce-blanche-maison.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 98,
+      "title": "Frites Ssauce Fromagere",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/frites-ssauce-fromagere.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 99,
+      "title": "Frites",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/frites.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 100,
+      "title": "Frtes Sauce Cheddar",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/frtes-sauce-cheddar.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 101,
+      "title": "Mozza Sticks",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/mozza-sticks.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 102,
+      "title": "Oignon Rings",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/oignon-rings.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 103,
+      "title": "Petit Salad",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/petit-salad.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 104,
+      "title": "Twisters Cheddar Bacon",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/twisters-cheddar-bacon.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 105,
+      "title": "Twisters Sauce Cheddar",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/twisters-sauce-cheddar.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 106,
+      "title": "Twisters",
+      "description": "Golden, Crispy Sides To Complete Your CFOCO Experience.",
+      "image": "/sides/twisters.png",
+      "category": "sides",
+      "categoryName": "Sides"
+    },
+    {
+      "id": 107,
+      "title": "Tacos Chèvre Miel Signature",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/152.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 108,
+      "title": "Tacos Raclette Royale",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/154.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 109,
+      "title": "Tacos Cheddar Supreme",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/156.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 110,
+      "title": "Tacos Gratini Cheddar",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/tacos-gratini-cheddar.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 111,
+      "title": "Tacos Gratini Chevre Miel",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/tacos-gratini-chevre-miel.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 112,
+      "title": "Tacos Gratini Raclette De Savoie",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/tacos-gratini-raclette-de-savoie.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 113,
+      "title": "Tacos Maxi",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/tacos-maxi.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 114,
+      "title": "Tacos Simple",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/tacos-simple.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 115,
+      "title": "Tacos Triple",
+      "description": "Soft, Melted French Tacos Loaded With Your Favourite Fillings.",
+      "image": "/tacos/tacos-triple.png",
+      "category": "tacos",
+      "categoryName": "Tacos"
+    },
+    {
+      "id": 116,
+      "title": "American Wrap Flambe Option",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/american-wrap-flambe-option.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 117,
+      "title": "American Wrap Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/american-wrap-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 118,
+      "title": "American Wrap Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/american-wrap-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 119,
+      "title": "American Wrap",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/american-wrap.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 120,
+      "title": "Chicken Wrap Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/chcken-wrap-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 121,
+      "title": "Chicken Wrap Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/chicken-wrap-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 122,
+      "title": "Crousty Wrap Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/crousty-wrap-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 123,
+      "title": "Crousty Wrap Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/crousty-wrap-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 124,
+      "title": "Magic Wrap Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/magic-wrap-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 125,
+      "title": "Magic Wrap Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/magic-wrap-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 126,
+      "title": "Magic Wrap",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/magic-wrap.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 127,
+      "title": "Mozza Wrap Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/mozza-wrap-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 128,
+      "title": "Mozza Wrap Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/mozza-wrap-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 129,
+      "title": "Mozza Wrap",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/mozza-wrap.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 130,
+      "title": "Petit Wrap",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/petit-wrap.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 131,
+      "title": "Potato Wrap Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/potato-wrap-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 132,
+      "title": "Potato Wrap Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/potato-wrap-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 133,
+      "title": "Potato Wrap",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/potato-wrap.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 134,
+      "title": "Veggie Wrap Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/vegge-wrap-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 135,
+      "title": "Veggie Wrap Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/veggei-wrap-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 136,
+      "title": "Veggie Wrap",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/veggie-wrap.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 137,
+      "title": "Wrap Chicken Curry Miel",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-chcken-curry-miel.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 138,
+      "title": "Wrap Chevre Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-chevre-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 139,
+      "title": "Wrap Chevre Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-chevre-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 140,
+      "title": "Wrap Chevre",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-chevre.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 141,
+      "title": "Wrap Chicken Tikka Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-chicken-tikka-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 142,
+      "title": "Wrap Chicken Tikka Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-chicken-tikka-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 143,
+      "title": "Wrap Chicken Tikka",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-chicken-tikka.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 144,
+      "title": "Wrap Curry Miel Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-curry-miel-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 145,
+      "title": "Wrap Curry Miel Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-curry-miel-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 146,
+      "title": "Wrap Mangoli Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-mangoli-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 147,
+      "title": "Wrap Mangoli Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-mangoli-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 148,
+      "title": "Wrap Mangoli",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-mangoli.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 149,
+      "title": "Wrap Petit Menu",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-petit-menu.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 150,
+      "title": "Wrap Petit Maxi",
+      "description": "Wrapped Tight With Fresh Ingredients And Signature Sauces.",
+      "image": "/wraps/wrap-petiti-maxi.png",
+      "category": "wraps",
+      "categoryName": "Wraps"
+    },
+    {
+      "id": 151,
+      "title": "Glace Exotic Mangue",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/glace-exotic-mangue.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    },
+    {
+      "id": 152,
+      "title": "Glace Italian",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/glace-italian.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    },
+    {
+      "id": 153,
+      "title": "Kinder Bueno",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/kinder-bueno.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    },
+    {
+      "id": 154,
+      "title": "Mini Exotic Fraise",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/mini-exotic-fraise.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    },
+    {
+      "id": 155,
+      "title": "Mini Exotic",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/mini-exotic.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    },
+    {
+      "id": 156,
+      "title": "Shake Exotic",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/shake-exotic.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    },
+    {
+      "id": 157,
+      "title": "Shake Fraise",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/shake-fraise.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    },
+    {
+      "id": 158,
+      "title": "Shake Italianne",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/shakle-italianne.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    },
+    {
+      "id": 159,
+      "title": "Sharjah Shake",
+      "description": "Sweet Endings — Shakes, Sundaes & Frozen Treats.",
+      "image": "/desserts/sharjah-shake.png",
+      "category": "desserts",
+      "categoryName": "Desserts"
+    }
+  ]
+}
