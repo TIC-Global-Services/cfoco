@@ -88,9 +88,8 @@ const Hero = () => {
 
         {/* Subtitles */}
         <div className="mt-2 sm:mt-0 text-center">
-          <p className="text-base sm:text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.2] max-w-3xl">
-            Join a team driven by innovation, collaboration, and a shared passion
-            for making a meaningful impact <span className="text-[#CC1518] font-medium">every day.</span>
+          <p className="text-base sm:text-xl md:text-2xl font-normal tracking-wide text-[#F2F2F2] leading-[1.2] max-w-3xl">
+            From signature favorites to bold new flavors, explore everything on the <span className="text-[#CC1518] font-medium">CFOCO</span> menu and find your next craving.
           </p>
         </div>
       </div>

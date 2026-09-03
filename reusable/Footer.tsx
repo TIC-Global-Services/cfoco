@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
+import Reveal from "@/reusable/Reveal";
 
 interface FooterNavLink {
   label: string;
@@ -25,7 +26,7 @@ const socialLinks = [
     href: "https://linkedin.com",
     icon: (
       <svg
-        className="w-5 h-5 fill-current transition-transform duration-200 group-hover:scale-110"
+        className="w-7 h-7 fill-current transition-transform duration-200 group-hover:scale-110"
         viewBox="0 0 24 24"
       >
         <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37z" />
@@ -37,7 +38,7 @@ const socialLinks = [
     href: "mailto:contact@cfoco.com",
     icon: (
       <svg
-        className="w-5 h-5 fill-none stroke-current transition-transform duration-200 group-hover:scale-110"
+        className="w-7 h-7 fill-none stroke-current transition-transform duration-200 group-hover:scale-110"
         viewBox="0 0 24 24"
         strokeWidth="1.8"
         strokeLinecap="round"
@@ -53,7 +54,7 @@ const socialLinks = [
     href: "https://instagram.com",
     icon: (
       <svg
-        className="w-5 h-5 fill-none stroke-current transition-transform duration-200 group-hover:scale-110"
+        className="w-7 h-7 fill-none stroke-current transition-transform duration-200 group-hover:scale-110"
         viewBox="0 0 24 24"
         strokeWidth="1.8"
         strokeLinecap="round"
@@ -67,8 +68,6 @@ const socialLinks = [
   },
 ];
 
-import Reveal from "@/reusable/Reveal";
-
 interface FooterProps {
   className?: string;
 }
@@ -76,12 +75,12 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = ({ className = "" }) => {
   return (
     <footer
-      className={`relative w-full overflow-hidden select-none ${matter.className} ${className}`}
+      className={`relative w-full h-[600px] overflow-hidden select-none ${matter.className} ${className}`}
     >
-      <Reveal>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 flex flex-col items-center">
+      <Reveal className="h-full w-full">
+        <div className="relative z-10 w-full h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 flex flex-col justify-between items-center">
           {/* Top Navigation Links */}
-          <nav className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 md:gap-12 lg:gap-14 text-sm sm:text-base font-normal text-neutral-200">
+          <nav className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 md:gap-12 lg:gap-14 text-sm sm:text-base font-normal text-neutral-200 shrink-0">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
@@ -95,20 +94,20 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           </nav>
 
           {/* Center 3D CFOCO Logo */}
-          <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl my-10 sm:my-14 md:my-16 flex justify-center items-center">
-            <div className="relative w-full aspect-[21/9] max-h-[420px] transition-transform duration-500 hover:scale-[1.02]">
+          <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
+            <div className="relative w-full h-[220px] sm:h-[280px] md:h-[320px] transition-transform duration-500 hover:scale-[1.02]">
               <Image
                 src="/footer_image.png"
-                alt="CFOCO"
+                alt="CFOCO Logo"
                 fill
                 priority
-                className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
+                className="object-cover drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
               />
             </div>
           </div>
 
-          {/* Bottom Section */}
-          <div className="w-full pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 text-xs sm:text-sm text-neutral-400">
+          {/* Bottom Footer Bar */}
+          <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 text-xs sm:text-sm text-neutral-400 shrink-0">
             {/* Copyright */}
             <div className="text-center md:text-left order-2 md:order-1 font-light">
               <span>Copyright © 2026 </span>
@@ -117,7 +116,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             </div>
 
             {/* Social Media Icons */}
-            <div className="flex items-center gap-4 order-1 md:order-2">
+            <div className="flex items-center gap-3 order-1 md:order-2">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}

@@ -73,13 +73,13 @@ const defaultRightReviews: ReviewCardItem[] = [
 
 const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
   return (
-    <div className="relative overflow-hidden bg-[#182030]/85 backdrop-blur-md border border-neutral-700/60 rounded-2xl p-6 sm:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] w-[280px] sm:w-[350px] md:w-[400px] lg:w-[420px] pointer-events-auto transition-all duration-300 hover:border-neutral-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
+    <div className="relative overflow-hidden bg-[#FFFFFF1A] backdrop-blur-xs border border-[#0000001A] rounded-[24px] sm:rounded-[30px] p-4 sm:p-6 lg:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] w-[225px] xs:w-[250px] sm:w-[320px] md:w-[380px] lg:w-[420px] pointer-events-auto transition-all duration-300 hover:border-neutral-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
       {/* 5 Golden Stars */}
-      <div className="flex items-center gap-1 mb-4 text-[#F59E0B]">
+      <div className="flex items-center gap-1 mb-2.5 sm:mb-4 text-[#F59E0B]">
         {Array.from({ length: card.rating }).map((_, i) => (
           <svg
             key={i}
-            className="w-4 h-4 sm:w-5 sm:h-5 fill-current"
+            className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 fill-current"
             viewBox="0 0 20 20"
           >
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -88,25 +88,25 @@ const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
       </div>
 
       {/* Review Quote Text */}
-      <p className="text-sm sm:text-base text-neutral-200 font-normal leading-relaxed mb-6">
+      <p className="text-xs sm:text-sm md:text-base text-neutral-200 font-normal leading-relaxed mb-4 sm:mb-6">
         {card.quote}
       </p>
 
       {/* Author Details */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5 sm:gap-3">
         {/* Avatar Graphic with Gradient Ring */}
         <div
-          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr ${
+          className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${
             card.avatarColor || "from-cyan-400 to-blue-600"
           } p-[2px] shadow-sm shrink-0`}
         >
-          <div className="w-full h-full rounded-full bg-[#111726] flex items-center justify-center text-xs sm:text-sm font-bold text-white uppercase">
+          <div className="w-full h-full rounded-full bg-[#111726] flex items-center justify-center text-[10px] sm:text-xs lg:text-sm font-bold text-white uppercase">
             {card.authorName.charAt(0)}
           </div>
         </div>
 
         {/* Author Name */}
-        <span className="text-sm sm:text-base font-semibold text-white tracking-wide">
+        <span className="text-xs sm:text-sm lg:text-base font-semibold text-white tracking-wide">
           {card.authorName}
         </span>
       </div>
@@ -200,35 +200,35 @@ const Reviews = ({
         {/* Pinned Title Layer (Fixed in Center during scroll) */}
         <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center">
           <div className="z-10 space-y-1">
-            <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+            <h2 className="text-4xl sm:text-7xl md:text-8xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
               16,000
             </h2>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-[4.735rem] font-bold tracking-tight text-white leading-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+            <h2 className="text-2xl sm:text-5xl md:text-6xl lg:text-[4.735rem] font-bold tracking-tight text-white leading-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
               Reviews Can&apos;t Be Wrong
             </h2>
           </div>
         </div>
 
         {/* Floating / Scrolling Review Cards Layer */}
-        <div className="absolute inset-0 z-10 w-full  flex justify-between h-full pointer-events-none px-4 sm:px-2">
-          {/* Left Column of Floating Cards */}
+        <div className="absolute inset-0 z-10 w-full flex justify-between h-full pointer-events-none px-2 sm:px-4">
+          {/* Left Column of Floating Cards (Desktop: lg:-mt-[22vh], Mobile: -mt-[32vh]) */}
           <div className="w-full lg:w-1/2 absolute inset-y-0 left-0 h-full">
             {leftReviews.map((card, i) => (
               <div
                 key={`rev-left-${card.id}-${i}`}
-                className="review-card-left absolute inset-0 flex items-center justify-start lg:justify-end pl-2 sm:pl-6 lg:pl-0 lg:pr-16 lg:-mt-[22vh] pointer-events-none"
+                className="review-card-left absolute inset-0 flex items-center justify-start lg:justify-end pl-2 sm:pl-4 lg:pl-0 lg:pr-16 -mt-[32vh] sm:-mt-[28vh] lg:-mt-[22vh] pointer-events-none"
               >
                 <ReviewCard card={card} />
               </div>
             ))}
           </div>
 
-          {/* Right Column of Floating Cards */}
+          {/* Right Column of Floating Cards (Desktop: lg:mt-[22vh], Mobile: mt-[32vh]) */}
           <div className="w-full lg:w-1/2 absolute inset-y-0 right-0 h-full">
             {rightReviews.map((card, i) => (
               <div
                 key={`rev-right-${card.id}-${i}`}
-                className="review-card-right absolute inset-0 flex items-center justify-end lg:justify-start pr-2 sm:pr-6 lg:pr-0 lg:pl-16 lg:mt-[22vh] pointer-events-none"
+                className="review-card-right absolute inset-0 flex items-center justify-end lg:justify-start pr-2 sm:pr-4 lg:pr-0 lg:pl-16 mt-[32vh] sm:mt-[28vh] lg:mt-[22vh] pointer-events-none"
               >
                 <ReviewCard card={card} />
               </div>

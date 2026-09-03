@@ -14,35 +14,35 @@ const GetCrispy = () => {
       {/* Background Ambient Glow */}
       {/* <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" /> */}
 
-      <div className="px-[5%] flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">
+      <div className="md:px-[5%] flex flex-col lg:flex-row items-center justify-between gap-2 lg:gap-8">
         {/* Left Column: Text & CTAs */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full lg:w-1/2 flex flex-col items-start text-left z-10"
+          className="w-full lg:w-1/2 flex flex-col items-center md:items-start text-left z-10"
         >
           {/* Headlines */}
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[3.75rem] font-bold tracking-tight text-white leading-[1.1]">
+          <h2 className="text-2xl sm:text-5xl md:text-6xl lg:text-[3.75rem] font-bold tracking-tight text-white leading-[1.1]">
             Enough Reading.
           </h2>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-[1.1] mb-6">
+          <h2 className="text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-[1.1] mb-2 md:mb-6">
             Go Get Crispy.
           </h2>
 
           {/* Description Paragraph */}
-          <p className="text-sm sm:text-base md:text-2xl text-neutral-300 font-normal leading-[1.2]  mb-8 sm:mb-10">
+          <p className="text-base sm:text-base text-center md:text-left md:text-2xl text-neutral-300 font-normal leading-[1.2]  mb-6 sm:mb-10">
             From The First Crunch To The Last Piece, Every Box Is Made To Create
             Moments Worth Sharing With The People Who Matter Most.
           </p>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-4 sm:gap-4">
+          <div className="flex md:flex-wrap items-center gap-2 sm:gap-4">
             {/* Primary Order Now Button */}
             <Link
               href="#order"
-              className="inline-flex items-center justify-center px-7 sm:px-8 py-3 sm:py-2.5 rounded-full bg-white text-neutral-900 font-semibold text-sm sm:text-base hover:bg-neutral-200 transition-all duration-300 shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95 cursor-pointer"
+              className="inline-flex items-center justify-center px-4 sm:px-8 py-2 sm:py-2.5 rounded-full bg-white text-neutral-900 font-semibold text-sm sm:text-base hover:bg-neutral-200 transition-all duration-300 shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95 cursor-pointer"
             >
               Order Now
             </Link>
@@ -50,7 +50,7 @@ const GetCrispy = () => {
             {/* Secondary Find Nearest Button */}
             <Link
               href="#locations"
-              className="inline-flex items-center justify-center px-7 sm:px-8 py-3 sm:py-2.5 rounded-full bg-white text-black hover:bg-[#252e42] border border-neutral-600/80 hover:border-neutral-400 font-medium text-sm sm:text-base transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+              className="inline-flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 rounded-full bg-white text-black hover:bg-[#252e42] border border-neutral-600/80 hover:border-neutral-400 font-medium text-sm sm:text-base transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
             >
               Find Your Nearest
             </Link>

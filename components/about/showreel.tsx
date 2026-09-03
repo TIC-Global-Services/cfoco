@@ -20,7 +20,7 @@ const Showreel = () => {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full h-[380px] sm:h-[480px] md:h-[580px] lg:h-[680px] rounded-2xl sm:rounded-3xl md:rounded-[30px] overflow-hidden border border-neutral-700/50 shadow-[0_25px_60px_rgba(0,0,0,0.7)] group"
+          className="relative w-full h-[580px] sm:h-[480px] md:h-[580px] lg:h-[680px] rounded-2xl sm:rounded-3xl md:rounded-[30px] overflow-hidden border border-neutral-700/50 shadow-[0_25px_60px_rgba(0,0,0,0.7)] group"
         >
           {/* Background Kitchen Image */}
           <Image

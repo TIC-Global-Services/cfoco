@@ -7,22 +7,19 @@ import Showreel from "@/components/about/showreel";
 import Reviews from "@/components/about/reviews";
 import GetCrispy from "@/components/about/getcrispy";
 import Reveal from "@/reusable/Reveal";
+import Simplefrastration from "@/components/about/simplefrastration";
 
 const page = () => {
   return (
     <main className="relative z-10 w-full flex-1 flex flex-col">
-      <Reveal>
-        <Hero />
-      </Reveal>
+      <Hero />
       <Reveal>
         <Obsession />
       </Reveal>
       <Reveal>
         <NothingFrozen />
       </Reveal>
-      <Reveal>
-        <WhatWeRefuse />
-      </Reveal>
+      <WhatWeRefuse />
       <Reveal>
         <Showreel />
       </Reveal>

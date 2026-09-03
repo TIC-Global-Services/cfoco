@@ -26,8 +26,8 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
   const pathname = usePathname();
 
   return (
-    <header className={`fixed top-0 z-50 w-full bg-black/30 backdrop-blur-md transition-all duration-300 ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className={`absolute top-0 left-0 right-0 z-50 w-full bg-black/30 backdrop-blur-md transition-all duration-300 ${className}`}>
+      <div className="px-4 sm:px-6 lg:px-[5%]">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0 group">
@@ -69,12 +69,12 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
           <div className="hidden md:flex items-center">
             <Link
               href="/contact"
-              className="group flex items-center gap-3 pl-5 pr-2 py-1.5 rounded-full bg-[#8799a5]/30 hover:bg-[#8799a5]/45 border border-white/20 backdrop-blur-md text-white font-medium text-sm lg:text-base transition-all duration-300 shadow-sm hover:shadow-md hover:border-white/40"
+              className="group flex items-center gap-3 pl-6 pr-1 py-1 rounded-full bg-[#FFFFFF99] hover:bg-[#8799a5]/45 border border-white/20 backdrop-blur-md text-white font-medium text-sm lg:text-base transition-all duration-300 shadow-sm hover:shadow-md hover:border-white/40"
             >
-              <span className="tracking-wide text-neutral-100 group-hover:text-white transition-colors">
+              <span className="tracking-tight font-semibold text-[#232E45] group-hover:text-white transition-colors">
                 Contact Us
               </span>
-              <div className="w-8 h-8 rounded-full bg-[#101726] border border-white/10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
+              <div className="w-8 h-8 rounded-full bg-[#232E45] border border-white/10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
                 <svg
                   className="w-4 h-4 text-white"
                   fill="none"

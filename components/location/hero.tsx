@@ -98,14 +98,14 @@ const Hero = () => {
       </div>
 
       {/* Scroll Down Indicator */}
-      <div className="pt-8 pb-2 flex flex-col items-center justify-center gap-1.5 opacity-50 hover:opacity-90 transition-opacity duration-300">
+      {/* <div className="pt-8 pb-2 flex flex-col items-center justify-center gap-1.5 opacity-50 hover:opacity-90 transition-opacity duration-300">
         <span className="text-xs sm:text-sm tracking-wider text-neutral-400 font-light">
           Scroll To Continue
         </span>
         <div className="w-3.5 h-3.5 rounded-full border border-neutral-400/50 flex items-center justify-center">
           <div className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse" />
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };
