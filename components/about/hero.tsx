@@ -172,7 +172,7 @@ const Hero = () => {
         <div className="w-full z-20">
           <motion.div
             style={{ opacity: textOpacity, y: headlineY }}
-            className="max-w-2xl text-center md:text-left"
+            className="max-w-2xl text-center md:text-left pt-10"
           >
             <h2 className="text-4xl sm:text-5xl md:text-[3.75rem] lg:text-[4.375rem] font-bold tracking-tight text-white leading-[1.08]">
               It Started With <br />

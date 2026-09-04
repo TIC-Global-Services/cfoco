@@ -96,13 +96,13 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
 
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
-            <div className="relative w-full h-[220px] sm:h-[280px] md:h-[320px] transition-transform duration-500 hover:scale-[1.02]">
+            <div className="relative w-full h-[220px] sm:h-[280px] md:h-[450px] transition-transform duration-500 hover:scale-[1.02]">
               <Image
                 src="/cfc-footer-bg.png"
                 alt="CFOCO Logo"
                 fill
                 priority
-                className="object-cover drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
+                className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
               />
             </div>
           </div>

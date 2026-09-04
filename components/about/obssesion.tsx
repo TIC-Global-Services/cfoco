@@ -316,7 +316,7 @@ const Obsession = () => {
                     style={{
                       // background:
                       //   "radial-gradient(circle at 35% 30%, #1e2638 0%, #0d121c 65%, #070a10 100%)",
-                      // border: "2px solid rgba(2, 136, 255, 0.35)",
+                      border: "2px solid rgba(2, 136, 255, 0.35)",
                       boxShadow:
                         "0 6px 20px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.8)",
                       animation: flareAnimation,
