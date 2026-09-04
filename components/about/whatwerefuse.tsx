@@ -219,9 +219,6 @@ const PillarBadge: React.FC<PillarBadgeProps> = ({
   );
 };
 
-// -----------------------------------------------------------------------------
-// Main Component
-// -----------------------------------------------------------------------------
 
 const WhatWeRefuse = () => {
   const containerRef = useRef<HTMLDivElement>(null);

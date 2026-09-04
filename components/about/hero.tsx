@@ -56,8 +56,8 @@ const Hero = () => {
       {/* Pinned Viewport Container */}
       <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 md:pt-0  px-6 sm:px-10 lg:px-16 overflow-hidden">
         {/* Ambient Atmosphere Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[850px] h-[600px] sm:h-[850px] bg-blue-600/10 rounded-full blur-[170px] pointer-events-none" />
-        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" />
+        {/* <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[850px] h-[600px] sm:h-[850px] bg-blue-600/10 rounded-full blur-[170px] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" /> */}
 
 
         <motion.div

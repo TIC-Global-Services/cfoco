@@ -50,7 +50,7 @@ export const locationsData: LocationData[] = [
     cityTag: "Bordeaux, France",
     badge: "Flagship",
     mapCoords: {
-      top: "33%",
+      top: "14%",
       left: "48.2%",
     },
     tagline: {
@@ -94,7 +94,7 @@ export const locationsData: LocationData[] = [
     cityTag: "Mérignac, France",
     badge: "Airport Hub",
     mapCoords: {
-      top: "35.5%",
+      top: "15%",
       left: "46.2%",
     },
     tagline: {
@@ -138,8 +138,8 @@ export const locationsData: LocationData[] = [
     cityTag: "Bastide, Bordeaux",
     badge: "Riverside",
     mapCoords: {
-      top: "32%",
-      left: "50.2%",
+      top: "18%",
+      left: "46.2%",
     },
     tagline: {
       prefix: "Riverside Chill.",
@@ -182,8 +182,8 @@ export const locationsData: LocationData[] = [
     cityTag: "Talence, Bordeaux",
     badge: "University",
     mapCoords: {
-      top: "37.5%",
-      left: "48.6%",
+      top: "20%",
+      left: "46.2%",
     },
     tagline: {
       prefix: "Campus Energy.",
@@ -226,7 +226,7 @@ export const locationsData: LocationData[] = [
     cityTag: "Pessac, France",
     badge: "Family Haven",
     mapCoords: {
-      top: "38.5%",
+      top: "20%",
       left: "46.8%",
     },
     tagline: {

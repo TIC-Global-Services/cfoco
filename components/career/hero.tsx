@@ -18,14 +18,11 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className={`relative w-full min-h-[calc(100vh-5rem)] flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-transparent select-none ${matter.className}`}>
-      {/* Spacer for top balance */}
-      <div className="hidden sm:block h-6" />
-
+    <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-0 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
-      <div className="w-full  flex flex-col items-center justify-center my-auto">
+      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-44">
         {/* Large Headline with Video Inside Text */}
-        <div className="relative w-full md:flex items-center hidden  justify-center overflow-hidden">
+        <div className="relative w-full md:flex items-center hidden justify-center overflow-hidden">
           <svg
             viewBox="0 0 2200 400"
             className="w-full h-auto block"
@@ -36,25 +33,25 @@ const Hero = () => {
                 id="crispy-text-mask"
                 maskUnits="userSpaceOnUse"
                 maskContentUnits="userSpaceOnUse"
-                x="-100"
-                y="-100"
-                width="2400"
-                height="600"
+                x="0"
+                y="0"
+                width="2200"
+                height="400"
                 style={{ maskType: "luminance" }}
               >
                 {/* Black background */}
                 <rect
-                  x="-100"
-                  y="-100"
-                  width="2400"
-                  height="600"
+                  x="0"
+                  y="0"
+                  width="2200"
+                  height="400"
                   fill="black"
                 />
 
                 {/* White text */}
                 <text
                   x="1100"
-                  y="160"
+                  y="140"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
@@ -68,7 +65,7 @@ const Hero = () => {
 
                 <text
                   x="1100"
-                  y="300"
+                  y="280"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
@@ -83,10 +80,10 @@ const Hero = () => {
             </defs>
 
             <foreignObject
-              x="-100"
-              y="-100"
-              width="2400"
-              height="600"
+              x="0"
+              y="0"
+              width="2200"
+              height="400"
               mask="url(#crispy-text-mask)"
             >
               <div className="w-full h-full">
@@ -103,7 +100,7 @@ const Hero = () => {
             </foreignObject>
           </svg>
         </div>
-        <div className="relative w-full  sm:max-w-md md:hidden">
+        <div className="relative w-full sm:max-w-md md:hidden">
           <svg
             viewBox="0 0 1000 380"
             className="w-full h-auto block"
@@ -143,7 +140,7 @@ const Hero = () => {
               x="0"
               y="0"
               width="1000"
-              height="580"
+              height="380"
               clipPath="url(#crispy-text-clip-mobile)"
             >
               <div className="w-full h-full">
@@ -162,7 +159,7 @@ const Hero = () => {
         </div>
 
         {/* Subtitles */}
-        <div className="mt-0 sm:mt-0 text-center">
+        <div className="mt-2 sm:mt-2 text-center px-4">
           <p className="text-xl sm:text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.2] max-w-3xl">
             Join a team driven by innovation, collaboration, and a shared passion
             for making a meaningful impact <span className="text-[#CC1518] font-medium">every day.</span>
