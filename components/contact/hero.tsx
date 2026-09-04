@@ -5,44 +5,56 @@ import { matter } from "@/font/fonts";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRefMobile = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay policy fallback handling
-      });
-    }
+    [videoRef, videoRefMobile].forEach((ref) => {
+      if (ref.current) {
+        ref.current.play().catch(() => {
+          // Autoplay policy fallback handling
+        });
+      }
+    });
   }, []);
 
   return (
-    <section className={`relative w-full min-h-[calc(100vh-5rem)] flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-transparent select-none ${matter.className}`}>
-      {/* Spacer for top balance */}
-      <div className="hidden sm:block h-6" />
-
+    <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-0 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
-      <div className="w-full flex flex-col items-center justify-center my-auto">
+      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-44">
         {/* Large Headline with Video Inside Text */}
-        <div className="relative w-full flex items-center justify-center">
+        <div className="relative w-full hidden md:flex items-center justify-center overflow-hidden">
           <svg
             viewBox="0 0 1380 230"
-            className="w-full h-auto overflow-hidden drop-shadow-2xl"
+            className="w-full h-auto block"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              <mask id="crispy-text-mask" x="0" y="0" width="100%" height="100%">
-                <rect width="100%" height="100%" fill="black" />
+              <mask
+                id="crispy-text-mask-desktop"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="1380"
+                height="230"
+              >
+                <rect
+                  x="0"
+                  y="0"
+                  width="1380"
+                  height="230"
+                  fill="black"
+                />
+
                 <text
-                  x="50%"
-                  y="58%"
+                  x="690"
+                  y="125"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
                   fontSize="150"
-                  letterSpacing="-3%"
+                  letterSpacing="-4"
                 >
                   Let’s Talk Cravings
                 </text>
@@ -50,13 +62,13 @@ const Hero = () => {
             </defs>
 
             <foreignObject
-              x="0"
-              y="0"
-              width="100%"
-              height="100%"
-              mask="url(#crispy-text-mask)"
+              x="10"
+              y="10"
+              width="1360"
+              height="210"
+              mask="url(#crispy-text-mask-desktop)"
             >
-              <div className="w-full h-full flex items-center justify-center bg-transparent">
+              <div className="w-full h-full overflow-hidden">
                 <video
                   ref={videoRef}
                   src="/bg_about_video.mp4"
@@ -64,21 +76,74 @@ const Hero = () => {
                   loop
                   muted
                   playsInline
-                  className="w-full h-full object-cover scale-105"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </foreignObject>
           </svg>
         </div>
+        <div className="relative w-full  sm:max-w-md md:hidden">
+          <svg
+            viewBox="0 0 1000 380"
+            className="w-full h-auto block"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <clipPath id="crispy-text-clip-mobile">
+                <text
+                  x="500"
+                  y="160"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
+                  fontSize="150"
+                  letterSpacing="-3"
+                >
+                  Let’s
+                </text>
 
+                <text
+                  x="500"
+                  y="300"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
+                  fontSize="150"
+                  letterSpacing="-3"
+                >
+                  Talk Cravings
+                </text>
+              </clipPath>
+            </defs>
+
+            <foreignObject
+              x="0"
+              y="0"
+              width="1000"
+              height="580"
+              clipPath="url(#crispy-text-clip-mobile)"
+            >
+              <div className="w-full h-full">
+                <video
+                  ref={videoRefMobile}
+                  src="/bg_about_video.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </foreignObject>
+          </svg>
+        </div>
         {/* Subtitles */}
-        <div className="mt-8 sm:mt-2 text-center">
-          <p className="text-base sm:text-xl md:text-2xl font-normal tracking-wide text-[#F2F2F2]">
-            Got a question, feedback, partnership idea, or need a little help? Whatever’s on your mind, th{" "}
-            <span className="text-[#CC1518] font-medium">CFOCO</span>.
-          </p>
-          <p className="text-base sm:text-xl md:text-2xl font-normal tracking-wide text-[#F2F2F2]">
-            team is here to listen, help, and keep things moving.
+        <div className="mt-2 sm:mt-2 text-center">
+          <p className="text-xl sm:text-xl md:text-2xl font-normal leading-[1.2] tracking-tight md:tracking-wide text-[#F2F2F2]">
+            Got a question, feedback, partnership <br className="md:hidden" /> idea, or need a little help? Whatever’s<br className="md:hidden" /> on your mind, th{" "}
+            <span className="text-[#CC1518] font-medium">CFOCO</span>. <br className="hidden lg:block"/> team is<br className="md:hidden" /> here to listen, help, and keep things <br className="md:hidden" /> moving.
           </p>
         </div>
       </div>

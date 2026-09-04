@@ -300,7 +300,7 @@ const ContactForm = () => {
         {/* Left Side: Contact Information Card */}
         <div
           ref={cardRef}
-          className="contact-info-card lg:col-span-2 bg-[#111113] border border-[#1e3a8a] rounded-[2rem] p-8 sm:px-10 flex flex-col shadow-2xl h-fit py-16 relative overflow-hidden transition-[box-shadow,border-color] duration-300 will-change-transform"
+          className="contact-info-card lg:col-span-2 bg-[#111113] border border-[#1e3a8a] rounded-[2rem] p-6 sm:px-10 flex flex-col shadow-2xl h-fit py-16 relative overflow-hidden transition-[box-shadow,border-color] duration-300 will-change-transform"
         >
           <div className="mb-10 relative z-10">
             <Image
@@ -313,10 +313,10 @@ const ContactForm = () => {
           </div>
 
           <div className="mb-5 relative z-10">
-            <h2 className="text-[#CC1518] text-[1.750rem] font-bold mb-2">
+            <h2 className="text-[#CC1518] text-2xl md:text-[1.750rem] font-bold mb-2 leading-none">
               Contact Information
             </h2>
-            <p className="text-white/90 text-lg font-medium">
+            <p className="text-white text-lg font-medium">
               Say something to start a live chat!
             </p>
           </div>
@@ -336,7 +336,7 @@ const ContactForm = () => {
             </div>
             <div className="flex items-start gap-5">
               <MapPin className="w-5 h-5 text-white shrink-0 mt-0.5" />
-              <span className="text-white font-light text-base leading-relaxed">
+              <span className="text-white font-light text-base leading-[1.2] tracking-tight">
                 132 Dartmouth Street Boston, Massachusetts 02156 United States
               </span>
             </div>
@@ -410,11 +410,11 @@ const ContactForm = () => {
             <div className="flex justify-end mt-4">
               <button
                 type="submit"
-                className="group flex items-center gap-3 bg-[#a3a3a3] hover:bg-[#d4d4d4] text-white pl-6 pr-2 py-2 rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]"
+                className="group flex items-center gap-3 bg-[#FFFFFF99] hover:bg-[#d4d4d4] text-white pl-7 pr-[4px] py-1 rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]"
               >
-                <span className="font-semibold text-sm">Submit</span>
-                <div className="bg-[#404040] group-hover:bg-[#171717] p-2.5 rounded-full flex items-center justify-center transition-colors">
-                  <ArrowUpRight className="w-4 h-4 text-white" strokeWidth={2.5} />
+                <span className="font-semibold text-base">Submit</span>
+                <div className="bg-[#232E45] group-hover:bg-[#232E45] p-2.5 rounded-full flex items-center justify-center transition-colors">
+                  <ArrowUpRight className="w-4 h-4 text-white" strokeWidth={1.5} />
                 </div>
               </button>
             </div>
