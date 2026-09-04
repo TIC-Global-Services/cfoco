@@ -216,10 +216,10 @@ const Obsession = () => {
 
       {/* Background Ambient Spotlight */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] max-w-[1200px] h-[320px] rounded-full pointer-events-none blur-[140px]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] max-w-full  h-[320px] rounded-full pointer-events-none blur-[140px]"
         style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(2, 136, 255, 0.18) 0%, rgba(13, 27, 62, 0.08) 50%, transparent 80%)",
+          // background:
+          //   "radial-gradient(ellipse at center, rgba(2, 136, 255, 0.18) 0%, rgba(13, 27, 62, 0.08) 50%, transparent 80%)",
         }}
       />
 
@@ -233,9 +233,7 @@ const Obsession = () => {
         </h2>
       </div>
 
-      {/* ========================================================================= */}
-      {/* DESKTOP TIMELINE SECTION (>= md): All 3 nodes equal size, scaling on dot  */}
-      {/* ========================================================================= */}
+   
       <div className="hidden md:block relative">
         {/* Horizontal Glowing Track */}
         <div className="absolute top-[44px] sm:top-[48px] left-0 right-0 h-[2px] -translate-y-1/2 z-0 pointer-events-none">
@@ -309,11 +307,16 @@ const Obsession = () => {
 
                   {/* Uniform Metallic Node Disc (Scales up when dot meets) */}
                   <div
-                    className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] rounded-full flex items-center justify-center transition-all duration-300"
+                    className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] rounded-full 
+          bg-transparent
+          backdrop-blur-md
+          border-t border-b border-white/90
+          shadow-[inset_-1px_-1px_4px_0_rgba(0,0,0,0.25)]
+          transition-all duration-300 ease-in-out overflow-hidden flex items-center justify-center"
                     style={{
-                      background:
-                        "radial-gradient(circle at 35% 30%, #1e2638 0%, #0d121c 65%, #070a10 100%)",
-                      border: "2px solid rgba(2, 136, 255, 0.35)",
+                      // background:
+                      //   "radial-gradient(circle at 35% 30%, #1e2638 0%, #0d121c 65%, #070a10 100%)",
+                      // border: "2px solid rgba(2, 136, 255, 0.35)",
                       boxShadow:
                         "0 6px 20px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.8)",
                       animation: flareAnimation,
@@ -359,9 +362,6 @@ const Obsession = () => {
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* MOBILE TIMELINE SECTION (< md): Shows 1 milestone at a time, auto looping */}
-      {/* ========================================================================= */}
       <div className="block md:hidden relative max-w-md mx-auto px-4">
         {/* Horizontal Laser Line across Mobile View */}
         <div className="absolute top-[44px] left-0 right-0 h-[2px] -translate-y-1/2 z-0 pointer-events-none">

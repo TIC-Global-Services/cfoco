@@ -20,10 +20,6 @@ const FriedChickenCanvas = dynamic(
   }
 );
 
-// -----------------------------------------------------------------------------
-// Domain Types & Data Models
-// -----------------------------------------------------------------------------
-
 export type PillarId = "conviviality" | "speed" | "quality";
 
 export interface PillarItem {
@@ -68,24 +64,24 @@ const PHASE_TARGETS = [0.05, 0.4, 0.68, 0.95];
 // -----------------------------------------------------------------------------
 
 /**
- * Section title header component with golden text and motion intro.
+ * Section title header component with golden text matching reference mock.
  */
 const SectionHeader = React.memo(function SectionHeader() {
   return (
-    <header className="w-full text-center z-20 shrink-0 mb-2 sm:mb-4">
+    <header className="w-full text-center z-20 shrink-0 mb-1 sm:mb-2 md:mb-3">
       <motion.h2
-        initial={{ opacity: 0, y: 15 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-[#E5A823] leading-[1.12]"
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] xl:text-[3.25rem] font-bold tracking-tight text-[#E5A823] leading-[1.1]"
       >
         What We Refuse
       </motion.h2>
       <motion.h2
-        initial={{ opacity: 0, y: 15 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-        className="text-3xl sm:text-4xl md:text-5xl lg:text-[4.25rem] xl:text-[5rem] font-bold tracking-tight text-[#E5A823] leading-none"
+        transition={{ duration: 0.5, delay: 0.08, ease: "easeOut" }}
+        className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.5rem] xl:text-[4.25rem] font-bold tracking-tight text-[#E5A823] leading-none mt-0.5 sm:mt-1"
       >
         To Compromise
       </motion.h2>
@@ -116,42 +112,42 @@ const OrbitDot: React.FC<OrbitDotProps> = ({
       type="button"
       onClick={onClick}
       aria-label={`Navigate to ${label}`}
-      className={`absolute ${positionClass} z-30 p-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E52320] rounded-full transition-transform duration-200 hover:scale-125`}
+      className={`absolute ${positionClass} z-30 p-2 cursor-pointer focus:outline-none rounded-full transition-transform duration-200 hover:scale-125`}
     >
       {isLargeDot ? (
         <div
-          className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+          className={`w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
             isActive
-              ? "border-[#E52320] bg-[#1a080a] scale-125 shadow-[0_0_18px_#E52320]"
+              ? "border-[#E52320] bg-[#1a080a] scale-125 shadow-[0_0_16px_#E52320]"
               : "border-[#38bdf8] bg-[#0d1424] hover:scale-110"
           }`}
         >
           <div
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
               isActive
-                ? "bg-[#E52320] shadow-[0_0_12px_#E52320]"
+                ? "bg-[#E52320] shadow-[0_0_10px_#E52320]"
                 : "bg-[#38bdf8] shadow-[0_0_6px_#38bdf8]"
             }`}
           />
         </div>
       ) : (
         <div
-          className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full transition-all duration-300 ${
+          className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full transition-all duration-300 ${
             isActive
-              ? "bg-[#E52320] shadow-[0_0_16px_#E52320] scale-150"
+              ? "bg-[#E52320] shadow-[0_0_14px_#E52320] scale-150"
               : "bg-[#38bdf8] shadow-[0_0_8px_#38bdf8] hover:scale-125"
           }`}
         />
       )}
       {isActive && (
-        <div className="absolute inset-0 m-auto w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-[#E52320] animate-ping pointer-events-none" />
+        <div className="absolute inset-0 m-auto w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-[#E52320] animate-ping pointer-events-none" />
       )}
     </button>
   );
 };
 
 /**
- * Desktop Pillar Card rendering icon, bold title, and description text.
+ * Desktop Pillar Card rendering icon, title, and description lines.
  */
 interface PillarBadgeProps {
   pillar: PillarItem;
@@ -180,35 +176,40 @@ const PillarBadge: React.FC<PillarBadgeProps> = ({
         }
       }}
       aria-label={`Select ${pillar.title} pillar`}
-      className={`w-full flex flex-col items-center text-center z-20 px-3 sm:px-5 cursor-pointer group transition-transform duration-300 hover:scale-105 focus:outline-none ${extraClass}`}
+      className={`flex flex-col items-center text-center z-20 px-2 sm:px-4 cursor-pointer group transition-all duration-300 hover:scale-105 focus:outline-none ${extraClass}`}
     >
+      {/* Circle Icon Container */}
       <div
-        className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full flex items-center justify-center border transition-all duration-300 mb-2 sm:mb-3 ${
+        className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center border transition-all duration-300 mb-2 sm:mb-2.5 ${
           isActive
-            ? "bg-[#1f1013] border-[#E52320] shadow-[0_0_24px_rgba(229,35,32,0.5)] scale-110"
-            : "bg-[#95C1E20A]/80 border-[#00000033] border-2 hover:border-white/25"
+            ? "bg-[#1f1013] border-[#E52320] shadow-[0_0_20px_rgba(229,35,32,0.45)] scale-110"
+            : "bg-[#141a26]/80 border-[#232d3f] hover:border-white/30"
         }`}
       >
         <IconComponent
-          className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 transition-colors duration-300 ${
+          className={`w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 transition-colors duration-300 ${
             isActive ? "text-[#E52320]" : "text-[#E5A823]"
           }`}
         />
       </div>
+
+      {/* Pillar Title */}
       <h3
-        className={`text-2xl sm:text-3xl lg:text-[2.25rem] xl:text-[2.75rem] font-bold mb-1.5 transition-all duration-300 ${
+        className={`text-xl sm:text-2xl lg:text-[1.85rem] xl:text-[2.25rem] font-bold mb-1 transition-all duration-300 ${
           isActive
-            ? "text-[#E52320] scale-105 drop-shadow-[0_0_18px_rgba(229,35,32,0.4)]"
+            ? "text-[#E52320] drop-shadow-[0_0_14px_rgba(229,35,32,0.4)]"
             : "text-white group-hover:text-[#E5A823]"
         }`}
       >
         {pillar.title}
       </h3>
+
+      {/* Pillar Subtitle Lines */}
       {pillar.lines.map((line, idx) => (
         <p
           key={idx}
-          className={`text-sm sm:text-base lg:text-lg xl:text-[22px] leading-[1.35] transition-colors duration-300 ${
-            isActive ? "text-white font-medium" : "text-[#A0A5B5]"
+          className={`text-xs sm:text-sm lg:text-base xl:text-[1.125rem] leading-[1.3] transition-colors duration-300 ${
+            isActive ? "text-white font-medium" : "text-[#9098ab]"
           }`}
         >
           {line}
@@ -275,33 +276,34 @@ const WhatWeRefuse = () => {
       ref={containerRef}
       className={`relative w-full h-[300vh] bg-transparent ${matter.className}`}
     >
-      {/* Sticky Viewport Container - Flexible min-h-screen layout with full unconstrained typography */}
-      <div className="sticky top-0 min-h-screen w-full flex flex-col justify-between pt-10 sm:pt-14 md:pt-18 lg:pt-20 pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6 lg:px-8 select-none">
+      {/* Sticky Viewport Container - Locks strictly to 100vh on all device heights */}
+      <div className="sticky top-0 h-screen h-[100dvh] max-h-screen w-full flex flex-col justify-between items-center pt-4 sm:pt-6 lg:pt-8 pb-4 sm:pb-6 lg:pb-8 px-4 sm:px-8 lg:px-12 max-w-[1600px] mx-auto overflow-hidden select-none">
         {/* Ambient Glow Backdrops */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[700px] lg:w-[850px] h-[500px] sm:h-[700px] lg:h-[850px] bg-blue-600/10 rounded-full blur-[160px] pointer-events-none" />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[380px] h-[300px] sm:h-[380px] bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] sm:w-[650px] lg:w-[800px] h-[450px] sm:h-[650px] lg:h-[800px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] sm:w-[350px] h-[280px] sm:h-[350px] bg-amber-500/5 rounded-full blur-[110px] pointer-events-none" />
 
         {/* Section Header */}
         <SectionHeader />
 
         {/* Interactive Orbit Stage with 3D Model in Center */}
-        <div className="relative w-full flex-1 flex flex-col justify-center items-center my-auto">
-          {/* DESKTOP & TABLET LAYOUT (>= lg) */}
-          <div className="hidden lg:flex w-full items-center justify-between gap-4 lg:gap-6 relative shrink-0">
+        <div className="relative w-full flex-1 flex flex-col justify-center items-center my-auto min-h-0 overflow-hidden">
+          {/* DESKTOP LAYOUT (>= lg) */}
+          <div className="hidden lg:flex w-full items-center justify-between gap-4 lg:gap-8 relative shrink-0 my-auto">
             {/* Left Pillar: Conviviality */}
-            <PillarBadge
-              pillar={PILLARS.conviviality}
-              isActive={isConvivialityActive}
-              onSelect={() => scrollToPhase(1)}
-              extraClass="order-1"
-            />
+            <div className="w-1/3 flex justify-center">
+              <PillarBadge
+                pillar={PILLARS.conviviality}
+                isActive={isConvivialityActive}
+                onSelect={() => scrollToPhase(1)}
+              />
+            </div>
 
             {/* Central Orbit Circle (Desktop) */}
-            <div className="relative flex items-center justify-center order-2 shrink-0">
-              <div className="relative w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] lg:w-[380px] lg:h-[380px] xl:w-[430px] xl:h-[430px] 2xl:w-[480px] 2xl:h-[480px] flex items-center justify-center">
+            <div className="w-1/3 relative flex items-center justify-center shrink-0">
+              <div className="relative w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] lg:w-[320px] lg:h-[320px] xl:w-[370px] xl:h-[370px] 2xl:w-[420px] 2xl:h-[420px] max-h-[38vh] max-w-[38vh] aspect-square flex items-center justify-center">
                 {/* Thin Orbit Perimeter Rings */}
-                <div className="absolute inset-0 rounded-full border-[1.5px] border-blue-400/35 shadow-[0_0_35px_rgba(56,189,248,0.2)] pointer-events-none" />
-                <div className="absolute -inset-3 sm:-inset-4 rounded-full border border-blue-500/10 pointer-events-none" />
+                <div className="absolute inset-0 rounded-full border-[1.5px] border-blue-400/30 shadow-[0_0_30px_rgba(56,189,248,0.18)] pointer-events-none" />
+                <div className="absolute -inset-3 rounded-full border border-blue-500/10 pointer-events-none" />
 
                 {/* Left Dot (Conviviality - 9 o'clock) */}
                 <OrbitDot
@@ -339,16 +341,17 @@ const WhatWeRefuse = () => {
             </div>
 
             {/* Right Pillar: Speed */}
-            <PillarBadge
-              pillar={PILLARS.speed}
-              isActive={isSpeedActive}
-              onSelect={() => scrollToPhase(2)}
-              extraClass="order-3"
-            />
+            <div className="w-1/3 flex justify-center">
+              <PillarBadge
+                pillar={PILLARS.speed}
+                isActive={isSpeedActive}
+                onSelect={() => scrollToPhase(2)}
+              />
+            </div>
           </div>
 
           {/* Desktop Bottom Pillar: Quality */}
-          <div className="hidden lg:flex flex-col items-center text-center shrink-0 z-20 mt-3 sm:mt-4 lg:mt-5">
+          <div className="hidden lg:flex flex-col items-center text-center shrink-0 z-20 mt-2 xl:mt-3">
             <PillarBadge
               pillar={PILLARS.quality}
               isActive={isQualityActive}
@@ -356,12 +359,12 @@ const WhatWeRefuse = () => {
             />
           </div>
 
-          {/* MOBILE LAYOUT (< lg) */}
+          {/* MOBILE & TABLET LAYOUT (< lg) */}
           <div className="flex lg:hidden flex-col items-center justify-center w-full my-auto shrink-0">
             {/* Center Orbit Ring */}
-            <div className="relative w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] md:w-[340px] md:h-[340px] flex items-center justify-center mb-5 sm:mb-6">
+            <div className="relative w-[210px] h-[210px] sm:w-[260px] sm:h-[260px] md:w-[300px] md:h-[300px] max-h-[32vh] aspect-square flex items-center justify-center mb-4 sm:mb-5">
               {/* Ring line */}
-              <div className="absolute inset-0 rounded-full border-[1.5px] border-blue-400/35 shadow-[0_0_25px_rgba(56,189,248,0.2)] pointer-events-none" />
+              <div className="absolute inset-0 rounded-full border-[1.5px] border-blue-400/30 shadow-[0_0_20px_rgba(56,189,248,0.18)] pointer-events-none" />
 
               {/* Left Anchor Dot (Conviviality) */}
               <OrbitDot
@@ -401,19 +404,19 @@ const WhatWeRefuse = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentMobilePillar.id}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25 }}
                 className="flex flex-col items-center text-center px-4"
               >
-                <h3 className="text-3xl font-bold mb-2 text-[#E52320] drop-shadow-[0_0_15px_rgba(229,35,32,0.4)]">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-1.5 text-[#E52320] drop-shadow-[0_0_12px_rgba(229,35,32,0.4)]">
                   {currentMobilePillar.title}
                 </h3>
                 {currentMobilePillar.lines.map((line, idx) => (
                   <p
                     key={idx}
-                    className="text-sm sm:text-base text-neutral-300 font-normal leading-relaxed"
+                    className="text-xs sm:text-sm text-neutral-300 font-normal leading-relaxed"
                   >
                     {line}
                   </p>
@@ -424,7 +427,7 @@ const WhatWeRefuse = () => {
         </div>
 
         {/* Floor Ambient Reflection */}
-        <div className="w-full h-6 bg-gradient-to-t from-transparent via-blue-900/10 to-transparent blur-xl pointer-events-none shrink-0" />
+        <div className="w-full h-4 bg-gradient-to-t from-transparent via-blue-900/10 to-transparent blur-lg pointer-events-none shrink-0" />
       </div>
     </div>
   );

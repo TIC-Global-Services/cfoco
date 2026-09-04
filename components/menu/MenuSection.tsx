@@ -185,7 +185,7 @@ const MenuSection: React.FC = () => {
           {visible.map((item) => (
             <div
               key={item.id}
-              className="group relative rounded-3xl p-6 sm:p-7 bg-white/20 hover:bg-white/30 backdrop-blur-xl border border-white/40 hover:border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 cursor-pointer overflow-hidden"
+              className="group relative rounded-3xl p-6 sm:p-7 bg-white/10 hover:bg-white/30 backdrop-blur-xs border-2 border-white/10 hover:border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 cursor-pointer overflow-hidden"
             >
               {/* Ambient Card Glow */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/5 opacity-60 pointer-events-none rounded-3xl" />

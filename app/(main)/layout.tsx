@@ -9,7 +9,7 @@ export default function MainLayout({
 }) {
   return (
     <div
-      className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat bg-fixed text-white flex flex-col pt-24"
+      className="relative min-h-screen w-full bg-cover bg-bottom bg-no-repeat bg-fixed text-white flex flex-col pt-24"
       style={{ backgroundImage: "url('/bg-image.png')" }}
     >
       <Navbar />

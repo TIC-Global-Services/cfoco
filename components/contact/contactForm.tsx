@@ -296,11 +296,11 @@ const ContactForm = () => {
         }
       `}</style>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 justify-center items-center">
         {/* Left Side: Contact Information Card */}
         <div
           ref={cardRef}
-          className="contact-info-card lg:col-span-2 bg-[#111113] border border-[#1e3a8a] rounded-[2rem] p-6 sm:px-10 flex flex-col shadow-2xl h-fit py-16 relative overflow-hidden transition-[box-shadow,border-color] duration-300 will-change-transform"
+          className="contact-info-card mb-20 lg:col-span-2 bg-[#111113] border border-[#1e3a8a] rounded-[2rem] p-6 sm:px-10 flex flex-col shadow-2xl h-fit py-16 relative overflow-hidden transition-[box-shadow,border-color] duration-300 will-change-transform"
         >
           <div className="mb-10 relative z-10">
             <Image
@@ -312,7 +312,7 @@ const ContactForm = () => {
             />
           </div>
 
-          <div className="mb-5 relative z-10">
+          <div className="mb-2 relative z-10">
             <h2 className="text-[#CC1518] text-2xl md:text-[1.750rem] font-bold mb-2 leading-none">
               Contact Information
             </h2>
@@ -353,7 +353,7 @@ const ContactForm = () => {
                 <input
                   type="text"
                   placeholder="john smith"
-                  className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-full px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
+                  className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
                 />
               </div>
 
@@ -363,7 +363,7 @@ const ContactForm = () => {
                 <input
                   type="email"
                   placeholder="john.smith@email.com"
-                  className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-full px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
+                  className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
                 />
               </div>
 
@@ -373,7 +373,7 @@ const ContactForm = () => {
                 <input
                   type="tel"
                   placeholder="+243545353"
-                  className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-full px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
+                  className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
                 />
               </div>
 
@@ -382,7 +382,7 @@ const ContactForm = () => {
                 <label className="text-white font-medium text-sm ml-2">select subject</label>
                 <div className="relative w-full">
                   <select
-                    className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-full px-5 py-3.5 text-white text-sm focus:outline-none appearance-none cursor-pointer"
+                    className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm focus:outline-none appearance-none cursor-pointer"
                   >
                     <option value="" disabled className="bg-[#111113] text-white">General enquiry</option>
                     <option value="general" selected className="bg-[#111113] text-white">General enquiry</option>
@@ -402,7 +402,7 @@ const ContactForm = () => {
               <textarea
                 placeholder="tell us about your enquiry"
                 rows={7}
-                className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-[1.5rem] p-5 text-white text-sm placeholder-white/50 focus:outline-none resize-none"
+                className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-xl p-5 text-white text-sm placeholder-white/50 focus:outline-none resize-none"
               ></textarea>
             </div>
 

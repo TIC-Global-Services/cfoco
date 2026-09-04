@@ -5,13 +5,16 @@ import { matter } from "@/font/fonts";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRefMobile = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay policy fallback handling
-      });
-    }
+    [videoRef, videoRefMobile].forEach((ref) => {
+      if (ref.current) {
+        ref.current.play().catch(() => {
+          // Autoplay policy fallback handling
+        });
+      }
+    });
   }, []);
 
   return (
@@ -22,42 +25,57 @@ const Hero = () => {
       {/* Main Content Area */}
       <div className="w-full  flex flex-col items-center justify-center my-auto">
         {/* Large Headline with Video Inside Text */}
-        <div className="relative w-full flex items-center justify-center">
+        <div className="relative w-full md:flex items-center hidden  justify-center overflow-hidden">
           <svg
             viewBox="0 0 2200 400"
-            className="w-full h-auto overflow-hidden drop-shadow-2xl"
+            className="w-full h-auto block"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              <mask id="crispy-text-mask" x="0" y="0" width="100%" height="100%">
-                <rect width="100%" height="100%" fill="black" />
+              <mask
+                id="crispy-text-mask"
+                maskUnits="userSpaceOnUse"
+                maskContentUnits="userSpaceOnUse"
+                x="-100"
+                y="-100"
+                width="2400"
+                height="600"
+                style={{ maskType: "luminance" }}
+              >
+                {/* Black background */}
+                <rect
+                  x="-100"
+                  y="-100"
+                  width="2400"
+                  height="600"
+                  fill="black"
+                />
+
+                {/* White text */}
                 <text
-                  x="50%"
-                  y="140"
+                  x="1100"
+                  y="160"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
                   fontSize="150"
-                  letterSpacing="-3%"
+                  letterSpacing="-4"
                 >
                   Build Your
                 </text>
+
                 <text
-                  x="50%"
-                  y="280"
+                  x="1100"
+                  y="300"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
                   fontSize="150"
-                  letterSpacing="-3%"
+                  letterSpacing="-4"
                 >
                   Future With Us
                 </text>
@@ -65,13 +83,13 @@ const Hero = () => {
             </defs>
 
             <foreignObject
-              x="0"
-              y="0"
-              width="100%"
-              height="100%"
+              x="-100"
+              y="-100"
+              width="2400"
+              height="600"
               mask="url(#crispy-text-mask)"
             >
-              <div className="w-full h-full flex items-center justify-center bg-transparent">
+              <div className="w-full h-full">
                 <video
                   ref={videoRef}
                   src="/bg_about_video.mp4"
@@ -79,7 +97,64 @@ const Hero = () => {
                   loop
                   muted
                   playsInline
-                  className="w-full h-full object-cover scale-105"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </foreignObject>
+          </svg>
+        </div>
+        <div className="relative w-full  sm:max-w-md md:hidden">
+          <svg
+            viewBox="0 0 1000 380"
+            className="w-full h-auto block"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <clipPath id="crispy-text-clip-mobile">
+                <text
+                  x="500"
+                  y="160"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
+                  fontSize="150"
+                  letterSpacing="-3"
+                >
+                  build your
+                </text>
+
+                <text
+                  x="500"
+                  y="300"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
+                  fontSize="150"
+                  letterSpacing="-3"
+                >
+                  future with us.
+                </text>
+              </clipPath>
+            </defs>
+
+            <foreignObject
+              x="0"
+              y="0"
+              width="1000"
+              height="580"
+              clipPath="url(#crispy-text-clip-mobile)"
+            >
+              <div className="w-full h-full">
+                <video
+                  ref={videoRefMobile}
+                  src="/bg_about_video.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
                 />
               </div>
             </foreignObject>
@@ -87,8 +162,8 @@ const Hero = () => {
         </div>
 
         {/* Subtitles */}
-        <div className="mt-2 sm:mt-0 text-center">
-          <p className="text-base sm:text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.2] max-w-3xl">
+        <div className="mt-0 sm:mt-0 text-center">
+          <p className="text-xl sm:text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.2] max-w-3xl">
             Join a team driven by innovation, collaboration, and a shared passion
             for making a meaningful impact <span className="text-[#CC1518] font-medium">every day.</span>
           </p>

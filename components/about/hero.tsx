@@ -54,14 +54,12 @@ const Hero = () => {
       className={`relative w-full h-[320vh] bg-transparent select-none ${matter.className}`}
     >
       {/* Pinned Viewport Container */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 md:pt-10 pb-8 sm:pb-12 md:pb-14 px-6 sm:px-10 lg:px-16 overflow-hidden">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 md:pt-0  px-6 sm:px-10 lg:px-16 overflow-hidden">
         {/* Ambient Atmosphere Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[850px] h-[600px] sm:h-[850px] bg-blue-600/10 rounded-full blur-[170px] pointer-events-none" />
         <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" />
 
-        {/* ========================================================================= */}
-        {/* LAYER 1: INITIAL HERO ("Crispy Since 2011.") */}
-        {/* ========================================================================= */}
+
         <motion.div
           style={{
             opacity: heroOpacity,
@@ -69,27 +67,19 @@ const Hero = () => {
           }}
           className="absolute inset-0 flex flex-col items-center justify-between py-12 sm:py-16 px-4 pointer-events-none z-30"
         >
-          <div className="hidden sm:block h-6" />
+          {/* <div className="hidden sm:block h-6" /> */}
 
           {/* Large Headline with Video Mask */}
-          <div className="w-full flex flex-col items-center justify-center my-auto">
+          <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-25">
             <div className="relative w-full flex items-center justify-center">
+
               <svg
                 viewBox="0 0 1380 230"
                 className="w-full h-auto overflow-visible border-none outline-none"
-                style={{
-                  transform: "translate3d(0,0,0)",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                  willChange: "transform",
-                }}
                 xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid meet"
               >
                 <defs>
-                  {/* Feather the mask edges slightly to prevent subpixel flicker */}
-                  <filter id="mask-feather" x="-5%" y="-5%" width="110%" height="110%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="0.8" />
-                  </filter>
                   <mask
                     id="crispy-text-mask-hero"
                     maskUnits="userSpaceOnUse"
@@ -98,14 +88,22 @@ const Hero = () => {
                     width="1580"
                     height="430"
                   >
-                    <rect x="-100" y="-100" width="1580" height="430" fill="black" />
+                    {/* Black = hidden */}
+                    <rect
+                      x="-100"
+                      y="-100"
+                      width="1580"
+                      height="430"
+                      fill="black"
+                    />
+
+                    {/* White text = visible */}
                     <text
                       x="50%"
                       y="58%"
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill="white"
-                      filter="url(#mask-feather)"
                       style={{
                         fontFamily: "var(--font-matter), sans-serif",
                         fontWeight: 700,
@@ -118,21 +116,19 @@ const Hero = () => {
                   </mask>
                 </defs>
 
+                {/* Video inside SVG mask */}
                 <foreignObject
                   x="2"
                   y="2"
                   width="1376"
                   height="226"
                   mask="url(#crispy-text-mask-hero)"
-                  style={{
-                    backfaceVisibility: "hidden",
-                    WebkitBackfaceVisibility: "hidden",
-                  }}
                 >
                   <div
                     className="w-full h-full flex items-center justify-center"
                     style={{
                       background: "transparent",
+                      transform: "translateZ(0)",
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                     }}
@@ -144,8 +140,10 @@ const Hero = () => {
                       loop
                       muted
                       playsInline
+                      preload="auto"
                       className="w-full h-full object-cover scale-110"
                       style={{
+                        transform: "translateZ(0) scale(1.1)",
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
                       }}
@@ -153,10 +151,11 @@ const Hero = () => {
                   </div>
                 </foreignObject>
               </svg>
+
             </div>
 
             {/* Subtitles */}
-            <div className="mt-8 sm:mt-2 text-center">
+            <div className="mt-8 sm:mt-0 text-center">
               <p className="text-base sm:text-xl md:text-2xl font-medium tracking-wide text-[#F2F2F2]">
                 A Recipe Born In{" "}
                 <span className="text-[#CC1518] font-medium">Bordeaux</span>.
@@ -170,11 +169,6 @@ const Hero = () => {
           <div className="hidden sm:block h-6" />
         </motion.div>
 
-        {/* ========================================================================= */}
-        {/* LAYER 2: FRUSTRATION STORY & HANDS (Appears smoothly as you scroll) */}
-        {/* ========================================================================= */}
-
-        {/* Top-Left Headline */}
         <div className="w-full z-20">
           <motion.div
             style={{ opacity: textOpacity, y: headlineY }}
@@ -196,15 +190,15 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-24vw] bottom-[30vh] sm:left-[-1vw] sm:bottom-[-2vh] w-[55vw] min-w-[340px] max-w-[850px] aspect-[4/3]"
+            className="absolute left-[-24vw] bottom-[30vh] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
-                src="/left_hand.png"
+                src="/left-hand-new.png"
                 alt="Left Hand holding Crispy Chicken"
                 fill
                 priority
-                className="object-contain object-left-bottom"
+                className="object-contain object-left-bottom rotate-10"
               />
             </div>
           </motion.div>
@@ -216,7 +210,7 @@ const Hero = () => {
               y: rightY,
               opacity: rightOpacity,
             }}
-            className="absolute right-[-35vw] top-[12vh] sm:right-[-7vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[850px] aspect-[4/3]"
+            className="absolute right-[-35vw] top-[12vh] sm:right-[-6vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[950px] aspect-[4/3]"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -224,7 +218,7 @@ const Hero = () => {
                 alt="Right Hand holding Crispy Chicken"
                 fill
                 priority
-                className="object-contain object-right-top"
+                className="object-cover object-right-top"
               />
             </div>
           </motion.div>
@@ -237,7 +231,7 @@ const Hero = () => {
             className="max-w-xl md:max-w-4xl text-center sm:text-right space-y-3"
           >
             <p className="text-sm sm:text-base md:text-2xl leading-none text-[#E0E0E0] font-medium whitespace-pre-line">
-              In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:<br className="hidden md:block"/>
+              In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:<br className="hidden md:block" />
               Fried Chicken That Promised The World And Delivered Grease. So They Did The
               Stubborn Thing{" "}
               <span className="text-[#E52320] font-medium">
@@ -248,7 +242,7 @@ const Hero = () => {
               One Relentless Question: What Does Perfect Actually Taste Like? The
               Answer Became{" "}
               <span className="text-[#E5A823] font-semibold">CFC</span>. Fresh,
-              Never Frozen. Bold, Never Boring.<br className="hidden md:block"/> Crispy In A Way You Feel Before You
+              Never Frozen. Bold, Never Boring.<br className="hidden md:block" /> Crispy In A Way You Feel Before You
               Taste.
             </p>
           </motion.div>
