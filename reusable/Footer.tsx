@@ -98,7 +98,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[220px] sm:h-[280px] md:h-[320px] transition-transform duration-500 hover:scale-[1.02]">
               <Image
-                src="/footer_image.png"
+                src="/cfc-footer-bg.png"
                 alt="CFOCO Logo"
                 fill
                 priority
