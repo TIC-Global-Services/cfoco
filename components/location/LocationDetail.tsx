@@ -18,7 +18,7 @@ export default function LocationDetail({ location }: LocationDetailProps) {
   return (
     <div className={`relative w-full min-h-screen px-4 sm:px-6 lg:px-[5%] py-6 sm:py-10 flex flex-col gap-6 sm:gap-8 select-none ${matter.className}`}>
       {/* Top Navigation */}
-      <Reveal>
+      {/* <Reveal>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/location"
@@ -28,7 +28,7 @@ export default function LocationDetail({ location }: LocationDetailProps) {
             <span>All Kitchens</span>
           </Link>
         </div>
-      </Reveal>
+      </Reveal> */}
 
       <Reveal>
         <LocationHero location={location} />

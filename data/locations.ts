@@ -56,13 +56,13 @@ export const locationsData: LocationData[] = [
     tagline: {
       prefix: "Bustling & Bold.",
       highlight: "Our Original.",
-      description: "Right In The Heart Of The City. Where It All Started In 2011, And Where The Lines Still Form At Lunch.",
+      description: "Right In The Heart Of The City. \nWhere It All Started In 2011, And Where The Lines Still Form At Lunch.",
     },
     address: "14 Rue Sainte-Catherine, 33000 Bordeaux",
     phone: "+33 5 56 00 12 34",
     mapsUrl: "https://maps.google.com/?q=14+Rue+Sainte-Catherine+Bordeaux",
     images: {
-      storefront: "/locations/bordeaux_front.jpg",
+      storefront: "/location_details-hero.jpg",
       kiosks: "/locations/kiosks.jpg",
       dining: "/locations/dining.jpg",
       barStools: "/locations/bar_stools.jpg",

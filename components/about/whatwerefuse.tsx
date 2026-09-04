@@ -64,10 +64,6 @@ const WhatWeRefuse = () => {
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setScrollProgress(latest);
-    // 0.00 - 0.25: Quality (initial)
-    // 0.25 - 0.55: Conviviality (scroll step 1)
-    // 0.55 - 0.80: Speed (scroll step 2)
-    // 0.80 - 1.00: Quality (at last, moves back to quality position)
     if (latest < 0.25) {
       setActivePhase(0);
     } else if (latest < 0.55) {
@@ -139,7 +135,7 @@ const WhatWeRefuse = () => {
         {/* Interactive Orbit Stage with 3D Model in Center */}
         <div className="relative w-full flex-1 flex flex-col justify-center items-center my-auto">
           {/* DESKTOP & TABLET LAYOUT (>= lg) */}
-          <div className="hidden lg:flex w-full items-center justify-between gap-4 relative max-w-6xl mx-auto">
+          <div className="hidden lg:flex w-full items-center justify-between gap-4 relative ">
             {/* Left Pillar: Conviviality */}
             <div
               onClick={() => scrollToPhase(1)}
@@ -148,8 +144,8 @@ const WhatWeRefuse = () => {
               <div
                 className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border transition-all duration-300 mb-2 sm:mb-3 ${
                   isConvivialityActive
-                    ? "bg-[#1f1013] border-[#E52320] shadow-[0_0_20px_rgba(229,35,32,0.45)] scale-110"
-                    : "bg-[#0d1424]/80 border-white/10 hover:border-white/25"
+                    ? "bg-[#95C1E20A] border-[#E52320] shadow-[0_0_20px_rgba(229,35,32,0.45)] scale-110"
+                    : "bg-[#95C1E20A]/80 border-[#00000033] border-2 hover:border-white/25"
                 }`}
               >
                 <Users

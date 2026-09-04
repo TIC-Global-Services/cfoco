@@ -32,7 +32,7 @@ const Showreel = () => {
           />
 
           {/* Cinematic Dark Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/10 transition-opacity duration-300 group-hover:bg-black/60" />
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/10 transition-opacity duration-300 group-hover:bg-black/60" /> */}
 
           {/* Centered Content Overlay */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6 z-10">

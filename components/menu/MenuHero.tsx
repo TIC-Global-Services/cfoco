@@ -20,7 +20,7 @@ const Hero = () => {
       <div className="hidden sm:block h-6" />
 
       {/* Main Content Area */}
-      <div className="w-full max-w-6xl mx-auto flex flex-col items-center justify-center my-auto">
+      <div className="w-full flex flex-col items-center justify-center my-auto">
         {/* Large Headline with Video Inside Text */}
         <div className="relative w-full flex items-center justify-center">
           <svg
