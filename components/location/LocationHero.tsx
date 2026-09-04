@@ -12,7 +12,7 @@ interface LocationHeroProps {
 
 export default function LocationHero({ location }: LocationHeroProps) {
   return (
-    <div className="relative w-full h-[800px] rounded-2xl sm:rounded-[20px] overflow-hidden border border-white/10 shadow-2xl group">
+    <div className="relative w-full aspect-[9/16] lg:h-[800px] rounded-2xl sm:rounded-[20px] overflow-hidden border border-white/10 shadow-2xl group">
       {/* 1. TOP HERO STOREFRONT BANNER (Matches Top Card in Mockup) */}
       <Image
         src={location.images.storefront}
@@ -23,8 +23,8 @@ export default function LocationHero({ location }: LocationHeroProps) {
       />
 
       {/* Gradient Overlays for readable text */}
-      {/* <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" /> */}
-      {/* <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" /> */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent" />
 
       {/* Top Right Location Pin Badge */}
       <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex items-center text-white text-xs sm:text-lg font-medium">
@@ -35,13 +35,13 @@ export default function LocationHero({ location }: LocationHeroProps) {
       {/* Bottom Hero Content */}
       <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="max-w-4xl">
-          <span className="text-xl md:text-[2rem] lg:text-[4.375rem] font-bold text-[#FFBF00] tracking-wide leading-none block">
+          <span className="text-[34px] md:text-[2rem] lg:text-[4.375rem] font-bold text-[#FFBF00] tracking-wide leading-none block">
             CFC Tasty
           </span>
-          <h1 className="text-3xl md:text-[4rem] lg:text-[6.25rem] font-extrabold text-[#FFBF00] tracking-tight leading-none whitespace-pre-line">
+          <h1 className="text-[34px] md:text-[4rem] lg:text-[6.25rem] font-extrabold text-[#FFBF00] tracking-tight leading-none whitespace-pre-line">
             {location.name}
           </h1>
-          <p className="text-xs sm:text-base lg:text-2xl text-[#FFFFFF] font-medium tracking-tight leading-none[1.2] mt-2 sm:mt-3 whitespace-pre-line">
+          <p className="text-base sm:text-base lg:text-2xl text-[#FFFFFF] font-medium tracking-tight leading-none[1.2] mt-2 sm:mt-3 whitespace-pre-line">
             {location.tagline.prefix}{" "}
             <span className="text-[#CC1518] font-medium">{location.tagline.highlight}</span>{" "}
             {location.tagline.description}

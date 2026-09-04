@@ -54,7 +54,7 @@ const Hero = () => {
       className={`relative w-full h-[320vh] bg-transparent select-none ${matter.className}`}
     >
       {/* Pinned Viewport Container */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-12 md:pb-14 px-6 sm:px-10 lg:px-16 overflow-hidden">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 md:pt-10 pb-8 sm:pb-12 md:pb-14 px-6 sm:px-10 lg:px-16 overflow-hidden">
         {/* Ambient Atmosphere Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[850px] h-[600px] sm:h-[850px] bg-blue-600/10 rounded-full blur-[170px] pointer-events-none" />
         <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" />
@@ -216,7 +216,7 @@ const Hero = () => {
               y: rightY,
               opacity: rightOpacity,
             }}
-            className="absolute right-[-35vw] top-[12vh] sm:right-[-7vw] sm:top-[-5vh] w-[58vw] min-w-[340px] max-w-[850px] aspect-[4/3]"
+            className="absolute right-[-35vw] top-[12vh] sm:right-[-7vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[850px] aspect-[4/3]"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -234,21 +234,21 @@ const Hero = () => {
         <div className="w-full mt-auto z-20 flex justify-end items-end">
           <motion.div
             style={{ opacity: textOpacity, y: descY }}
-            className="max-w-xl md:max-w-3xl text-center sm:text-right space-y-3"
+            className="max-w-xl md:max-w-4xl text-center sm:text-right space-y-3"
           >
-            <p className="text-sm sm:text-base md:text-2xl leading-[1.2] text-[#E0E0E0] font-normal">
-              In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:
+            <p className="text-sm sm:text-base md:text-2xl leading-none text-[#E0E0E0] font-medium whitespace-pre-line">
+              In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:<br className="hidden md:block"/>
               Fried Chicken That Promised The World And Delivered Grease. So They Did The
               Stubborn Thing{" "}
-              <span className="text-[#E52320] font-semibold">
+              <span className="text-[#E52320] font-medium">
                 They Started Over. Hundreds Of Tests.
               </span>
             </p>
-            <p className="text-sm sm:text-base md:text-2xl leading-[1.2] text-[#E0E0E0] font-normal">
+            <p className="text-sm sm:text-base md:text-2xl leading-none text-[#E0E0E0] font-medium">
               One Relentless Question: What Does Perfect Actually Taste Like? The
               Answer Became{" "}
               <span className="text-[#E5A823] font-semibold">CFC</span>. Fresh,
-              Never Frozen. Bold, Never Boring. Crispy In A Way You Feel Before You
+              Never Frozen. Bold, Never Boring.<br className="hidden md:block"/> Crispy In A Way You Feel Before You
               Taste.
             </p>
           </motion.div>

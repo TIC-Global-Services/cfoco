@@ -4,82 +4,148 @@ import React, { useEffect, useRef } from "react";
 import { matter } from "@/font/fonts";
 
 const Hero = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRefDesktop = useRef<HTMLVideoElement>(null);
+  const videoRefMobile = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay policy fallback handling
-      });
-    }
+    [videoRefDesktop, videoRefMobile].forEach((ref) => {
+      if (ref.current) {
+        ref.current.play().catch(() => {
+          // Autoplay policy fallback handling
+        });
+      }
+    });
   }, []);
 
   return (
-    <section className={`relative w-full min-h-[calc(100vh-5rem)] flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-transparent select-none ${matter.className}`}>
-      {/* Spacer for top balance */}
-      <div className="hidden sm:block h-6" />
-
+    <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
-      <div className="w-full max-w-6xl mx-auto flex flex-col items-center justify-center my-auto">
-        {/* Large Headline with Video Inside Text */}
-        <div className="relative w-full flex items-center justify-center">
+      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-44">
+        {/* Large Headline with Video Inside Text - Desktop */}
+        <div className="relative w-full hidden md:block">
           <svg
             viewBox="0 0 2200 400"
-            className="w-full h-auto overflow-hidden drop-shadow-2xl"
+            className="w-full h-auto block"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              <mask id="crispy-text-mask" x="0" y="0" width="100%" height="100%">
-                <rect width="100%" height="100%" fill="black" />
+              <clipPath id="crispy-text-clip-desktop">
                 <text
-                  x="50%"
+                  x="1100"
                   y="140"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
                   fontSize="150"
-                  letterSpacing="-3%"
+                  letterSpacing="-4"
                 >
                   Five Kitchens.
                 </text>
+
                 <text
-                  x="50%"
+                  x="1100"
                   y="280"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
                   fontSize="150"
-                  letterSpacing="-3%"
+                  letterSpacing="-4"
                 >
                   One Standard. Find Yours.
                 </text>
-              </mask>
+              </clipPath>
             </defs>
 
             <foreignObject
               x="0"
               y="0"
-              width="100%"
-              height="100%"
-              mask="url(#crispy-text-mask)"
+              width="2200"
+              height="400"
+              clipPath="url(#crispy-text-clip-desktop)"
             >
-              <div className="w-full h-full flex items-center justify-center bg-transparent">
+              <div className="w-full h-full">
                 <video
-                  ref={videoRef}
+                  ref={videoRefDesktop}
                   src="/bg_about_video.mp4"
                   autoPlay
                   loop
                   muted
                   playsInline
-                  className="w-full h-full object-cover scale-105"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </foreignObject>
+          </svg>
+        </div>
+
+        {/* Large Headline with Video Inside Text - Mobile */}
+        <div className="relative w-full max-w-sm sm:max-w-md md:hidden">
+          <svg
+            viewBox="0 0 1000 580"
+            className="w-full h-auto block"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <clipPath id="crispy-text-clip-mobile">
+                <text
+                  x="500"
+                  y="160"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
+                  fontSize="150"
+                  letterSpacing="-3"
+                >
+                  Five Kitchens.
+                </text>
+
+                <text
+                  x="500"
+                  y="300"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
+                  fontSize="150"
+                  letterSpacing="-3"
+                >
+                  One Standard.
+                </text>
+
+                <text
+                  x="500"
+                  y="460"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontFamily="var(--font-matter), sans-serif"
+                  fontWeight="700"
+                  fontSize="150"
+                  letterSpacing="-3"
+                >
+                  Find Yours.
+                </text>
+              </clipPath>
+            </defs>
+
+            <foreignObject
+              x="0"
+              y="0"
+              width="1000"
+              height="580"
+              clipPath="url(#crispy-text-clip-mobile)"
+            >
+              <div className="w-full h-full">
+                <video
+                  ref={videoRefMobile}
+                  src="/bg_about_video.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
                 />
               </div>
             </foreignObject>
@@ -87,25 +153,21 @@ const Hero = () => {
         </div>
 
         {/* Subtitles */}
-        <div className="mt-2 sm:mt-0 text-center">
-          <p className="text-base sm:text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.2]">
+        <div className="mt-4 md:mt-2 text-center px-4">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3]">
             Across <span className="text-[#CC1518] font-medium">Bordeaux</span> And Beyond
           </p>
-          <p className="text-base sm:text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.2] mt-1">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] mt-1 hidden md:block">
             Every CFC Is The Same Promise, Cooked Fresh Where You Are.
+          </p>
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] mt-1 md:hidden">
+            Every CFC Is The Same Promise,
+          </p>
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] mt-0.5 md:hidden">
+            Cooked Fresh Where You Are.
           </p>
         </div>
       </div>
-
-      {/* Scroll Down Indicator */}
-      {/* <div className="pt-8 pb-2 flex flex-col items-center justify-center gap-1.5 opacity-50 hover:opacity-90 transition-opacity duration-300">
-        <span className="text-xs sm:text-sm tracking-wider text-neutral-400 font-light">
-          Scroll To Continue
-        </span>
-        <div className="w-3.5 h-3.5 rounded-full border border-neutral-400/50 flex items-center justify-center">
-          <div className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse" />
-        </div>
-      </div> */}
     </section>
   );
 };

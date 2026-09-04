@@ -80,7 +80,7 @@ export const locationsData: LocationData[] = [
       sunday: "Sun 12:00–22:00",
     },
     tourTitle: "Step Inside The Crunch",
-    tourSubtitle: "Take A Virtual Tour ↗",
+    tourSubtitle: "Take A Virtual Tour",
     features: ["Digital Kiosks", "Dine-In", "Takeaway", "Late Night", "WiFi"],
     stats: {
       established: "2011",
@@ -106,7 +106,7 @@ export const locationsData: LocationData[] = [
     phone: "+33 5 56 00 56 78",
     mapsUrl: "https://maps.google.com/?q=85+Avenue+JFK+Merignac",
     images: {
-      storefront: "/locations/bordeaux_front.jpg",
+      storefront: "/location_details-hero.jpg",
       kiosks: "/locations/kiosks.jpg",
       dining: "/locations/dining.jpg",
       barStools: "/locations/bar_stools.jpg",
@@ -124,7 +124,7 @@ export const locationsData: LocationData[] = [
       sunday: "Sun 11:30–23:00",
     },
     tourTitle: "Step Inside The Crunch",
-    tourSubtitle: "Take A Virtual Tour ↗",
+    tourSubtitle: "Take A Virtual Tour",
     features: ["Drive-Thru", "Free Parking", "Express Kiosks", "Family Zone", "Fast Pick-Up"],
     stats: {
       established: "2016",
@@ -150,7 +150,7 @@ export const locationsData: LocationData[] = [
     phone: "+33 5 56 00 90 12",
     mapsUrl: "https://maps.google.com/?q=28+Avenue+Thiers+Bordeaux",
     images: {
-      storefront: "/locations/bordeaux_front.jpg",
+      storefront: "/location_details-hero.jpg",
       kiosks: "/locations/kiosks.jpg",
       dining: "/locations/dining.jpg",
       barStools: "/locations/bar_stools.jpg",
@@ -168,7 +168,7 @@ export const locationsData: LocationData[] = [
       sunday: "Sun 12:00–22:30",
     },
     tourTitle: "Step Inside The Crunch",
-    tourSubtitle: "Take A Virtual Tour ↗",
+    tourSubtitle: "Take A Virtual Tour",
     features: ["Riverside Terrace", "Outdoor Seating", "Cocktail Bar", "Late Night", "Pet Friendly"],
     stats: {
       established: "2019",
@@ -194,7 +194,7 @@ export const locationsData: LocationData[] = [
     phone: "+33 5 56 00 34 56",
     mapsUrl: "https://maps.google.com/?q=120+Cours+Gambetta+Talence",
     images: {
-      storefront: "/locations/bordeaux_front.jpg",
+      storefront: "/location_details-hero.jpg",
       kiosks: "/locations/kiosks.jpg",
       dining: "/locations/dining.jpg",
       barStools: "/locations/bar_stools.jpg",
@@ -212,7 +212,7 @@ export const locationsData: LocationData[] = [
       sunday: "Sun 12:00–23:00",
     },
     tourTitle: "Step Inside The Crunch",
-    tourSubtitle: "Take A Virtual Tour ↗",
+    tourSubtitle: "Take A Virtual Tour",
     features: ["Charging Stations", "Study Friendly", "Student Discount", "Fast WiFi", "Group Tables"],
     stats: {
       established: "2021",
@@ -238,7 +238,7 @@ export const locationsData: LocationData[] = [
     phone: "+33 5 56 00 78 90",
     mapsUrl: "https://maps.google.com/?q=42+Avenue+Pasteur+Pessac",
     images: {
-      storefront: "/locations/bordeaux_front.jpg",
+      storefront: "/location_details-hero.jpg",
       kiosks: "/locations/kiosks.jpg",
       dining: "/locations/dining.jpg",
       barStools: "/locations/bar_stools.jpg",
@@ -256,7 +256,7 @@ export const locationsData: LocationData[] = [
       sunday: "Sun 11:30–22:00",
     },
     tourTitle: "Step Inside The Crunch",
-    tourSubtitle: "Take A Virtual Tour ↗",
+    tourSubtitle: "Take A Virtual Tour",
     features: ["Kids Play Area", "Free Parking", "Large Booths", "Disabled Access", "Takeaway"],
     stats: {
       established: "2023",

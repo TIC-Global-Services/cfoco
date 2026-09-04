@@ -7,10 +7,7 @@ import { matter } from "@/font/fonts";
 import { locationsData, LocationData } from "@/data/locations";
 import { MapPin, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-// Constants for the carousel track
-const ITEM_WIDTH = 320; // px width of each slot
-const ITEM_GAP = 20;    // px gap between items
-const STEP = ITEM_WIDTH + ITEM_GAP; // total distance per item
+
 
 const StepInside = () => {
   const total = locationsData.length;
@@ -24,10 +21,25 @@ const StepInside = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [])
+
   // The real data index (0..total-1) for map pin & detail card
   const realIndex = ((virtualIndex % total) + total) % total;
   const activeLocation: LocationData = locationsData[realIndex] || locationsData[0];
-
+  // Constants for the carousel track
+  const ITEM_WIDTH = isMobile ? 210 : 380; // px width of each slot
+  const ITEM_GAP = 20;    // px gap between items
+  const STEP = ITEM_WIDTH + ITEM_GAP; // total distance per item
   // Tripled list for seamless looping
   const tripled = [...locationsData, ...locationsData, ...locationsData];
 
@@ -77,12 +89,40 @@ const StepInside = () => {
     setVirtualIndex(tripledIdx);
   };
 
+  // Touch Swipe Handling for Mobile
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchEndX.current = null;
+    touchStartX.current = e.targetTouches[0].clientX;
+    setIsPaused(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    setIsPaused(false);
+    if (touchStartX.current === null || touchEndX.current === null) return;
+
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 30; // threshold in px
+
+    if (distance > minSwipeDistance) {
+      handleNext();
+    } else if (distance < -minSwipeDistance) {
+      handlePrev();
+    }
+  };
+
   // Track transform: shift so that virtualIndex item is centered
   const trackTranslateX = `calc(-${virtualIndex * STEP}px - ${ITEM_WIDTH / 2}px)`;
 
   return (
     <section
-      className={`relative w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center overflow-hidden select-none ${matter.className}`}
+      className={`relative w-full py-16 sm:py-24 px-0 sm:px-6 lg:px-8 flex flex-col items-center justify-center overflow-hidden select-none ${matter.className}`}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -146,23 +186,22 @@ const StepInside = () => {
           </h2>
 
           {/* Subtitle */}
-          <p className="mt-4 max-w-4xl text-sm sm:text-base md:text-2xl text-neutral-300 font-normal leading-[1.2]">
-            Same Recipe, Same Crispy Standard, But Every CFC Takes On The Character Of Its
-            Neighbourhood. Pick A City, Or Let Us Find The One Closest To You.
+          <p className="mt-4 md:max-w-4xl text-base sm:text-base md:text-2xl text-neutral-300 font-normal leading-[1.2]">
+            Same Recipe, Same Crispy Standard, But <br className="md:hidden" /> Every CFC Takes On The Character Of Its<br className="md:hidden" />
+            Neighbourhood. Pick A City, Or Let Us Find The<br className="md:hidden" /> One Closest To You.
           </p>
         </div>
 
         {/* World Map with Animated Moving Pinpoint & Detail Card */}
-        <div className="relative w-full my-8 sm:mt-20 flex items-center justify-center">
+        <div className="relative w-full my-10 sm:mt-20 flex items-center justify-center">
           <div className="relative w-full aspect-[2/1] max-h-[380px]">
             <Image
               src="/new-map.png"
               alt="CFC Global Locations World Map"
               fill
-              className="object-contain opacity-90 transition-opacity duration-500 hover:opacity-100"
+              className="object-cover md:object-contain opacity-90 transition-opacity duration-500 hover:opacity-100"
               priority
             />
-
 
             {/* ACTIVE PINPOINT — Visible beacon dot + pulsing rings + detail card */}
             <div
@@ -187,8 +226,8 @@ const StepInside = () => {
               />
 
               {/* ===== FLOATING DETAIL CARD (above the dot) ===== */}
-              <div className="absolute left-1/2 -translate-x-1/2 bottom-4 flex flex-col items-center pointer-events-auto">
-                <div className="w-[200px] sm:w-[240px] bg-black/92 backdrop-blur-xl text-white rounded-xl p-3 sm:p-4 border border-[#FFBF00]/40 shadow-[0_8px_30px_rgba(0,0,0,0.85),0_0_20px_rgba(255,191,0,0.08)] text-left transition-all duration-300 hover:border-[#FFBF00]/70 hover:shadow-[0_12px_40px_rgba(0,0,0,0.9),0_0_30px_rgba(255,191,0,0.15)]">
+              <div className="absolute left-1/2 -translate-x-1/2 bottom-2 md:bottom-4 flex flex-col items-center pointer-events-auto">
+                <div className="w-[200px] sm:w-[240px] bg-black/92 backdrop-blur-xl text-white rounded-xl p-4 sm:p-4 border border-[#FFBF00]/40 shadow-[0_8px_30px_rgba(0,0,0,0.85),0_0_20px_rgba(255,191,0,0.08)] text-left transition-all duration-300 hover:border-[#FFBF00]/70 hover:shadow-[0_12px_40px_rgba(0,0,0,0.9),0_0_30px_rgba(255,191,0,0.15)]">
                   {/* Header Row */}
                   <div className="flex items-center justify-between gap-1.5 mb-1.5">
                     <div className="flex items-center gap-1 text-[#FFBF00]">
@@ -231,21 +270,19 @@ const StepInside = () => {
 
                 {/* Connector line from card to dot */}
                 <div className="w-px h-2.5 bg-gradient-to-b from-[#FFBF00]/50 to-[#FFBF00]/10" />
-                {/* Small diamond connector */}
-                {/* <div className="w-2 h-2 bg-[#FFBF00] rotate-45 -mt-0.5" /> */}
               </div>
             </div>
           </div>
         </div>
 
         {/* INFINITE LOOPING CENTER-HIGHLIGHTED CAROUSEL */}
-        <div className="w-full relative py-0 px-4 sm:px-12 flex items-center justify-center max-w-5xl">
-          {/* Previous / Next Arrow Controls */}
+        <div className="w-full relative py-0 px-0 sm:px-12 flex items-center justify-center max-w-5xl">
+          {/* Previous / Next Arrow Controls (Desktop only) */}
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Previous Location"
-            className="absolute left-2 sm:left-4 z-30 p-2 sm:p-2.5 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95"
+            className="hidden md:flex absolute left-2 sm:left-4 z-30 p-2 sm:p-2.5 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
           >
             <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
@@ -254,24 +291,24 @@ const StepInside = () => {
             type="button"
             onClick={handleNext}
             aria-label="Next Location"
-            className="absolute right-2 sm:right-4 z-30 p-2 sm:p-2.5 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95"
+            className="hidden md:flex absolute right-2 sm:right-4 z-30 p-2 sm:p-2.5 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
           >
             <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
-          {/* Carousel Viewport */}
-          <div className="relative w-full h-24 sm:h-28 flex items-center justify-center overflow-hidden">
-            {/* Fade edges */}
-            {/* <div className="absolute left-0 top-0 w-16 sm:w-24 h-full bg-gradient-to-r from-black to-transparent z-20 pointer-events-none" />
-            <div className="absolute right-0 top-0 w-16 sm:w-24 h-full bg-gradient-to-l from-black to-transparent z-20 pointer-events-none" /> */}
-
+          {/* Carousel Viewport with Touch Drag/Swipe Support */}
+          <div
+            className="relative w-full h-24 sm:h-28 flex items-center justify-center overflow-hidden touch-pan-y"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
               ref={trackRef}
-              className={`flex items-center absolute left-1/2 ${
-                isTransitioning
-                  ? "transition-transform duration-500 ease-out"
-                  : ""
-              }`}
+              className={`flex items-center absolute left-1/2 ${isTransitioning
+                ? "transition-transform duration-500 ease-out"
+                : ""
+                }`}
               style={{
                 gap: `${ITEM_GAP}px`,
                 transform: `translate3d(${trackTranslateX}, 0, 0)`,
@@ -293,13 +330,13 @@ const StepInside = () => {
                         href={`/location/${loc.slug}`}
                         className="group flex flex-col items-center justify-center transition-all duration-500 scale-110 sm:scale-125"
                       >
-                        <span className="whitespace-nowrap text-3xl sm:text-4xl md:text-[3.125rem] font-black tracking-tight text-[#FFBF00] transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_0_20px_rgba(255,191,0,0.3)]">
+                        <span className="whitespace-nowrap text-[34px] sm:text-4xl md:text-[3.125rem] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105">
                           {loc.name}
                         </span>
                       </Link>
                     ) : (
                       <div className="flex flex-col items-center justify-center opacity-30 hover:opacity-75 transition-all duration-300 scale-90 sm:scale-95">
-                        <span className="whitespace-nowrap text-lg sm:text-2xl md:text-3xl font-bold tracking-tight text-neutral-400 hover:text-white transition-colors">
+                        <span className="whitespace-nowrap text-[34px] sm:text-2xl md:text-3xl font-bold tracking-tight text-neutral-400 hover:text-white transition-colors">
                           {loc.name}
                         </span>
                       </div>

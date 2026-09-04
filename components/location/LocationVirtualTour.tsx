@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Compass, X, Sparkles } from "lucide-react";
+import { Compass, X, Sparkles, RectangleGoggles } from "lucide-react";
 import { LocationData } from "@/data/locations";
 
 interface LocationVirtualTourProps {
@@ -15,7 +15,7 @@ export default function LocationVirtualTour({ location }: LocationVirtualTourPro
   return (
     <>
       {/* 3. VIRTUAL TOUR BANNER (Matches Bottom Card in Mockup) */}
-      <div className="relative w-full aspect-[16/8] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl group cursor-pointer"
+      <div className="relative w-full aspect-[9/16] md:aspect-[16/8] rounded-[20px] sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl group cursor-pointer"
         // onClick={() => setShowTourModal(true)}
       >
         <Image
@@ -26,20 +26,21 @@ export default function LocationVirtualTour({ location }: LocationVirtualTourPro
         />
 
         {/* Ambient Dark Overlay */}
-        <div className="absolute inset-0 bg-black/60 group-hover:bg-black/50 transition-colors duration-500" />
+        <div className="absolute inset-0 bg-black/5 group-hover:bg-black/50 transition-colors duration-500" />
 
         {/* Center Content */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
-          <div className="max-w-5xl">
-            <h2 className="text-3xl sm:text-5xl lg:text-[4.375rem] font-bold text-[#F6B90B] tracking-tight drop-shadow-md">
+          <div className="max-w-xs md:max-w-5xl leading-none">
+            <h2 className="text-[2.125rem] sm:text-5xl lg:text-[4.375rem] font-bold text-[#F6B90B] tracking-tight drop-shadow-md">
               {location.tourTitle}
             </h2>
 
             <button
               type="button"
-              className="mt-4 sm:mt-6 inline-flex items-center gap-2 text-xs md:text-lg lg:text-xl font-semibold text-white"
+              className="mt-4 sm:mt-6 inline-flex items-center gap-2 text-base md:text-lg lg:text-xl font-semibold text-white"
             >
               <span>{location.tourSubtitle}</span>
+              <RectangleGoggles />
             </button>
           </div>
         </div>

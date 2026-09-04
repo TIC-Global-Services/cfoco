@@ -13,11 +13,12 @@ interface FooterNavLink {
 
 const navLinks: FooterNavLink[] = [
   { label: "Menu", href: "/menu" },
+   { label: "Our Story", href: "/our-story" },
   { label: "Franchise", href: "/franchise" },
-  { label: "Our Story", href: "/our-story" },
-  { label: "News & Blogs", href: "/news-blogs" },
-  { label: "Policies", href: "/policies" },
+   { label: "Policies", href: "/policies" },
   { label: "Contact Us", href: "/contact" },
+  { label: "News & Blogs", href: "/news-blogs" },
+ 
 ];
 
 const socialLinks = [
@@ -78,14 +79,14 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
       className={`relative w-full h-[600px] overflow-hidden select-none ${matter.className} ${className}`}
     >
       <Reveal className="h-full w-full">
-        <div className="relative z-10 w-full h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 flex flex-col justify-between items-center">
+        <div className="relative z-10 w-full h-full px-5 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 flex flex-col justify-between items-center">
           {/* Top Navigation Links */}
-          <nav className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 md:gap-12 lg:gap-14 text-sm sm:text-base font-normal text-neutral-200 shrink-0">
+          <nav className="flex flex-wrap justify-center items-center px-10 md:px-0 gap-6 sm:gap-8 md:gap-10 lg:gap-14 text-lg sm:text-lg font-normal text-white shrink-0">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="transition-colors duration-200 hover:text-white relative py-1 group"
+                className="transition-colors duration-200 hover:text-white relative leading-[0.9]  group"
               >
                 <span>{link.label}</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E5A823] transition-all duration-300 group-hover:w-full" />
@@ -107,7 +108,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           </div>
 
           {/* Bottom Footer Bar */}
-          <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 text-xs sm:text-sm text-neutral-400 shrink-0">
+          <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-2 sm:gap-6 text-base sm:text-base text-[#B0B0B0] shrink-0">
             {/* Copyright */}
             <div className="text-center md:text-left order-2 md:order-1 font-light">
               <span>Copyright © 2026 </span>
@@ -132,16 +133,16 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             </div>
 
             {/* Credits */}
-            <div className="text-center md:text-right order-3 font-light">
-              <span>Designed &amp; Developed by </span>
-              <a
+            <div className="text-center text-base md:text-right text-[#B0B0B0] order-3 font-light">
+              <span>Designed &amp; Developed by </span><br className="md:hidden"/>
+              <Link
                 href="https://ticglobalservices.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-[#FF3838] hover:text-red-400 transition-colors duration-200"
+                className="font-medium text-[#CC1518] hover:text-red-400 transition-colors duration-200"
               >
                 TIC Global services
-              </a>
+              </Link>
             </div>
           </div>
         </div>
