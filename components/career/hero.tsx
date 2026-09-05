@@ -6,12 +6,15 @@ import { matter } from "@/font/fonts";
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoRefMobile = useRef<HTMLVideoElement>(null);
-  const maskRef = useRef<SVGMaskElement>(null);
+  const maskRefDesktop = useRef<SVGMaskElement>(null);
+  const maskRefMobile = useRef<SVGMaskElement>(null);
 
   useEffect(() => {
-    if (maskRef.current) {
-      maskRef.current.setAttribute("mask-type", "alpha");
-    }
+    [maskRefDesktop, maskRefMobile].forEach((ref) => {
+      if (ref.current) {
+        ref.current.setAttribute("mask-type", "alpha");
+      }
+    });
     [videoRef, videoRefMobile].forEach((ref) => {
       if (ref.current) {
         ref.current.play().catch(() => {
@@ -25,35 +28,36 @@ const Hero = () => {
     <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-0 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
       <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-44">
-        {/* Large Headline with Video Inside Text */}
-        <div className="relative w-full md:flex items-center hidden justify-center overflow-hidden">
+        {/* Large Headline with Video Inside Text - Desktop */}
+        <div className="relative w-full hidden md:flex items-center justify-center">
           <svg
             viewBox="0 0 2200 400"
-            className="w-full h-auto block"
+            className="w-full h-auto overflow-visible border-none outline-none"
             xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
           >
             <defs>
               <mask
-                ref={maskRef}
-                id="crispy-text-mask"
+                ref={maskRefDesktop}
+                id="crispy-text-mask-career-desktop"
                 maskUnits="userSpaceOnUse"
-                maskContentUnits="userSpaceOnUse"
-                x="0"
-                y="0"
-                width="2200"
-                height="400"
+                x="-100"
+                y="-100"
+                width="2400"
+                height="600"
               >
-                {/* White text */}
                 <text
                   x="1100"
                   y="140"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
                   fontSize="150"
-                  letterSpacing="-4"
+                  letterSpacing="-4%"
                 >
                   Build Your
                 </text>
@@ -64,10 +68,12 @@ const Hero = () => {
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
                   fontSize="150"
-                  letterSpacing="-4"
+                  letterSpacing="-4%"
                 >
                   Future With Us
                 </text>
@@ -75,16 +81,20 @@ const Hero = () => {
             </defs>
 
             <foreignObject
-              x="0"
-              y="0"
-              width="2200"
-              height="400"
+              x="2"
+              y="2"
+              width="2196"
+              height="396"
             >
               <div
-                className="w-full h-full"
+                className="w-full h-full flex items-center justify-center"
                 style={{
-                  WebkitMaskImage: "url(#crispy-text-mask)",
-                  maskImage: "url(#crispy-text-mask)",
+                  background: "transparent",
+                  transform: "translateZ(0)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  WebkitMaskImage: "url(#crispy-text-mask-career-desktop)",
+                  maskImage: "url(#crispy-text-mask-career-desktop)",
                   WebkitMaskRepeat: "no-repeat",
                   maskRepeat: "no-repeat",
                 }}
@@ -96,29 +106,49 @@ const Hero = () => {
                   loop
                   muted
                   playsInline
-                  className="w-full h-full object-cover"
+                  preload="auto"
+                  className="w-full h-full object-cover scale-110"
+                  style={{
+                    transform: "translateZ(0) scale(1.1)",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
                 />
               </div>
             </foreignObject>
           </svg>
         </div>
+
+        {/* Large Headline with Video Inside Text - Mobile */}
         <div className="relative w-full sm:max-w-md md:hidden">
           <svg
             viewBox="0 0 1000 380"
-            className="w-full h-auto block"
+            className="w-full h-auto overflow-visible border-none outline-none"
             xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
           >
             <defs>
-              <clipPath id="crispy-text-clip-mobile">
+              <mask
+                ref={maskRefMobile}
+                id="crispy-text-mask-career-mobile"
+                maskUnits="userSpaceOnUse"
+                x="-100"
+                y="-100"
+                width="1200"
+                height="580"
+              >
                 <text
                   x="500"
                   y="160"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
                   fontSize="150"
-                  letterSpacing="-3"
+                  letterSpacing="-3%"
                 >
                   build your
                 </text>
@@ -128,24 +158,38 @@ const Hero = () => {
                   y="300"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
                   fontSize="150"
-                  letterSpacing="-3"
+                  letterSpacing="-3%"
                 >
                   future with us.
                 </text>
-              </clipPath>
+              </mask>
             </defs>
 
             <foreignObject
-              x="0"
-              y="0"
-              width="1000"
-              height="380"
-              clipPath="url(#crispy-text-clip-mobile)"
+              x="2"
+              y="2"
+              width="996"
+              height="376"
             >
-              <div className="w-full h-full">
+              <div
+                className="w-full h-full flex items-center justify-center"
+                style={{
+                  background: "transparent",
+                  transform: "translateZ(0)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  WebkitMaskImage: "url(#crispy-text-mask-career-mobile)",
+                  maskImage: "url(#crispy-text-mask-career-mobile)",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                }}
+              >
                 <video
                   ref={videoRefMobile}
                   src="/bg_about_video.mp4"
@@ -153,7 +197,13 @@ const Hero = () => {
                   loop
                   muted
                   playsInline
-                  className="w-full h-full object-cover"
+                  preload="auto"
+                  className="w-full h-full object-cover scale-110"
+                  style={{
+                    transform: "translateZ(0) scale(1.1)",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
                 />
               </div>
             </foreignObject>
@@ -168,16 +218,6 @@ const Hero = () => {
           </p>
         </div>
       </div>
-
-      {/* Scroll Down Indicator */}
-      {/* <div className="pt-8 pb-2 flex flex-col items-center justify-center gap-1.5 opacity-50 hover:opacity-90 transition-opacity duration-300">
-        <span className="text-xs sm:text-sm tracking-wider text-neutral-400 font-light">
-          Scroll To Continue
-        </span>
-        <div className="w-3.5 h-3.5 rounded-full border border-neutral-400/50 flex items-center justify-center">
-          <div className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse" />
-        </div>
-      </div> */}
     </section>
   );
 };

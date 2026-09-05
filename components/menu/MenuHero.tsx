@@ -28,15 +28,24 @@ const Hero = () => {
         {/* Large Headline with Video Inside Text */}
         <div className="relative w-full flex items-center justify-center">
           <svg
-            viewBox="0 0 2200 400"
-            className="w-full h-auto overflow-hidden drop-shadow-2xl"
+            viewBox="0 0 1380 300"
+            className="w-full h-auto overflow-visible border-none outline-none"
             xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
           >
             <defs>
-              <mask ref={maskRef} id="crispy-text-mask" x="0" y="0" width="100%" height="100%">
+              <mask
+                ref={maskRef}
+                id="crispy-text-mask-menu"
+                maskUnits="userSpaceOnUse"
+                x="-100"
+                y="-100"
+                width="1580"
+                height="540"
+              >
                 <text
                   x="50%"
-                  y="140"
+                  y="34%"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
@@ -44,14 +53,14 @@ const Hero = () => {
                     fontFamily: "var(--font-matter), sans-serif",
                     fontWeight: 700,
                   }}
-                  fontSize="200"
+                  fontSize="130"
                   letterSpacing="-3%"
                 >
-                 One Menu.
+                  One Menu.
                 </text>
                 <text
                   x="50%"
-                  y="280"
+                  y="68%"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
@@ -59,7 +68,7 @@ const Hero = () => {
                     fontFamily: "var(--font-matter), sans-serif",
                     fontWeight: 700,
                   }}
-                  fontSize="180"
+                  fontSize="120"
                   letterSpacing="-3%"
                 >
                   Endless Cravings.
@@ -68,16 +77,20 @@ const Hero = () => {
             </defs>
 
             <foreignObject
-              x="0"
-              y="0"
-              width="100%"
-              height="100%"
+              x="2"
+              y="2"
+              width="1376"
+              height="336"
             >
               <div
-                className="w-full h-full flex items-center justify-center bg-transparent"
+                className="w-full h-full flex items-center justify-center"
                 style={{
-                  WebkitMaskImage: "url(#crispy-text-mask)",
-                  maskImage: "url(#crispy-text-mask)",
+                  background: "transparent",
+                  transform: "translateZ(0)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  WebkitMaskImage: "url(#crispy-text-mask-menu)",
+                  maskImage: "url(#crispy-text-mask-menu)",
                   WebkitMaskRepeat: "no-repeat",
                   maskRepeat: "no-repeat",
                 }}
@@ -89,7 +102,13 @@ const Hero = () => {
                   loop
                   muted
                   playsInline
-                  className="w-full h-full object-cover scale-105"
+                  preload="auto"
+                  className="w-full h-full object-cover scale-110 brightness-110"
+                  style={{
+                    transform: "translateZ(0) scale(1.1)",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
                 />
               </div>
             </foreignObject>
@@ -97,22 +116,12 @@ const Hero = () => {
         </div>
 
         {/* Subtitles */}
-        <div className="mt-2 sm:mt-0 text-center">
+        <div className="mt-4 sm:mt-0 text-center">
           <p className="text-base sm:text-xl md:text-2xl font-normal tracking-wide text-[#F2F2F2] leading-[1.2] max-w-3xl">
             From signature favorites to bold new flavors, explore everything on the <span className="text-[#CC1518] font-medium">CFOCO</span> menu and find your next craving.
           </p>
         </div>
       </div>
-
-      {/* Scroll Down Indicator */}
-      {/* <div className="pt-8 pb-2 flex flex-col items-center justify-center gap-1.5 opacity-50 hover:opacity-90 transition-opacity duration-300">
-        <span className="text-xs sm:text-sm tracking-wider text-neutral-400 font-light">
-          Scroll To Continue
-        </span>
-        <div className="w-3.5 h-3.5 rounded-full border border-neutral-400/50 flex items-center justify-center">
-          <div className="w-1 h-1 rounded-full bg-neutral-400 animate-pulse" />
-        </div>
-      </div> */}
     </section>
   );
 };

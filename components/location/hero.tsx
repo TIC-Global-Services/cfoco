@@ -4,148 +4,109 @@ import React, { useEffect, useRef } from "react";
 import { matter } from "@/font/fonts";
 
 const Hero = () => {
-  const videoRefDesktop = useRef<HTMLVideoElement>(null);
-  const videoRefMobile = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const maskRef = useRef<SVGMaskElement>(null);
 
   useEffect(() => {
-    [videoRefDesktop, videoRefMobile].forEach((ref) => {
-      if (ref.current) {
-        ref.current.play().catch(() => {
-          // Autoplay policy fallback handling
-        });
-      }
-    });
+    if (maskRef.current) {
+      maskRef.current.setAttribute("mask-type", "alpha");
+    }
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Autoplay policy fallback handling
+      });
+    }
   }, []);
 
   return (
     <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
       <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-44">
-        {/* Large Headline with Video Inside Text - Desktop */}
-        <div className="relative w-full hidden md:block">
+        {/* Large Headline with Video Inside Text */}
+        <div className="relative w-full flex items-center justify-center">
           <svg
-            viewBox="0 0 2200 400"
-            className="w-full h-auto block"
+            viewBox="0 0 1380 300"
+            className="w-full h-auto overflow-visible border-none outline-none"
             xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
           >
             <defs>
-              <clipPath id="crispy-text-clip-desktop">
+              <mask
+                ref={maskRef}
+                id="crispy-text-mask-location"
+                maskUnits="userSpaceOnUse"
+                x="-100"
+                y="-100"
+                width="1580"
+                height="540"
+              >
                 <text
-                  x="1100"
-                  y="140"
+                  x="50%"
+                  y="34%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
-                  fontSize="150"
-                  letterSpacing="-4"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
+                  fontSize="130"
+                  letterSpacing="-3%"
                 >
                   Five Kitchens.
                 </text>
 
                 <text
-                  x="1100"
-                  y="280"
+                  x="50%"
+                  y="68%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
-                  fontSize="150"
-                  letterSpacing="-4"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
+                  fontSize="95"
+                  letterSpacing="-3%"
                 >
                   One Standard. Find Yours.
                 </text>
-              </clipPath>
+              </mask>
             </defs>
 
             <foreignObject
-              x="0"
-              y="0"
-              width="2200"
-              height="400"
-              clipPath="url(#crispy-text-clip-desktop)"
+              x="2"
+              y="2"
+              width="1376"
+              height="336"
             >
-              <div className="w-full h-full">
+              <div
+                className="w-full h-full flex items-center justify-center"
+                style={{
+                  background: "transparent",
+                  transform: "translateZ(0)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  WebkitMaskImage: "url(#crispy-text-mask-location)",
+                  maskImage: "url(#crispy-text-mask-location)",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                }}
+              >
                 <video
-                  ref={videoRefDesktop}
+                  ref={videoRef}
                   src="/bg_about_video.mp4"
                   autoPlay
                   loop
                   muted
                   playsInline
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </foreignObject>
-          </svg>
-        </div>
-
-        {/* Large Headline with Video Inside Text - Mobile */}
-        <div className="relative w-full max-w-sm sm:max-w-md md:hidden">
-          <svg
-            viewBox="0 0 1000 580"
-            className="w-full h-auto block"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <clipPath id="crispy-text-clip-mobile">
-                <text
-                  x="500"
-                  y="160"
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
-                  fontSize="150"
-                  letterSpacing="-3"
-                >
-                  Five Kitchens.
-                </text>
-
-                <text
-                  x="500"
-                  y="300"
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
-                  fontSize="150"
-                  letterSpacing="-3"
-                >
-                  One Standard.
-                </text>
-
-                <text
-                  x="500"
-                  y="460"
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontFamily="var(--font-matter), sans-serif"
-                  fontWeight="700"
-                  fontSize="150"
-                  letterSpacing="-3"
-                >
-                  Find Yours.
-                </text>
-              </clipPath>
-            </defs>
-
-            <foreignObject
-              x="0"
-              y="0"
-              width="1000"
-              height="580"
-              clipPath="url(#crispy-text-clip-mobile)"
-            >
-              <div className="w-full h-full">
-                <video
-                  ref={videoRefMobile}
-                  src="/bg_about_video.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover"
+                  preload="auto"
+                  className="w-full h-full object-cover scale-110 brightness-110"
+                  style={{
+                    transform: "translateZ(0) scale(1.1)",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
                 />
               </div>
             </foreignObject>
@@ -153,7 +114,7 @@ const Hero = () => {
         </div>
 
         {/* Subtitles */}
-        <div className="mt-4 md:mt-2 text-center px-4">
+        <div className="mt-4 md:mt-0 text-center px-4">
           <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3]">
             Across <span className="text-[#CC1518] font-medium">Bordeaux</span> And Beyond
           </p>
