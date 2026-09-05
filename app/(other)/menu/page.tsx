@@ -11,10 +11,7 @@ export const metadata = {
 
 const MenuPage = () => {
   return (
-    <main
-      className="relative z-10 w-full min-h-screen -mt-24 pt-24 bg-cover bg-bottom bg-no-repeat bg-fixed flex-1 flex flex-col"
-      style={{ backgroundImage: "url('/menu_bgimage.png')" }}
-    >
+    <main>
       <Reveal>
         <Hero />
       </Reveal>

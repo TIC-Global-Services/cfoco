@@ -137,26 +137,42 @@ const Obsession = () => {
         }
 
         /* Desktop Node 2 Outer Charging Glow (2014 Center at 50%) */
-        @keyframes node2Charging {
-          0%, 40% {
-            transform: scale(1);
-            opacity: 0.95;
-            border-color: #00d4ff;
-            box-shadow: 0 0 8px 2px #ffffff, 0 0 18px 5px #00d4ff, 0 0 32px 8px rgba(2,136,255,0.9);
-          }
-          50% {
-            transform: scale(1.08);
-            opacity: 1;
-            border-color: #ffffff;
-            box-shadow: 0 0 12px 4px #ffffff, 0 0 26px 8px #00d4ff, 0 0 50px 14px rgba(2,136,255,1);
-          }
-          60%, 100% {
-            transform: scale(1);
-            opacity: 0.95;
-            border-color: #00d4ff;
-            box-shadow: 0 0 8px 2px #ffffff, 0 0 18px 5px #00d4ff, 0 0 32px 8px rgba(2,136,255,0.9);
-          }
-        }
+
+@keyframes node2Charging {
+  0%, 40% {
+    transform: scale(1);
+    opacity: 0.95;
+    border-color: #ffffff;
+    box-shadow:
+      0 0 2px 1px #ffffff,
+      0 0 5px 2px #00d4ff,
+      0 0 10px 3px rgba(2,136,255,0.8),
+      inset 0 0 4px 1px rgba(0,0,0,0.5),
+      inset 0 0 3px 1px rgba(255,255,255,0.4);
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+    border-color: #ffffff;
+    box-shadow:
+      0 0 3px 1px #ffffff,
+      0 0 8px 3px #ffffff,
+      0 0 16px 6px rgba(2,136,255,1),
+      inset 0 0 5px 1px rgba(0,0,0,0.45),
+      inset 0 0 4px 1px rgba(255,255,255,0.5);
+  }
+  60%, 100% {
+    transform: scale(1);
+    opacity: 0.95;
+    border-color: #ffffff;
+    box-shadow:
+      0 0 2px 1px #ffffff,
+      0 0 5px 2px #00d4ff,
+      0 0 10px 3px rgba(2,136,255,0.8),
+      inset 0 0 4px 1px rgba(0,0,0,0.5),
+      inset 0 0 3px 1px rgba(255,255,255,0.4);
+  }
+}
 
         /* Desktop Node 3 Flare (2018 at 83.33%) - Glows blue cyan by default, extra surge when dot meets */
         @keyframes node3Flare {
@@ -246,9 +262,9 @@ const Obsession = () => {
             className="w-full h-full"
             style={{
               background:
-                "linear-gradient(90deg, transparent 0%, rgba(2,136,255,0.4) 10%, rgba(2,136,255,0.9) 30%, rgba(0,212,255,1) 50%, rgba(2,136,255,0.9) 70%, rgba(2,136,255,0.4) 90%, transparent 100%)",
-              boxShadow:
-                "0 0 10px 1px rgba(2,136,255,0.6), 0 0 25px 4px rgba(2,136,255,0.3)",
+                "linear-gradient(90deg, transparent 0%, rgba(2,136,255,0.4) 5%, rgba(2,136,255,0.9) 25%, rgba(0,212,255,1) 50%, rgba(2,136,255,0.9) 75%, rgba(2,136,255,0.4) 95%, transparent 100%)",
+              // boxShadow:
+              //   "0 0 10px 1px rgba(2,136,255,0.6), 0 0 25px 4px rgba(2,136,255,0.3)",
             }}
           />
 
@@ -268,10 +284,10 @@ const Obsession = () => {
               }}
             />
             <div
-              className="w-3.5 h-3.5 rounded-full bg-white relative z-10"
+              className="w-3 h-3 rounded-full bg-white relative z-10"
               style={{
                 boxShadow:
-                  "0 0 8px 3px #ffffff, 0 0 18px 6px #00d4ff, 0 0 32px 10px rgba(2,136,255,0.9)",
+                  "0 0 8px 2px #ffffff, 0 0 18px 4px #00d4ff, 0 0 22px 6px rgba(2,136,255,0.6)",
               }}
             />
           </div>
@@ -307,26 +323,49 @@ const Obsession = () => {
                   <div
                     className="absolute w-[1px] h-[1px] rounded-full blur-[5px] pointer-events-none"
                     style={{
-                      background: isCenter
-                        ? "rgba(0, 212, 255, 0.8)"
-                        : "rgba(2, 136, 255, 0.6)",
-                      animation: bloomAnimation,
+                      background:
+                        "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 8%, rgba(255,255,255,0.85) 20%, rgba(120,220,255,0.9) 35%, rgba(0,212,255,1) 50%, rgba(120,220,255,0.9) 65%, rgba(255,255,255,0.85) 80%, rgba(255,255,255,0.5) 92%, transparent 100%)",
                     }}
                   />
 
                   {/* Outer Glowing Charging Ring (Center Node Only) */}
                   {isCenter && (
                     <div
-                      className="absolute w-[90px] h-[90px] sm:w-[98px] sm:h-[98px] rounded-full border-4 border-white pointer-events-none z-0"
+                      className="absolute w-[100px] h-[100px] sm:w-[108px] sm:h-[108px] pointer-events-none z-0"
                       style={{
-                        boxShadow:
-                          "0 0 8px 2px #ffffff, 0 0 18px 10px rgba(2,136,255,0.9), 0 0 32px 8px rgba(2,136,255,0.9)",
-                        animation:
-                          "node2Charging 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+                        animation: "node2Pulse 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite",
                       }}
-                    />
+                    >
+                      <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+                        <defs>
+                          <filter id="node2RingGlow" x="-60%" y="-60%" width="220%" height="220%">
+                            <feGaussianBlur stdDeviation="3.5" result="blur" />
+                            <feMerge>
+                              <feMergeNode in="blur" />
+                              <feMergeNode in="blur" />
+                              <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                          </filter>
+                        </defs>
+                        {/* Soft outer cyan halo */}
+                        <circle
+                          cx="50" cy="50" r="41"
+                          fill="none"
+                          stroke="#00d4ff"
+                          strokeWidth="4"
+                          filter="url(#node2RingGlow)"
+                        />
+                        {/* Crisp bright core ring on top, no blur */}
+                        <circle
+                          cx="50" cy="50" r="41"
+                          fill="none"
+                          stroke="#ffffff"
+                          strokeWidth="1.5"
+                          opacity="0.9"
+                        />
+                      </svg>
+                    </div>
                   )}
-
                   {/* Circular Badge Container */}
                   <div
                     className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] rounded-full 
@@ -355,7 +394,7 @@ const Obsession = () => {
                     style={{
                       color: "transparent",
                       WebkitTextStroke: "2px #E52528",
-                      filter: "drop-shadow(0 0 6px rgba(229, 37, 40, 0.4))",
+                      // filter: "drop-shadow(0 0 6px rgba(229, 37, 40, 0.4))",
                     }}
                   >
                     {item.year}

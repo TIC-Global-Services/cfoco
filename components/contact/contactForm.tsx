@@ -9,19 +9,19 @@ const ContactForm = () => {
     <section className="relative w-full px-4 sm:px-6 lg:px-[5%] pb-20 pt-10">
       <style>{`
         .neon-line-glow-1 {
-          stroke-dasharray: 22 78;
+          stroke-dasharray: 100 10;
           animation: moveNeonBorder 3.5s linear infinite;
           filter: drop-shadow(0 0 6px #0288FF)
   drop-shadow(0 0 14px rgba(2, 136, 255, 0.9))
   drop-shadow(0 0 22px rgba(2, 136, 255, 0.6));
         }
         .neon-line-core-1 {
-          stroke-dasharray: 22 78;
+          stroke-dasharray: 100 10;
           animation: moveNeonBorder 3.5s linear infinite;
           filter: drop-shadow(0 0 2px #ffffff);
         }
         .neon-line-glow-2 {
-          stroke-dasharray: 22 78;
+          stroke-dasharray: 100 10;
           animation: moveNeonBorder 3.5s linear infinite;
           animation-delay: -1.75s;
           filter: drop-shadow(0 0 6px #0288FF)
@@ -29,7 +29,7 @@ const ContactForm = () => {
   drop-shadow(0 0 22px rgba(2, 136, 255, 0.6));
         }
         .neon-line-core-2 {
-          stroke-dasharray: 22 78;
+          stroke-dasharray: 100 10;
           animation: moveNeonBorder 3.5s linear infinite;
           animation-delay: -1.75s;
           filter: drop-shadow(0 0 2px #ffffff);
@@ -56,9 +56,9 @@ const ContactForm = () => {
         }
       `}</style>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 justify-center items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 justify-center items-stretch">
         {/* Left Side: Contact Information Card with Moving Neon Border */}
-        <div className="contact-info-card mb-20 lg:col-span-2 bg-transparent border border-[#1e3a8a]/40 rounded-[20px] p-6 sm:px-10 flex flex-col shadow-[0_0_30px_rgba(2,136,255,0.15)] py-20 relative overflow-hidden transition-shadow duration-300">
+        <div className="contact-info-card lg:col-span-2 bg-transparent border border-[#1e3a8a]/40 rounded-[20px] p-6 sm:px-10 flex flex-col shadow-[0_0_30px_rgba(2,136,255,0.15)] py-20 relative overflow-hidden transition-shadow duration-300 h-full">
           {/* Moving Neon Border SVG */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none rounded-[20px] overflow-visible"
@@ -196,12 +196,12 @@ const ContactForm = () => {
               </span>
             </div>
           </div>
-         
+
         </div>
 
         {/* Right Side: Form Fields */}
-        <div className="lg:col-span-3 flex flex-col py-4 sm:py-6 lg:pl-4">
-          <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+        <div className="lg:col-span-3 flex flex-col py-4 sm:py-0 lg:pl-">
+          <form id="contact-form" className="flex flex-col gap-6 h-full" onSubmit={(e) => e.preventDefault()}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
               {/* Name Field */}
               <div className="flex flex-col gap-2">
@@ -254,29 +254,29 @@ const ContactForm = () => {
             </div>
 
             {/* Message Field */}
-            <div className="flex flex-col gap-2 mt-2">
+            <div className="flex flex-col gap-2 mt-2 flex-1">
               <label className="text-white font-medium text-sm ml-2">your message</label>
               <textarea
                 placeholder="tell us about your enquiry"
-                rows={7}
-                className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-xl p-5 text-white text-sm placeholder-white/50 focus:outline-none resize-none"
+                className="form-glow-input w-full h-full bg-transparent border border-[#1e3a8a] rounded-xl p-5 text-white text-sm placeholder-white/50 focus:outline-none resize-none"
               ></textarea>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-end mt-4">
-              <button
-                type="submit"
-                className="group flex items-center gap-3 bg-[#FFFFFF99] hover:bg-[#d4d4d4] text-white pl-7 pr-[4px] py-1 rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]"
-              >
-                <span className="font-semibold text-base">Submit</span>
-                <div className="bg-[#232E45] group-hover:bg-[#232E45] p-2.5 rounded-full flex items-center justify-center transition-colors">
-                  <ArrowUpRight className="w-4 h-4 text-white" strokeWidth={1.5} />
-                </div>
-              </button>
             </div>
           </form>
         </div>
+      </div>
+
+      {/* Submit Button — outside grid so it doesn't affect card height */}
+      <div className="flex justify-end mt-6">
+        <button
+          type="submit"
+          form="contact-form"
+          className="group flex items-center gap-3 bg-[#FFFFFF99] hover:bg-[#d4d4d4] text-white pl-7 pr-[4px] py-1 rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]"
+        >
+          <span className="font-semibold text-base">Submit</span>
+          <div className="bg-[#232E45] group-hover:bg-[#232E45] p-2.5 rounded-full flex items-center justify-center transition-colors">
+            <ArrowUpRight className="w-4 h-4 text-white" strokeWidth={1.5} />
+          </div>
+        </button>
       </div>
     </section>
   );
