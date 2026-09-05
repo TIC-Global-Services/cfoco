@@ -5,8 +5,12 @@ import { matter } from "@/font/fonts";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const maskRef = useRef<SVGMaskElement>(null);
 
   useEffect(() => {
+    if (maskRef.current) {
+      maskRef.current.setAttribute("mask-type", "alpha");
+    }
     if (videoRef.current) {
       videoRef.current.play().catch(() => {
         // Autoplay policy fallback handling
@@ -29,8 +33,7 @@ const Hero = () => {
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              <mask id="crispy-text-mask" x="0" y="0" width="100%" height="100%">
-                <rect width="100%" height="100%" fill="black" />
+              <mask ref={maskRef} id="crispy-text-mask" x="0" y="0" width="100%" height="100%">
                 <text
                   x="50%"
                   y="140"
@@ -69,9 +72,16 @@ const Hero = () => {
               y="0"
               width="100%"
               height="100%"
-              mask="url(#crispy-text-mask)"
             >
-              <div className="w-full h-full flex items-center justify-center bg-transparent">
+              <div
+                className="w-full h-full flex items-center justify-center bg-transparent"
+                style={{
+                  WebkitMaskImage: "url(#crispy-text-mask)",
+                  maskImage: "url(#crispy-text-mask)",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                }}
+              >
                 <video
                   ref={videoRef}
                   src="/bg_about_video.mp4"

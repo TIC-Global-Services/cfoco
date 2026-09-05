@@ -19,7 +19,7 @@ const page = () => {
       <Reveal>
         <NothingFrozen />
       </Reveal>
-      <WhatWeRefuse />
+      {/* <WhatWeRefuse /> */}
       <Reveal>
         <Showreel />
       </Reveal>

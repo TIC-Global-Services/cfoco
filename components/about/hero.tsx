@@ -8,6 +8,7 @@ import { matter } from "@/font/fonts";
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const maskRef = useRef<SVGMaskElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -41,6 +42,9 @@ const Hero = () => {
   const descY = useTransform(smoothProgress, [0.42, 0.62], [25, 0]);
 
   useEffect(() => {
+    if (maskRef.current) {
+      maskRef.current.setAttribute("mask-type", "alpha");
+    }
     if (videoRef.current) {
       videoRef.current.play().catch(() => {
         // Autoplay policy fallback handling
@@ -81,6 +85,7 @@ const Hero = () => {
               >
                 <defs>
                   <mask
+                    ref={maskRef}
                     id="crispy-text-mask-hero"
                     maskUnits="userSpaceOnUse"
                     x="-100"
@@ -88,15 +93,6 @@ const Hero = () => {
                     width="1580"
                     height="430"
                   >
-                    {/* Black = hidden */}
-                    <rect
-                      x="-100"
-                      y="-100"
-                      width="1580"
-                      height="430"
-                      fill="black"
-                    />
-
                     {/* White text = visible */}
                     <text
                       x="50%"
@@ -122,7 +118,6 @@ const Hero = () => {
                   y="2"
                   width="1376"
                   height="226"
-                  mask="url(#crispy-text-mask-hero)"
                 >
                   <div
                     className="w-full h-full flex items-center justify-center"
@@ -131,6 +126,10 @@ const Hero = () => {
                       transform: "translateZ(0)",
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
+                      WebkitMaskImage: "url(#crispy-text-mask-hero)",
+                      maskImage: "url(#crispy-text-mask-hero)",
+                      WebkitMaskRepeat: "no-repeat",
+                      maskRepeat: "no-repeat",
                     }}
                   >
                     <video
@@ -225,7 +224,7 @@ const Hero = () => {
         </div>
 
         {/* Bottom-Right Story Paragraphs */}
-        <div className="w-full mt-auto z-20 flex justify-end items-end">
+        <div className="w-full mt-[30%] z-20 flex justify-end items-center">
           <motion.div
             style={{ opacity: textOpacity, y: descY }}
             className="max-w-xl md:max-w-4xl text-center sm:text-right space-y-3"

@@ -1,286 +1,46 @@
 "use client";
 
-import React, { useRef, useEffect, useCallback } from 'react';
-import Image from 'next/image';
-import { Phone, Mail, MapPin, ArrowUpRight, ChevronDown } from 'lucide-react';
-import { gsap } from 'gsap';
-
-const DEFAULT_GLOW_COLOR = '204, 21, 24';
-const DEFAULT_PARTICLE_COUNT = 12;
-
-const createParticleElement = (x: number, y: number, color: string = DEFAULT_GLOW_COLOR): HTMLDivElement => {
-  const el = document.createElement('div');
-  el.className = 'particle';
-  el.style.cssText = `
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: rgba(${color}, 1);
-    box-shadow: 0 0 6px rgba(${color}, 0.8), 0 0 12px rgba(${color}, 0.4);
-    pointer-events: none;
-    z-index: 5;
-    left: ${x}px;
-    top: ${y}px;
-  `;
-  return el;
-};
+import React from "react";
+import Image from "next/image";
+import { Phone, Mail, MapPin, ArrowUpRight, ChevronDown } from "lucide-react";
 
 const ContactForm = () => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const particlesRef = useRef<HTMLDivElement[]>([]);
-  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const isHoveredRef = useRef(false);
-  const memoizedParticles = useRef<HTMLDivElement[]>([]);
-  const particlesInitialized = useRef(false);
-  const magnetismAnimationRef = useRef<gsap.core.Tween | null>(null);
-
-  const initializeParticles = useCallback(() => {
-    if (particlesInitialized.current || !cardRef.current) return;
-
-    const { width, height } = cardRef.current.getBoundingClientRect();
-    memoizedParticles.current = Array.from({ length: DEFAULT_PARTICLE_COUNT }, () =>
-      createParticleElement(Math.random() * width, Math.random() * height, DEFAULT_GLOW_COLOR)
-    );
-    particlesInitialized.current = true;
-  }, []);
-
-  const clearAllParticles = useCallback(() => {
-    timeoutsRef.current.forEach(clearTimeout);
-    timeoutsRef.current = [];
-    magnetismAnimationRef.current?.kill();
-
-    particlesRef.current.forEach((particle) => {
-      gsap.to(particle, {
-        scale: 0,
-        opacity: 0,
-        duration: 0.3,
-        ease: 'back.in(1.7)',
-        onComplete: () => {
-          particle.parentNode?.removeChild(particle);
-        },
-      });
-    });
-    particlesRef.current = [];
-  }, []);
-
-  const animateParticles = useCallback(() => {
-    if (!cardRef.current || !isHoveredRef.current) return;
-
-    if (!particlesInitialized.current) {
-      initializeParticles();
-    }
-
-    memoizedParticles.current.forEach((particle, index) => {
-      const timeoutId = setTimeout(() => {
-        if (!isHoveredRef.current || !cardRef.current) return;
-
-        const clone = particle.cloneNode(true) as HTMLDivElement;
-        cardRef.current.appendChild(clone);
-        particlesRef.current.push(clone);
-
-        gsap.fromTo(
-          clone,
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)' }
-        );
-
-        gsap.to(clone, {
-          x: (Math.random() - 0.5) * 100,
-          y: (Math.random() - 0.5) * 100,
-          rotation: Math.random() * 360,
-          duration: 2 + Math.random() * 2,
-          ease: 'none',
-          repeat: -1,
-          yoyo: true,
-        });
-
-        gsap.to(clone, {
-          opacity: 0.3,
-          duration: 1.5,
-          ease: 'power2.inOut',
-          repeat: -1,
-          yoyo: true,
-        });
-      }, index * 100);
-
-      timeoutsRef.current.push(timeoutId);
-    });
-  }, [initializeParticles]);
-
-  useEffect(() => {
-    const element = cardRef.current;
-    if (!element) return;
-
-    const handleMouseEnter = () => {
-      isHoveredRef.current = true;
-      animateParticles();
-
-      gsap.to(element, {
-        rotateX: 5,
-        rotateY: 5,
-        duration: 0.3,
-        ease: 'power2.out',
-        transformPerspective: 1000,
-      });
-    };
-
-    const handleMouseLeave = () => {
-      isHoveredRef.current = false;
-      clearAllParticles();
-
-      element.style.setProperty('--glow-intensity', '0');
-
-      gsap.to(element, {
-        rotateX: 0,
-        rotateY: 0,
-        duration: 0.3,
-        ease: 'power2.out',
-      });
-
-      gsap.to(element, {
-        x: 0,
-        y: 0,
-        duration: 0.3,
-        ease: 'power2.out',
-      });
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = element.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      const relativeX = (x / rect.width) * 100;
-      const relativeY = (y / rect.height) * 100;
-
-      element.style.setProperty('--glow-x', `${relativeX}%`);
-      element.style.setProperty('--glow-y', `${relativeY}%`);
-      element.style.setProperty('--glow-intensity', '1');
-
-      const rotateX = ((y - centerY) / centerY) * -8;
-      const rotateY = ((x - centerX) / centerX) * 8;
-
-      gsap.to(element, {
-        rotateX,
-        rotateY,
-        duration: 0.1,
-        ease: 'power2.out',
-        transformPerspective: 1000,
-      });
-
-      const magnetX = (x - centerX) * 0.04;
-      const magnetY = (y - centerY) * 0.04;
-
-      magnetismAnimationRef.current = gsap.to(element, {
-        x: magnetX,
-        y: magnetY,
-        duration: 0.3,
-        ease: 'power2.out',
-      });
-    };
-
-    const handleClick = (e: MouseEvent) => {
-      const rect = element.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const maxDistance = Math.max(
-        Math.hypot(x, y),
-        Math.hypot(x - rect.width, y),
-        Math.hypot(x, y - rect.height),
-        Math.hypot(x - rect.width, y - rect.height)
-      );
-
-      const ripple = document.createElement('div');
-      ripple.style.cssText = `
-        position: absolute;
-        width: ${maxDistance * 2}px;
-        height: ${maxDistance * 2}px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(${DEFAULT_GLOW_COLOR}, 0.35) 0%, rgba(${DEFAULT_GLOW_COLOR}, 0.15) 30%, transparent 70%);
-        left: ${x - maxDistance}px;
-        top: ${y - maxDistance}px;
-        pointer-events: none;
-        z-index: 20;
-      `;
-
-      element.appendChild(ripple);
-
-      gsap.fromTo(
-        ripple,
-        { scale: 0, opacity: 1 },
-        {
-          scale: 1,
-          opacity: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          onComplete: () => ripple.remove(),
-        }
-      );
-    };
-
-    element.addEventListener('mouseenter', handleMouseEnter);
-    element.addEventListener('mouseleave', handleMouseLeave);
-    element.addEventListener('mousemove', handleMouseMove);
-    element.addEventListener('click', handleClick);
-
-    return () => {
-      isHoveredRef.current = false;
-      element.removeEventListener('mouseenter', handleMouseEnter);
-      element.removeEventListener('mouseleave', handleMouseLeave);
-      element.removeEventListener('mousemove', handleMouseMove);
-      element.removeEventListener('click', handleClick);
-      clearAllParticles();
-    };
-  }, [animateParticles, clearAllParticles]);
-
   return (
     <section className="relative w-full px-4 sm:px-6 lg:px-[5%] pb-20 pt-10">
       <style>{`
-        .contact-info-card {
-          --glow-x: 50%;
-          --glow-y: 50%;
-          --glow-intensity: 0;
-          --glow-radius: 250px;
-          --glow-color: ${DEFAULT_GLOW_COLOR};
+        .neon-line-glow-1 {
+          stroke-dasharray: 22 78;
+          animation: moveNeonBorder 3.5s linear infinite;
+          filter: drop-shadow(0 0 6px #0288FF)
+  drop-shadow(0 0 14px rgba(2, 136, 255, 0.9))
+  drop-shadow(0 0 22px rgba(2, 136, 255, 0.6));
         }
-        .contact-info-card::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          padding: 2px;
-          background: radial-gradient(
-            var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-            rgba(var(--glow-color), calc(var(--glow-intensity) * 0.8)) 0%,
-            rgba(var(--glow-color), calc(var(--glow-intensity) * 0.3)) 30%,
-            transparent 65%
-          );
-          border-radius: inherit;
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask-composite: exclude;
-          pointer-events: none;
-          opacity: 1;
-          transition: opacity 0.3s ease;
-          z-index: 1;
+        .neon-line-core-1 {
+          stroke-dasharray: 22 78;
+          animation: moveNeonBorder 3.5s linear infinite;
+          filter: drop-shadow(0 0 2px #ffffff);
         }
-        .contact-info-card:hover {
-          box-shadow: 0 8px 30px rgba(204, 21, 24, 0.2), 0 0 35px rgba(204, 21, 24, 0.1);
+        .neon-line-glow-2 {
+          stroke-dasharray: 22 78;
+          animation: moveNeonBorder 3.5s linear infinite;
+          animation-delay: -1.75s;
+          filter: drop-shadow(0 0 6px #0288FF)
+  drop-shadow(0 0 14px rgba(2, 136, 255, 0.9))
+  drop-shadow(0 0 22px rgba(2, 136, 255, 0.6));
         }
-        .particle::before {
-          content: '';
-          position: absolute;
-          top: -2px;
-          left: -2px;
-          right: -2px;
-          bottom: -2px;
-          background: rgba(${DEFAULT_GLOW_COLOR}, 0.25);
-          border-radius: 50%;
-          z-index: -1;
+        .neon-line-core-2 {
+          stroke-dasharray: 22 78;
+          animation: moveNeonBorder 3.5s linear infinite;
+          animation-delay: -1.75s;
+          filter: drop-shadow(0 0 2px #ffffff);
+        }
+        @keyframes moveNeonBorder {
+          0% {
+            stroke-dashoffset: 100;
+          }
+          100% {
+            stroke-dashoffset: 0;
+          }
         }
         .form-glow-input {
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -297,18 +57,113 @@ const ContactForm = () => {
       `}</style>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 justify-center items-center">
-        {/* Left Side: Contact Information Card */}
-        <div
-          ref={cardRef}
-          className="contact-info-card mb-20 lg:col-span-2 bg-[#111113] border border-[#1e3a8a] rounded-[2rem] p-6 sm:px-10 flex flex-col shadow-2xl h-fit py-16 relative overflow-hidden transition-[box-shadow,border-color] duration-300 will-change-transform"
-        >
+        {/* Left Side: Contact Information Card with Moving Neon Border */}
+        <div className="contact-info-card mb-20 lg:col-span-2 bg-transparent border border-[#1e3a8a]/40 rounded-[20px] p-6 sm:px-10 flex flex-col shadow-[0_0_30px_rgba(2,136,255,0.15)] py-20 relative overflow-hidden transition-shadow duration-300">
+          {/* Moving Neon Border SVG */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none rounded-[20px] overflow-visible"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="neon-border-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#0288FF" stopOpacity="0.2" />
+                <stop offset="35%" stopColor="#0288FF" stopOpacity="1" />
+                <stop offset="65%" stopColor="#FFFFFF" stopOpacity="1" />
+                <stop offset="100%" stopColor="#0288FF" stopOpacity="0.3" />
+              </linearGradient>
+            </defs>
+
+            {/* Static Base Track */}
+            <rect
+              x="1"
+              y="1"
+              width="calc(100% - 2px)"
+              height="calc(100% - 2px)"
+              rx="20"
+              ry="20"
+              fill="none"
+              stroke="#1e3a8a"
+              strokeWidth="1.5"
+              strokeOpacity="0.5"
+              vectorEffect="non-scaling-stroke"
+            />
+
+            {/* Neon Glow Outer Line 1 */}
+            <rect
+              x="1"
+              y="1"
+              width="calc(100% - 2px)"
+              height="calc(100% - 2px)"
+              rx="20"
+              ry="20"
+              fill="none"
+              stroke="url(#neon-border-grad)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              pathLength="100"
+              vectorEffect="non-scaling-stroke"
+              className="neon-line-glow-1"
+            />
+
+            {/* Sharp Core Neon Line 1 */}
+            <rect
+              x="1"
+              y="1"
+              width="calc(100% - 2px)"
+              height="calc(100% - 2px)"
+              rx="20"
+              ry="20"
+              fill="none"
+              stroke="url(#neon-border-grad)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              pathLength="100"
+              vectorEffect="non-scaling-stroke"
+              className="neon-line-core-1"
+            />
+
+            {/* Neon Glow Outer Line 2 */}
+            <rect
+              x="1"
+              y="1"
+              width="calc(100% - 2px)"
+              height="calc(100% - 2px)"
+              rx="20"
+              ry="20"
+              fill="none"
+              stroke="url(#neon-border-grad)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              pathLength="100"
+              vectorEffect="non-scaling-stroke"
+              className="neon-line-glow-2"
+            />
+
+            {/* Sharp Core Neon Line 2 */}
+            <rect
+              x="1"
+              y="1"
+              width="calc(100% - 2px)"
+              height="calc(100% - 2px)"
+              rx="20"
+              ry="20"
+              fill="none"
+              stroke="url(#neon-border-grad)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              pathLength="100"
+              vectorEffect="non-scaling-stroke"
+              className="neon-line-core-2"
+            />
+          </svg>
+
           <div className="mb-10 relative z-10">
             <Image
               src="/cfc_logo.svg"
               alt="CFC Logo"
               width={140}
-              height={45}
-              className="w-auto h-8 sm:h-10 object-contain"
+              height={735}
+              className="w-auto h-8 sm:h-10 object-cover"
             />
           </div>
 
@@ -341,6 +196,7 @@ const ContactForm = () => {
               </span>
             </div>
           </div>
+         
         </div>
 
         {/* Right Side: Form Fields */}
@@ -382,10 +238,11 @@ const ContactForm = () => {
                 <label className="text-white font-medium text-sm ml-2">select subject</label>
                 <div className="relative w-full">
                   <select
+                    defaultValue="general"
                     className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm focus:outline-none appearance-none cursor-pointer"
                   >
                     <option value="" disabled className="bg-[#111113] text-white">General enquiry</option>
-                    <option value="general" selected className="bg-[#111113] text-white">General enquiry</option>
+                    <option value="general" className="bg-[#111113] text-white">General enquiry</option>
                     <option value="support" className="bg-[#111113] text-white">Support</option>
                     <option value="partnership" className="bg-[#111113] text-white">Partnership</option>
                   </select>

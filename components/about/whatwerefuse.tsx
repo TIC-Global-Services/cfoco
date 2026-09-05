@@ -182,14 +182,12 @@ const PillarBadge: React.FC<PillarBadgeProps> = ({
       <div
         className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center border transition-all duration-300 mb-2 sm:mb-2.5 ${
           isActive
-            ? "bg-[#1f1013] border-[#E52320] shadow-[0_0_20px_rgba(229,35,32,0.45)] scale-110"
+            ? "bg-[#1f1013] border-[#232d3f]  scale-110"
             : "bg-[#141a26]/80 border-[#232d3f] hover:border-white/30"
         }`}
       >
         <IconComponent
-          className={`w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 transition-colors duration-300 ${
-            isActive ? "text-[#E52320]" : "text-[#E5A823]"
-          }`}
+          className={`w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 transition-colors duration-300 text-[#E5A823]`}
         />
       </div>
 
@@ -295,12 +293,12 @@ const WhatWeRefuse = () => {
               />
             </div>
 
-            {/* Central Orbit Circle (Desktop) */}
+        
             <div className="w-1/3 relative flex items-center justify-center shrink-0">
-              <div className="relative w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] lg:w-[320px] lg:h-[320px] xl:w-[370px] xl:h-[370px] 2xl:w-[420px] 2xl:h-[420px] max-h-[38vh] max-w-[38vh] aspect-square flex items-center justify-center">
-                {/* Thin Orbit Perimeter Rings */}
+              <div className="relative w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] lg:w-[320px] lg:h-[320px] xl:w-[370px] xl:h-[370px] 2xl:w-[420px] 2xl:h-[420px] max-h-[40vh] max-w-[40vh] aspect-square flex items-center justify-center">
+               
                 <div className="absolute inset-0 rounded-full border-[1.5px] border-blue-400/30 shadow-[0_0_30px_rgba(56,189,248,0.18)] pointer-events-none" />
-                <div className="absolute -inset-3 rounded-full border border-blue-500/10 pointer-events-none" />
+                {/* <div className="absolute -inset-3 rounded-full border border-blue-500/10 pointer-events-none" /> */}
 
                 {/* Left Dot (Conviviality - 9 o'clock) */}
                 <OrbitDot

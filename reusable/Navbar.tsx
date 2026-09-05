@@ -12,9 +12,12 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
+   { label: "Our Story", href: "/about" },
+  { label: "Location", href: "/location" },
+  { label: "Menu", href: "/menu" },
   { label: "Franchise", href: "/franchise" },
   { label: "News & Blogs", href: "/news-blogs" },
-  { label: "Our Story", href: "/our-story" },
+ 
 ];
 
 interface NavbarProps {
@@ -69,7 +72,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
           <div className="hidden md:flex items-center">
             <Link
               href="/contact"
-              className="group flex items-center gap-3 pl-6 pr-1 py-1 rounded-full bg-[#FFFFFF99] hover:bg-[#8799a5]/45 border border-white/20 backdrop-blur-md text-white font-medium text-sm lg:text-base transition-all duration-300 shadow-sm hover:shadow-md hover:border-white/40"
+              className="group flex items-center gap-3 pl-6 pr-1 py-1 rounded-full bg-[#FFFFFF99] hover:bg-[#8799a5]/45 border border-white/20 backdrop-blur-md text-white font-medium text-sm lg:text-lg transition-all duration-300 shadow-sm hover:shadow-md hover:border-white/40"
             >
               <span className="tracking-tight font-semibold text-[#232E45] group-hover:text-white transition-colors">
                 Contact Us

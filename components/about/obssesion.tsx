@@ -53,6 +53,8 @@ const Obsession = () => {
     <section
       className={`relative w-full py-20 md:py-28 bg-transparent select-none overflow-hidden ${matter.className}`}
     >
+      {/* Background Ambient Radial Gradient Glow */}
+      <div className="absolute inset-0 pointer-events-none" />
       {/* Laser & Flare Synchronized Keyframe Animations */}
       <style>{`
         /* Desktop Laser Beacon Traveling Left to Right (16.6% -> 50% -> 83.3%) */
@@ -115,102 +117,105 @@ const Obsession = () => {
           }
         }
 
-        /* Desktop Node 1 Flare (2011 at 16.66%) - Scales up only when dot meets */
+        /* Desktop Node 1 Flare (2011 at 16.66%) - Glows blue cyan by default, extra surge when dot meets */
         @keyframes node1Flare {
           0%, 8% {
             transform: scale(1);
-            border-color: rgba(2, 136, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.2);
+            border-color: #00d4ff;
+            box-shadow: 0 0 12px 2px #00d4ff, 0 0 25px 5px rgba(2,136,255,0.7), inset 0 0 8px rgba(0,212,255,0.4);
           }
           16.66% {
-            transform: scale(1.22);
-            border-color: #00d4ff;
-            box-shadow: 0 0 28px 8px #00d4ff, 0 0 55px 16px rgba(2,136,255,0.9), inset 0 0 20px rgba(0,212,255,0.7);
+            transform: scale(1.18);
+            border-color: #ffffff;
+            box-shadow: 0 0 28px 7px #00d4ff, 0 0 55px 14px rgba(2,136,255,0.95), inset 0 0 16px rgba(0,212,255,0.8);
           }
           26%, 100% {
             transform: scale(1);
-            border-color: rgba(2, 136, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.2);
-          }
-        }
-
-        /* Desktop Node 2 Flare (2014 at 50%) - Scales up only when dot meets */
-        @keyframes node2Flare {
-          0%, 41% {
-            transform: scale(1);
-            border-color: rgba(2, 136, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.2);
-          }
-          50% {
-            transform: scale(1.22);
             border-color: #00d4ff;
-            box-shadow: 0 0 28px 8px #00d4ff, 0 0 55px 16px rgba(2,136,255,0.9), inset 0 0 20px rgba(0,212,255,0.7);
-          }
-          59%, 100% {
-            transform: scale(1);
-            border-color: rgba(2, 136, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.2);
+            box-shadow: 0 0 12px 2px #00d4ff, 0 0 25px 5px rgba(2,136,255,0.7), inset 0 0 8px rgba(0,212,255,0.4);
           }
         }
 
-        /* Desktop Node 3 Flare (2018 at 83.33%) - Scales up only when dot meets */
-        @keyframes node3Flare {
-          0%, 74% {
-            transform: scale(1);
-            border-color: rgba(2, 136, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.2);
-          }
-          83.33% {
-            transform: scale(1.22);
-            border-color: #00d4ff;
-            box-shadow: 0 0 28px 8px #00d4ff, 0 0 55px 16px rgba(2,136,255,0.9), inset 0 0 20px rgba(0,212,255,0.7);
-          }
-          92%, 100% {
-            transform: scale(1);
-            border-color: rgba(2, 136, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.2);
-          }
-        }
-
-        /* Mobile Node Flare (Pulsing at 50% when dot hits center) */
-        @keyframes mobileNodeFlare {
+        /* Desktop Node 2 Outer Charging Glow (2014 Center at 50%) */
+        @keyframes node2Charging {
           0%, 40% {
             transform: scale(1);
-            border-color: rgba(2, 136, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.2);
+            opacity: 0.95;
+            border-color: #00d4ff;
+            box-shadow: 0 0 8px 2px #ffffff, 0 0 18px 5px #00d4ff, 0 0 32px 8px rgba(2,136,255,0.9);
           }
           50% {
-            transform: scale(1.2);
-            border-color: #00d4ff;
-            box-shadow: 0 0 30px 8px #00d4ff, 0 0 60px 18px rgba(2,136,255,0.9), inset 0 0 22px rgba(0,212,255,0.7);
+            transform: scale(1.08);
+            opacity: 1;
+            border-color: #ffffff;
+            box-shadow: 0 0 12px 4px #ffffff, 0 0 26px 8px #00d4ff, 0 0 50px 14px rgba(2,136,255,1);
           }
           60%, 100% {
             transform: scale(1);
-            border-color: rgba(2, 136, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.2);
+            opacity: 0.95;
+            border-color: #00d4ff;
+            box-shadow: 0 0 8px 2px #ffffff, 0 0 18px 5px #00d4ff, 0 0 32px 8px rgba(2,136,255,0.9);
+          }
+        }
+
+        /* Desktop Node 3 Flare (2018 at 83.33%) - Glows blue cyan by default, extra surge when dot meets */
+        @keyframes node3Flare {
+          0%, 74% {
+            transform: scale(1);
+            border-color: #00d4ff;
+            box-shadow: 0 0 12px 2px #00d4ff, 0 0 25px 5px rgba(2,136,255,0.7), inset 0 0 8px rgba(0,212,255,0.4);
+          }
+          83.33% {
+            transform: scale(1.18);
+            border-color: #ffffff;
+            box-shadow: 0 0 28px 7px #00d4ff, 0 0 55px 14px rgba(2,136,255,0.95), inset 0 0 16px rgba(0,212,255,0.8);
+          }
+          92%, 100% {
+            transform: scale(1);
+            border-color: #00d4ff;
+            box-shadow: 0 0 12px 2px #00d4ff, 0 0 25px 5px rgba(2,136,255,0.7), inset 0 0 8px rgba(0,212,255,0.4);
+          }
+        }
+
+        /* Mobile Node Flare */
+        @keyframes mobileNodeFlare {
+          0%, 40% {
+            transform: scale(1);
+            border-color: #00d4ff;
+            box-shadow: 0 0 18px 4px #00d4ff, 0 0 35px 8px rgba(2,136,255,0.7), inset 0 0 10px rgba(0,212,255,0.5);
+          }
+          50% {
+            transform: scale(1.18);
+            border-color: #ffffff;
+            box-shadow: 0 0 35px 12px #00d4ff, 0 0 70px 22px rgba(2,136,255,1), inset 0 0 25px rgba(255,255,255,0.9);
+          }
+          60%, 100% {
+            transform: scale(1);
+            border-color: #00d4ff;
+            box-shadow: 0 0 18px 4px #00d4ff, 0 0 35px 8px rgba(2,136,255,0.7), inset 0 0 10px rgba(0,212,255,0.5);
           }
         }
 
         /* Ambient Glow Flares */
         @keyframes node1Bloom {
-          0%, 8% { opacity: 0; transform: scale(0.8); }
-          16.66% { opacity: 0.95; transform: scale(1.6); }
-          26%, 100% { opacity: 0; transform: scale(0.8); }
+          0%, 8% { opacity: 0.5; transform: scale(1.1); }
+          16.66% { opacity: 1; transform: scale(1.8); }
+          26%, 100% { opacity: 0.5; transform: scale(1.1); }
         }
         @keyframes node2Bloom {
-          0%, 41% { opacity: 0; transform: scale(0.8); }
-          50% { opacity: 0.95; transform: scale(1.6); }
-          59%, 100% { opacity: 0; transform: scale(0.8); }
+          0%, 40% { opacity: 0.7; transform: scale(1.2); }
+          50% { opacity: 1; transform: scale(2); }
+          60%, 100% { opacity: 0.7; transform: scale(1.2); }
         }
         @keyframes node3Bloom {
-          0%, 74% { opacity: 0; transform: scale(0.8); }
-          83.33% { opacity: 0.95; transform: scale(1.6); }
-          92%, 100% { opacity: 0; transform: scale(0.8); }
+          0%, 74% { opacity: 0.5; transform: scale(1.1); }
+          83.33% { opacity: 1; transform: scale(1.8); }
+          92%, 100% { opacity: 0.5; transform: scale(1.1); }
         }
         @keyframes mobileBloom {
-          0%, 40% { opacity: 0; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.6); }
-          60%, 100% { opacity: 0; transform: scale(0.8); }
+          0%, 40% { opacity: 0.7; transform: scale(1.2); }
+          50% { opacity: 1; transform: scale(2); }
+          60%, 100% { opacity: 0.7; transform: scale(1.2); }
         }
       `}</style>
 
@@ -233,7 +238,7 @@ const Obsession = () => {
         </h2>
       </div>
 
-   
+
       <div className="hidden md:block relative">
         {/* Horizontal Glowing Track */}
         <div className="absolute top-[44px] sm:top-[48px] left-0 right-0 h-[2px] -translate-y-1/2 z-0 pointer-events-none">
@@ -279,47 +284,57 @@ const Obsession = () => {
               index === 0
                 ? "node1Flare 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite"
                 : index === 1
-                ? "node2Flare 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite"
-                : "node3Flare 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite";
+                  ? "node2Charging 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite"
+                  : "node3Flare 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite";
 
             const bloomAnimation =
               index === 0
                 ? "node1Bloom 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite"
                 : index === 1
-                ? "node2Bloom 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite"
-                : "node3Bloom 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite";
+                  ? "node2Bloom 3.6s cubic-bezier(0.2, 0, 0.2, 1) infinite"
+                  : "node3Bloom 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite";
+
+            const isCenter = index === 1;
 
             return (
               <div
                 key={item.year}
                 className="flex flex-col items-center text-center group"
               >
-                {/* Equal Base Sized Badge Icon Area */}
+                {/* Badge Icon Area */}
                 <div className="relative mb-6 h-[88px] sm:h-[96px] flex items-center justify-center">
                   {/* Ambient Glow Bloom */}
                   <div
-                    className="absolute w-[110px] h-[110px] rounded-full blur-[25px] pointer-events-none"
+                    className="absolute w-[1px] h-[1px] rounded-full blur-[5px] pointer-events-none"
                     style={{
-                      background: "rgba(2, 136, 255, 0.6)",
+                      background: isCenter
+                        ? "rgba(0, 212, 255, 0.8)"
+                        : "rgba(2, 136, 255, 0.6)",
                       animation: bloomAnimation,
                     }}
                   />
 
-                  {/* Uniform Metallic Node Disc (Scales up when dot meets) */}
+                  {/* Outer Glowing Charging Ring (Center Node Only) */}
+                  {isCenter && (
+                    <div
+                      className="absolute w-[90px] h-[90px] sm:w-[98px] sm:h-[98px] rounded-full border-4 border-white pointer-events-none z-0"
+                      style={{
+                        boxShadow:
+                          "0 0 8px 2px #ffffff, 0 0 18px 10px rgba(2,136,255,0.9), 0 0 32px 8px rgba(2,136,255,0.9)",
+                        animation:
+                          "node2Charging 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+                      }}
+                    />
+                  )}
+
+                  {/* Circular Badge Container */}
                   <div
                     className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] rounded-full 
-          bg-transparent
-          backdrop-blur-md
-          border-t border-b border-white/90
-          shadow-[inset_-1px_-1px_4px_0_rgba(0,0,0,0.25)]
-          transition-all duration-300 ease-in-out overflow-hidden flex items-center justify-center"
+                      backdrop-blur-md border-t border-b border-white/90
+                      shadow-[inset_-1px_-1px_4px_0_rgba(0,0,0,0.25)]
+                      overflow-hidden flex items-center justify-center relative z-10 transition-all duration-300"
                     style={{
-                      // background:
-                      //   "radial-gradient(circle at 35% 30%, #1e2638 0%, #0d121c 65%, #070a10 100%)",
-                      border: "2px solid rgba(2, 136, 255, 0.35)",
-                      boxShadow:
-                        "0 6px 20px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.8)",
-                      animation: flareAnimation,
+                      animation: isCenter ? undefined : flareAnimation,
                     }}
                   >
                     <div className="relative w-9 h-9 sm:w-10 sm:h-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
@@ -334,12 +349,13 @@ const Obsession = () => {
                 </div>
 
                 {/* Year with Red Neon Stroke */}
-                <div className="mb-1.5 sm:mb-2">
+                <div className="mb-2">
                   <span
-                    className="font-extrabold text-2xl md:text-3xl lg:text-4xl tracking-wider inline-block"
+                    className="font-extrabold text-3xl md:text-4xl lg:text-5xl tracking-wider inline-block"
                     style={{
                       color: "transparent",
-                      WebkitTextStroke: "1.5px #E52528",
+                      WebkitTextStroke: "2px #E52528",
+                      filter: "drop-shadow(0 0 6px rgba(229, 37, 40, 0.4))",
                     }}
                   >
                     {item.year}
@@ -347,12 +363,12 @@ const Obsession = () => {
                 </div>
 
                 {/* Milestone Title */}
-                <h3 className="text-xl md:text-xl lg:text-[2.25rem] font-bold text-white mb-2 tracking-tight">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-white mb-2 tracking-tight">
                   {item.title}
                 </h3>
 
                 {/* Description */}
-                <div className="text-white text-sm md:text-sm lg:text-[1.125rem] font-medium leading-[1.3] w-full max-w-sm">
+                <div className="text-white text-sm md:text-base font-normal leading-snug w-full max-w-xs opacity-90">
                   <p>{item.descLine1}</p>
                   <p>{item.descLine2}</p>
                 </div>
@@ -400,26 +416,29 @@ const Obsession = () => {
           </div>
         </div>
 
-        {/* Center Node Badge on Mobile (Flares when laser hits at 50%) */}
+        {/* Center Node Badge on Mobile */}
         <div className="relative mb-6 h-[88px] flex items-center justify-center z-10">
           <div
             className="absolute w-[110px] h-[110px] rounded-full blur-[25px] pointer-events-none"
             style={{
-              background: "rgba(2, 136, 255, 0.6)",
+              background: "rgba(0, 212, 255, 0.8)",
               animation: "mobileBloom 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite",
             }}
           />
+
+          {/* Outer Glowing Charging Ring on Mobile */}
           <div
-            className="w-[72px] h-[72px] rounded-full flex items-center justify-center"
+            className="absolute w-[90px] h-[90px] rounded-full border-4 border-[#00d4ff] pointer-events-none z-0"
             style={{
-              background:
-                "radial-gradient(circle at 35% 30%, #1e2638 0%, #0d121c 65%, #070a10 100%)",
-              border: "2px solid rgba(2, 136, 255, 0.35)",
               boxShadow:
-                "0 6px 20px rgba(0,0,0,0.9), inset 0 1.5px 2px rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.8)",
+                "0 0 8px 2px #ffffff, 0 0 18px 5px #00d4ff, 0 0 32px 8px rgba(2, 136, 255, 0.9)",
               animation:
-                "mobileNodeFlare 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+                "node2Charging 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite",
             }}
+          />
+
+          <div
+            className="w-[72px] h-[72px] rounded-full bg-transparent backdrop-blur-md border-t border-b border-white/90 shadow-[inset_-1px_-1px_4px_0_rgba(0,0,0,0.25)] flex items-center justify-center relative z-10 transition-all duration-300"
           >
             <div className="relative w-9 h-9 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
               <Image
@@ -446,10 +465,11 @@ const Obsession = () => {
               {/* Year with Red Neon Stroke */}
               <div className="mb-1.5">
                 <span
-                  className="font-extrabold text-3xl tracking-wider inline-block"
+                  className="font-extrabold text-3xl sm:text-4xl tracking-wider inline-block"
                   style={{
                     color: "transparent",
-                    WebkitTextStroke: "1.5px #E52528",
+                    WebkitTextStroke: "2px #E52528",
+                    filter: "drop-shadow(0 0 6px rgba(229, 37, 40, 0.4))",
                   }}
                 >
                   {currentMobileMilestone.year}

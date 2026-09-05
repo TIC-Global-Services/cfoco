@@ -6,8 +6,12 @@ import { matter } from "@/font/fonts";
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoRefMobile = useRef<HTMLVideoElement>(null);
+  const maskRef = useRef<SVGMaskElement>(null);
 
   useEffect(() => {
+    if (maskRef.current) {
+      maskRef.current.setAttribute("mask-type", "alpha");
+    }
     [videoRef, videoRefMobile].forEach((ref) => {
       if (ref.current) {
         ref.current.play().catch(() => {
@@ -30,6 +34,7 @@ const Hero = () => {
           >
             <defs>
               <mask
+                ref={maskRef}
                 id="crispy-text-mask"
                 maskUnits="userSpaceOnUse"
                 maskContentUnits="userSpaceOnUse"
@@ -37,17 +42,7 @@ const Hero = () => {
                 y="0"
                 width="2200"
                 height="400"
-                style={{ maskType: "luminance" }}
               >
-                {/* Black background */}
-                <rect
-                  x="0"
-                  y="0"
-                  width="2200"
-                  height="400"
-                  fill="black"
-                />
-
                 {/* White text */}
                 <text
                   x="1100"
@@ -84,9 +79,16 @@ const Hero = () => {
               y="0"
               width="2200"
               height="400"
-              mask="url(#crispy-text-mask)"
             >
-              <div className="w-full h-full">
+              <div
+                className="w-full h-full"
+                style={{
+                  WebkitMaskImage: "url(#crispy-text-mask)",
+                  maskImage: "url(#crispy-text-mask)",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                }}
+              >
                 <video
                   ref={videoRef}
                   src="/bg_about_video.mp4"

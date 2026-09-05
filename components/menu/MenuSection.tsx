@@ -115,11 +115,8 @@ const categories: Category[] = (menuData.categories as { id: string; name: strin
   })
 );
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 8;
 
 const MenuSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? "poulet");
@@ -181,7 +178,7 @@ const MenuSection: React.FC = () => {
           <p className="text-sm mt-1 opacity-70">Run <code className="bg-white/30 px-1 rounded">python remover.py</code> to process images.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-6">
           {visible.map((item) => (
             <div
               key={item.id}
@@ -191,7 +188,7 @@ const MenuSection: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/5 opacity-60 pointer-events-none rounded-3xl" />
 
               {/* Food Image Container */}
-              <div className="relative w-full aspect-square max-h-64 sm:max-h-[50dvh] mx-auto flex items-center justify-center mb-6 overflow-hidden rounded-2xl">
+              <div className="relative w-full aspect-square max-h-64 sm:max-h-[35dvh] mx-auto flex items-center justify-center mb-6 overflow-hidden rounded-2xl">
                 <Image
                   src={item.image}
                   alt={item.title}
@@ -203,10 +200,10 @@ const MenuSection: React.FC = () => {
 
               {/* Content info */}
               <div className="relative z-10 flex flex-col">
-                <h3 className="text-2xl sm:text-[2.5rem] font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors">
+                <h3 className="text-2xl sm:text-[2.2rem] font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors">
                   {item.title}
                 </h3>
-                <p className="mt-1 text-sm sm:text-xl font-medium text-neutral-700/90 leading-snug">
+                <p className="mt-1 text-sm sm:text-lg font-medium text-neutral-700/90 leading-snug">
                   {item.description}
                 </p>
               </div>

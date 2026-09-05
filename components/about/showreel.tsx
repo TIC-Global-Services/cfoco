@@ -84,7 +84,7 @@ const Showreel = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden border border-neutral-700 shadow-2xl"
+              className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden border border-neutral-700 "
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
