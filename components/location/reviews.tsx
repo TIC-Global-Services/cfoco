@@ -133,9 +133,9 @@ const Reviews = ({
   useEffect(() => {
     const ctx = gsap.context(() => {
       const isMobile = window.matchMedia("(max-width: 1024px)").matches;
-      const staggerDelay = isMobile ? 0.8 : 0.7;
+      const staggerDelay = isMobile ? 1.3 : 0.7;
       const startY = isMobile ? "90vh" : "110vh";
-      const endY = isMobile ? "-90vh" : "-110vh";
+      const endY = isMobile ? "-100vh" : "-110vh";
 
       const leftCards = gsap.utils.toArray<HTMLElement>(".review-card-left");
       const rightCards = gsap.utils.toArray<HTMLElement>(".review-card-right");
@@ -221,7 +221,7 @@ const Reviews = ({
             {leftReviews.map((card, i) => (
               <div
                 key={`rev-left-${card.id}-${i}`}
-                className="review-card-left absolute inset-0 flex items-center justify-start lg:justify-end pl-2 sm:pl-4 lg:pl-0 lg:pr-16 -mt-[34vh] sm:-mt-[28vh] lg:-mt-[22vh] pointer-events-none"
+                className="review-card-left absolute inset-0 flex items-center justify-start lg:justify-end pl-2 sm:pl-4 lg:pl-0 lg:pr-16 -mt-[44vh] sm:-mt-[28vh] lg:-mt-[22vh] pointer-events-none"
               >
                 <ReviewCard card={card} />
               </div>
@@ -233,7 +233,7 @@ const Reviews = ({
             {rightReviews.map((card, i) => (
               <div
                 key={`rev-right-${card.id}-${i}`}
-                className="review-card-right absolute inset-0 flex items-center justify-end lg:justify-start pr-2 sm:pr-4 lg:pr-0 lg:pl-16 mt-[32vh] sm:mt-[28vh] lg:mt-[22vh] pointer-events-none"
+                className="review-card-right absolute inset-0 flex items-center justify-end lg:justify-start pr-2 sm:pr-4 lg:pr-0 lg:pl-16 mt-[52vh] sm:mt-[28vh] lg:mt-[22vh] pointer-events-none"
               >
                 <ReviewCard card={card} />
               </div>

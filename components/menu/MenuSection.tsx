@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { matter } from "@/font/fonts";
 import menuData from "@/public/menu_data.json";
@@ -23,84 +23,81 @@ interface MenuItem {
 // Cast the JSON data
 const allItems: MenuItem[] = menuData.items as MenuItem[];
 
-// ---------------------------------------------------------------------------
-// Category icons (unchanged from original)
-// ---------------------------------------------------------------------------
 const categoryIcons: Record<string, React.ReactNode> = {
   poulet: (
-    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-44 md:h-24 flex items-center justify-center">
+    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
       <Image
         src="/cfc_bucket.png"
         alt="Poulet"
-        width={80}
-        height={80}
-        className="object-cover drop-shadow-md"
+        width={140}
+        height={140}
+        className="object-contain drop-shadow-md w-full h-full"
       />
     </div>
   ),
   burgers: (
-    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
       <Image
         src="/category/burger.png"
         alt="Burgers"
-        width={80}
-        height={80}
-        className="object-cover drop-shadow-md"
+        width={140}
+        height={140}
+        className="object-contain drop-shadow-md w-full h-full"
       />
     </div>
   ),
   "riz-box": (
-    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
       <Image
         src="/category/riz-box.png"
         alt="Riz Box"
-        width={80}
-        height={80}
-        className="object-cover drop-shadow-md"
+        width={140}
+        height={140}
+        className="object-contain drop-shadow-md w-full h-full"
       />
     </div>
   ),
   tacos: (
-    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
       <Image
         src="/category/tacos.png"
         alt="Tacos"
-        width={80}
-        height={80}
-        className="object-cover drop-shadow-md"
+        width={140}
+        height={140}
+        className="object-contain drop-shadow-md w-full h-full"
       />
     </div>
   ),
   wraps: (
-    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
       <Image
         src="/category/wraps.png"
         alt="Wraps"
-        width={80}
-        height={80}
-        className="object-cover drop-shadow-md"
+        width={140}
+        height={140}
+        className="object-contain drop-shadow-md w-full h-full"
       />
     </div>
   ),
   desserts: (
-    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
       <Image
         src="/category/dessert.png"
         alt="Desserts"
-        width={80}
-        height={80}
-        className="object-cover drop-shadow-md"
+        width={140}
+        height={140}
+        className="object-contain drop-shadow-md w-full h-full"
       />
     </div>
   ),
   sides: (
-    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
       <Image
         src="/category/sides.png"
         alt="Sides"
-        width={80}
-        height={80}
-        className="object-cover drop-shadow-md"
+        width={140}
+        height={140}
+        className="object-contain drop-shadow-md w-full h-full"
       />
     </div>
   ),
@@ -115,57 +112,171 @@ const categories: Category[] = (menuData.categories as { id: string; name: strin
   })
 );
 
-
 const ITEMS_PER_PAGE = 8;
 
 const MenuSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? "poulet");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    // Allow a small buffer of 6px to avoid jitter
+    setCanScrollLeft(scrollLeft > 6);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 6);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    checkScroll();
+
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("resize", checkScroll);
+
+    const ro = new ResizeObserver(() => {
+      checkScroll();
+    });
+    ro.observe(el);
+
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+      ro.disconnect();
+    };
+  }, [checkScroll]);
 
   const filtered = allItems.filter((item) => item.category === activeCategory);
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
-  const handleCategoryChange = (catId: string) => {
+  const handleCategoryChange = (
+    catId: string,
+    event?: React.MouseEvent<HTMLButtonElement>
+  ) => {
     setActiveCategory(catId);
     setVisibleCount(ITEMS_PER_PAGE);
+
+    if (event?.currentTarget) {
+      event.currentTarget.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
   };
 
   return (
     <section
-      className={`relative w-full px-4 sm:px-6 lg:px-[5%] pb-20 select-none ${matter.className}`}
+      className={`relative w-full px-4 sm:px-6 lg:px-[3%] pb-20 select-none ${matter.className}`}
     >
-      {/* Category Navigation Bar - Full Width with Active OG Color & Inactive Black and White */}
-      <div className="w-full flex items-center justify-between overflow-x-auto no-scrollbar py-6 mb-10 sm:mb-16 gap-3 sm:gap-4 md:gap-6">
-        {categories.map((cat) => {
-          const isActive = activeCategory === cat.id;
-          return (
-            <button
-              key={cat.id}
-              onClick={() => handleCategoryChange(cat.id)}
-              className="flex-1 flex flex-col items-center justify-center group flex-shrink-0 sm:flex-shrink focus:outline-none transition-all duration-300 min-w-[70px] sm:min-w-0 cursor-pointer"
-            >
-              <div
-                className={`relative flex items-center justify-center transition-all duration-300 ${
-                  isActive
-                    ? "grayscale-0 opacity-100 scale-110 drop-shadow-md"
-                    : "grayscale opacity-50 contrast-125 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
-                }`}
+      {/* Category Navigation Bar - Scrollable with Smart Dynamic Arrows */}
+      <div className="relative w-full mb-10 sm:mb-16 group/nav">
+        {/* Left Edge Gradient Fade */}
+        <div
+          className={`absolute left-0 top-0 bottom-0 w-12 sm:w-40 bg-gradient-to-r from-white via-white/5 blur-[5px] to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
+            canScrollLeft ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        {/* Left Arrow Button - only visible when scrolled right */}
+        <button
+          onClick={() => {
+            scrollRef.current?.scrollBy({ left: -280, behavior: "smooth" });
+          }}
+          disabled={!canScrollLeft}
+          aria-label="Scroll categories left"
+          className={`absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
+            canScrollLeft
+              ? "opacity-100 scale-100 pointer-events-auto"
+              : "opacity-0 scale-75 pointer-events-none"
+          }`}
+        >
+          <svg className="w-5 h-5 stroke-[2.4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        {/* Scrollable Categories Strip */}
+        <div
+          ref={scrollRef}
+          className="w-full flex items-end overflow-x-auto py-6 gap-6 sm:gap-8 md:gap-12 px-[20%]scroll-smooth"
+          style={{
+            scrollSnapType: "x mandatory",
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={(e) => handleCategoryChange(cat.id, e)}
+                style={{ scrollSnapAlign: "center" }}
+                className="relative flex flex-col items-center justify-end group flex-shrink-0 focus:outline-none transition-all duration-300 w-[120px] sm:w-[150px] md:w-[170px] cursor-pointer pb-2"
               >
-                {cat.icon}
-              </div>
-              <span
-                className={`mt-3 text-sm sm:text-base md:text-lg transition-all duration-200 tracking-tight text-center ${
-                  isActive
-                    ? "font-bold text-neutral-900"
-                    : "font-normal text-neutral-500 group-hover:text-neutral-900"
-                }`}
-              >
-                {cat.name}
-              </span>
-            </button>
-          );
-        })}
+                <div
+                  className={`flex items-center justify-center transition-all duration-300 ${
+                    isActive
+                      ? "grayscale-0 opacity-100 scale-110 drop-shadow-xl"
+                      : "grayscale opacity-55 contrast-125 group-hover:grayscale-0 group-hover:opacity-90 group-hover:scale-105"
+                  }`}
+                >
+                  {cat.icon}
+                </div>
+                <span
+                  className={`mt-4 text-base sm:text-lg md:text-xl lg:text-2xl transition-all duration-200 tracking-tight text-center whitespace-nowrap ${
+                    isActive
+                      ? "font-extrabold text-neutral-900"
+                      : "font-medium text-neutral-500 group-hover:text-neutral-900"
+                  }`}
+                >
+                  {cat.name}
+                </span>
+
+                {/* Subtle Active Indicator Dot / Pill */}
+                {/* <div
+                  className={`mt-2 h-1 rounded-full transition-all duration-300 ${
+                    isActive
+                      ? "w-8 bg-[#CC1518] shadow-[0_0_8px_rgba(204,21,24,0.5)]"
+                      : "w-0 bg-transparent"
+                  }`}
+                /> */}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Right Arrow Button - only visible when more content exists to the right */}
+        <button
+          onClick={() => {
+            scrollRef.current?.scrollBy({ left: 280, behavior: "smooth" });
+          }}
+          disabled={!canScrollRight}
+          aria-label="Scroll categories right"
+          className={`absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
+            canScrollRight
+              ? "opacity-100 scale-100 pointer-events-auto"
+              : "opacity-0 scale-75 pointer-events-none"
+          }`}
+        >
+          <svg className="w-5 h-5 stroke-[2.4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {/* Right Edge Gradient Fade */}
+        <div
+          className={`absolute right-0 top-2 bottom-0 h-50 w-12 sm:w-40 bg-gradient-to-l blur-[5px] from-white via-white/5 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
+            canScrollRight ? "opacity-100" : "opacity-0"
+          }`}
+        />
       </div>
 
       {/* Menu Cards Grid */}
@@ -178,7 +289,7 @@ const MenuSection: React.FC = () => {
           <p className="text-sm mt-1 opacity-70">Run <code className="bg-white/30 px-1 rounded">python remover.py</code> to process images.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-6 px-[5%]">
           {visible.map((item) => (
             <div
               key={item.id}
@@ -200,7 +311,7 @@ const MenuSection: React.FC = () => {
 
               {/* Content info */}
               <div className="relative z-10 flex flex-col">
-                <h3 className="text-2xl sm:text-[2.2rem] font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors">
+                <h3 className="text-2xl sm:text-3xl font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors">
                   {item.title}
                 </h3>
                 <p className="mt-1 text-sm sm:text-lg font-medium text-neutral-700/90 leading-snug">

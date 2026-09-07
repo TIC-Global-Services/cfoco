@@ -63,9 +63,10 @@ const Hero = () => {
               y="2"
               width="1376"
               height="226"
+              className="overflow-hidden"
             >
               <div
-                className="w-full h-full flex items-center justify-center"
+                className="w-full h-full flex items-center justify-center overflow-hidden"
                 style={{
                   background: "transparent",
                   transform: "translateZ(0)",
@@ -75,6 +76,10 @@ const Hero = () => {
                   maskImage: "url(#crispy-text-mask-contact)",
                   WebkitMaskRepeat: "no-repeat",
                   maskRepeat: "no-repeat",
+                  WebkitMaskSize: "100% 100%",
+                  maskSize: "100% 100%",
+                  contain: "paint",
+                  isolation: "isolate",
                 }}
               >
                 <video
@@ -90,6 +95,9 @@ const Hero = () => {
                     transform: "translateZ(0) scale(1.1)",
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
+                    border: "none",
+                    outline: "none",
+                    display: "block",
                   }}
                 />
               </div>
@@ -101,7 +109,7 @@ const Hero = () => {
         <div className="mt-4 sm:mt-2 text-center">
           <p className="text-xl sm:text-xl md:text-2xl font-normal leading-[1.2] tracking-tight md:tracking-wide text-[#F2F2F2]">
             Got a question, feedback, partnership <br className="md:hidden" /> idea, or need a little help? Whatever’s<br className="md:hidden" /> on your mind, the{" "}
-            <span className="text-[#CC1518] font-medium">CFOCO</span> <br className="hidden lg:block"/> team is<br className="md:hidden" /> here to listen, help, and keep things <br className="md:hidden" /> moving.
+            <span className="text-[#CC1518] font-medium">CFOCO</span> <br className="hidden lg:block" /> team is<br className="md:hidden" /> here to listen, help, and keep things <br className="md:hidden" /> moving.
           </p>
         </div>
       </div>

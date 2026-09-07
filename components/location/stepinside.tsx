@@ -176,10 +176,10 @@ const StepInside = () => {
       `}</style>
 
       {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-[#FFBF00]/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px]  pointer-events-none" />
 
       <div className="relative z-10 w-full flex flex-col items-center text-center">
-        <div className="mb-10">
+        <div className="md:mb-10">
           {/* Title */}
           <h2 className="text-4xl sm:text-5xl md:text-[4.375rem] font-extrabold tracking-tight text-[#FFBF00] drop-shadow-sm">
             Step Inside.
@@ -193,7 +193,7 @@ const StepInside = () => {
         </div>
 
         {/* World Map with Animated Moving Pinpoint & Detail Card */}
-        <div className="relative w-full my-10 sm:mt-20 flex items-center justify-center">
+        <div className="relative w-full my-30 sm:mt-20 flex items-center justify-center">
           <div className="relative w-full aspect-[2/1] max-h-[380px]">
             <Image
               src="/new-map.png"

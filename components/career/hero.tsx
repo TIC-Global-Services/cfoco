@@ -85,9 +85,10 @@ const Hero = () => {
               y="2"
               width="2196"
               height="396"
+              className="overflow-hidden"
             >
               <div
-                className="w-full h-full flex items-center justify-center"
+                className="w-full h-full flex items-center justify-center overflow-hidden"
                 style={{
                   background: "transparent",
                   transform: "translateZ(0)",
@@ -97,6 +98,10 @@ const Hero = () => {
                   maskImage: "url(#crispy-text-mask-career-desktop)",
                   WebkitMaskRepeat: "no-repeat",
                   maskRepeat: "no-repeat",
+                  WebkitMaskSize: "100% 100%",
+                  maskSize: "100% 100%",
+                  contain: "paint",
+                  isolation: "isolate",
                 }}
               >
                 <video
@@ -112,6 +117,9 @@ const Hero = () => {
                     transform: "translateZ(0) scale(1.1)",
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
+                    border: "none",
+                    outline: "none",
+                    display: "block",
                   }}
                 />
               </div>
@@ -132,6 +140,7 @@ const Hero = () => {
                 ref={maskRefMobile}
                 id="crispy-text-mask-career-mobile"
                 maskUnits="userSpaceOnUse"
+                style={{ maskType: "alpha" }}
                 x="-100"
                 y="-100"
                 width="1200"
@@ -176,9 +185,10 @@ const Hero = () => {
               y="2"
               width="996"
               height="376"
+              className="overflow-hidden"
             >
               <div
-                className="w-full h-full flex items-center justify-center"
+                className="w-full h-full flex items-center justify-center overflow-hidden"
                 style={{
                   background: "transparent",
                   transform: "translateZ(0)",
@@ -188,6 +198,10 @@ const Hero = () => {
                   maskImage: "url(#crispy-text-mask-career-mobile)",
                   WebkitMaskRepeat: "no-repeat",
                   maskRepeat: "no-repeat",
+                  WebkitMaskSize: "100% 100%",
+                  maskSize: "100% 100%",
+                  contain: "paint",
+                  isolation: "isolate",
                 }}
               >
                 <video
@@ -203,6 +217,9 @@ const Hero = () => {
                     transform: "translateZ(0) scale(1.1)",
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
+                    border: "none",
+                    outline: "none",
+                    display: "block",
                   }}
                 />
               </div>

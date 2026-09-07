@@ -118,9 +118,10 @@ const Hero = () => {
                   y="2"
                   width="1376"
                   height="226"
+                  className="overflow-hidden"
                 >
                   <div
-                    className="w-full h-full flex items-center justify-center"
+                    className="w-full h-full flex items-center justify-center overflow-hidden"
                     style={{
                       background: "transparent",
                       transform: "translateZ(0)",
@@ -130,6 +131,10 @@ const Hero = () => {
                       maskImage: "url(#crispy-text-mask-hero)",
                       WebkitMaskRepeat: "no-repeat",
                       maskRepeat: "no-repeat",
+                      WebkitMaskSize: "100% 100%",
+                      maskSize: "100% 100%",
+                      contain: "paint",
+                      isolation: "isolate",
                     }}
                   >
                     <video
@@ -145,6 +150,9 @@ const Hero = () => {
                         transform: "translateZ(0) scale(1.1)",
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
+                        border: "none",
+                        outline: "none",
+                        display: "block",
                       }}
                     />
                   </div>
@@ -189,7 +197,7 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-24vw] bottom-[30vh] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
+            className="absolute left-[-20vw] bottom-[35vh] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -209,7 +217,7 @@ const Hero = () => {
               y: rightY,
               opacity: rightOpacity,
             }}
-            className="absolute right-[-35vw] top-[12vh] sm:right-[-6vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[950px] aspect-[4/3]"
+            className="absolute right-[-40vw] top-[16vh] sm:right-[-6vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[950px] aspect-[4/3]"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image

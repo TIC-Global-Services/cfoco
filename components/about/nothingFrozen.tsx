@@ -23,7 +23,7 @@ const NothingFrozen = () => {
               className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight uppercase whitespace-nowrap"
               style={{
                 color: "transparent",
-                WebkitTextStroke: "1.5px #E5A823",
+                WebkitTextStroke: "1px #E5A823",
                 // textShadow: "0 0 20px rgba(229, 168, 35, 0.15)",
               }}
             >

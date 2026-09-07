@@ -81,7 +81,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
       <Reveal className="h-full w-full">
         <div className="relative z-10 w-full h-full px-5 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 flex flex-col justify-between items-center">
           {/* Top Navigation Links */}
-          <nav className="flex flex-wrap justify-center items-center px-10 md:px-0 gap-6 sm:gap-8 md:gap-10 lg:gap-14 text-lg sm:text-lg font-normal text-white shrink-0">
+          <nav className="flex flex-wrap justify-center items-center px-3 md:px-0 gap-6 sm:gap-8 md:gap-10 lg:gap-14 text-lg sm:text-lg font-normal text-white shrink-0">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
