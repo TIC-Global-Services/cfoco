@@ -80,7 +80,7 @@ const Hero = () => {
           {/* <div className="hidden sm:block h-6" /> */}
 
           {/* Large Headline with Video Mask */}
-          <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-25">
+          <div className="w-full flex flex-col items-center md:justify-start pt-[40%] sm:pt-[50%] lg:pt-25">
             {/* Desktop Headline */}
             <div className="relative w-full hidden md:flex items-center justify-center">
               <svg

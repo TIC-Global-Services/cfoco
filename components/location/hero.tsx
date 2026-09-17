@@ -151,9 +151,9 @@ const Hero = () => {
         </div>
 
         {/* Large Headline with Video Inside Text - Mobile */}
-        <div className="relative w-full flex md:hidden items-center justify-center">
+        <div className="relative w-full flex md:hidden items-center justify-center pt-[65%] sm:pt-[40%]">
           <svg
-            viewBox="0 0 1380 300"
+            viewBox="0 0 1380 420"
             className="w-full h-auto overflow-visible border-none outline-none"
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="xMidYMid meet"
@@ -167,11 +167,11 @@ const Hero = () => {
                 x="-100"
                 y="-100"
                 width="1580"
-                height="540"
+                height="620"
               >
                 <text
                   x="50%"
-                  y="34%"
+                  y="18%"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
@@ -179,7 +179,7 @@ const Hero = () => {
                     fontFamily: "var(--font-matter), sans-serif",
                     fontWeight: 700,
                   }}
-                  fontSize="130"
+                  fontSize="150"
                   letterSpacing="-3%"
                 >
                   Five Kitchens.
@@ -187,7 +187,7 @@ const Hero = () => {
 
                 <text
                   x="50%"
-                  y="68%"
+                  y="50%"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
@@ -195,10 +195,25 @@ const Hero = () => {
                     fontFamily: "var(--font-matter), sans-serif",
                     fontWeight: 700,
                   }}
-                  fontSize="95"
+                  fontSize="150"
                   letterSpacing="-3%"
                 >
-                  One Standard. find yours.
+                  One Standard.
+                </text>
+                <text
+                  x="50%"
+                  y="85%"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
+                  fontSize="150"
+                  letterSpacing="-3%"
+                >
+                  Find Yours.
                 </text>
               </mask>
             </defs>
@@ -207,7 +222,7 @@ const Hero = () => {
               x="2"
               y="2"
               width="1376"
-              height="296"
+              height="416"
               className="overflow-hidden border-none outline-none"
               style={{ overflow: "hidden", border: "none", outline: "none" }}
             >
@@ -258,7 +273,7 @@ const Hero = () => {
         </div>
 
         {/* Subtitles */}
-        <div className="mt-4 md:-mt-8 text-center px-4">
+        <div className="mt-6 md:-mt-8 text-center px-4">
           <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none">
             Across <span className="text-[#CC1518] font-medium">Bordeaux</span> And Beyond
           </p>
