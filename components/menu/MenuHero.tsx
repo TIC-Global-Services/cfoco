@@ -25,12 +25,12 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className={`relative w-full min-h-screen md:min-h-screen flex flex-col items-center justify-between px-0 sm:px-6 lg:px-8 md:py-8 sm:py-12 bg-transparent select-none ${matter.className}`}>
+    <section className={`relative w-full min-h-screen  flex flex-col items-center justify-start px-0 sm:px-6 lg:px-8 md:py-8 sm:py-12 bg-transparent select-none ${matter.className}`}>
       {/* Spacer for top balance on desktop */}
       {/* <div className="hidden md:block h-6" /> */}
 
       {/* Main Content Area */}
-      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-35">
+      <div className="w-full flex flex-col items-center md:justify-center pt-[60%] sm:pt-[50%] lg:pt-[8%]">
         {/* Large Headline with Video Inside Text - Desktop */}
         <div className="relative w-full hidden md:flex items-center justify-center">
           <svg

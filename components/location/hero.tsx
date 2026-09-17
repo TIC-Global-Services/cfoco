@@ -40,11 +40,11 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
+    <section className={`relative w-full min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
-      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-38">
+      <div className="w-full flex flex-col items-center md:justify-center">
         {/* Large Headline with Video Inside Text - Desktop */}
-        <div className="relative w-full hidden md:flex items-center justify-center">
+        <div className="relative w-full hidden md:flex items-center justify-center pt-[10%]">
           <svg
             viewBox="0 0 1380 280"
             className="w-full h-auto overflow-visible border-none outline-none"

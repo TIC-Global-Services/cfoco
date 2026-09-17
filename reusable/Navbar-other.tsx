@@ -29,7 +29,7 @@ const NavbarOther: React.FC<NavbarProps> = ({ className = "" }) => {
   const pathname = usePathname();
 
   return (
-    <header className={`absolute top-5 left-0 right-0 z-50 w-full  transition-all duration-300 ${className}`}>
+    <header className={`absolute top-0 left-0 right-0 z-50 w-full  transition-all duration-300 ${className}`}>
       <div className="px-4 sm:px-6 lg:px-[5%]">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
