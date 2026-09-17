@@ -7,8 +7,10 @@ import { matter } from "@/font/fonts";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const maskRef = useRef<SVGMaskElement>(null);
+  const videoRefDesktop = useRef<HTMLVideoElement>(null);
+  const videoRefMobile = useRef<HTMLVideoElement>(null);
+  const maskRefDesktop = useRef<SVGMaskElement>(null);
+  const maskRefMobile = useRef<SVGMaskElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -42,14 +44,18 @@ const Hero = () => {
   const descY = useTransform(smoothProgress, [0.42, 0.62], [25, 0]);
 
   useEffect(() => {
-    if (maskRef.current) {
-      maskRef.current.setAttribute("mask-type", "alpha");
-    }
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay policy fallback handling
-      });
-    }
+    [maskRefDesktop, maskRefMobile].forEach((ref) => {
+      if (ref.current) {
+        ref.current.setAttribute("mask-type", "alpha");
+      }
+    });
+    [videoRefDesktop, videoRefMobile].forEach((ref) => {
+      if (ref.current) {
+        ref.current.play().catch(() => {
+          // Autoplay policy fallback handling
+        });
+      }
+    });
   }, []);
 
   return (
@@ -75,8 +81,8 @@ const Hero = () => {
 
           {/* Large Headline with Video Mask */}
           <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-25">
-            <div className="relative w-full flex items-center justify-center">
-
+            {/* Desktop Headline */}
+            <div className="relative w-full hidden md:flex items-center justify-center">
               <svg
                 viewBox="0 0 1380 230"
                 className="w-full h-auto overflow-visible border-none outline-none"
@@ -85,9 +91,10 @@ const Hero = () => {
               >
                 <defs>
                   <mask
-                    ref={maskRef}
-                    id="crispy-text-mask-hero"
+                    ref={maskRefDesktop}
+                    id="crispy-text-mask-hero-desktop"
                     maskUnits="userSpaceOnUse"
+                    style={{ maskType: "alpha" }}
                     x="-100"
                     y="-100"
                     width="1580"
@@ -127,8 +134,8 @@ const Hero = () => {
                       transform: "translateZ(0)",
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
-                      WebkitMaskImage: "url(#crispy-text-mask-hero)",
-                      maskImage: "url(#crispy-text-mask-hero)",
+                      WebkitMaskImage: "url(#crispy-text-mask-hero-desktop)",
+                      maskImage: "url(#crispy-text-mask-hero-desktop)",
                       WebkitMaskRepeat: "no-repeat",
                       maskRepeat: "no-repeat",
                       WebkitMaskSize: "100% 100%",
@@ -138,7 +145,7 @@ const Hero = () => {
                     }}
                   >
                     <video
-                      ref={videoRef}
+                      ref={videoRefDesktop}
                       src="/bg_about_video.mp4"
                       autoPlay
                       loop
@@ -158,16 +165,115 @@ const Hero = () => {
                   </div>
                 </foreignObject>
               </svg>
+            </div>
 
+            {/* Mobile Headline - 2 lines */}
+            <div className="relative w-full sm:max-w-md flex md:hidden items-center justify-center">
+              <svg
+                viewBox="0 0 1000 390"
+                className="w-full h-auto overflow-visible border-none outline-none"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <defs>
+                  <mask
+                    ref={maskRefMobile}
+                    id="crispy-text-mask-hero-mobile"
+                    maskUnits="userSpaceOnUse"
+                    style={{ maskType: "alpha" }}
+                    x="-100"
+                    y="-100"
+                    width="1200"
+                    height="580"
+                  >
+                    <text
+                      x="500"
+                      y="150"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="white"
+                      style={{
+                        fontFamily: "var(--font-matter), sans-serif",
+                        fontWeight: 700,
+                      }}
+                      fontSize="150"
+                      letterSpacing="-3%"
+                    >
+                      Crispy Since
+                    </text>
+
+                    <text
+                      x="500"
+                      y="295"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="white"
+                      style={{
+                        fontFamily: "var(--font-matter), sans-serif",
+                        fontWeight: 700,
+                      }}
+                      fontSize="150"
+                      letterSpacing="-3%"
+                    >
+                      2011.
+                    </text>
+                  </mask>
+                </defs>
+
+                <foreignObject
+                  x="2"
+                  y="2"
+                  width="996"
+                  height="376"
+                  className="overflow-hidden"
+                >
+                  <div
+                    className="w-full h-full flex items-center justify-center overflow-hidden"
+                    style={{
+                      background: "transparent",
+                      transform: "translateZ(0)",
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                      WebkitMaskImage: "url(#crispy-text-mask-hero-mobile)",
+                      maskImage: "url(#crispy-text-mask-hero-mobile)",
+                      WebkitMaskRepeat: "no-repeat",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskSize: "100% 100%",
+                      maskSize: "100% 100%",
+                      contain: "paint",
+                      isolation: "isolate",
+                    }}
+                  >
+                    <video
+                      ref={videoRefMobile}
+                      src="/bg_about_video.mp4"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="auto"
+                      className="w-full h-full object-cover scale-110"
+                      style={{
+                        transform: "translateZ(0) scale(1.1)",
+                        backfaceVisibility: "hidden",
+                        WebkitBackfaceVisibility: "hidden",
+                        border: "none",
+                        outline: "none",
+                        display: "block",
+                      }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
             </div>
 
             {/* Subtitles */}
             <div className="mt-8 sm:mt-0 text-center">
-              <p className="text-base sm:text-xl md:text-2xl font-medium tracking-wide text-[#F2F2F2]">
+              <p className="text-xl sm:text-xl md:text-2xl font-medium tracking-wide text-[#F2F2F2]">
                 A Recipe Born In{" "}
                 <span className="text-[#CC1518] font-medium">Bordeaux</span>.
               </p>
-              <p className="text-base sm:text-xl md:text-2xl leading-none font-medium tracking-wide text-[#F2F2F2]">
+              <p className="text-xl sm:text-xl md:text-2xl leading-none font-medium tracking-wide text-[#F2F2F2]">
                 An Obsession That Never Cooled.
               </p>
             </div>
@@ -197,7 +303,7 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-30vw] bottom-[30vh] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
+            className="absolute left-[-10%] bottom-[40%] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
