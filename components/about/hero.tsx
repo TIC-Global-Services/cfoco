@@ -170,7 +170,7 @@ const Hero = () => {
             {/* Mobile Headline - 2 lines */}
             <div className="relative w-full sm:max-w-md flex md:hidden items-center justify-center">
               <svg
-                viewBox="0 0 1000 390"
+                viewBox="0 0 1000 440"
                 className="w-full h-auto overflow-visible border-none outline-none"
                 xmlns="http://www.w3.org/2000/svg"
                 preserveAspectRatio="xMidYMid meet"
@@ -188,7 +188,7 @@ const Hero = () => {
                   >
                     <text
                       x="500"
-                      y="150"
+                      y="120"
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill="white"
@@ -196,7 +196,7 @@ const Hero = () => {
                         fontFamily: "var(--font-matter), sans-serif",
                         fontWeight: 700,
                       }}
-                      fontSize="150"
+                      fontSize="170"
                       letterSpacing="-3%"
                     >
                       Crispy Since
@@ -212,7 +212,7 @@ const Hero = () => {
                         fontFamily: "var(--font-matter), sans-serif",
                         fontWeight: 700,
                       }}
-                      fontSize="150"
+                      fontSize="160"
                       letterSpacing="-3%"
                     >
                       2011.

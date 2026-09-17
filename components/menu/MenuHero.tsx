@@ -30,7 +30,7 @@ const Hero = () => {
       {/* <div className="hidden md:block h-6" /> */}
 
       {/* Main Content Area */}
-      <div className="w-full flex flex-col items-center md:justify-center pt-[60%] sm:pt-[50%] lg:pt-[8%]">
+      <div className="w-full flex flex-col items-center md:justify-center pt-[45%] sm:pt-[50%] lg:pt-[8%]">
         {/* Large Headline with Video Inside Text - Desktop */}
         <div className="relative w-full hidden md:flex items-center justify-center">
           <svg
@@ -184,11 +184,16 @@ const Hero = () => {
             </defs>
 
             <foreignObject
-              x="2"
-              y="2"
-              width="996"
-              height="376"
+              x="0"
+              y="0"
+              width="1380"
+              height="450"
               className="overflow-hidden"
+              style={{
+                overflow: "hidden",
+                border: 0,
+                outline: 0,
+              }}
             >
               <div
                 className="w-full h-full flex items-center justify-center overflow-hidden"

@@ -151,10 +151,10 @@ const Hero = () => {
         </div>
 
         {/* Large Headline with Video Inside Text - Mobile */}
-        <div className="relative w-full flex md:hidden items-center justify-center pt-[65%] sm:pt-[40%]">
+        <div className="relative w-full flex md:hidden items-center justify-center pt-[45%] sm:pt-[40%]">
           <svg
-            viewBox="0 0 1380 420"
-            className="w-full h-auto overflow-visible border-none outline-none"
+            viewBox="0 0 1380 550"
+             className="block w-full h-auto"
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="xMidYMid meet"
           >
@@ -167,7 +167,7 @@ const Hero = () => {
                 x="-100"
                 y="-100"
                 width="1580"
-                height="620"
+                height="650"
               >
                 <text
                   x="50%"
@@ -179,7 +179,7 @@ const Hero = () => {
                     fontFamily: "var(--font-matter), sans-serif",
                     fontWeight: 700,
                   }}
-                  fontSize="150"
+                  fontSize="190"
                   letterSpacing="-3%"
                 >
                   Five Kitchens.
@@ -187,7 +187,7 @@ const Hero = () => {
 
                 <text
                   x="50%"
-                  y="50%"
+                  y="54%"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
@@ -195,14 +195,14 @@ const Hero = () => {
                     fontFamily: "var(--font-matter), sans-serif",
                     fontWeight: 700,
                   }}
-                  fontSize="150"
+                  fontSize="190"
                   letterSpacing="-3%"
                 >
                   One Standard.
                 </text>
                 <text
                   x="50%"
-                  y="85%"
+                  y="90%"
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="white"
@@ -210,7 +210,7 @@ const Hero = () => {
                     fontFamily: "var(--font-matter), sans-serif",
                     fontWeight: 700,
                   }}
-                  fontSize="150"
+                  fontSize="190"
                   letterSpacing="-3%"
                 >
                   Find Yours.
@@ -219,12 +219,16 @@ const Hero = () => {
             </defs>
 
             <foreignObject
-              x="2"
-              y="2"
-              width="1376"
-              height="416"
-              className="overflow-hidden border-none outline-none"
-              style={{ overflow: "hidden", border: "none", outline: "none" }}
+              x="0"
+              y="0"
+              width="1380"
+              height="780"
+              className="overflow-hidden"
+              style={{
+                overflow: "hidden",
+                border: 0,
+                outline: 0,
+              }}
             >
               <div
                 className="w-full h-full flex items-center justify-center overflow-hidden border-none outline-none"
