@@ -80,7 +80,7 @@ const Hero = () => {
           {/* <div className="hidden sm:block h-6" /> */}
 
           {/* Large Headline with Video Mask */}
-          <div className="w-full flex flex-col items-center md:justify-start pt-[45%] sm:pt-[50%] lg:pt-25">
+          <div className="w-full flex flex-col items-center justify-center pt-28 sm:pt-32 md:pt-20 lg:pt-16">
             {/* Desktop Headline */}
             <div className="relative w-full hidden md:flex items-center justify-center">
               <svg
@@ -308,7 +308,7 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-10%] bottom-[40%] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
+            className="absolute left-[-30%] bottom-[30%] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -328,7 +328,7 @@ const Hero = () => {
               y: rightY,
               opacity: rightOpacity,
             }}
-            className="absolute right-[-40vw] top-[14vh] sm:right-[-6vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[950px] aspect-[4/3]"
+            className="absolute right-[-40%] top-[12%] sm:right-[-6vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[950px] aspect-[4/3]"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
