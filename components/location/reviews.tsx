@@ -133,7 +133,7 @@ const Reviews = ({
   useEffect(() => {
     const ctx = gsap.context(() => {
       const isMobile = window.matchMedia("(max-width: 1024px)").matches;
-      const staggerDelay = isMobile ? 1.3 : 0.7;
+      const staggerDelay = isMobile ? 1.5 : 0.7;
       const startY = isMobile ? "90vh" : "110vh";
       const endY = isMobile ? "-100vh" : "-110vh";
 
