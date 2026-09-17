@@ -161,7 +161,7 @@ const Hero = () => {
                     fontFamily: "var(--font-matter), sans-serif",
                     fontWeight: 700,
                   }}
-                  fontSize="150"
+                  fontSize="140"
                   letterSpacing="-3%"
                 >
                   Build Your
@@ -187,15 +187,15 @@ const Hero = () => {
 
             <foreignObject
               x="0"
-  y="0"
-  width="1380"
-  height="450"
-  className="overflow-hidden"
-  style={{
-    overflow: "hidden",
-    border: 0,
-    outline: 0,
-  }}
+              y="0"
+              width="1000"
+              height="380"
+              className="overflow-hidden"
+              style={{
+                overflow: "hidden",
+                border: 0,
+                outline: 0,
+              }}
             >
               <div
                 className="w-full h-full flex items-center justify-center overflow-hidden"

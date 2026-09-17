@@ -186,8 +186,8 @@ const Hero = () => {
             <foreignObject
               x="0"
               y="0"
-              width="1380"
-              height="450"
+              width="1000"
+              height="380"
               className="overflow-hidden"
               style={{
                 overflow: "hidden",

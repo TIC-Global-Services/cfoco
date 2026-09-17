@@ -222,7 +222,7 @@ const Hero = () => {
               x="0"
               y="0"
               width="1380"
-              height="780"
+              height="550"
               className="overflow-hidden"
               style={{
                 overflow: "hidden",
