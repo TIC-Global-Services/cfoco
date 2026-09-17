@@ -42,7 +42,7 @@ const Hero = () => {
   return (
     <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
-      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-44">
+      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-38">
         {/* Large Headline with Video Inside Text - Desktop */}
         <div className="relative w-full hidden md:flex items-center justify-center">
           <svg
@@ -91,7 +91,7 @@ const Hero = () => {
                   fontSize="100"
                   letterSpacing="-3%"
                 >
-                  One Standard. find yours.
+                  One Standard. Find Yours.
                 </text>
               </mask>
             </defs>
@@ -258,11 +258,11 @@ const Hero = () => {
         </div>
 
         {/* Subtitles */}
-        <div className="mt-4 md:mt-0 text-center px-4">
-          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3]">
+        <div className="mt-4 md:-mt-8 text-center px-4">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none">
             Across <span className="text-[#CC1518] font-medium">Bordeaux</span> And Beyond
           </p>
-          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] mt-1 hidden md:block">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none mt-1 hidden md:block">
             Every CFC Is The Same Promise, Cooked Fresh Where You Are.
           </p>
           <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] mt-1 md:hidden">

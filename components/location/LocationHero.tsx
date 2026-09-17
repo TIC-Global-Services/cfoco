@@ -33,7 +33,7 @@ export default function LocationHero({ location }: LocationHeroProps) {
       </div>
 
       {/* Bottom Hero Content */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 flex flex-col items-center text-center gap-6">
         <div className="max-w-4xl">
           <span className="text-[34px] md:text-[2rem] lg:text-[4.375rem] font-bold text-[#FFBF00] tracking-wide leading-none block">
             CFC Tasty

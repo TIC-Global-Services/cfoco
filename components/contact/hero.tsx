@@ -21,7 +21,7 @@ const Hero = () => {
   return (
     <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-0 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
-      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-44">
+      <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-38">
         {/* Large Headline with Video Inside Text */}
         <div className="relative w-full flex items-center justify-center">
           <svg
@@ -106,7 +106,7 @@ const Hero = () => {
         </div>
 
         {/* Subtitles */}
-        <div className="mt-4 sm:mt-2 text-center">
+        <div className="mt-4 md:-mt-6 text-center px-4">
           <p className="text-xl sm:text-xl md:text-2xl font-normal leading-[1.2] tracking-tight md:tracking-wide text-[#F2F2F2]">
             Got a question, feedback, partnership <br className="md:hidden" /> idea, or need a little help? Whatever’s<br className="md:hidden" /> on your mind, the{" "}
             <span className="text-[#CC1518] font-medium">CFOCO</span> <br className="hidden lg:block" /> team is<br className="md:hidden" /> here to listen, help, and keep things <br className="md:hidden" /> moving.
