@@ -160,8 +160,8 @@ const WhatWeRefuse = () => {
               </div>
 
               {/* JOB TITLE (In the notch) */}
-              <div className="absolute bottom-6 right-2 sm:right-4 flex items-start justify-start w-[50%] z-0 pointer-events-none">
-                <span className="text-[#F6B90B] font-bold text-lg sm:text-2xl text-right leading-tight">
+              <div className="absolute bottom-4 sm:bottom-6 right-3 sm:right-4 flex items-center justify-end w-[52%] z-20 pointer-events-none">
+                <span className="text-[#F6B90B] font-bold text-lg sm:text-2xl text-right leading-tight break-words">
                   {job.role}
                 </span>
               </div>
@@ -254,8 +254,8 @@ const WhatWeRefuse = () => {
                   </div>
 
                   {/* JOB TITLE */}
-                  <div className="absolute bottom-5 right-2 flex items-start justify-end w-[70%] md:w-[50%] pointer-events-none">
-                    <span className="text-[#F6B90B] font-bold text-xl text-right leading-tight">
+                  <div className="absolute bottom-3 sm:bottom-5 right-3 flex items-center justify-end w-[50%] z-20 pointer-events-none">
+                    <span className="text-[#F6B90B] font-bold text-base sm:text-xl text-right leading-tight break-words">
                       {job.role}
                     </span>
                   </div>

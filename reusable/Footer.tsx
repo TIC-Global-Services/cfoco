@@ -86,7 +86,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
               <Link
                 key={link.label}
                 href={link.href}
-                className="transition-colors duration-200 hover:text-white relative leading-[0.9]  group"
+                className="transition-colors duration-200 hover:text-white relative leading-none md:leading-[0.9]  group"
               >
                 <span>{link.label}</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E5A823] transition-all duration-300 group-hover:w-full" />
@@ -110,7 +110,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           {/* Bottom Footer Bar */}
           <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-2 sm:gap-6 text-base sm:text-base text-[#B0B0B0] shrink-0">
             {/* Copyright */}
-            <div className="text-center md:text-left order-2 md:order-1 font-light">
+            <div className="text-center md:text-left order-2 md:order-1 font-semibold">
               <span>Copyright © 2026 </span>
               <span className="font-semibold text-[#E5A823]">CFOCO.</span>
               <span> All rights reserved.</span>
@@ -133,13 +133,13 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             </div>
 
             {/* Credits */}
-            <div className="text-center text-base md:text-right text-[#B0B0B0] order-3 font-light">
+            <div className="text-center text-base md:text-right text-[#B0B0B0] order-3 font-semibold">
               <span>Designed &amp; Developed by </span><br className="md:hidden"/>
               <Link
                 href="https://ticglobalservices.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-[#CC1518] hover:text-red-400 transition-colors duration-200"
+                className="font-semibold text-[#CC1518] hover:text-red-400 transition-colors duration-200"
               >
                 TIC Global services
               </Link>

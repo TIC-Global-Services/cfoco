@@ -179,7 +179,7 @@ const Hero = () => {
         <div className="w-full z-20">
           <motion.div
             style={{ opacity: textOpacity, y: headlineY }}
-            className="max-w-2xl text-center md:text-left pt-10"
+            className="max-w-2xl text-center md:text-left md:pt-10"
           >
             <h2 className="text-4xl sm:text-5xl md:text-[3.75rem] lg:text-[4.375rem] font-bold tracking-tight text-white leading-[1.08]">
               It Started With <br />
@@ -197,7 +197,7 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-20vw] bottom-[35vh] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
+            className="absolute left-[-30vw] bottom-[30vh] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -217,7 +217,7 @@ const Hero = () => {
               y: rightY,
               opacity: rightOpacity,
             }}
-            className="absolute right-[-40vw] top-[16vh] sm:right-[-6vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[950px] aspect-[4/3]"
+            className="absolute right-[-40vw] top-[14vh] sm:right-[-6vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[950px] aspect-[4/3]"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -232,7 +232,7 @@ const Hero = () => {
         </div>
 
         {/* Bottom-Right Story Paragraphs */}
-        <div className="w-full mt-[30%] z-20 flex justify-end items-center">
+        <div className="w-full mt-[70%] md:mt-[30%] z-20 flex justify-end items-end md:items-center">
           <motion.div
             style={{ opacity: textOpacity, y: descY }}
             className="max-w-xl md:max-w-4xl text-center sm:text-right space-y-3"

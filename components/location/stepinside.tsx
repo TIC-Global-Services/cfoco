@@ -122,7 +122,7 @@ const StepInside = () => {
 
   return (
     <section
-      className={`relative w-full py-8 sm:py-12 md:py-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center overflow-hidden select-none min-h-screen ${matter.className}`}
+      className={`relative w-full py-8 sm:py-12 md:py-10 px-0 sm:px-6 lg:px-8 flex flex-col items-center justify-center overflow-hidden select-none min-h-screen ${matter.className}`}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -179,15 +179,15 @@ const StepInside = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[450px] pointer-events-none" />
 
       <div className="relative z-10 w-full flex flex-col items-center text-center max-w-6xl mx-auto">
-        <div className="mb-4 sm:mb-6 md:mb-8">
+        <div className="mb-4 sm:mb-6 md:mb-8 px-[5%] sm:px-0">
           {/* Title */}
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[70px] font-extrabold tracking-tight text-[#FFBF00] drop-shadow-sm">
             Step Inside.
           </h2>
 
           {/* Subtitle - exactly 2 lines on desktop */}
-          <p className="mt-3 md:max-w-5xl mx-auto text-xs sm:text-base md:text-2xl text-neutral-300 font-normal leading-[1.3]">
-            Same Recipe, Same Crispy Standard, But Every CFC Takes On The Character Of Its Neighbourhood.
+          <p className="mt-3 md:max-w-5xl mx-auto text-base md:text-2xl text-neutral-300 font-normal leading-[1.3]">
+            Same Recipe, Same Crispy Standard, But <br className="sm:hidden"/> Every CFC Takes On The Character Of Its Neighbourhood.
             Pick A City, Or Let Us Find The One Closest To You.
           </p>
         </div>
@@ -199,7 +199,7 @@ const StepInside = () => {
               src="/new-map.png"
               alt="CFC Global Locations World Map"
               fill
-              className="object-contain opacity-90 transition-opacity duration-500 hover:opacity-100"
+              className="object-cover md:object-contain opacity-90 transition-opacity duration-500 hover:opacity-100"
               priority
             />
 
@@ -322,13 +322,13 @@ const StepInside = () => {
                         href={`/location/${loc.slug}`}
                         className="group flex flex-col items-center justify-center transition-all duration-500 scale-105 sm:scale-110"
                       >
-                        <span className="whitespace-nowrap text-2xl sm:text-3xl md:text-[50px] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105">
+                        <span className="whitespace-nowrap text-4xl sm:text-3xl md:text-[50px] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105">
                           {loc.name}
                         </span>
                       </Link>
                     ) : (
                       <div className="flex flex-col items-center justify-center opacity-30 hover:opacity-75 transition-all duration-300 scale-90 sm:scale-95">
-                        <span className="whitespace-nowrap text-lg sm:text-xl md:text-3xl font-bold tracking-tight text-neutral-400 hover:text-white transition-colors">
+                        <span className="whitespace-nowrap text-2xl sm:text-xl md:text-3xl font-bold tracking-tight text-neutral-400 hover:text-white transition-colors">
                           {loc.name}
                         </span>
                       </div>

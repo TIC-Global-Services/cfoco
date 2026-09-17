@@ -41,7 +41,7 @@ export default function LocationHero({ location }: LocationHeroProps) {
           <h1 className="text-[34px] md:text-[4rem] lg:text-[6.25rem] font-extrabold text-[#FFBF00] tracking-tight leading-none whitespace-pre-line">
             {location.name}
           </h1>
-          <p className="text-base sm:text-base lg:text-2xl text-[#FFFFFF] font-medium tracking-tight leading-none[1.2] mt-2 sm:mt-3 whitespace-pre-line">
+          <p className="text-base sm:text-base lg:text-2xl text-[#FFFFFF] font-medium tracking-tight leading-[1.2] mt-2 sm:mt-3 whitespace-pre-line">
             {location.tagline.prefix}{" "}
             <span className="text-[#CC1518] font-medium">{location.tagline.highlight}</span>{" "}
             {location.tagline.description}

@@ -25,7 +25,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-0 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
+    <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-[5%] sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
       {/* Main Content Area */}
       <div className="w-full flex flex-col items-center md:justify-start pt-[60%] sm:pt-[50%] lg:pt-44">
         {/* Large Headline with Video Inside Text - Desktop */}
@@ -159,7 +159,7 @@ const Hero = () => {
                   fontSize="150"
                   letterSpacing="-3%"
                 >
-                  build your
+                  Build Your
                 </text>
 
                 <text
@@ -175,7 +175,7 @@ const Hero = () => {
                   fontSize="150"
                   letterSpacing="-3%"
                 >
-                  future with us.
+                  Future With Us.
                 </text>
               </mask>
             </defs>
