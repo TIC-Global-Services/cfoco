@@ -281,13 +281,13 @@ const Hero = () => {
           <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none">
             Across <span className="text-[#CC1518] font-medium">Bordeaux</span> And Beyond
           </p>
-          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none mt-1 hidden md:block">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none  hidden md:block">
             Every CFC Is The Same Promise, Cooked Fresh Where You Are.
           </p>
-          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] mt-1 md:hidden">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3]  md:hidden">
             Every CFC Is The Same Promise,
           </p>
-          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] mt-0.5 md:hidden">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3]  md:hidden">
             Cooked Fresh Where You Are.
           </p>
         </div>
