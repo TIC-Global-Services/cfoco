@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import { locationsData, LocationData } from "@/data/locations";
-import { MapPin, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 
 
@@ -122,7 +122,7 @@ const StepInside = () => {
 
   return (
     <section
-      className={`relative w-full py-16 sm:py-24 px-0 sm:px-6 lg:px-8 flex flex-col items-center justify-center overflow-hidden select-none ${matter.className}`}
+      className={`relative w-full py-8 sm:py-12 md:py-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center overflow-hidden select-none min-h-screen ${matter.className}`}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -176,30 +176,30 @@ const StepInside = () => {
       `}</style>
 
       {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px]  pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[450px] pointer-events-none" />
 
-      <div className="relative z-10 w-full flex flex-col items-center text-center">
-        <div className="md:mb-10">
+      <div className="relative z-10 w-full flex flex-col items-center text-center max-w-6xl mx-auto">
+        <div className="mb-4 sm:mb-6 md:mb-8">
           {/* Title */}
-          <h2 className="text-4xl sm:text-5xl md:text-[4.375rem] font-extrabold tracking-tight text-[#FFBF00] drop-shadow-sm">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[70px] font-extrabold tracking-tight text-[#FFBF00] drop-shadow-sm">
             Step Inside.
           </h2>
 
-          {/* Subtitle */}
-          <p className="mt-4 md:max-w-4xl text-base sm:text-base md:text-2xl text-neutral-300 font-normal leading-[1.2]">
-            Same Recipe, Same Crispy Standard, But <br className="md:hidden" /> Every CFC Takes On The Character Of Its<br className="md:hidden" />
-            Neighbourhood. Pick A City, Or Let Us Find The<br className="md:hidden" /> One Closest To You.
+          {/* Subtitle - exactly 2 lines on desktop */}
+          <p className="mt-3 md:max-w-5xl mx-auto text-xs sm:text-base md:text-2xl text-neutral-300 font-normal leading-[1.3]">
+            Same Recipe, Same Crispy Standard, But Every CFC Takes On The Character Of Its Neighbourhood.
+            Pick A City, Or Let Us Find The One Closest To You.
           </p>
         </div>
 
         {/* World Map with Animated Moving Pinpoint & Detail Card */}
-        <div className="relative w-full my-30 sm:mt-20 flex items-center justify-center">
-          <div className="relative w-full aspect-[2/1] max-h-[380px]">
+        <div className="relative w-full my-4 sm:my-6 flex items-center justify-center">
+          <div className="relative w-full aspect-[2.1/1] max-h-[280px] sm:max-h-[340px] md:max-h-[400px]">
             <Image
               src="/new-map.png"
               alt="CFC Global Locations World Map"
               fill
-              className="object-cover md:object-contain opacity-90 transition-opacity duration-500 hover:opacity-100"
+              className="object-contain opacity-90 transition-opacity duration-500 hover:opacity-100"
               priority
             />
 
@@ -211,12 +211,10 @@ const StepInside = () => {
                 left: activeLocation.mapCoords.left,
               }}
             >
-              {/* ===== BEACON DOT (always visible at the map coordinate) ===== */}
-              {/* Outer pulse ring 2 */}
+              
               <span
                 className="beacon-ring-2 absolute top-1/2 left-1/2 w-3 h-3 rounded-full bg-[#FFBF00]/30 pointer-events-none"
               />
-              {/* Inner pulse ring 1 */}
               <span
                 className="beacon-ring-1 absolute top-1/2 left-1/2 w-3 h-3 rounded-full bg-[#FFBF00]/50 pointer-events-none"
               />
@@ -225,64 +223,58 @@ const StepInside = () => {
                 className="beacon-dot absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#FFBF00] z-[2] pointer-events-none"
               />
 
-              {/* ===== FLOATING DETAIL CARD (above the dot) ===== */}
-              <div className="absolute left-1/2 -translate-x-1/2 bottom-2 md:bottom-4 flex flex-col items-center pointer-events-auto">
-                <div className="w-[200px] sm:w-[240px] bg-black/92 backdrop-blur-xl text-white rounded-xl p-4 sm:p-4 border border-[#FFBF00]/40 shadow-[0_8px_30px_rgba(0,0,0,0.85),0_0_20px_rgba(255,191,0,0.08)] text-left transition-all duration-300 hover:border-[#FFBF00]/70 hover:shadow-[0_12px_40px_rgba(0,0,0,0.9),0_0_30px_rgba(255,191,0,0.15)]">
-                  {/* Header Row */}
-                  <div className="flex items-center justify-between gap-1.5 mb-1.5">
-                    <div className="flex items-center gap-1 text-[#FFBF00]">
-                      <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-[#FFBF00] shrink-0" />
-                      <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider truncate">
-                        {activeLocation.cityTag}
-                      </span>
-                    </div>
-                    {activeLocation.badge && (
-                      <span className="text-[8px] sm:text-[9px] px-1.5 py-0.5 rounded-full bg-[#FFBF00]/15 text-[#FFBF00] font-semibold border border-[#FFBF00]/30 shrink-0 whitespace-nowrap">
-                        {activeLocation.badge}
-                      </span>
-                    )}
+              {/* ===== FLOATING DETAIL CARD (below the dot so it never overlaps top text) ===== */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-4 sm:top-5 flex flex-col items-center pointer-events-auto z-40">
+                {/* Connector line from dot down to card */}
+                <div className="w-px h-3 bg-gradient-to-b from-[#FFBF00] to-[#1e82e6]" />
+
+                <div className="w-[220px] sm:w-[270px] bg-[#3a3f47] text-white rounded-2xl p-2.5 sm:p-3.5 border border-[#1e82e6] shadow-[0_14px_40px_rgba(0,0,0,0.85)] text-left transition-all duration-300">
+                  {/* City / Tag Header */}
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFBF00] fill-[#FFBF00] shrink-0" />
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white truncate">
+                      {activeLocation.cityTag}
+                    </span>
                   </div>
 
                   {/* Location Title */}
-                  <h4 className="text-xs sm:text-sm font-extrabold text-white leading-tight">
+                  <h4 className="text-sm sm:text-base font-bold text-[#FFBF00] leading-snug">
                     CFC {activeLocation.name}
                   </h4>
 
                   {/* Address preview */}
-                  <p className="text-[10px] sm:text-[11px] text-neutral-400 font-light mt-0.5 line-clamp-1">
+                  <p className="text-[11px] sm:text-xs text-slate-200 font-normal mt-0.5 mb-2.5 leading-tight line-clamp-2">
                     {activeLocation.address}
                   </p>
 
-                  {/* Action Link to Slug Page */}
-                  <div className="mt-2 pt-1.5 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-[9px] sm:text-[10px] text-neutral-500">
-                      {activeLocation.stats?.capacity || "Dine-In & Takeaway"}
-                    </span>
+                  {/* Action Link Button */}
+                  <div>
                     <Link
                       href={`/location/${activeLocation.slug}`}
-                      className="inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-bold text-[#FFBF00] hover:text-white transition-colors group"
+                      className="inline-flex items-center gap-1.5 bg-[#96a0ad] hover:bg-[#a5afbc] transition-colors rounded-full pl-3 pr-1 py-0.5 group"
                     >
-                      <span>Explore</span>
-                      <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:translate-x-0.5 transition-transform" />
+                      <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#1a212d]">
+                        EXPLORE
+                      </span>
+                      <span className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-[#18202d] flex items-center justify-center text-white transition-transform group-hover:scale-105">
+                        <ArrowUpRight className="w-3 h-3 stroke-[2.5]" />
+                      </span>
                     </Link>
                   </div>
                 </div>
-
-                {/* Connector line from card to dot */}
-                <div className="w-px h-2.5 bg-gradient-to-b from-[#FFBF00]/50 to-[#FFBF00]/10" />
               </div>
             </div>
           </div>
         </div>
 
         {/* INFINITE LOOPING CENTER-HIGHLIGHTED CAROUSEL */}
-        <div className="w-full relative py-0 px-0 sm:px-12 flex items-center justify-center max-w-5xl">
+        <div className="w-full relative py-0 px-0 sm:px-12 flex items-center justify-center max-w-4xl mt-2 sm:mt-4">
           {/* Previous / Next Arrow Controls (Desktop only) */}
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Previous Location"
-            className="hidden md:flex absolute left-2 sm:left-4 z-30 p-2 sm:p-2.5 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
+            className="hidden md:flex absolute left-2 sm:left-4 z-30 p-2 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
           >
             <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
@@ -291,14 +283,14 @@ const StepInside = () => {
             type="button"
             onClick={handleNext}
             aria-label="Next Location"
-            className="hidden md:flex absolute right-2 sm:right-4 z-30 p-2 sm:p-2.5 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
+            className="hidden md:flex absolute right-2 sm:right-4 z-30 p-2 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
           >
             <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
           {/* Carousel Viewport with Touch Drag/Swipe Support */}
           <div
-            className="relative w-full h-24 sm:h-28 flex items-center justify-center overflow-hidden touch-pan-y"
+            className="relative w-full h-16 sm:h-10 flex items-center justify-center overflow-hidden touch-pan-y"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -328,15 +320,15 @@ const StepInside = () => {
                     {isCenter ? (
                       <Link
                         href={`/location/${loc.slug}`}
-                        className="group flex flex-col items-center justify-center transition-all duration-500 scale-110 sm:scale-125"
+                        className="group flex flex-col items-center justify-center transition-all duration-500 scale-105 sm:scale-110"
                       >
-                        <span className="whitespace-nowrap text-[34px] sm:text-4xl md:text-[3.125rem] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105">
+                        <span className="whitespace-nowrap text-2xl sm:text-3xl md:text-[50px] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105">
                           {loc.name}
                         </span>
                       </Link>
                     ) : (
                       <div className="flex flex-col items-center justify-center opacity-30 hover:opacity-75 transition-all duration-300 scale-90 sm:scale-95">
-                        <span className="whitespace-nowrap text-[34px] sm:text-2xl md:text-3xl font-bold tracking-tight text-neutral-400 hover:text-white transition-colors">
+                        <span className="whitespace-nowrap text-lg sm:text-xl md:text-3xl font-bold tracking-tight text-neutral-400 hover:text-white transition-colors">
                           {loc.name}
                         </span>
                       </div>

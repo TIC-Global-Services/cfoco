@@ -3,6 +3,7 @@ import Hero from '@/components/career/hero'
 import Reachoutanyway from '@/components/career/reachout'
 import WhatWeRefuse from '@/components/career/whatwerefuse'
 import Reveal from '@/reusable/Reveal'
+import BuildYourFuture from '@/components/career/buildyourfuture'
 
 const page = () => {
   return (
@@ -10,6 +11,7 @@ const page = () => {
       <Reveal>
         <Hero/>
       </Reveal>
+      <BuildYourFuture/>
       <Reveal>
         <WhatWeRefuse/>
       </Reveal>

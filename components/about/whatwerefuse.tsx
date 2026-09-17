@@ -1,430 +1,198 @@
 "use client";
 
-import React, { useRef, useState, useCallback, useMemo } from "react";
-import dynamic from "next/dynamic";
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
-import { Users, Rabbit, Star, LucideIcon } from "lucide-react";
+import React, { useState } from "react";
+import Image from "next/image";
+import { Users, Rabbit, Star } from "lucide-react";
 import { matter } from "@/font/fonts";
-import { FallbackChicken } from "./FriedChickenCanvas";
 
-// Dynamically import Three.js Canvas to prevent SSR issues, with fallback image
-const FriedChickenCanvas = dynamic(
-  () => import("./FriedChickenCanvas"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-full flex items-center justify-center">
-        <FallbackChicken />
-      </div>
-    ),
-  }
-);
+const WhatWeRefuse: React.FC = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-export type PillarId = "conviviality" | "speed" | "quality";
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePos({ x, y });
+  };
 
-export interface PillarItem {
-  id: PillarId;
-  title: string;
-  lines: string[];
-  icon: LucideIcon;
-  phaseIndex: number;
-}
-
-const PILLARS: Record<PillarId, PillarItem> = {
-  conviviality: {
-    id: "conviviality",
-    title: "Conviviality",
-    lines: ["Great Meals Are Meant To Be Shared.", "So Is A Good Time."],
-    icon: Users,
-    phaseIndex: 1,
-  },
-  speed: {
-    id: "speed",
-    title: "Speed",
-    lines: ["Fast Food Should Be Fast And", "Still Be Food."],
-    icon: Rabbit,
-    phaseIndex: 2,
-  },
-  quality: {
-    id: "quality",
-    title: "Quality",
-    lines: [
-      "If It's Not Crispy Enough To Hear, It Doesn't",
-      "Leave The Kitchen.",
-    ],
-    icon: Star,
-    phaseIndex: 0,
-  },
-};
-
-const PHASE_TARGETS = [0.05, 0.4, 0.68, 0.95];
-
-// -----------------------------------------------------------------------------
-// Sub-Components
-// -----------------------------------------------------------------------------
-
-/**
- * Section title header component with golden text matching reference mock.
- */
-const SectionHeader = React.memo(function SectionHeader() {
   return (
-    <header className="w-full text-center z-20 shrink-0 mb-1 sm:mb-2 md:mb-3">
-      <motion.h2
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] xl:text-[3.25rem] font-bold tracking-tight text-[#E5A823] leading-[1.1]"
-      >
-        What We Refuse
-      </motion.h2>
-      <motion.h2
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.08, ease: "easeOut" }}
-        className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.5rem] xl:text-[4.25rem] font-bold tracking-tight text-[#E5A823] leading-none mt-0.5 sm:mt-1"
-      >
-        To Compromise
-      </motion.h2>
-    </header>
-  );
-});
-
-/**
- * Orbit Anchor Dot component for interactive phase selection around the 3D model.
- */
-interface OrbitDotProps {
-  isActive: boolean;
-  positionClass: string;
-  label: string;
-  onClick: () => void;
-  isLargeDot?: boolean;
-}
-
-const OrbitDot: React.FC<OrbitDotProps> = ({
-  isActive,
-  positionClass,
-  label,
-  onClick,
-  isLargeDot = false,
-}) => {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={`Navigate to ${label}`}
-      className={`absolute ${positionClass} z-30 p-2 cursor-pointer focus:outline-none rounded-full transition-transform duration-200 hover:scale-125`}
+    <section
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setMousePos({ x: 0, y: 0 })}
+      className={`relative w-full min-h-screen py-12 sm:py-16 md:py-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between overflow-hidden select-none ${matter.className}`}
     >
-      {isLargeDot ? (
-        <div
-          className={`w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-            isActive
-              ? "border-[#E52320] bg-[#1a080a] scale-125 shadow-[0_0_16px_#E52320]"
-              : "border-[#38bdf8] bg-[#0d1424] hover:scale-110"
-          }`}
-        >
-          <div
-            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-              isActive
-                ? "bg-[#E52320] shadow-[0_0_10px_#E52320]"
-                : "bg-[#38bdf8] shadow-[0_0_6px_#38bdf8]"
-            }`}
+      {/* Ambient background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
+
+      {/* Header */}
+      <header className="relative z-10 text-center mb-2 sm:mb-0">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[50px] font-extrabold tracking-tight text-[#FFBF00] leading-none drop-shadow-md">
+          What We Refuse
+        </h2>
+        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[50px] font-extrabold tracking-tight text-[#FFBF00] leading-none mt-1 sm:mt-2 drop-shadow-md">
+          To Compromise
+        </h2>
+      </header>
+
+      {/* Main Interactive Stage Container */}
+      <div className="relative w-full  h-[580px] sm:h-[650px] lg:h-[720px] flex items-center justify-center my-auto">
+        
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[280px] sm:w-[380px] md:w-[460px] lg:w-[520px] aspect-square flex items-center justify-center">
+          <Image
+            src="/fried-chicken.png"
+            alt="Crispy Fried Chicken"
+            fill
+            className="object-cover drop-shadow-[0_25px_60px_rgba(0,0,0,0.9)]"
+            priority
           />
         </div>
-      ) : (
-        <div
-          className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full transition-all duration-300 ${
-            isActive
-              ? "bg-[#E52320] shadow-[0_0_14px_#E52320] scale-150"
-              : "bg-[#38bdf8] shadow-[0_0_8px_#38bdf8] hover:scale-125"
-          }`}
-        />
-      )}
-      {isActive && (
-        <div className="absolute inset-0 m-auto w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-[#E52320] animate-ping pointer-events-none" />
-      )}
-    </button>
-  );
-};
 
-/**
- * Desktop Pillar Card rendering icon, title, and description lines.
- */
-interface PillarBadgeProps {
-  pillar: PillarItem;
-  isActive: boolean;
-  onSelect: () => void;
-  extraClass?: string;
-}
-
-const PillarBadge: React.FC<PillarBadgeProps> = ({
-  pillar,
-  isActive,
-  onSelect,
-  extraClass = "",
-}) => {
-  const IconComponent = pillar.icon;
-
-  return (
-    <div
-      onClick={onSelect}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onSelect();
-        }
-      }}
-      aria-label={`Select ${pillar.title} pillar`}
-      className={`flex flex-col items-center text-center z-20 px-2 sm:px-4 cursor-pointer group transition-all duration-300 hover:scale-105 focus:outline-none ${extraClass}`}
-    >
-      {/* Circle Icon Container */}
-      <div
-        className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center border transition-all duration-300 mb-2 sm:mb-2.5 ${
-          isActive
-            ? "bg-[#1f1013] border-[#232d3f]  scale-110"
-            : "bg-[#141a26]/80 border-[#232d3f] hover:border-white/30"
-        }`}
-      >
-        <IconComponent
-          className={`w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 transition-colors duration-300 text-[#E5A823]`}
-        />
-      </div>
-
-      {/* Pillar Title */}
-      <h3
-        className={`text-xl sm:text-2xl lg:text-[1.85rem] xl:text-[2.25rem] font-bold mb-1 transition-all duration-300 ${
-          isActive
-            ? "text-[#E52320] drop-shadow-[0_0_14px_rgba(229,35,32,0.4)]"
-            : "text-white group-hover:text-[#E5A823]"
-        }`}
-      >
-        {pillar.title}
-      </h3>
-
-      {/* Pillar Subtitle Lines */}
-      {pillar.lines.map((line, idx) => (
-        <p
-          key={idx}
-          className={`text-xs sm:text-sm lg:text-base xl:text-[1.125rem] leading-[1.3] transition-colors duration-300 ${
-            isActive ? "text-white font-medium" : "text-[#9098ab]"
-          }`}
-        >
-          {line}
-        </p>
-      ))}
-    </div>
-  );
-};
-
-
-const WhatWeRefuse = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  // activePhase: 0: Quality (initial), 1: Conviviality, 2: Speed, 3: Quality (last)
-  const [activePhase, setActivePhase] = useState<number>(0);
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    setScrollProgress(latest);
-    if (latest < 0.25) {
-      setActivePhase(0);
-    } else if (latest < 0.55) {
-      setActivePhase(1);
-    } else if (latest < 0.8) {
-      setActivePhase(2);
-    } else {
-      setActivePhase(3);
-    }
-  });
-
-  // Smooth scroll handler for clicking on any pillar or dot anchor
-  const scrollToPhase = useCallback((phaseIndex: number) => {
-    if (!containerRef.current) return;
-    const containerTop =
-      containerRef.current.getBoundingClientRect().top + window.scrollY;
-    const containerHeight =
-      containerRef.current.offsetHeight - window.innerHeight;
-    const targetFraction = PHASE_TARGETS[phaseIndex] ?? 0;
-    window.scrollTo({
-      top: containerTop + targetFraction * containerHeight,
-      behavior: "smooth",
-    });
-  }, []);
-
-  const isQualityActive = activePhase === 0 || activePhase === 3;
-  const isConvivialityActive = activePhase === 1;
-  const isSpeedActive = activePhase === 2;
-
-  const currentMobilePillar = useMemo(() => {
-    if (activePhase === 1) return PILLARS.conviviality;
-    if (activePhase === 2) return PILLARS.speed;
-    return PILLARS.quality;
-  }, [activePhase]);
-
-  return (
-    <div
-      ref={containerRef}
-      className={`relative w-full h-[300vh] bg-transparent ${matter.className}`}
-    >
-      {/* Sticky Viewport Container - Locks strictly to 100vh on all device heights */}
-      <div className="sticky top-0 h-screen h-[100dvh] max-h-screen w-full flex flex-col justify-between items-center pt-4 sm:pt-6 lg:pt-8 pb-4 sm:pb-6 lg:pb-8 px-4 sm:px-8 lg:px-12 max-w-[1600px] mx-auto overflow-hidden select-none">
-        {/* Ambient Glow Backdrops */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] sm:w-[650px] lg:w-[800px] h-[450px] sm:h-[650px] lg:h-[800px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none" />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] sm:w-[350px] h-[280px] sm:h-[350px] bg-amber-500/5 rounded-full blur-[110px] pointer-events-none" />
-
-        {/* Section Header */}
-        <SectionHeader />
-
-        {/* Interactive Orbit Stage with 3D Model in Center */}
-        <div className="relative w-full flex-1 flex flex-col justify-center items-center my-auto min-h-0 overflow-hidden">
-          {/* DESKTOP LAYOUT (>= lg) */}
-          <div className="hidden lg:flex w-full items-center justify-between gap-4 lg:gap-8 relative shrink-0 my-auto">
-            {/* Left Pillar: Conviviality */}
-            <div className="w-1/3 flex justify-center">
-              <PillarBadge
-                pillar={PILLARS.conviviality}
-                isActive={isConvivialityActive}
-                onSelect={() => scrollToPhase(1)}
-              />
-            </div>
-
-        
-            <div className="w-1/3 relative flex items-center justify-center shrink-0">
-              <div className="relative w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] lg:w-[320px] lg:h-[320px] xl:w-[370px] xl:h-[370px] 2xl:w-[420px] 2xl:h-[420px] max-h-[40vh] max-w-[40vh] aspect-square flex items-center justify-center">
-               
-                <div className="absolute inset-0 rounded-full border-[1.5px] border-blue-400/30 shadow-[0_0_30px_rgba(56,189,248,0.18)] pointer-events-none" />
-                {/* <div className="absolute -inset-3 rounded-full border border-blue-500/10 pointer-events-none" /> */}
-
-                {/* Left Dot (Conviviality - 9 o'clock) */}
-                <OrbitDot
-                  isActive={isConvivialityActive}
-                  positionClass="left-0 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                  label="Conviviality"
-                  onClick={() => scrollToPhase(1)}
-                />
-
-                {/* Right Dot (Speed - 3 o'clock) */}
-                <OrbitDot
-                  isActive={isSpeedActive}
-                  positionClass="right-0 top-1/2 translate-x-1/2 -translate-y-1/2"
-                  label="Speed"
-                  onClick={() => scrollToPhase(2)}
-                />
-
-                {/* Bottom Dot (Quality - 6 o'clock) */}
-                <OrbitDot
-                  isActive={isQualityActive}
-                  positionClass="bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
-                  label="Quality"
-                  onClick={() => scrollToPhase(0)}
-                  isLargeDot
-                />
-
-                {/* 3D Model Canvas */}
-                <div className="relative w-full h-full z-10 flex items-center justify-center">
-                  <FriedChickenCanvas
-                    activePhase={activePhase}
-                    scrollProgress={scrollProgress}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Right Pillar: Speed */}
-            <div className="w-1/3 flex justify-center">
-              <PillarBadge
-                pillar={PILLARS.speed}
-                isActive={isSpeedActive}
-                onSelect={() => scrollToPhase(2)}
-              />
-            </div>
-          </div>
-
-          {/* Desktop Bottom Pillar: Quality */}
-          <div className="hidden lg:flex flex-col items-center text-center shrink-0 z-20 mt-2 xl:mt-3">
-            <PillarBadge
-              pillar={PILLARS.quality}
-              isActive={isQualityActive}
-              onSelect={() => scrollToPhase(0)}
-            />
-          </div>
-
-          {/* MOBILE & TABLET LAYOUT (< lg) */}
-          <div className="flex lg:hidden flex-col items-center justify-center w-full my-auto shrink-0">
-            {/* Center Orbit Ring */}
-            <div className="relative w-[210px] h-[210px] sm:w-[260px] sm:h-[260px] md:w-[300px] md:h-[300px] max-h-[32vh] aspect-square flex items-center justify-center mb-4 sm:mb-5">
-              {/* Ring line */}
-              <div className="absolute inset-0 rounded-full border-[1.5px] border-blue-400/30 shadow-[0_0_20px_rgba(56,189,248,0.18)] pointer-events-none" />
-
-              {/* Left Anchor Dot (Conviviality) */}
-              <OrbitDot
-                isActive={isConvivialityActive}
-                positionClass="left-0 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                label="Conviviality"
-                onClick={() => scrollToPhase(1)}
-              />
-
-              {/* Right Anchor Dot (Speed) */}
-              <OrbitDot
-                isActive={isSpeedActive}
-                positionClass="right-0 top-1/2 translate-x-1/2 -translate-y-1/2"
-                label="Speed"
-                onClick={() => scrollToPhase(2)}
-              />
-
-              {/* Bottom Anchor Dot (Quality) */}
-              <OrbitDot
-                isActive={isQualityActive}
-                positionClass="bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
-                label="Quality"
-                onClick={() => scrollToPhase(0)}
-                isLargeDot
-              />
-
-              {/* 3D Model / Fallback Image Canvas */}
-              <div className="relative w-full h-full z-10 flex items-center justify-center">
-                <FriedChickenCanvas
-                  activePhase={activePhase}
-                  scrollProgress={scrollProgress}
-                />
-              </div>
-            </div>
-
-            {/* Mobile Active Pillar Text below orbit ring */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentMobilePillar.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25 }}
-                className="flex flex-col items-center text-center px-4"
-              >
-                <h3 className="text-2xl sm:text-3xl font-bold mb-1.5 text-[#E52320] drop-shadow-[0_0_12px_rgba(229,35,32,0.4)]">
-                  {currentMobilePillar.title}
-                </h3>
-                {currentMobilePillar.lines.map((line, idx) => (
-                  <p
-                    key={idx}
-                    className="text-xs sm:text-sm text-neutral-300 font-normal leading-relaxed"
-                  >
-                    {line}
-                  </p>
-                ))}
-              </motion.div>
-            </AnimatePresence>
+       
+        <div className="absolute left-2 sm:left-[3%] lg:left-[6%] xl:left-[10%] top-[32%] sm:top-[38%] -translate-y-1/2 z-20 hover:z-50 group transition-all duration-300">
+          <div className="w-[230px] sm:w-[270px] lg:w-[310px] bg-[#1d232e]/75 backdrop-blur-xl border border-white/15 rounded-2xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] transition-all duration-300 group-hover:scale-105 group-hover:border-[#FFBF00]/60 group-hover:shadow-[0_0_35px_rgba(255,191,0,0.25)]">
+            <Rabbit className="w-8 h-8 text-white mb-4 stroke-[1.5]" />
+            <h3 className="text-2xl sm:text-[2.5rem] font-bold text-white mb-2">Speed</h3>
+            <p className="text-xs sm:text-xl text-neutral-300 font-normal leading-[1.2]">
+              Fast Food Should Be Fast And Still Be Food.
+            </p>
           </div>
         </div>
 
-        {/* Floor Ambient Reflection */}
-        <div className="w-full h-4 bg-gradient-to-t from-transparent via-blue-900/10 to-transparent blur-lg pointer-events-none shrink-0" />
+        {/* Right Card: Quality */}
+        <div className="absolute right-2 sm:right-[3%] lg:right-[6%] xl:right-[10%] top-[32%] sm:top-[38%] -translate-y-1/2 z-20 hover:z-50 group transition-all duration-300">
+          <div className="w-[230px] sm:w-[270px] lg:w-[310px] bg-[#1d232e]/75 backdrop-blur-xl border border-white/15 rounded-2xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] transition-all duration-300 group-hover:scale-105 group-hover:border-[#FFBF00]/60 group-hover:shadow-[0_0_35px_rgba(255,191,0,0.25)]">
+            <Star className="w-6 h-6 text-white mb-4 stroke-[1.5]" />
+            <h3 className="text-2xl sm:text-[2.5rem] font-bold text-white mb-2">Quality</h3>
+            <p className="text-xs sm:text-xl text-neutral-300 font-normal leading-[1.2]">
+              If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen.
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Center Card: Conviviality */}
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-2 sm:bottom-[4%] lg:bottom-[6%] z-20 hover:z-50 group transition-all duration-300">
+          <div className="w-[250px] sm:w-[290px] lg:w-[330px] bg-[#1d232e]/80 backdrop-blur-xl border border-[#1e82e6]/70 rounded-2xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.9)] transition-all duration-300 group-hover:scale-105 group-hover:border-[#FFBF00] group-hover:shadow-[0_0_40px_rgba(255,191,0,0.35)]">
+            <Users className="w-6 h-6 text-[#FFBF00] mb-4 stroke-[1.5]" />
+            <h3 className="text-2xl sm:text-[2.5rem] font-bold text-[#FFBF00] mb-2">Conviviality</h3>
+            <p className="text-xs sm:text-xl text-neutral-200 font-normal leading-[1.2]">
+              Great Meals Are Meant To Be Shared. So Is A Good Time.
+            </p>
+          </div>
+        </div>
+
+        
+        <div
+          className="absolute top-[50%] left-[50%]  z-30 pointer-events-none transition-transform duration-300 ease-out w-[650px] sm:w-[850px] lg:w-[1050px] aspect-square"
+          style={{
+            transform: `translate(calc(-50% + ${mousePos.x * 20}px), calc(-50% + ${mousePos.y * 20}px))`,
+          }}
+        >
+          <Image
+            src="/masala.png"
+            alt="Masala Dust Explosion"
+            fill
+            className="object-contain opacity-95"
+          />
+        </div>
+
+        {/* Parallax Floating Ingredient Spices */}
+        {/* Chili Left */}
+        <div
+          className="absolute left-[8%] sm:left-[16%] top-[20%] sm:top-[24%] z-30 pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate(${mousePos.x * -40}px, ${mousePos.y * -40}px) rotate(${mousePos.x * 20}deg)`,
+          }}
+        >
+          <Image
+            src="/chili-left.png"
+            alt="Chili Left"
+            width={70}
+            height={70}
+            className="w-10 sm:w-14 lg:w-16 object-contain drop-shadow-xl"
+          />
+        </div>
+
+        {/* Chili Right */}
+        <div
+          className="absolute right-[8%] sm:right-[16%] top-[18%] sm:top-[22%] z-30 pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate(${mousePos.x * 45}px, ${mousePos.y * 35}px) rotate(${mousePos.y * -25}deg)`,
+          }}
+        >
+          <Image
+            src="/chill-right.png"
+            alt="Chili Right"
+            width={70}
+            height={70}
+            className="w-10 sm:w-14 lg:w-16 object-contain drop-shadow-xl"
+          />
+        </div>
+
+        {/* Leaf Left */}
+        <div
+          className="absolute left-[30%] top-[36%] z-30 pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate(${mousePos.x * 30}px, ${mousePos.y * -30}px) rotate(${mousePos.x * -35}deg)`,
+          }}
+        >
+          <Image
+            src="/leaf.png"
+            alt="Leaf Left"
+            width={60}
+            height={60}
+            className="w-8 sm:w-12 object-contain drop-shadow-lg"
+          />
+        </div>
+
+        {/* Leaf Right */}
+        <div
+          className="absolute right-[28%] top-[30%] z-30 pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate(${mousePos.x * -35}px, ${mousePos.y * 40}px) rotate(${mousePos.y * 30}deg)`,
+          }}
+        >
+          <Image
+            src="/leaf-right.png"
+            alt="Leaf Right"
+            width={60}
+            height={60}
+            className="w-8 sm:w-12 object-contain drop-shadow-lg"
+          />
+        </div>
+
+        {/* Tomato */}
+        <div
+          className="absolute left-[22%] bottom-[24%] z-30 pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate(${mousePos.x * 50}px, ${mousePos.y * -25}px) rotate(${mousePos.x * 25}deg)`,
+          }}
+        >
+          <Image
+            src="/tomato.png"
+            alt="Tomato"
+            width={50}
+            height={50}
+            className="w-7 sm:w-10 object-contain drop-shadow-lg"
+          />
+        </div>
+
+        {/* Pepper */}
+        <div
+          className="absolute right-[24%] bottom-[26%] z-30 pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate(${mousePos.x * -30}px, ${mousePos.y * 35}px) rotate(${mousePos.y * -20}deg)`,
+          }}
+        >
+          <Image
+            src="/pepper.png"
+            alt="Pepper"
+            width={40}
+            height={40}
+            className="w-5 sm:w-8 object-contain drop-shadow-lg"
+          />
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
