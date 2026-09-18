@@ -1,16 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { matter } from "@/font/fonts";
+import MaskedVideoHeadline from "@/components/shared/MaskedVideoHeadline";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRefDesktop = useRef<HTMLVideoElement>(null);
-  const videoRefMobile = useRef<HTMLVideoElement>(null);
-  const maskRefDesktop = useRef<SVGMaskElement>(null);
-  const maskRefMobile = useRef<SVGMaskElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -43,21 +40,6 @@ const Hero = () => {
   const headlineY = useTransform(smoothProgress, [0.42, 0.62], [-25, 0]);
   const descY = useTransform(smoothProgress, [0.42, 0.62], [25, 0]);
 
-  useEffect(() => {
-    [maskRefDesktop, maskRefMobile].forEach((ref) => {
-      if (ref.current) {
-        ref.current.setAttribute("mask-type", "alpha");
-      }
-    });
-    [videoRefDesktop, videoRefMobile].forEach((ref) => {
-      if (ref.current) {
-        ref.current.play().catch(() => {
-          // Autoplay policy fallback handling
-        });
-      }
-    });
-  }, []);
-
   return (
     <div
       ref={containerRef}
@@ -83,193 +65,29 @@ const Hero = () => {
           <div className="w-full flex flex-col items-center justify-center pt-28 sm:pt-32 md:pt-20 lg:pt-[8%]">
             {/* Desktop Headline */}
             <div className="relative w-full hidden md:flex items-center justify-center">
-              <svg
-                viewBox="0 0 1380 230"
-                className="w-full h-auto overflow-visible border-none outline-none"
-                xmlns="http://www.w3.org/2000/svg"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <defs>
-                  <mask
-                    ref={maskRefDesktop}
-                    id="crispy-text-mask-hero-desktop"
-                    maskUnits="userSpaceOnUse"
-                    style={{ maskType: "alpha" }}
-                    x="-100"
-                    y="-100"
-                    width="1580"
-                    height="430"
-                  >
-                    {/* White text = visible */}
-                    <text
-                      x="50%"
-                      y="58%"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="white"
-                      style={{
-                        fontFamily: "var(--font-matter), sans-serif",
-                        fontWeight: 700,
-                      }}
-                      fontSize="150"
-                      letterSpacing="-3%"
-                    >
-                      Crispy Since 2011.
-                    </text>
-                  </mask>
-                </defs>
-
-                {/* Video inside SVG mask */}
-                <foreignObject
-                  x="2"
-                  y="2"
-                  width="1376"
-                  height="226"
-                  className="overflow-hidden"
-                >
-                  <div
-                    className="w-full h-full flex items-center justify-center overflow-hidden"
-                    style={{
-                      background: "transparent",
-                      transform: "translateZ(0)",
-                      backfaceVisibility: "hidden",
-                      WebkitBackfaceVisibility: "hidden",
-                      WebkitMaskImage: "url(#crispy-text-mask-hero-desktop)",
-                      maskImage: "url(#crispy-text-mask-hero-desktop)",
-                      WebkitMaskRepeat: "no-repeat",
-                      maskRepeat: "no-repeat",
-                      WebkitMaskSize: "100% 100%",
-                      maskSize: "100% 100%",
-                      contain: "paint",
-                      isolation: "isolate",
-                    }}
-                  >
-                    <video
-                      ref={videoRefDesktop}
-                      src="/bg_about_video.mp4"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="auto"
-                      className="w-full h-full object-cover scale-110"
-                      style={{
-                        transform: "translateZ(0) scale(1.1)",
-                        backfaceVisibility: "hidden",
-                        WebkitBackfaceVisibility: "hidden",
-                        border: "none",
-                        outline: "none",
-                        display: "block",
-                      }}
-                    />
-                  </div>
-                </foreignObject>
-              </svg>
+              <MaskedVideoHeadline
+                videoSrc="/bg_about_video.mp4"
+                refWidth={1380}
+                refHeight={230}
+                fontSize={115}
+                letterSpacing="-3%"
+                lines={[{ text: "Crispy Since 2011.", y: "58%" }]}
+              />
             </div>
 
             {/* Mobile Headline - 2 lines */}
             <div className="relative w-full sm:max-w-md flex md:hidden items-center justify-center">
-              <svg
-                viewBox="0 0 1000 440"
-                className="w-full h-auto overflow-visible border-none outline-none"
-                xmlns="http://www.w3.org/2000/svg"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <defs>
-                  <mask
-                    ref={maskRefMobile}
-                    id="crispy-text-mask-hero-mobile"
-                    maskUnits="userSpaceOnUse"
-                    style={{ maskType: "alpha" }}
-                    x="-100"
-                    y="-100"
-                    width="1200"
-                    height="580"
-                  >
-                    <text
-                      x="500"
-                      y="120"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="white"
-                      style={{
-                        fontFamily: "var(--font-matter), sans-serif",
-                        fontWeight: 700,
-                      }}
-                      fontSize="170"
-                      letterSpacing="-3%"
-                    >
-                      Crispy Since
-                    </text>
-
-                    <text
-                      x="500"
-                      y="295"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="white"
-                      style={{
-                        fontFamily: "var(--font-matter), sans-serif",
-                        fontWeight: 700,
-                      }}
-                      fontSize="160"
-                      letterSpacing="-3%"
-                    >
-                      2011.
-                    </text>
-                  </mask>
-                </defs>
-
-                <foreignObject
-                  x="0"
-                  y="0"
-                  width="1380"
-                  height="450"
-                  className="overflow-hidden"
-                  style={{
-                    overflow: "hidden",
-                    border: 0,
-                    outline: 0,
-                  }}
-                >
-                  <div
-                    className="w-full h-full flex items-center justify-center overflow-hidden"
-                    style={{
-                      background: "transparent",
-                      transform: "translateZ(0)",
-                      backfaceVisibility: "hidden",
-                      WebkitBackfaceVisibility: "hidden",
-                      WebkitMaskImage: "url(#crispy-text-mask-hero-mobile)",
-                      maskImage: "url(#crispy-text-mask-hero-mobile)",
-                      WebkitMaskRepeat: "no-repeat",
-                      maskRepeat: "no-repeat",
-                      WebkitMaskSize: "100% 100%",
-                      maskSize: "100% 100%",
-                      contain: "paint",
-                      isolation: "isolate",
-                    }}
-                  >
-                    <video
-                      ref={videoRefMobile}
-                      src="/bg_about_video.mp4"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="auto"
-                      className="w-full h-full object-cover scale-110"
-                      style={{
-                        transform: "translateZ(0) scale(1.1)",
-                        backfaceVisibility: "hidden",
-                        WebkitBackfaceVisibility: "hidden",
-                        border: "none",
-                        outline: "none",
-                        display: "block",
-                      }}
-                    />
-                  </div>
-                </foreignObject>
-              </svg>
+              <MaskedVideoHeadline
+                videoSrc="/bg_about_video.mp4"
+                refWidth={1000}
+                refHeight={440}
+                fontSize={160}
+                letterSpacing="-3%"
+                lines={[
+                  { text: "Crispy Since", y: "120" },
+                  { text: "2011.", y: "295", fontSize: 122 },
+                ]}
+              />
             </div>
 
             {/* Subtitles */}
