@@ -187,10 +187,13 @@ const Hero = () => {
         </div>
 
         {/* Mobile */}
-        <div className="relative w-full flex md:hidden pt-[45%] sm:pt-[40%]">
+        <div
+          className="relative w-full flex md:hidden pt-[45%] sm:pt-[40%] isolate"
+          style={{ isolation: "isolate" }}
+        >
           <div
-            className="relative w-full"
-            style={{ paddingTop: `${MOBILE_RATIO}%` }}
+            className="relative w-full isolate"
+            style={{ paddingTop: `${MOBILE_RATIO}%`, isolation: "isolate" }}
           >
             <svg
               viewBox="0 0 1380 550"
@@ -262,14 +265,18 @@ const Hero = () => {
                     height: "100%",
                     opacity: isReady ? 1 : 0,
                     transition: "opacity 0.3s ease-out",
-                    willChange: "opacity",
+                    WebkitTransform: "translateZ(0)",
+                    transform: "translateZ(0)",
+                    willChange: "opacity, transform",
                   }}
                 >
                   <div
                     className="w-full h-full flex items-center justify-center overflow-hidden border-none outline-none"
                     style={{
                       background: "transparent",
+                      WebkitTransform: "translateZ(0)",
                       transform: "translateZ(0)",
+                      willChange: "transform",
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                       WebkitMaskImage: "url(#crispy-text-mask-location-mobile)",
@@ -291,12 +298,15 @@ const Hero = () => {
                       loop
                       muted
                       playsInline
+                      webkit-playsinline
                       preload="auto"
                       onLoadedData={handleVideoReady}
                       onCanPlay={handleVideoReady}
                       className="w-full h-full object-cover scale-110 brightness-110"
                       style={{
+                        WebkitTransform: "translateZ(0) scale(1.1)",
                         transform: "translateZ(0) scale(1.1)",
+                        willChange: "transform",
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
                         border: "none",
