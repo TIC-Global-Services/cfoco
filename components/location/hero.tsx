@@ -26,28 +26,58 @@ const Hero = () => {
         if (ref.current.readyState >= 2) {
           setIsReady(true);
         }
-        ref.current.play().catch(() => {
-          // Autoplay policy fallback handling
-        });
+        ref.current.play().catch(() => {});
       }
     });
 
-    const timer = setTimeout(() => {
-      setIsReady(true);
-    }, 300);
+    let cancelled = false;
+    const markReady = () => {
+      if (!cancelled) setIsReady(true);
+    };
 
-    return () => clearTimeout(timer);
+    // Wait for the actual webfont used in the mask, not a flat timer
+    if (typeof document !== "undefined" && "fonts" in document) {
+      document.fonts
+        .load('700 100px "matter"')
+        .then(() => document.fonts.ready.then(markReady))
+        .catch(markReady);
+    }
+
+    // Hard fallback in case font loading API stalls
+    const timer = setTimeout(markReady, 800);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
 
+  // Shared style for mask text: stroke fattens the glyph edge by ~1px
+  // to close the sub-pixel antialiasing gap that leaks a hairline.
+  const maskTextStyle: React.CSSProperties = {
+    fontFamily: "var(--font-matter), sans-serif",
+    fontWeight: 700,
+  };
+  const maskTextProps = {
+    fill: "white",
+    stroke: "white",
+    strokeWidth: 1.5,
+    paintOrder: "stroke fill" as const,
+  };
+
   return (
-    <section className={`relative w-full min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
-      {/* Main Content Area */}
+    <section
+      className={`relative w-full min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}
+    >
       <div className="w-full flex flex-col items-center md:justify-center">
-        {/* Large Headline with Video Inside Text - Desktop */}
+        {/* Desktop */}
         <div className="relative w-full hidden md:flex items-center justify-center pt-[10%]">
           <svg
             viewBox="0 0 1380 280"
-            className="w-full h-auto overflow-visible border-none outline-none"
+            width="100%"
+            height="100%"
+            className="block w-full border-none outline-none"
+            style={{ aspectRatio: "1380 / 280" }}
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="xMidYMid meet"
           >
@@ -67,29 +97,22 @@ const Hero = () => {
                   y="34%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  {...maskTextProps}
+                  style={maskTextStyle}
                   fontSize="100"
-                  letterSpacing="-3%"
+                  letterSpacing="-0.03em"
                 >
                   Five Kitchens.
                 </text>
-
                 <text
                   x="50%"
                   y="66%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  {...maskTextProps}
+                  style={maskTextStyle}
                   fontSize="100"
-                  letterSpacing="-3%"
+                  letterSpacing="-0.03em"
                 >
                   One Standard. Find Yours.
                 </text>
@@ -105,56 +128,67 @@ const Hero = () => {
               style={{ overflow: "hidden", border: "none", outline: "none" }}
             >
               <div
-                className="w-full h-full flex items-center justify-center overflow-hidden border-none outline-none"
                 style={{
-                  background: "transparent",
-                  transform: "translateZ(0)",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                  WebkitMaskImage: "url(#crispy-text-mask-location-desktop)",
-                  maskImage: "url(#crispy-text-mask-location-desktop)",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskSize: "100% 100%",
-                  maskSize: "100% 100%",
-                  contain: "paint",
-                  isolation: "isolate",
-                  border: "none",
-                  outline: "none",
+                  width: "100%",
+                  height: "100%",
                   opacity: isReady ? 1 : 0,
                   transition: "opacity 0.3s ease-out",
+                  willChange: "opacity",
                 }}
               >
-                <video
-                  ref={videoRefDesktop}
-                  src="/bg_about_video.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  onLoadedData={handleVideoReady}
-                  onCanPlay={handleVideoReady}
-                  className="w-full h-full object-cover scale-110 brightness-110"
+                <div
+                  className="w-full h-full flex items-center justify-center overflow-hidden border-none outline-none"
                   style={{
-                    transform: "translateZ(0) scale(1.1)",
+                    background: "transparent",
+                    transform: "translateZ(0)",
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
+                    WebkitMaskImage: "url(#crispy-text-mask-location-desktop)",
+                    maskImage: "url(#crispy-text-mask-location-desktop)",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskSize: "100% 100%",
+                    maskSize: "100% 100%",
+                    contain: "paint",
+                    isolation: "isolate",
                     border: "none",
                     outline: "none",
-                    display: "block",
                   }}
-                />
+                >
+                  <video
+                    ref={videoRefDesktop}
+                    src="/bg_about_video.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                    onLoadedData={handleVideoReady}
+                    onCanPlay={handleVideoReady}
+                    className="w-full h-full object-cover scale-110 brightness-110"
+                    style={{
+                      transform: "translateZ(0) scale(1.1)",
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                      border: "none",
+                      outline: "none",
+                      display: "block",
+                    }}
+                  />
+                </div>
               </div>
             </foreignObject>
           </svg>
         </div>
 
-        {/* Large Headline with Video Inside Text - Mobile */}
+        {/* Mobile */}
         <div className="relative w-full flex md:hidden items-center justify-center pt-[45%] sm:pt-[40%]">
           <svg
             viewBox="0 0 1380 550"
-             className="block w-full h-auto"
+            width="100%"
+            height="100%"
+            className="block w-full"
+            style={{ aspectRatio: "1380 / 550" }}
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="xMidYMid meet"
           >
@@ -174,29 +208,22 @@ const Hero = () => {
                   y="18%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  {...maskTextProps}
+                  style={maskTextStyle}
                   fontSize="190"
-                  letterSpacing="-3%"
+                  // letterSpacing="-0.01em"
                 >
                   Five Kitchens.
                 </text>
-
                 <text
                   x="50%"
                   y="54%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  {...maskTextProps}
+                  style={maskTextStyle}
                   fontSize="190"
-                  letterSpacing="-3%"
+                  // letterSpacing="-0.03em"
                 >
                   One Standard.
                 </text>
@@ -205,13 +232,10 @@ const Hero = () => {
                   y="90%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="white"
-                  style={{
-                    fontFamily: "var(--font-matter), sans-serif",
-                    fontWeight: 700,
-                  }}
+                  {...maskTextProps}
+                  style={maskTextStyle}
                   fontSize="190"
-                  letterSpacing="-3%"
+                  // letterSpacing="-0.03em"
                 >
                   Find Yours.
                 </text>
@@ -224,53 +248,57 @@ const Hero = () => {
               width="1380"
               height="550"
               className="overflow-hidden"
-              style={{
-                overflow: "hidden",
-                border: 0,
-                outline: 0,
-              }}
+              style={{ overflow: "hidden", border: 0, outline: 0 }}
             >
               <div
-                className="w-full h-full flex items-center justify-center overflow-hidden border-none outline-none"
                 style={{
-                  background: "transparent",
-                  transform: "translateZ(0)",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                  WebkitMaskImage: "url(#crispy-text-mask-location-mobile)",
-                  maskImage: "url(#crispy-text-mask-location-mobile)",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskSize: "100% 100%",
-                  maskSize: "100% 100%",
-                  contain: "paint",
-                  isolation: "isolate",
-                  border: "none",
-                  outline: "none",
+                  width: "100%",
+                  height: "100%",
                   opacity: isReady ? 1 : 0,
                   transition: "opacity 0.3s ease-out",
+                  willChange: "opacity",
                 }}
               >
-                <video
-                  ref={videoRefMobile}
-                  src="/bg_about_video.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  onLoadedData={handleVideoReady}
-                  onCanPlay={handleVideoReady}
-                  className="w-full h-full object-cover scale-110 brightness-110"
+                <div
+                  className="w-full h-full flex items-center justify-center overflow-hidden border-none outline-none"
                   style={{
-                    transform: "translateZ(0) scale(1.1)",
+                    background: "transparent",
+                    transform: "translateZ(0)",
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
+                    WebkitMaskImage: "url(#crispy-text-mask-location-mobile)",
+                    maskImage: "url(#crispy-text-mask-location-mobile)",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskSize: "100% 100%",
+                    maskSize: "100% 100%",
+                    contain: "paint",
+                    isolation: "isolate",
                     border: "none",
                     outline: "none",
-                    display: "block",
                   }}
-                />
+                >
+                  <video
+                    ref={videoRefMobile}
+                    src="/bg_about_video.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                    onLoadedData={handleVideoReady}
+                    onCanPlay={handleVideoReady}
+                    className="w-full h-full object-cover scale-110 brightness-110"
+                    style={{
+                      transform: "translateZ(0) scale(1.1)",
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                      border: "none",
+                      outline: "none",
+                      display: "block",
+                    }}
+                  />
+                </div>
               </div>
             </foreignObject>
           </svg>
@@ -281,13 +309,13 @@ const Hero = () => {
           <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none">
             Across <span className="text-[#CC1518] font-medium">Bordeaux</span> And Beyond
           </p>
-          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none  hidden md:block">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-none hidden md:block">
             Every CFC Is The Same Promise, Cooked Fresh Where You Are.
           </p>
-          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3]  md:hidden">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] md:hidden">
             Every CFC Is The Same Promise,
           </p>
-          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3]  md:hidden">
+          <p className="text-xl md:text-[1.375rem] font-normal tracking-wide text-[#F2F2F2] leading-[1.3] md:hidden">
             Cooked Fresh Where You Are.
           </p>
         </div>

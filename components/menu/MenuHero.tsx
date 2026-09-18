@@ -143,7 +143,6 @@ const Hero = () => {
                 ref={maskRefMobile}
                 id="crispy-text-mask-menu-mobile"
                 maskUnits="userSpaceOnUse"
-                style={{ maskType: "alpha" }}
                 x="-100"
                 y="-100"
                 width="1200"
@@ -160,7 +159,7 @@ const Hero = () => {
                     fontWeight: 700,
                   }}
                   fontSize="145"
-                  letterSpacing="-3%"
+                  letterSpacing="-0.03em"
                 >
                   One Menu.
                 </text>
@@ -176,7 +175,7 @@ const Hero = () => {
                     fontWeight: 700,
                   }}
                   fontSize="116"
-                  letterSpacing="-3%"
+                  letterSpacing="-0.03em"
                 >
                   Endless Cravings.
                 </text>
@@ -189,18 +188,14 @@ const Hero = () => {
               width="1000"
               height="380"
               className="overflow-hidden"
-              style={{
-                overflow: "hidden",
-                border: 0,
-                outline: 0,
-              }}
+              style={{ overflow: "hidden", clipPath: "inset(0)" }} 
             >
               <div
                 className="w-full h-full flex items-center justify-center overflow-hidden"
                 style={{
                   background: "transparent",
-                  transform: "translateZ(0)",
-                  backfaceVisibility: "hidden",
+                  // transform: "translateZ(0)",
+                  // backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                   WebkitMaskImage: "url(#crispy-text-mask-menu-mobile)",
                   maskImage: "url(#crispy-text-mask-menu-mobile)",
