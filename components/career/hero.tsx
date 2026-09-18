@@ -9,19 +9,26 @@ const Hero = () => {
   const maskRefDesktop = useRef<SVGMaskElement>(null);
   const maskRefMobile = useRef<SVGMaskElement>(null);
 
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
-    [maskRefDesktop, maskRefMobile].forEach((ref) => {
-      if (ref.current) {
-        ref.current.setAttribute("mask-type", "alpha");
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+    const ctx = canvas.getContext("2d");
+    let rafId: number;
+
+    const draw = () => {
+      if (video.readyState >= 2) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
       }
-    });
-    [videoRef, videoRefMobile].forEach((ref) => {
-      if (ref.current) {
-        ref.current.play().catch(() => {
-          // Autoplay policy fallback handling
-        });
-      }
-    });
+      rafId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   return (
@@ -144,6 +151,7 @@ const Hero = () => {
               <mask
                 ref={maskRefMobile}
                 id="crispy-text-mask-career-mobile"
+                mask-type="alpha"
                 maskUnits="userSpaceOnUse"
                 style={{ maskType: "alpha" }}
                 x="-100"

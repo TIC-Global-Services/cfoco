@@ -74,7 +74,7 @@ const defaultRightReviews: ReviewCardItem[] = [
 
 const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
   return (
-    <div className="relative overflow-hidden bg-[#FFFFFF1A] backdrop-blur-xs border border-[#0000001A] rounded-[30px] sm:rounded-[30px] py-10 px-5 sm:p-6 lg:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] w-[272px] xs:w-[250px] sm:w-[320px] md:w-[380px] lg:w-[420px] pointer-events-auto transition-all duration-300 hover:border-neutral-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
+    <div className="relative overflow-hidden bg-[#FFFFFF1A] backdrop-blur-xs border border-[#0000001A] rounded-[30px] sm:rounded-[30px] py-10 px-5 sm:p-6 lg:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] w-[272px] xs:w-[250px] sm:w-[320px] md:w-[380px] lg:w-[420px] pointer-events-auto transition-[border-color,box-shadow] duration-300 hover:border-neutral-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transform-gpu will-change-transform">
       {/* 5 Golden Stars */}
       <div className="flex items-center mb-6 sm:mb-4 text-[#FFBB00]">
         {Array.from({ length: card.rating }).map((_, i) => (
@@ -134,24 +134,29 @@ const Reviews = ({
     const ctx = gsap.context(() => {
       const isMobile = window.matchMedia("(max-width: 1024px)").matches;
       const staggerDelay = isMobile ? 1.2 : 0.7;
-      const startY = isMobile ? "90vh" : "110vh";
-      const endY = isMobile ? "-100vh" : "-110vh";
 
       const leftCards = gsap.utils.toArray<HTMLElement>(".review-card-left");
       const rightCards = gsap.utils.toArray<HTMLElement>(".review-card-right");
+      const allCards = [...leftCards, ...rightCards];
 
-      // Set initial positions below viewport
-      gsap.set(leftCards, { y: startY });
-      gsap.set(rightCards, { y: startY });
+      const getStartY = () => window.innerHeight * (isMobile ? 1.1 : 1.25);
+      const getEndY = () => -window.innerHeight * (isMobile ? 1.1 : 1.25);
+
+      // Hardware accelerate elements & set initial positions via pure pixel values
+      gsap.set(allCards, {
+        y: getStartY,
+        force3D: true,
+        willChange: "transform",
+      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
           end: isMobile ? "+=3000" : "+=4500",
-          scrub: 1.2,
+          scrub: 0.8,
           pin: true,
-          anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -164,9 +169,10 @@ const Reviews = ({
           tl.to(
             leftCards[i],
             {
-              y: endY,
+              y: getEndY,
               duration: 2.2,
               ease: "none",
+              force3D: true,
             },
             delay
           );
@@ -176,9 +182,10 @@ const Reviews = ({
           tl.to(
             rightCards[i],
             {
-              y: endY,
+              y: getEndY,
               duration: 2.2,
               ease: "none",
+              force3D: true,
             },
             delay
           );
