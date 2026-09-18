@@ -124,16 +124,16 @@ const BuildYourFuture: React.FC = () => {
         {/* LAYER 1 (Behind Canvas): Absolute Content Overlay */}
         <div className="relative z-10 w-full  h-full pointer-events-none">
           {/* Top Heading (Mobile) / Left Column (Desktop) */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-20 sm:top-10 text-center w-full max-w-[320px] sm:max-w-[420px] px-4 pointer-events-auto lg:left-1 lg:right-auto lg:top-[20%] lg:translate-x-0 lg:text-left lg:max-w-[500px] xl:max-w-[600px] lg:px-0">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[54px] xl:text-[62px] font-extrabold tracking-tight text-[#FFBF00] leading-[1.08] drop-shadow-xl">
+          <div className="absolute left-1/2 -translate-x-1/2 top-20 sm:top-10 text-center w-full max-w-[320px] sm:max-w-[420px] px-4 pointer-events-auto lg:-left-5 lg:right-auto lg:top-[20%] lg:translate-x-0 lg:text-left lg:max-w-[500px] xl:max-w-[600px] lg:px-0">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[54px] xl:text-[62px] font-extrabold tracking-tight text-[#FFBF00] leading-[1.02] drop-shadow-xl">
               Why Build Your <br className="hidden lg:block" />
               Future With CFOCO?
             </h2>
           </div>
 
           {/* Bottom Paragraph (Mobile) / Right Column (Desktop) */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-6 sm:bottom-10 text-center w-full max-w-[320px] sm:max-w-[420px] px-4 pointer-events-auto lg:left-auto lg:right-12 lg:bottom-[20%] lg:translate-x-0  lg:text-right lg:max-w-[420px] xl:max-w-[480px] lg:px-0">
-            <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-neutral-200 font-normal leading-[1.3] drop-shadow-md">
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-6 sm:bottom-10 text-center w-full max-w-[320px] sm:max-w-[420px] px-4 pointer-events-auto lg:left-auto lg:right-0 lg:bottom-[20%] lg:translate-x-0  lg:text-right lg:max-w-[420px] xl:max-w-xl lg:px-0">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-neutral-200 font-normal leading-[1.2] drop-shadow-md">
               At CFOCO, We&apos;re More Than Just Burgers And Fried Chicken. We&apos;re
               A Team Built On Energy, Creativity, Teamwork, And A Shared Obsession
               With Quality. Whether You&apos;re Taking Orders, Managing Operations,
