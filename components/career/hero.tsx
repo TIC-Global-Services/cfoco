@@ -1,38 +1,93 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { matter } from "@/font/fonts";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoRefMobile = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRefMobile = useRef<HTMLCanvasElement>(null);
   const maskRefDesktop = useRef<SVGMaskElement>(null);
   const maskRefMobile = useRef<SVGMaskElement>(null);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // mask-type isn't in React's SVGProps typings, so it can't be set as a
+  // plain JSX prop without a TS error. useLayoutEffect sets it imperatively
+  // and still runs synchronously before the browser paints, so there's no
+  // flash of the wrong mask mode.
+  useLayoutEffect(() => {
+    [maskRefDesktop, maskRefMobile].forEach((ref) => {
+      ref.current?.setAttribute("mask-type", "alpha");
+    });
+  }, []);
 
+  // Draw video frames onto the canvases every frame. The canvas — not the
+  // <video> — is what gets CSS-masked below, because iOS/WebKit's video
+  // compositing layer does not reliably respect CSS mask-image / foreignObject
+  // masking, while canvas (a normal 2D-painted element) does.
   useEffect(() => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
-    const ctx = canvas.getContext("2d");
     let rafId: number;
 
     const draw = () => {
-      if (video.readyState >= 2) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-      }
+      const pairs = [
+        { video: videoRef.current, canvas: canvasRef.current },
+        { video: videoRefMobile.current, canvas: canvasRefMobile.current },
+      ];
+
+      pairs.forEach(({ video, canvas }) => {
+        if (video && canvas && video.readyState >= 2) {
+          if (canvas.width !== video.videoWidth) canvas.width = video.videoWidth;
+          if (canvas.height !== video.videoHeight) canvas.height = video.videoHeight;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+        }
+      });
+
       rafId = requestAnimationFrame(draw);
     };
-    draw();
 
+    draw();
     return () => cancelAnimationFrame(rafId);
   }, []);
 
+  // Explicit play() call as an autoplay-policy fallback.
+  useEffect(() => {
+    [videoRef, videoRefMobile].forEach((ref) => {
+      if (ref.current) {
+        ref.current.play().catch(() => {
+          // Autoplay policy fallback handling
+        });
+      }
+    });
+  }, []);
+
   return (
-    <section className={`relative w-full min-h-screen flex flex-col items-center justify-between px-[5%] sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}>
+    <section
+      className={`relative w-full min-h-screen flex flex-col items-center justify-between px-[5%] sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}
+    >
+      {/* Off-screen video elements — never rendered directly on iOS.
+          They exist only as frame sources for the canvases below. */}
+      <video
+        ref={videoRef}
+        src="/bg_about_video.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        className="hidden"
+      />
+      <video
+        ref={videoRefMobile}
+        src="/bg_about_video.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        className="hidden"
+      />
+
       {/* Main Content Area */}
       <div className="w-full flex flex-col items-center md:justify-start pt-[45%] sm:pt-[50%] lg:pt-38">
         {/* Large Headline with Video Inside Text - Desktop */}
@@ -116,14 +171,8 @@ const Hero = () => {
                   isolation: "isolate",
                 }}
               >
-                <video
-                  ref={videoRef}
-                  src="/bg_about_video.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
+                <canvas
+                  ref={canvasRef}
                   className="w-full h-full object-cover scale-110"
                   style={{
                     transform: "translateZ(0) scale(1.1)",
@@ -151,9 +200,7 @@ const Hero = () => {
               <mask
                 ref={maskRefMobile}
                 id="crispy-text-mask-career-mobile"
-                mask-type="alpha"
                 maskUnits="userSpaceOnUse"
-                style={{ maskType: "alpha" }}
                 x="-100"
                 y="-100"
                 width="1200"
@@ -222,14 +269,8 @@ const Hero = () => {
                   isolation: "isolate",
                 }}
               >
-                <video
-                  ref={videoRefMobile}
-                  src="/bg_about_video.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
+                <canvas
+                  ref={canvasRefMobile}
                   className="w-full h-full object-cover scale-110"
                   style={{
                     transform: "translateZ(0) scale(1.1)",
