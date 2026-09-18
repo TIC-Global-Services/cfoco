@@ -100,7 +100,7 @@ const Hero = () => {
                   {...maskTextProps}
                   style={maskTextStyle}
                   fontSize="100"
-                  letterSpacing="-0.03em"
+                  letterSpacing="-0.01em"
                 >
                   Five Kitchens.
                 </text>
@@ -112,7 +112,7 @@ const Hero = () => {
                   {...maskTextProps}
                   style={maskTextStyle}
                   fontSize="100"
-                  letterSpacing="-0.03em"
+                    letterSpacing="-0.01em"
                 >
                   One Standard. Find Yours.
                 </text>
