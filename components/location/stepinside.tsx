@@ -268,7 +268,7 @@ const StepInside = () => {
         </div>
 
         {/* INFINITE LOOPING CENTER-HIGHLIGHTED CAROUSEL */}
-        <div className="w-full relative py-0 px-0 sm:px-12 flex items-center justify-center max-w-4xl mt-2 sm:mt-4">
+        <div className="w-full relative py-0 px-0 sm:px-12 flex items-center justify-center max-w-4xl mt-2 sm:mt-0">
           {/* Previous / Next Arrow Controls (Desktop only) */}
           <button
             type="button"
