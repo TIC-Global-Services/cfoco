@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import SpecularButton from "./specularButton";
 
 interface NavItem {
   label: string;
@@ -12,12 +13,11 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
-   { label: "Our Story", href: "/about" },
+  { label: "Our Story", href: "/about" },
   { label: "Location", href: "/location" },
   { label: "Menu", href: "/menu" },
   { label: "Career", href: "/career" },
   { label: "News & Blogs", href: "/news-blogs" },
- 
 ];
 
 interface NavbarProps {
@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
   const pathname = usePathname();
 
   return (
-    <header className={`absolute top-0 left-0 right-0 z-50 w-full  transition-all duration-300 ${className}`}>
+    <header className={`absolute top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${className}`}>
       <div className="px-4 sm:px-6 lg:px-[5%]">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -46,23 +46,33 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-8 lg:space-x-10">
+          <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
-              return (
+              return isActive ? (
+                <Link key={item.label} href={item.href}>
+                  <SpecularButton
+                    size="sm"
+                    radius={9999}
+                    tint="#ffffff"
+                    tintOpacity={0.12}
+                    blur={16}
+                    textColor="#ffffff"
+                    lineColor="#ffffff"
+                    baseColor="#525252"
+                    autoAnimate
+                    className="text-sm lg:text-base font-medium py-2 px-5"
+                  >
+                    {item.label}
+                  </SpecularButton>
+                </Link>
+              ) : (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`text-sm lg:text-base font-medium transition-colors duration-200 relative py-1 ${
-                    isActive
-                      ? "text-white"
-                      : "text-neutral-300 hover:text-white"
-                  }`}
+                  className="text-sm lg:text-base font-medium text-neutral-300 hover:text-white transition-colors duration-200 py-1"
                 >
                   {item.label}
-                  {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-orange-500 to-amber-400 rounded-full" />
-                  )}
                 </Link>
               );
             })}
@@ -136,16 +146,33 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
           <div className="flex flex-col space-y-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
-              return (
+              return isActive ? (
                 <Link
                   key={item.label}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`px-3 py-2.5 rounded-lg text-base font-medium transition-colors ${
-                    isActive
-                      ? "text-white bg-white/10"
-                      : "text-neutral-300 hover:text-white hover:bg-white/5"
-                  }`}
+                >
+                  <SpecularButton
+                    size="sm"
+                    radius={12}
+                    tint="#ffffff"
+                    tintOpacity={0.12}
+                    blur={16}
+                    textColor="#ffffff"
+                    lineColor="#ffffff"
+                    baseColor="#525252"
+                    autoAnimate
+                    className="w-full text-base font-medium py-2 px-4 justify-start"
+                  >
+                    {item.label}
+                  </SpecularButton>
+                </Link>
+              ) : (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2.5 rounded-lg text-base font-medium transition-colors text-neutral-300 hover:text-white hover:bg-white/5"
                 >
                   {item.label}
                 </Link>

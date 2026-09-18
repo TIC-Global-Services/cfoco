@@ -173,7 +173,7 @@ const MenuSection: React.FC = () => {
 
   return (
     <section
-      className={`relative w-full px-4 sm:px-6 lg:px-[3%] pb-20 select-none ${matter.className}`}
+      className={`relative w-full px-4 sm:px-6 lg:px-[0%] pb-20 select-none ${matter.className}`}
     >
       {/* Category Navigation Bar - Scrollable with Smart Dynamic Arrows */}
       <div className="relative w-full mb-10 sm:mb-16 group/nav">
@@ -205,7 +205,7 @@ const MenuSection: React.FC = () => {
         {/* Scrollable Categories Strip */}
         <div
           ref={scrollRef}
-          className="w-full flex items-end overflow-x-auto py-6 gap-6 sm:gap-8 md:gap-12 px-[20%]scroll-smooth"
+          className="w-full flex items-end overflow-x-auto py-6 gap-6 sm:gap-8 md:gap-12 px-[0%] scroll-smooth"
           style={{
             scrollSnapType: "x mandatory",
             msOverflowStyle: "none",
@@ -219,7 +219,7 @@ const MenuSection: React.FC = () => {
                 key={cat.id}
                 onClick={(e) => handleCategoryChange(cat.id, e)}
                 style={{ scrollSnapAlign: "center" }}
-                className="relative flex flex-col items-center justify-end group flex-shrink-0 focus:outline-none transition-all duration-300 w-[120px] sm:w-[150px] md:w-[170px] cursor-pointer pb-2"
+                className="relative flex flex-col items-center justify-end group flex-shrink-0 focus:outline-none transition-all duration-300 w-[120px] sm:w-[150px] md:w-[200px] cursor-pointer pb-2"
               >
                 <div
                   className={`flex items-center justify-center transition-all duration-300 ${
@@ -273,7 +273,7 @@ const MenuSection: React.FC = () => {
 
         {/* Right Edge Gradient Fade */}
         <div
-          className={`absolute right-0 top-2 bottom-0 h-50 w-12 sm:w-40 bg-gradient-to-l blur-[5px] from-white via-white/5 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
+          className={`absolute right-0 top-2 bottom-0 h-70 w-12 sm:w-40 bg-gradient-to-l blur-[10px] from-white via-white/5 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
             canScrollRight ? "opacity-100" : "opacity-0"
           }`}
         />

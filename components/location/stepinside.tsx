@@ -274,7 +274,7 @@ const StepInside = () => {
             type="button"
             onClick={handlePrev}
             aria-label="Previous Location"
-            className="hidden md:flex absolute left-2 sm:left-4 z-30 p-2 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
+            className="hidden md:flex absolute left-2 sm:left-4 z-30 p-2 cursor-pointer rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
           >
             <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
@@ -283,7 +283,7 @@ const StepInside = () => {
             type="button"
             onClick={handleNext}
             aria-label="Next Location"
-            className="hidden md:flex absolute right-2 sm:right-4 z-30 p-2 rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
+            className="hidden md:flex absolute right-2 sm:right-4 z-30 p-2 cursor-pointer rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
           >
             <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>

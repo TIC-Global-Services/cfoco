@@ -134,7 +134,7 @@ const WhatWeRefuse = () => {
               <div className="w-[45%] sm:w-[42%] bg-[#0a0a0f] border-b border-l border-r border-[#0066FF] rounded-b-[1.3rem] p-6 sm:p-6 pt-6 relative z-10">
 
                 {/* Seamless top connection to hide top card's bottom border under tab */}
-                <div className="absolute -top-[2px] -left-[1px] -right-[1px] h-[4px] bg-[#0a0a0f]" />
+                <div className="absolute -top-[2px] left-0 right-0 h-[4px] bg-[#0a0a0f]" />
 
                 {/* Inverted Concave Corner Curve */}
                 <svg
@@ -227,7 +227,7 @@ const WhatWeRefuse = () => {
                   {/* APPLY BLOCK */}
                   <div className="w-[48%] bg-[#0a0a0f] border-b border-l border-r border-[#0066FF] rounded-b-[1.3rem] p-5 relative z-10">
 
-                    <div className="absolute -top-[2px] -left-[1px] -right-[1px] h-[4px] bg-[#0a0a0f]" />
+                    <div className="absolute -top-[2px] left-0 right-0 h-[4px] bg-[#0a0a0f]" />
 
                     <svg
                       className="absolute -top-[1px] left-full w-[24px] h-[24px] pointer-events-none"
