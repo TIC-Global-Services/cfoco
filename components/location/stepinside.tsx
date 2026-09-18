@@ -290,7 +290,7 @@ const StepInside = () => {
 
           {/* Carousel Viewport with Touch Drag/Swipe Support */}
           <div
-            className="relative w-full h-16 sm:h-10 flex items-center justify-center overflow-hidden touch-pan-y"
+            className="relative w-full h-20 sm:h-20 md:h-24 flex items-center justify-center overflow-hidden touch-pan-y"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -315,20 +315,20 @@ const StepInside = () => {
                     key={`${loc.slug}-${tripledIdx}`}
                     onClick={() => handleItemClick(tripledIdx)}
                     style={{ width: `${ITEM_WIDTH}px` }}
-                    className="shrink-0 flex flex-col items-center justify-center cursor-pointer px-2"
+                    className="shrink-0 flex flex-col items-center justify-center cursor-pointer px-2 py-1"
                   >
                     {isCenter ? (
                       <Link
                         href={`/location/${loc.slug}`}
-                        className="group flex flex-col items-center justify-center transition-all duration-500 scale-105 sm:scale-110"
+                        className="group flex flex-col items-center justify-center transition-all duration-500 scale-105 sm:scale-110 py-1"
                       >
-                        <span className="whitespace-nowrap text-4xl sm:text-3xl md:text-[50px] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105">
+                        <span className="whitespace-nowrap text-4xl sm:text-3xl md:text-[50px] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105 leading-none">
                           {loc.name}
                         </span>
                       </Link>
                     ) : (
-                      <div className="flex flex-col items-center justify-center opacity-30 hover:opacity-75 transition-all duration-300 scale-90 sm:scale-95">
-                        <span className="whitespace-nowrap text-2xl sm:text-xl md:text-3xl font-bold tracking-tight text-neutral-400 hover:text-white transition-colors">
+                      <div className="flex flex-col items-center justify-center opacity-30 hover:opacity-75 transition-all duration-300 scale-90 sm:scale-95 py-1">
+                        <span className="whitespace-nowrap text-2xl sm:text-xl md:text-3xl font-bold tracking-tight text-neutral-400 hover:text-white transition-colors leading-none">
                           {loc.name}
                         </span>
                       </div>
