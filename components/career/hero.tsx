@@ -1,157 +1,72 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { matter } from "@/font/fonts";
-
-// Draws `video` into `ctx` covering the full width/height, center-cropping
-// like CSS `object-fit: cover` rather than stretching.
-function drawVideoCover(
-  ctx: CanvasRenderingContext2D,
-  video: HTMLVideoElement,
-  width: number,
-  height: number
-) {
-  const vw = video.videoWidth;
-  const vh = video.videoHeight;
-  if (!vw || !vh) return;
-
-  const videoRatio = vw / vh;
-  const canvasRatio = width / height;
-
-  let sx = 0,
-    sy = 0,
-    sw = vw,
-    sh = vh;
-
-  if (videoRatio > canvasRatio) {
-    sw = vh * canvasRatio;
-    sx = (vw - sw) / 2;
-  } else {
-    sh = vw / canvasRatio;
-    sy = (vh - sh) / 2;
-  }
-
-  ctx.drawImage(video, sx, sy, sw, sh, 0, 0, width, height);
-}
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoRefMobile = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasRefMobile = useRef<HTMLCanvasElement>(null);
-  const fontRef = useRef<HTMLSpanElement>(null);
-  const fontFamilyRef = useRef<string>("sans-serif");
+  const maskRefDesktop = useRef<SVGMaskElement>(null);
+  const maskRefMobile = useRef<SVGMaskElement>(null);
 
-  // Autoplay fallback.
-  useEffect(() => {
-    [videoRef, videoRefMobile].forEach((ref) => {
-      ref.current?.play().catch(() => {
-        // Autoplay policy fallback handling
-      });
+  // mask-type isn't in React's SVGProps typings, so it can't be set as a
+  // plain JSX prop without a TS error. useLayoutEffect sets it imperatively
+  // and still runs synchronously before the browser paints, so there's no
+  // flash of the wrong mask mode.
+  useLayoutEffect(() => {
+    [maskRefDesktop, maskRefMobile].forEach((ref) => {
+      ref.current?.setAttribute("mask-type", "alpha");
     });
   }, []);
 
+  // Draw video frames onto the canvases every frame. The canvas — not the
+  // <video> — is what gets CSS-masked below, because iOS/WebKit's video
+  // compositing layer does not reliably respect CSS mask-image / foreignObject
+  // masking, while canvas (a normal 2D-painted element) does.
   useEffect(() => {
-    // Read the actual resolved font-family string once, since ctx.font
-    // can't read CSS custom properties or the `matter.className` directly.
-    const readFont = () => {
-      if (fontRef.current) {
-        fontFamilyRef.current = getComputedStyle(fontRef.current).fontFamily;
-      }
-    };
-    readFont();
-    // In case the webfont finishes loading slightly after first paint.
-    if (typeof document !== "undefined" && "fonts" in document) {
-      document.fonts.ready.then(readFont).catch(() => {});
-    }
-
-    const resizeCanvas = (canvas: HTMLCanvasElement | null) => {
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.max(1, Math.round(rect.width * dpr));
-      canvas.height = Math.max(1, Math.round(rect.height * dpr));
-    };
-
-    const handleResize = () => {
-      resizeCanvas(canvasRef.current);
-      resizeCanvas(canvasRefMobile.current);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
     let rafId: number;
 
-    const drawTextMaskedVideo = (
-      canvas: HTMLCanvasElement | null,
-      video: HTMLVideoElement | null,
-      lines: string[],
-      lineYRatios: number[],
-      fontSizeRatio: number
-    ) => {
-      if (!canvas || !video || video.readyState < 2 || canvas.width === 0) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      const { width, height } = canvas;
-      ctx.clearRect(0, 0, width, height);
-
-      // 1. Paint the text as a solid white shape.
-      ctx.save();
-      ctx.fillStyle = "#fff";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.font = `700 ${height * fontSizeRatio}px ${fontFamilyRef.current}`;
-      lines.forEach((line, i) => {
-        ctx.fillText(line, width / 2, height * lineYRatios[i]);
-      });
-      ctx.restore();
-
-      // 2. Keep only the video pixels that overlap that text shape.
-      ctx.save();
-      ctx.globalCompositeOperation = "source-in";
-      drawVideoCover(ctx, video, width, height);
-      ctx.restore();
-    };
-
     const draw = () => {
-      drawTextMaskedVideo(
-        canvasRef.current,
-        videoRef.current,
-        ["Build Your", "Future With Us"],
-        [140 / 390, 280 / 390],
-        150 / 390
-      );
-      drawTextMaskedVideo(
-        canvasRefMobile.current,
-        videoRefMobile.current,
-        ["Build Your", "Future With Us."],
-        [160 / 380, 300 / 380],
-        140 / 380
-      );
+      const pairs = [
+        { video: videoRef.current, canvas: canvasRef.current },
+        { video: videoRefMobile.current, canvas: canvasRefMobile.current },
+      ];
+
+      pairs.forEach(({ video, canvas }) => {
+        if (video && canvas && video.readyState >= 2) {
+          if (canvas.width !== video.videoWidth) canvas.width = video.videoWidth;
+          if (canvas.height !== video.videoHeight) canvas.height = video.videoHeight;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+        }
+      });
+
       rafId = requestAnimationFrame(draw);
     };
 
     draw();
+    return () => cancelAnimationFrame(rafId);
+  }, []);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(rafId);
-    };
+  // Explicit play() call as an autoplay-policy fallback.
+  useEffect(() => {
+    [videoRef, videoRefMobile].forEach((ref) => {
+      if (ref.current) {
+        ref.current.play().catch(() => {
+          // Autoplay policy fallback handling
+        });
+      }
+    });
   }, []);
 
   return (
     <section
       className={`relative w-full min-h-screen flex flex-col items-center justify-between px-[5%] sm:px-6 lg:px-8 bg-transparent select-none ${matter.className}`}
     >
-      {/* Hidden element used only to read the resolved font-family string —
-          ctx.font needs a real font name, not a CSS variable or className. */}
-      <span ref={fontRef} className={`hidden ${matter.className}`} aria-hidden="true">
-        x
-      </span>
-
-      {/* Off-screen video elements — frame sources only, never rendered directly. */}
+      {/* Off-screen video elements — never rendered directly on iOS.
+          They exist only as frame sources for the canvases below. */}
       <video
         ref={videoRef}
         src="/bg_about_video.mp4"
@@ -173,15 +88,202 @@ const Hero = () => {
         className="hidden"
       />
 
+      {/* Main Content Area */}
       <div className="w-full flex flex-col items-center md:justify-start pt-[45%] sm:pt-[50%] lg:pt-38">
-        {/* Desktop */}
-        <div className="relative w-full hidden md:block" style={{ aspectRatio: "2200 / 390" }}>
-          <canvas ref={canvasRef} className="w-full h-full block" />
+        {/* Large Headline with Video Inside Text - Desktop */}
+        <div className="relative w-full hidden md:flex items-center justify-center">
+          <svg
+            viewBox="0 0 2200 390"
+            className="w-full h-auto overflow-visible border-none outline-none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <mask
+                ref={maskRefDesktop}
+                id="crispy-text-mask-career-desktop"
+                maskUnits="userSpaceOnUse"
+                x="-100"
+                y="-100"
+                width="2400"
+                height="600"
+              >
+                <text
+                  x="1100"
+                  y="140"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
+                  fontSize="150"
+                  letterSpacing="-4%"
+                >
+                  Build Your
+                </text>
+
+                <text
+                  x="1100"
+                  y="280"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
+                  fontSize="150"
+                  letterSpacing="-4%"
+                >
+                  Future With Us
+                </text>
+              </mask>
+            </defs>
+
+            <foreignObject
+              x="2"
+              y="2"
+              width="2196"
+              height="396"
+              className="overflow-hidden"
+              style={{
+                overflow: "hidden",
+                border: 0,
+                outline: 0,
+              }}
+            >
+              <div
+                className="w-full h-full flex items-center justify-center overflow-hidden"
+                style={{
+                  background: "transparent",
+                  transform: "translateZ(0)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  WebkitMaskImage: "url(#crispy-text-mask-career-desktop)",
+                  maskImage: "url(#crispy-text-mask-career-desktop)",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskSize: "100% 100%",
+                  maskSize: "100% 100%",
+                  contain: "paint",
+                  isolation: "isolate",
+                }}
+              >
+                <canvas
+                  ref={canvasRef}
+                  className="w-full h-full object-cover scale-110"
+                  style={{
+                    transform: "translateZ(0) scale(1.1)",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                    border: "none",
+                    outline: "none",
+                    display: "block",
+                  }}
+                />
+              </div>
+            </foreignObject>
+          </svg>
         </div>
 
-        {/* Mobile */}
-        <div className="relative w-full sm:max-w-md md:hidden" style={{ aspectRatio: "1000 / 380" }}>
-          <canvas ref={canvasRefMobile} className="w-full h-full block" />
+        {/* Large Headline with Video Inside Text - Mobile */}
+        <div className="relative w-full sm:max-w-md md:hidden">
+          <svg
+            viewBox="0 0 1000 380"
+            className="w-full h-auto overflow-visible border-none outline-none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <mask
+                ref={maskRefMobile}
+                id="crispy-text-mask-career-mobile"
+                maskUnits="userSpaceOnUse"
+                x="-100"
+                y="-100"
+                width="1200"
+                height="580"
+              >
+                <text
+                  x="500"
+                  y="160"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
+                  fontSize="140"
+                  letterSpacing="-3%"
+                >
+                  Build Your
+                </text>
+
+                <text
+                  x="500"
+                  y="300"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="white"
+                  style={{
+                    fontFamily: "var(--font-matter), sans-serif",
+                    fontWeight: 700,
+                  }}
+                  fontSize="140"
+                  letterSpacing="-3%"
+                >
+                  Future With Us.
+                </text>
+              </mask>
+            </defs>
+
+            <foreignObject
+              x="0"
+              y="0"
+              width="1000"
+              height="380"
+              className="overflow-hidden"
+              style={{
+                overflow: "hidden",
+                border: 0,
+                outline: 0,
+              }}
+            >
+              <div
+                className="w-full h-full flex items-center justify-center overflow-hidden"
+                style={{
+                  background: "transparent",
+                  transform: "translateZ(0)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  WebkitMaskImage: "url(#crispy-text-mask-career-mobile)",
+                  maskImage: "url(#crispy-text-mask-career-mobile)",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskSize: "100% 100%",
+                  maskSize: "100% 100%",
+                  contain: "paint",
+                  isolation: "isolate",
+                }}
+              >
+                <canvas
+                  ref={canvasRefMobile}
+                  className="w-full h-full object-cover scale-110"
+                  style={{
+                    transform: "translateZ(0) scale(1.1)",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                    border: "none",
+                    outline: "none",
+                    display: "block",
+                  }}
+                />
+              </div>
+            </foreignObject>
+          </svg>
         </div>
 
         {/* Subtitles */}
