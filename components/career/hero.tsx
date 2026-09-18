@@ -31,7 +31,7 @@ const Hero = () => {
         {/* Large Headline with Video Inside Text - Desktop */}
         <div className="relative w-full hidden md:flex items-center justify-center">
           <svg
-            viewBox="0 0 2200 400"
+            viewBox="0 0 2200 390"
             className="w-full h-auto overflow-visible border-none outline-none"
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="xMidYMid meet"
@@ -81,10 +81,10 @@ const Hero = () => {
             </defs>
 
             <foreignObject
-              x="0"
-              y="0"
-              width="1380"
-              height="450"
+              x="2"
+              y="2"
+              width="2196"
+              height="396"
               className="overflow-hidden"
               style={{
                 overflow: "hidden",
