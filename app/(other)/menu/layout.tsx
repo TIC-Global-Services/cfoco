@@ -9,13 +9,16 @@ export default function MenuLayout({
   children: React.ReactNode;
 }) {
   return (
-      <div
-      className="relative min-h-screen w-full bg-cover bg-bottom bg-no-repeat bg-fixed text-white flex flex-col pt-24"
-      style={{ backgroundImage: "url('/menu_bgimage.png')" }}
-    >
-      <NavbarOther />
-      {children}
-      <FooterOther />
-    </div>
-  );
+      <div className="relative min-h-screen w-full text-white flex flex-col pt-24">
+      
+        <div
+          className="fixed inset-0 -z-10 bg-cover bg-bottom bg-no-repeat"
+          style={{ backgroundImage: "url('/menu_bgimage.png')" }}
+          aria-hidden="true"
+        />
+        <NavbarOther />
+        {children}
+        <FooterOther />
+      </div>
+    );
 }
