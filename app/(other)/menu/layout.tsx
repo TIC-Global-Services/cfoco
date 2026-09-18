@@ -13,7 +13,7 @@ export default function MenuLayout({
       
         <div
           className="fixed inset-0 -z-10 bg-cover bg-bottom bg-no-repeat"
-          style={{ backgroundImage: "url('/menu_bgimage.png')" }}
+          style={{ backgroundImage: "url('/menu_bgimage-new.png')" }}
           aria-hidden="true"
         />
         <NavbarOther />

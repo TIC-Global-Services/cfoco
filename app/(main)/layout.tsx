@@ -12,7 +12,7 @@ export default function MainLayout({
 
       <div
         className="fixed inset-0 -z-10 bg-cover bg-bottom bg-no-repeat"
-        style={{ backgroundImage: "url('/bg-image.png')" }}
+        style={{ backgroundImage: "url('/bg-image-new.png')" }}
         aria-hidden="true"
       />
       <Navbar />

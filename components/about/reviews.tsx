@@ -6,9 +6,6 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import { matter } from "@/font/fonts";
 import Image from "next/image";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export interface ReviewCardItem {
   id: string;
@@ -131,6 +128,8 @@ const Reviews = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+
+    gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
       const isMobile = window.matchMedia("(max-width: 1024px)").matches;
       const staggerDelay = isMobile ? 1 : 0.7;
