@@ -23,9 +23,7 @@ const page = () => {
       <Reveal>
         <Showreel />
       </Reveal>
-      <Reveal>
-        <Reviews />
-      </Reveal>
+      <Reviews />
       <Reveal>
         <GetCrispy />
       </Reveal>

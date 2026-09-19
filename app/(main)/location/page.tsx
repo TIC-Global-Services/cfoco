@@ -13,9 +13,7 @@ const page = () => {
       <Reveal>
         <StepInside/>
       </Reveal>
-      <Reveal>
-        <Reviews/>
-      </Reveal>
+      <Reviews/>
     </main>
   )
 }

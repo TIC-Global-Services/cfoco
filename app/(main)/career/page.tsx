@@ -12,9 +12,7 @@ const page = () => {
         <Hero/>
       </Reveal>
       <BuildYourFuture/>
-      <Reveal>
-        <WhatWeRefuse/>
-      </Reveal>
+      <WhatWeRefuse/>
       <Reveal>
         <Reachoutanyway/>
       </Reveal>
