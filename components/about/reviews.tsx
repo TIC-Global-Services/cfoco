@@ -245,8 +245,8 @@ const Reviews = ({
       // ── Touch / small screens ──
       mm.add("(max-width: 1024px)", () => {
         const { left, right } = collect();
-        // scrub:true (no smoothing lag) feels far steadier under momentum scroll
-        buildScrollTimeline(left, right, 1900, 2.2, 0.7, true);
+        // Slightly increased stagger (1.05s) & scrollDistance (2400) for more breathing room & delay between cards
+        buildScrollTimeline(left, right, 2400, 2.2, 1.03, true);
       });
 
       // ── Desktop ──
