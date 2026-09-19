@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
 import { matter } from "@/font/fonts";
+import GlobalLoader from "@/components/common/Loader";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -28,7 +29,10 @@ export default function RootLayout({
       lang="en"
       className={`${dmSans.variable} ${matter.variable} min-h-screen bg-[#0b0d14] antialiased`}
     >
-      <body className="min-h-screen bg-[#0b0d14] flex flex-col text-white">{children}</body>
+      <body className="min-h-screen bg-[#0b0d14] flex flex-col text-white">
+        <GlobalLoader />
+        {children}
+      </body>
     </html>
   );
 }

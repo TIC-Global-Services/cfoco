@@ -4,13 +4,15 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useScroll, useMotionValueEvent } from "framer-motion";
 import { matter } from "@/font/fonts";
 
-const TOTAL_FRAMES = 91;
+const TOTAL_FRAMES = 68;
 
 const BuildYourFuture: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasWrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef<number>(0);
+  const lastRenderedIndexRef = useRef<number>(-1);
   const rafIdRef = useRef<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -19,15 +21,57 @@ const BuildYourFuture: React.FC = () => {
     offset: ["start start", "end end"],
   });
 
+  // Find nearest loaded frame if the target frame is still downloading
+  const getBestAvailableImage = useCallback((targetIndex: number): { img: HTMLImageElement; index: number } | null => {
+    const images = imagesRef.current;
+    if (!images || images.length === 0) return null;
+
+    // Direct match check
+    const exact = images[targetIndex];
+    if (exact && exact.complete && exact.naturalWidth > 0) {
+      return { img: exact, index: targetIndex };
+    }
+
+    // Search outward (prefer backwards then forwards)
+    let bestDist = Infinity;
+    let bestMatch: { img: HTMLImageElement; index: number } | null = null;
+
+    for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
+      // Check backwards
+      const backIdx = targetIndex - offset;
+      if (backIdx >= 0) {
+        const backImg = images[backIdx];
+        if (backImg && backImg.complete && backImg.naturalWidth > 0) {
+          bestMatch = { img: backImg, index: backIdx };
+          break;
+        }
+      }
+
+      // Check forwards
+      const fwdIdx = targetIndex + offset;
+      if (fwdIdx < TOTAL_FRAMES) {
+        const fwdImg = images[fwdIdx];
+        if (fwdImg && fwdImg.complete && fwdImg.naturalWidth > 0) {
+          bestMatch = { img: fwdImg, index: fwdIdx };
+          break;
+        }
+      }
+    }
+
+    return bestMatch;
+  }, []);
+
   // Draw current frame onto canvas
   const drawFrame = useCallback((index: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    const img = imagesRef.current[index];
-    if (!img || !img.complete || img.naturalWidth === 0) return;
+    const match = getBestAvailableImage(index);
+    if (!match) return;
+
+    const { img, index: actualDrawnIndex } = match;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -37,6 +81,9 @@ const BuildYourFuture: React.FC = () => {
 
     const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
     const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
 
     ctx.drawImage(
       img,
@@ -49,43 +96,80 @@ const BuildYourFuture: React.FC = () => {
       img.naturalWidth * ratio,
       img.naturalHeight * ratio
     );
-  }, []);
 
-  // Update Canvas resolution on resize/mount with DPR clamp for mobile performance
+    lastRenderedIndexRef.current = actualDrawnIndex;
+  }, [getBestAvailableImage]);
+
+  // Update Canvas resolution with DPR clamp for mobile performance
   const updateCanvasSize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
 
-    // Clamp DPR to maximum of 2 to preserve 60fps on high-DPI mobile devices
+    // Clamp DPR to maximum of 2 to preserve 60fps on high-DPI mobile devices (iOS Safari)
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.floor(rect.width * dpr);
-    canvas.height = Math.floor(rect.height * dpr);
+    const newWidth = Math.floor(rect.width * dpr);
+    const newHeight = Math.floor(rect.height * dpr);
+
+    if (canvas.width !== newWidth || canvas.height !== newHeight) {
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+    }
 
     drawFrame(currentFrameRef.current);
   }, [drawFrame]);
 
-  // Preload Images
+  // Progressive Preload of Sequence Images
   useEffect(() => {
-    const images: HTMLImageElement[] = [];
+    const images: HTMLImageElement[] = new Array(TOTAL_FRAMES);
 
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    const handleImageLoad = (frameIdx: number) => {
+      if (frameIdx === 0) {
+        setIsLoaded(true);
+        updateCanvasSize();
+        drawFrame(0);
+      } else {
+        // Redraw if the newly loaded frame is target or closer to current scroll target
+        const currentTarget = currentFrameRef.current;
+        const lastDrawn = lastRenderedIndexRef.current;
+        const currentDistance = Math.abs(lastDrawn - currentTarget);
+        const newDistance = Math.abs(frameIdx - currentTarget);
+
+        if (frameIdx === currentTarget || newDistance < currentDistance) {
+          drawFrame(currentTarget);
+        }
+      }
+    };
+
+    // Helper to create & load an image object
+    const loadIndex = (i: number) => {
+      if (images[i]) return;
       const img = new Image();
-      const frameNum = String(i).padStart(3, "0");
+      img.decoding = "async";
+      const frameNum = String(i + 1).padStart(3, "0");
       img.src = `/burger-sequence/ezgif-frame-${frameNum}.png`;
 
-      img.onload = () => {
-        if (i === 1) {
-          setIsLoaded(true);
-          updateCanvasSize();
-          drawFrame(0);
-        } else if (i - 1 === currentFrameRef.current) {
-          drawFrame(currentFrameRef.current);
-        }
+      img.onload = () => handleImageLoad(i);
+      img.onerror = () => {
+        // Safe fallback in case of single network fail
+        console.warn(`Failed to load burger sequence frame ${frameNum}`);
       };
 
-      images.push(img);
+      images[i] = img;
+    };
+
+    // Priority 1: Load first frame immediately
+    loadIndex(0);
+
+    // Priority 2: Keyframe sampling (every 4th frame) so fast scrolling has instant coarse frames
+    for (let i = 4; i < TOTAL_FRAMES; i += 4) {
+      loadIndex(i);
+    }
+
+    // Priority 3: Load all remaining frames
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
+      loadIndex(i);
     }
 
     imagesRef.current = images;
@@ -115,20 +199,37 @@ const BuildYourFuture: React.FC = () => {
     }
   });
 
-  // Handle Resize
+  // Handle Resize and Orientation changes via ResizeObserver & Window Listeners
   useEffect(() => {
     updateCanvasSize();
-    window.addEventListener("resize", updateCanvasSize);
-    return () => window.removeEventListener("resize", updateCanvasSize);
+
+    const canvasWrapper = canvasWrapperRef.current;
+    let observer: ResizeObserver | null = null;
+
+    if (canvasWrapper && typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(() => {
+        updateCanvasSize();
+      });
+      observer.observe(canvasWrapper);
+    }
+
+    window.addEventListener("resize", updateCanvasSize, { passive: true });
+    window.addEventListener("orientationchange", updateCanvasSize);
+
+    return () => {
+      if (observer) observer.disconnect();
+      window.removeEventListener("resize", updateCanvasSize);
+      window.removeEventListener("orientationchange", updateCanvasSize);
+    };
   }, [updateCanvasSize]);
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-[190vh] sm:h-[220vh] ${matter.className}`}
+      className={`relative w-full h-[190vh] sm:h-[220vh] ${matter.className} transform-gpu`}
     >
-      {/* Sticky Viewport Container - uses dynamic viewport units (dvh) for mobile browser address bar handling */}
-      <div className="sticky top-0 h-screen supports-[height:100dvh]:h-[100dvh] w-full flex flex-col lg:flex-row items-center justify-between lg:justify-center overflow-hidden select-none px-4 sm:px-8 lg:px-16 py-6 sm:py-8 lg:py-0">
+      {/* Sticky Viewport Container - uses dynamic viewport units (dvh) with standard vh fallback */}
+      <div className="sticky top-0 h-screen supports-[height:100dvh]:h-[100dvh] w-full flex flex-col lg:flex-row items-center justify-between lg:justify-center overflow-hidden select-none px-4 sm:px-8 lg:px-16 py-6 sm:py-8 lg:py-0 will-change-transform transform-gpu">
         {/* Ambient background glow (optimized blur and size for mobile GPU performance) */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[600px] bg-blue-600/10 rounded-full blur-[100px] lg:blur-[180px] pointer-events-none" />
 
@@ -143,7 +244,10 @@ const BuildYourFuture: React.FC = () => {
         </div>
 
         {/* Center Canvas (Burger Sequence) */}
-        <div className="relative w-full flex-1 max-w-[340px] xs:max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[850px] max-h-[38vh] xs:max-h-[42vh] sm:max-h-[50vh] lg:max-h-[85vh] z-20 pointer-events-none flex items-center justify-center my-auto lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-[88vh] lg:my-0">
+        <div
+          ref={canvasWrapperRef}
+          className="relative w-full flex-1 max-w-[340px] xs:max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[850px] max-h-[38vh] xs:max-h-[42vh] sm:max-h-[50vh] lg:max-h-[85vh] z-20 pointer-events-none flex items-center justify-center my-auto lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-[88vh] lg:my-0"
+        >
           <canvas
             ref={canvasRef}
             className={`w-full h-full object-contain pointer-events-none transition-opacity duration-500 ${
