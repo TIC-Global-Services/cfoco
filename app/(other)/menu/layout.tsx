@@ -1,5 +1,4 @@
 import React from "react";
-import PageLayout from "@/reusable/PageLayout";
 import NavbarOther from "@/reusable/Navbar-other";
 import FooterOther from "@/reusable/Footer-other";
 
@@ -9,16 +8,24 @@ export default function MenuLayout({
   children: React.ReactNode;
 }) {
   return (
-      <div className="relative min-h-screen w-full text-white flex flex-col pt-24">
-      
-        <div
-          className="fixed inset-0 -z-10 bg-cover bg-bottom bg-no-repeat"
-          style={{ backgroundImage: "url('/menu_bgimage-new.png')" }}
-          aria-hidden="true"
-        />
-        <NavbarOther />
+    <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-[#0b0d14] text-white flex flex-col pt-24">
+
+      {/* Background Image */}
+      <div
+        className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{
+          backgroundImage: "url('/menu_bgimage-new.png')",
+        }}
+        aria-hidden="true"
+      />
+
+      <NavbarOther />
+
+      <main className="relative flex-1 bg-transparent">
         {children}
-        <FooterOther />
-      </div>
-    );
+      </main>
+
+      <FooterOther />
+    </div>
+  );
 }

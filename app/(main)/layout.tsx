@@ -8,15 +8,23 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative overflow-x-clip min-h-screen w-full text-white flex flex-col pt-24">
+    <div className="relative isolate min-h-screen w-full overflow-x-clip bg-[#0b0d14] text-white flex flex-col pt-24">
 
+      {/* Background Image */}
       <div
-        className="fixed inset-0 -z-10 bg-cover bg-bottom bg-no-repeat"
-        style={{ backgroundImage: "url('/bg-image-new.png')" }}
+        className="fixed inset-0 -z-10 bg-cover bg-bottom bg-no-repeat pointer-events-none"
+        style={{
+          backgroundImage: "url('/bg-image-new.png')",
+        }}
         aria-hidden="true"
       />
+
       <Navbar />
-      {children}
+
+      <main className="relative flex-1 bg-transparent">
+        {children}
+      </main>
+
       <Footer />
     </div>
   );

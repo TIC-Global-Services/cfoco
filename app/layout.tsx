@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
 import { matter } from "@/font/fonts";
 import "./globals.css";
@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   description: "CFOCO is a crispy chicken kitchen that has been serving delicious fried chicken since 2011. Our secret recipe and commitment to quality have made us a favorite among chicken lovers.",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0b0d14",
+  colorScheme: "dark",
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -21,9 +26,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${matter.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${matter.variable} min-h-screen bg-[#0b0d14] antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-screen bg-[#0b0d14] flex flex-col text-white">{children}</body>
     </html>
   );
 }
