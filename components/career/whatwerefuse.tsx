@@ -78,18 +78,6 @@ const WhatWeRefuse = () => {
 
   return (
     <section className="relative w-full py-20 overflow-hidden font-sans">
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
-          display: inline-flex;
-          white-space: nowrap;
-        }
-      `}</style>
-
       <div className="px-4 sm:px-[5%] relative z-10">
 
         {/* Title */}

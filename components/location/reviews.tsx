@@ -74,7 +74,7 @@ const defaultRightReviews: ReviewCardItem[] = [
 
 const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
   return (
-    <div className="relative overflow-hidden bg-[#FFFFFF1A] backdrop-blur-xs border border-[#0000001A] rounded-[30px] sm:rounded-[30px] py-10 px-5 sm:p-6 lg:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] w-[272px] xs:w-[250px] sm:w-[320px] md:w-[380px] lg:w-[420px] pointer-events-auto transition-[border-color,box-shadow] duration-300 hover:border-neutral-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transform-gpu will-change-transform">
+    <div className="relative overflow-hidden bg-[#1a1d2be6] border border-[#0000001A] rounded-[30px] sm:rounded-[30px] py-10 px-5 sm:p-6 lg:p-10 shadow-[0_8px_24px_rgba(0,0,0,0.4)] w-[272px] xs:w-[250px] sm:w-[320px] md:w-[380px] lg:w-[420px] pointer-events-auto transform-gpu will-change-transform">
       {/* 5 Golden Stars */}
       <div className="flex items-center mb-6 sm:mb-4 text-[#FFBB00]">
         {Array.from({ length: card.rating }).map((_, i) => (
@@ -147,6 +147,7 @@ const Reviews = ({
         y: getStartY,
         force3D: true,
         willChange: "transform",
+        backfaceVisibility: "hidden",
       });
 
       const tl = gsap.timeline({
@@ -154,8 +155,9 @@ const Reviews = ({
           trigger: containerRef.current,
           start: "top top",
           end: isMobile ? "+=3000" : "+=4500",
-          scrub: 0.8,
+          scrub: 0.3,
           pin: true,
+          fastScrollEnd: true,
           invalidateOnRefresh: true,
         },
       });
@@ -210,8 +212,8 @@ const Reviews = ({
         <div className="absolute top-1/3 left-1/4 w-[350px] h-[350px] bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
 
         {/* Pinned Title Layer (Fixed in Center during scroll) */}
-        <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center">
-          <div className="z-10 space-y-1">
+        <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center transform-gpu backface-hidden will-change-transform">
+          <div className="z-10 space-y-1 transform-gpu">
             <h2 className="text-6xl sm:text-7xl md:text-8xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
               16,000
             </h2>
