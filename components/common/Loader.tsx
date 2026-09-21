@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
@@ -53,20 +53,62 @@ export const Loader: React.FC<LoaderProps> = ({
 export const GlobalLoader: React.FC = () => {
   const pathname = usePathname();
 
-  // Initial Fullscreen Preloader States
-  const [initialLoading, setInitialLoading] = useState(true);
+  // Initial Fullscreen Preloader States (Shows ONLY once per session on initial load)
+  const [initialLoading, setInitialLoading] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // Route Transition Progress Bar States
-  const [isRouteNavigating, setIsRouteNavigating] = useState(false);
-  const [routeProgress, setRouteProgress] = useState(0);
+  // Network / Route Activity Bar States
+  const [isNetworkActive, setIsNetworkActive] = useState(false);
+  const [networkProgress, setNetworkProgress] = useState(0);
   const [prevPathname, setPrevPathname] = useState(pathname);
+  const activeRequestsRef = useRef(0);
+  const progressTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // 1. Initial Page Load Animation
+  // Helper to start the top bar network animation
+  const startNetworkBar = useCallback(() => {
+    setIsNetworkActive(true);
+    setNetworkProgress((prev) => (prev > 0 ? prev : 25));
+
+    if (progressTimerRef.current) clearInterval(progressTimerRef.current);
+    progressTimerRef.current = setInterval(() => {
+      setNetworkProgress((prev) => {
+        if (prev < 85) {
+          return prev + Math.floor((90 - prev) / 10) + 1;
+        }
+        return prev;
+      });
+    }, 200);
+  }, []);
+
+  // Helper to complete and hide the top bar network animation
+  const finishNetworkBar = useCallback(() => {
+    if (progressTimerRef.current) {
+      clearInterval(progressTimerRef.current);
+      progressTimerRef.current = null;
+    }
+    setNetworkProgress(100);
+    setTimeout(() => {
+      setIsNetworkActive(false);
+      setNetworkProgress(0);
+    }, 400);
+  }, []);
+
+  // 1. Initial Page Load (Plays ONCE when the user first opens the website)
   useEffect(() => {
+    try {
+      const alreadyLoaded = sessionStorage.getItem("cfoco_initial_loaded");
+      if (alreadyLoaded) {
+        setInitialLoading(false);
+        return;
+      }
+    } catch {
+      // Ignore sessionStorage errors in restricted environments
+    }
+
+    setInitialLoading(true);
+
     let currentPct = 0;
-    let timer: ReturnType<typeof setInterval>;
     let isComplete = false;
 
     const onWindowLoad = () => {
@@ -79,28 +121,32 @@ export const GlobalLoader: React.FC = () => {
       window.addEventListener("load", onWindowLoad, { once: true });
     }
 
-    timer = setInterval(() => {
+    const timer = setInterval(() => {
       if (!isComplete) {
-        // Increment steadily up to 88% while waiting for window load
         if (currentPct < 88) {
           const step = Math.max(1, Math.floor((90 - currentPct) / 8));
           currentPct = Math.min(88, currentPct + step);
           setProgress(currentPct);
         }
       } else {
-        // Accelerate to 100% once ready
         currentPct += 12;
         if (currentPct >= 100) {
           currentPct = 100;
           setProgress(100);
           clearInterval(timer);
 
+          try {
+            sessionStorage.setItem("cfoco_initial_loaded", "true");
+          } catch {
+            // Ignore sessionStorage errors
+          }
+
           // Graceful fadeout sequence
           setTimeout(() => {
             setIsExiting(true);
             setTimeout(() => {
               setInitialLoading(false);
-            }, 700);
+            }, 600);
           }, 200);
         } else {
           setProgress(currentPct);
@@ -108,14 +154,19 @@ export const GlobalLoader: React.FC = () => {
       }
     }, 30);
 
-    // Failsafe timeout so the user is never stuck
+    // Failsafe timeout so user is never stuck
     const fallback = setTimeout(() => {
       setProgress(100);
+      try {
+        sessionStorage.setItem("cfoco_initial_loaded", "true");
+      } catch {
+        // Ignore sessionStorage errors
+      }
       setIsExiting(true);
       setTimeout(() => {
         setInitialLoading(false);
-      }, 700);
-    }, 2500);
+      }, 600);
+    }, 2000);
 
     return () => {
       clearInterval(timer);
@@ -128,28 +179,61 @@ export const GlobalLoader: React.FC = () => {
   useEffect(() => {
     if (pathname !== prevPathname) {
       setPrevPathname(pathname);
-      setIsRouteNavigating(true);
-      setRouteProgress(20);
-
-      const t1 = setTimeout(() => setRouteProgress(65), 100);
-      const t2 = setTimeout(() => setRouteProgress(100), 280);
-      const t3 = setTimeout(() => {
-        setIsRouteNavigating(false);
-        setRouteProgress(0);
-      }, 550);
-
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
-      };
+      startNetworkBar();
+      const t = setTimeout(() => {
+        finishNetworkBar();
+      }, 350);
+      return () => clearTimeout(t);
     }
-  }, [pathname, prevPathname]);
+  }, [pathname, prevPathname, startNetworkBar, finishNetworkBar]);
+
+  // 3. Global Network & Download Interceptor
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // Track active fetch requests
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+      activeRequestsRef.current += 1;
+      startNetworkBar();
+      try {
+        return await originalFetch(...args);
+      } finally {
+        activeRequestsRef.current = Math.max(0, activeRequestsRef.current - 1);
+        if (activeRequestsRef.current === 0) {
+          finishNetworkBar();
+        }
+      }
+    };
+
+    // Custom event listeners for manual network/download trigger
+    const handleNetworkStart = () => {
+      activeRequestsRef.current += 1;
+      startNetworkBar();
+    };
+
+    const handleNetworkEnd = () => {
+      activeRequestsRef.current = Math.max(0, activeRequestsRef.current - 1);
+      if (activeRequestsRef.current === 0) {
+        finishNetworkBar();
+      }
+    };
+
+    window.addEventListener("cfoco:network-start", handleNetworkStart);
+    window.addEventListener("cfoco:network-end", handleNetworkEnd);
+
+    return () => {
+      window.fetch = originalFetch;
+      window.removeEventListener("cfoco:network-start", handleNetworkStart);
+      window.removeEventListener("cfoco:network-end", handleNetworkEnd);
+      if (progressTimerRef.current) clearInterval(progressTimerRef.current);
+    };
+  }, [startNetworkBar, finishNetworkBar]);
 
   return (
     <>
-      {/* ── Top Navigation Bar (Route Transition) ── */}
-      {isRouteNavigating && (
+      {/* ── Top Glowing Progress Bar (For Route Transitions & Network Downloads) ── */}
+      {isNetworkActive && (
         <div
           className="fixed top-0 left-0 right-0 h-[3px] z-[999999] pointer-events-none overflow-hidden"
           aria-hidden="true"
@@ -157,20 +241,21 @@ export const GlobalLoader: React.FC = () => {
           <div
             className="h-full bg-gradient-to-r from-[#E52320] via-[#FFBF00] to-[#0066FF] transition-all duration-300 ease-out shadow-[0_0_12px_rgba(255,191,0,0.8)]"
             style={{
-              width: `${routeProgress}%`,
-              opacity: routeProgress === 100 ? 0 : 1,
+              width: `${networkProgress}%`,
+              opacity: networkProgress === 100 ? 0 : 1,
             }}
           />
         </div>
       )}
 
-      {/* ── Initial Fullscreen Preloader ── */}
+      {/* ── Initial Website Load Fullscreen Preloader (Shown ONLY once per session) ── */}
       {initialLoading && (
         <div
-          className={`fixed inset-0 z-[9999999] flex flex-col items-center justify-center bg-[#0b0d14] select-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isExiting
+          className={`fixed inset-0 z-[9999999] flex flex-col items-center justify-center bg-[#0b0d14] select-none transition-all duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isExiting
               ? "opacity-0 scale-[1.03] blur-sm pointer-events-none"
               : "opacity-100 scale-100"
-            }`}
+          }`}
           style={{ willChange: "transform, opacity, filter" }}
         >
           {/* Ambient Background Glows */}
