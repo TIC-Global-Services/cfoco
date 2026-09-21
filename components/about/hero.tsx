@@ -110,7 +110,7 @@ const Hero = () => {
             style={{ opacity: textOpacity, y: headlineY }}
             className="max-w-2xl text-center md:text-left md:pt-10"
           >
-            <h2 className="text-4xl sm:text-5xl md:text-[3.75rem] lg:text-[4.375rem] font-bold tracking-tight text-white leading-[1.08]">
+            <h2 className="text-4xl sm:text-5xl lg:text-[3.75rem] lg:text-[4.375rem] font-bold tracking-tight text-white leading-[1.08]">
               It Started With <br />
               A Simple Frustration.
             </h2>
@@ -126,7 +126,7 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-30%] bottom-[30%] sm:left-[-6vw] sm:bottom-[1vh] w-[55vw] min-w-[340px] max-w-[950px] h-full"
+            className="absolute left-[-30%] bottom-[20%] md:left-0 lg:left-[-6vw] lg:bottom-[1vh] w-[55vw] min-w-[380px] md:max-w-[950px] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -146,7 +146,7 @@ const Hero = () => {
               y: rightY,
               opacity: rightOpacity,
             }}
-            className="absolute right-[-40%] top-[12%] sm:right-[-6vw] sm:top-[-5vh] w-[55vw] min-w-[340px] max-w-[950px] aspect-[4/3]"
+            className="absolute right-[-45%] top-[10%] md:-right-10 md:top-5 lg:right-[-6vw] lg:top-[-5vh] w-[55vw] min-w-[390px] md:max-w-[950px] aspect-[4/3]"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -161,12 +161,12 @@ const Hero = () => {
         </div>
 
         {/* Bottom-Right Story Paragraphs */}
-        <div className="w-full mt-[70%] md:mt-[30%] z-20 flex justify-end items-end md:items-center">
+        <div className="w-full mt-[90%] md:mt-[30%] z-20 flex justify-end items-end md:items-center">
           <motion.div
             style={{ opacity: textOpacity, y: descY }}
             className="max-w-xl md:max-w-4xl text-center sm:text-right space-y-3"
           >
-            <p className="text-sm sm:text-base md:text-2xl leading-none text-[#E0E0E0] font-medium whitespace-pre-line">
+            <p className="text-sm sm:text-base lg:text-2xl leading-[1.2] text-[#E0E0E0] font-medium whitespace-pre-line">
               In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:<br className="hidden md:block" />
               Fried Chicken That Promised The World And Delivered Grease. So They Did The
               Stubborn Thing{" "}
@@ -174,7 +174,7 @@ const Hero = () => {
                 They Started Over. Hundreds Of Tests.
               </span>
             </p>
-            <p className="text-sm sm:text-base md:text-2xl leading-none text-[#E0E0E0] font-medium">
+            <p className="text-sm sm:text-base lg:text-2xl leading-[1.2] text-[#E0E0E0] font-medium">
               One Relentless Question: What Does Perfect Actually Taste Like? The
               Answer Became{" "}
               <span className="text-[#E5A823] font-semibold">CFC</span>. Fresh,

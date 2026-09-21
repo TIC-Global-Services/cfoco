@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import Image from "next/image";
 import { useScroll, useMotionValueEvent } from "framer-motion";
 import { matter } from "@/font/fonts";
 
@@ -34,6 +33,7 @@ const BuildYourFuture: React.FC = () => {
     }
 
     // Search outward (prefer backwards then forwards)
+    let bestDist = Infinity;
     let bestMatch: { img: HTMLImageElement; index: number } | null = null;
 
     for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
@@ -56,11 +56,6 @@ const BuildYourFuture: React.FC = () => {
           break;
         }
       }
-    }
-
-    // Fallback to frame 0 if available
-    if (!bestMatch && images[0] && images[0].complete && images[0].naturalWidth > 0) {
-      return { img: images[0], index: 0 };
     }
 
     return bestMatch;
@@ -110,14 +105,12 @@ const BuildYourFuture: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const width = rect.width || canvas.clientWidth || 340;
-    const height = rect.height || canvas.clientHeight || 260;
-    if (width === 0 || height === 0) return;
+    if (rect.width === 0 || rect.height === 0) return;
 
-    // Clamp DPR to maximum of 2 to preserve 60fps on high-DPI mobile devices
+    // Clamp DPR to maximum of 2 to preserve 60fps on high-DPI mobile devices (iOS Safari)
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const newWidth = Math.floor(width * dpr);
-    const newHeight = Math.floor(height * dpr);
+    const newWidth = Math.floor(rect.width * dpr);
+    const newHeight = Math.floor(rect.height * dpr);
 
     if (canvas.width !== newWidth || canvas.height !== newHeight) {
       canvas.width = newWidth;
@@ -130,17 +123,14 @@ const BuildYourFuture: React.FC = () => {
   // Progressive Preload of Sequence Images
   useEffect(() => {
     const images: HTMLImageElement[] = new Array(TOTAL_FRAMES);
-    let isCancelled = false;
 
     const handleImageLoad = (frameIdx: number) => {
-      if (isCancelled) return;
       if (frameIdx === 0) {
         setIsLoaded(true);
-        requestAnimationFrame(() => {
-          updateCanvasSize();
-          drawFrame(0);
-        });
+        updateCanvasSize();
+        drawFrame(0);
       } else {
+        // Redraw if the newly loaded frame is target or closer to current scroll target
         const currentTarget = currentFrameRef.current;
         const lastDrawn = lastRenderedIndexRef.current;
         const currentDistance = Math.abs(lastDrawn - currentTarget);
@@ -152,68 +142,39 @@ const BuildYourFuture: React.FC = () => {
       }
     };
 
-    const loadIndex = (i: number): Promise<void> => {
-      return new Promise((resolve) => {
-        if (images[i]) {
-          resolve();
-          return;
-        }
-        const img = new (window.Image || Image)();
-        img.decoding = "async";
-        const frameNum = String(i + 1).padStart(3, "0");
-        img.src = `/burger-sequence/ezgif-frame-${frameNum}.png`;
+    // Helper to create & load an image object
+    const loadIndex = (i: number) => {
+      if (images[i]) return;
+      const img = new Image();
+      img.decoding = "async";
+      const frameNum = String(i + 1).padStart(3, "0");
+      img.src = `/burger-sequence/ezgif-frame-${frameNum}.png`;
 
-        img.onload = () => {
-          handleImageLoad(i);
-          resolve();
-        };
-        img.onerror = () => {
-          resolve();
-        };
-
-        images[i] = img;
-      });
-    };
-
-    // Staged sequence loader:
-    // Step 1: Load frame 0 immediately with highest priority
-    loadIndex(0).then(() => {
-      if (isCancelled) return;
-
-      // Step 2: Load keyframes evenly (every 4th frame) in small batches
-      const keyframes: number[] = [];
-      for (let i = 4; i < TOTAL_FRAMES; i += 4) {
-        keyframes.push(i);
-      }
-
-      const loadKeyframes = async () => {
-        for (const idx of keyframes) {
-          if (isCancelled) return;
-          await loadIndex(idx);
-        }
-
-        // Step 3: Fill remaining intermediate frames gradually
-        for (let i = 1; i < TOTAL_FRAMES; i++) {
-          if (isCancelled) return;
-          if (!images[i]) {
-            await loadIndex(i);
-          }
-        }
+      img.onload = () => handleImageLoad(i);
+      img.onerror = () => {
+        // Safe fallback in case of single network fail
+        console.warn(`Failed to load burger sequence frame ${frameNum}`);
       };
 
-      if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-        (window as Window & { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(() => {
-          loadKeyframes();
-        });
-      } else {
-        setTimeout(loadKeyframes, 50);
-      }
-    });
+      images[i] = img;
+    };
+
+    // Priority 1: Load first frame immediately
+    loadIndex(0);
+
+    // Priority 2: Keyframe sampling (every 4th frame) so fast scrolling has instant coarse frames
+    for (let i = 4; i < TOTAL_FRAMES; i += 4) {
+      loadIndex(i);
+    }
+
+    // Priority 3: Load all remaining frames
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
+      loadIndex(i);
+    }
 
     imagesRef.current = images;
 
     return () => {
-      isCancelled = true;
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }
@@ -241,7 +202,6 @@ const BuildYourFuture: React.FC = () => {
   // Handle Resize and Orientation changes via ResizeObserver & Window Listeners
   useEffect(() => {
     updateCanvasSize();
-    const timer = setTimeout(updateCanvasSize, 100);
 
     const canvasWrapper = canvasWrapperRef.current;
     let observer: ResizeObserver | null = null;
@@ -257,7 +217,6 @@ const BuildYourFuture: React.FC = () => {
     window.addEventListener("orientationchange", updateCanvasSize);
 
     return () => {
-      clearTimeout(timer);
       if (observer) observer.disconnect();
       window.removeEventListener("resize", updateCanvasSize);
       window.removeEventListener("orientationchange", updateCanvasSize);
@@ -275,7 +234,7 @@ const BuildYourFuture: React.FC = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[600px] bg-blue-600/10 rounded-full blur-[100px] lg:blur-[180px] pointer-events-none" />
 
         {/* Content Container: Mobile uses flex column flow to guarantee NO overlap, Desktop transitions to absolute layout */}
-        
+
         {/* Top Heading */}
         <div className="w-full z-10 text-center max-w-[340px] sm:max-w-[460px] pointer-events-auto lg:absolute lg:left-8 xl:left-16 lg:top-[22%] lg:translate-x-0 lg:text-left lg:max-w-[480px] xl:max-w-[580px] lg:px-0 transition-all duration-300">
           <h2 className="text-[2.1225rem] sm:text-4xl lg:text-[50px] xl:text-[60px] font-extrabold tracking-tight text-[#FFBF00] leading-[1.08] sm:leading-[1.02] drop-shadow-xl">
@@ -284,33 +243,15 @@ const BuildYourFuture: React.FC = () => {
           </h2>
         </div>
 
-        {/* Center Canvas & Instant Poster (Burger Sequence) */}
+        {/* Center Canvas (Burger Sequence) */}
         <div
           ref={canvasWrapperRef}
-          className="relative w-full flex-1 max-w-[340px] xs:max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[850px] min-h-[200px] xs:min-h-[240px] max-h-[38vh] xs:max-h-[42vh] sm:max-h-[50vh] lg:max-h-[85vh] z-20 pointer-events-none flex items-center justify-center my-auto lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-[88vh] lg:my-0"
+          className="relative w-full flex-1 max-w-[340px] xs:max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[850px] max-h-[38vh] xs:max-h-[42vh] sm:max-h-[50vh] lg:max-h-[85vh] z-20 pointer-events-none flex items-center justify-center my-auto lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-[88vh] lg:my-0"
         >
-          {/* Instant Priority Poster so it is never blank on mobile initial load */}
-          <div
-            className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 pointer-events-none ${
-              isLoaded ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <Image
-              src="/burger-sequence/ezgif-frame-001.png"
-              alt="CFOCO Burger"
-              fill
-              priority
-              className="object-contain pointer-events-none"
-              sizes="(max-width: 768px) 340px, (max-width: 1024px) 580px, 850px"
-            />
-          </div>
-
-          {/* Animated Burger Canvas */}
           <canvas
             ref={canvasRef}
-            className={`w-full h-full object-contain pointer-events-none transition-opacity duration-300 ${
-              isLoaded ? "opacity-100" : "opacity-0"
-            }`}
+            className={`w-full h-full object-contain pointer-events-none transition-opacity duration-500 ${isLoaded ? "opacity-100" : "opacity-0"
+              }`}
           />
         </div>
 

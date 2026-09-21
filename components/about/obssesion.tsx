@@ -383,7 +383,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 </h3>
 
                 {/* Description */}
-                <div className="text-white text-sm md:text-base font-normal leading-snug w-full max-w-xs opacity-90">
+                <div className="text-white text-sm md:text-sm font-normal leading-snug w-full max-w-xs opacity-90">
                   <p>{item.descLine1}</p>
                   <p>{item.descLine2}</p>
                 </div>
