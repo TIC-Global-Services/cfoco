@@ -46,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6 lg:space-x-8">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return isActive ? (
@@ -79,7 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
           </nav>
 
           {/* Contact Us CTA Button */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden lg:flex items-center">
             <Link
               href="/contact"
               className="group flex items-center gap-3 pl-6 pr-1 py-1 rounded-full bg-[#FFFFFF99] hover:bg-[#8799a5]/45 border border-white/20 backdrop-blur-md text-white font-medium text-sm lg:text-lg transition-all duration-300 shadow-sm hover:shadow-md hover:border-white/40"
@@ -106,7 +106,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center">
+          <div className="flex lg:hidden items-center">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -142,7 +142,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0d121c]/95 backdrop-blur-xl border-b border-white/10 px-4 pt-2 pb-6 space-y-4">
+        <div className="lg:hidden bg-[#0d121c]/95 backdrop-blur-xl border-b border-white/10 px-4 pt-2 pb-6 space-y-4">
           <div className="flex flex-col space-y-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href;

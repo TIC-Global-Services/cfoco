@@ -126,7 +126,7 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-35%] bottom-[20%] min-[425px]:left-[-25%] min-[425px]:bottom-[20%] md:left-0 lg:left-[-6vw] lg:bottom-[1vh] w-[55vw] min-w-[380px] md:max-w-[950px] h-full"
+            className="absolute left-[-35%] bottom-[20%] min-[425px]:left-[-25%] min-[425px]:bottom-[20%] md:left-0 lg:left-[-6vw] lg:bottom-[1vh] w-[55vw] min-w-[380px] md:max-w-[600px] lg:max-w-[950px] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
@@ -146,7 +146,7 @@ const Hero = () => {
               y: rightY,
               opacity: rightOpacity,
             }}
-            className="absolute right-[-50%] top-[10%] min-[425px]:right-[-40%] min-[425px]:top-[10%] md:-right-10 md:top-5 lg:right-[-6vw] lg:top-[-5vh] w-[55vw] min-w-[390px] md:max-w-[950px] aspect-[4/3]"
+            className="absolute right-[-50%] top-[10%] min-[425px]:right-[-40%] min-[425px]:top-[10%] md:-right-10 md:top-5 lg:right-[-6vw] lg:top-[-5vh] w-[55vw] min-w-[390px] md:max-w-[600px] lg:max-w-[950px] aspect-[4/3]"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
