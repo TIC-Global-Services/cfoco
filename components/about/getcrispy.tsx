@@ -82,7 +82,7 @@ const GetCrispy = () => {
               className="relative w-full h-full drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)]"
             >
               <Image
-                src="/map.png"
+                src="/output.gif"
                 alt="CFOCO Locations Map"
                 fill
                 priority

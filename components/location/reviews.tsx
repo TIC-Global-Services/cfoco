@@ -98,9 +98,8 @@ const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
 
       <div className="relative flex items-center gap-2.5 sm:gap-3 pt-2">
         <div
-          className={`w-12.5 h-12.5 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${
-            card.avatarColor || "from-cyan-400 to-blue-600"
-          } p-[2px] shadow-sm shrink-0`}
+          className={`w-12.5 h-12.5 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${card.avatarColor || "from-cyan-400 to-blue-600"
+            } p-[2px] shadow-sm shrink-0`}
         >
           <div className="relative w-full h-full rounded-full overflow-hidden bg-[#111726]">
             <Image

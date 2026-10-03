@@ -1,36 +1,14 @@
 "use client";
 
-import { Suspense, useRef } from "react";
+import { Suspense } from "react";
 import { Bounds, useGLTF } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import { Canvas } from "@react-three/fiber";
 
 function LogoModel({ modelPath }: { modelPath: string }) {
   const { scene } = useGLTF(modelPath);
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (!groupRef.current) return;
-    
-    // state.pointer contains normalized mouse coordinates (-1 to 1)
-    const targetX = (state.pointer.y * Math.PI) / 42; // up/down tilt (very subtle)
-    const targetY = (state.pointer.x * Math.PI) / 42; // left/right tilt (very subtle)
-
-    // Smoothly interpolate current rotation towards the target rotation
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(
-      groupRef.current.rotation.x,
-      Math.PI / 2 - targetX,
-      0.08
-    );
-    groupRef.current.rotation.y = THREE.MathUtils.lerp(
-      groupRef.current.rotation.y,
-      targetY,
-      0.08
-    );
-  });
 
   return (
-    <group ref={groupRef} rotation={[Math.PI / 2, 0, 0]}>
+    <group rotation={[Math.PI / 2, 0, 0]}>
       <primitive object={scene} />
     </group>
   );

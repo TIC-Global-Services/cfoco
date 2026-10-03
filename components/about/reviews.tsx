@@ -1,16 +1,12 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { matter } from "@/font/fonts";
 import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
-
-/** useLayoutEffect on the client, useEffect during SSR (avoids Next.js warning) */
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export interface ReviewCardItem {
   id: string;
@@ -76,10 +72,8 @@ const defaultRightReviews: ReviewCardItem[] = [
 
 const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
   return (
-    // NOTE: no `will-change` here — GSAP sets/clears it on the animated wrapper.
-    // A permanent will-change on many nodes eats GPU memory on iOS.
-    <div className="relative overflow-hidden bg-[#1a1d2be6] border border-[#0000001A] rounded-[30px] py-10 px-5 sm:p-6 lg:p-10 shadow-[0_8px_24px_rgba(0,0,0,0.4)] w-[272px] xs:w-[250px] sm:w-[320px] md:w-[380px] lg:w-[420px] pointer-events-auto">
-      <div className="flex items-center mb-6 sm:mb-4 text-[#FFBB00]">
+    <div className="relative overflow-hidden bg-[#1a1d2be6] backdrop-blur-md border border-white/10 rounded-[24px] sm:rounded-[30px] py-6 px-5 sm:p-6 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] w-[88vw] max-w-[340px] sm:w-[320px] md:w-[380px] lg:w-[450px] pointer-events-auto">
+      <div className="flex items-center mb-4 text-[#FFBB00]">
         {Array.from({ length: card.rating }).map((_, i) => (
           <svg
             key={i}
@@ -96,11 +90,10 @@ const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
         {card.quote}
       </p>
 
-      <div className="relative flex items-center gap-2.5 sm:gap-3 pt-2">
+      <div className="relative flex items-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
         <div
-          className={`w-12.5 h-12.5 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${
-            card.avatarColor || "from-cyan-400 to-blue-600"
-          } p-[2px] shadow-sm shrink-0`}
+          className={`w-12.5 h-12.5 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${card.avatarColor || "from-cyan-400 to-blue-600"
+            } p-[2px] shadow-sm shrink-0`}
         >
           <div className="relative w-full h-full rounded-full overflow-hidden bg-[#111726]">
             <Image
@@ -133,60 +126,23 @@ const Reviews = ({
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Viewport height is LOCKED in JS instead of using 100dvh.
-  // On iOS/Android the browser chrome collapses while scrolling; 100dvh then
-  // re-lays-out the pinned box every frame, which is the up/down "shake".
-  const [lockedVh, setLockedVh] = useState<number | null>(null);
-
-  useIsoLayoutEffect(() => {
-    let lastWidth = window.innerWidth;
-    setLockedVh(window.innerHeight);
-
-    const onResize = () => {
-      // Height-only changes = address-bar show/hide. Ignore them completely.
-      if (window.innerWidth === lastWidth) return;
-      lastWidth = window.innerWidth;
-      setLockedVh(window.innerHeight);
-      requestAnimationFrame(() => ScrollTrigger.refresh());
-    };
-
-    window.addEventListener("resize", onResize);
-    window.addEventListener("orientationchange", onResize);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("orientationchange", onResize);
-    };
-  }, []);
-
-  useIsoLayoutEffect(() => {
-    if (lockedVh === null) return;
-
-    const isTouch = ScrollTrigger.isTouch === 1;
-
-    // Do not recalc on mobile toolbar resize.
-    ScrollTrigger.config({ ignoreMobileResize: true });
-
-    // The official GSAP fix for iOS Safari pin jitter: ScrollTrigger takes over
-    // touch scrolling so the address bar can't fight the pinned element.
-    // Remove this line if you also run Lenis / Locomotive smooth scroll.
-    if (isTouch) ScrollTrigger.normalizeScroll(true);
-
+  useEffect(() => {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
       const buildScrollTimeline = (
         leftCards: HTMLElement[],
         rightCards: HTMLElement[],
-        scrollDistance: number,
         cardDuration: number,
         staggerStep: number,
         scrubSpeed: number | boolean
       ) => {
         const all = [...leftCards, ...rightCards];
-        const travel = Math.max(lockedVh * 1.15, 800);
+        const travel =
+          typeof window !== "undefined"
+            ? Math.max(window.innerHeight * 0.95, 650)
+            : 700;
 
-        // autoAlpha only (opacity + visibility) — never tween opacity and
-        // autoAlpha on the same target, they overwrite each other.
         gsap.set(all, {
           y: travel,
           autoAlpha: 0,
@@ -196,16 +152,10 @@ const Reviews = ({
 
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: containerRef.current,
-            pin: containerRef.current,
+            trigger: sectionRef.current,
             start: "top top",
-            end: `+=${scrollDistance}`,
+            end: "bottom bottom",
             scrub: scrubSpeed,
-            pinSpacing: true,
-            anticipatePin: 1, // kills the one-frame jump at pin start
-            // "transform" avoids position:fixed, which is what stutters on iOS
-            pinType: isTouch ? "transform" : "fixed",
-            fastScrollEnd: true,
             invalidateOnRefresh: true,
           },
         });
@@ -245,55 +195,53 @@ const Reviews = ({
       // ── Touch / small screens ──
       mm.add("(max-width: 1024px)", () => {
         const { left, right } = collect();
-        // Slightly increased stagger (1.05s) & scrollDistance (2400) for more breathing room & delay between cards
-        buildScrollTimeline(left, right, 2400, 2.2, 1.03, true);
+        // 6 cards float sequentially without overlapping
+        buildScrollTimeline(left, right, 2.2, 1, 0.5);
       });
 
       // ── Desktop ──
       mm.add("(min-width: 1025px)", () => {
         const { left, right } = collect();
-        buildScrollTimeline(left, right, 3000, 2.4, 0.8, 0.6);
+        // 2 parallel columns floating smoothly
+        buildScrollTimeline(left, right, 2.4, 0.8, 0.6);
       });
     }, sectionRef);
 
-    // Late-loading fonts/images shift layout → recalc once everything settles.
     const refreshAfterLoad = () => ScrollTrigger.refresh();
     window.addEventListener("load", refreshAfterLoad);
+    window.addEventListener("resize", refreshAfterLoad);
     if (typeof document !== "undefined" && "fonts" in document) {
       (document as Document).fonts.ready.then(refreshAfterLoad);
     }
 
     return () => {
       window.removeEventListener("load", refreshAfterLoad);
-      if (isTouch) ScrollTrigger.normalizeScroll(false);
+      window.removeEventListener("resize", refreshAfterLoad);
       ctx.revert();
     };
-  }, [lockedVh]);
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       id="reviews-section"
-      // IMPORTANT: no `overflow-hidden` here. An ancestor with overflow:hidden
-      // (or a transform/filter) breaks position:fixed pinning in Safari.
-      className={`relative w-full bg-transparent select-none ${matter.className}`}
+      className={`relative w-full bg-transparent select-none ${matter.className} h-[360vh] lg:h-[280vh]`}
     >
+      {/* Sticky Viewport Container - completely immune to touch jitter & address bar resizing */}
       <div
         ref={containerRef}
-        style={{ height: lockedVh ? `${lockedVh}px` : undefined }}
-        className="h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden relative px-0 sm:px-[5%]"
+        className="sticky top-0 h-screen supports-[height:100svh]:h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden px-0 sm:px-[5%]"
       >
-        {/* Ambient glows — radial gradients instead of blur(150px).
-            Huge blur filters are the single biggest jank source on iOS. */}
+        {/* Ambient glows */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[600px] h-[500px] sm:h-[600px] rounded-full pointer-events-none"
           style={{
             background:
               "radial-gradient(circle, rgba(37,99,235,0.18) 0%, rgba(37,99,235,0) 70%)",
           }}
         />
         <div
-          className="absolute top-1/3 left-1/4 w-[350px] h-[350px] rounded-full pointer-events-none"
+          className="absolute top-1/3 left-1/4 w-[300px] sm:w-[350px] h-[300px] sm:h-[350px] rounded-full pointer-events-none"
           style={{
             background:
               "radial-gradient(circle, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0) 70%)",
@@ -302,11 +250,11 @@ const Reviews = ({
 
         {/* Centered title layer */}
         <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center select-none">
-          <div className="z-10 space-y-1">
-            <h2 className="text-6xl sm:text-7xl md:text-8xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+          <div className="space-y-1">
+            <h2 className="text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
               16,000
             </h2>
-            <h2 className="text-2xl sm:text-5xl md:text-6xl lg:text-[4.735rem] font-bold tracking-tight text-white leading-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+            <h2 className="text-xl xs:text-2xl sm:text-5xl md:text-6xl lg:text-[4.735rem] font-bold tracking-tight text-white leading-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
               Reviews Can&apos;t Be Wrong
             </h2>
           </div>
@@ -318,7 +266,7 @@ const Reviews = ({
             {leftReviews.map((card, i) => (
               <div
                 key={`rev-left-${card.id}-${i}`}
-                className="review-card-left absolute inset-0 flex items-center justify-start lg:justify-end pl-3 xs:pl-4 sm:pl-6 lg:pl-0 lg:pr-16 pointer-events-none invisible"
+                className="review-card-left absolute inset-0 flex items-center justify-start lg:justify-end px-4 lg:px-0 lg:pr-16 pointer-events-none invisible"
               >
                 <div className="pointer-events-auto">
                   <ReviewCard card={card} />
@@ -331,7 +279,7 @@ const Reviews = ({
             {rightReviews.map((card, i) => (
               <div
                 key={`rev-right-${card.id}-${i}`}
-                className="review-card-right absolute inset-0 flex items-center justify-end lg:justify-start pr-3 xs:pr-4 sm:pr-6 lg:pr-0 lg:pl-16 pointer-events-none invisible"
+                className="review-card-right absolute inset-0 flex items-center justify-end lg:justify-start px-4 lg:px-0 lg:pl-16 pointer-events-none invisible"
               >
                 <div className="pointer-events-auto">
                   <ReviewCard card={card} />

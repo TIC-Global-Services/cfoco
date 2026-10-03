@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
 import dynamic from "next/dynamic";
-import { motion, useMotionValue, useSpring } from "framer-motion";
 import LazyMount from "./LazyMount";
 
 const FooterLogoCanvas = dynamic(() => import("@/reusable/FooterLogoCanvas"), {
@@ -33,7 +32,7 @@ const socialLinks = [
     href: "https://linkedin.com",
     icon: (
       <svg
-        className="w-7 h-7 fill-current transition-transform duration-200 group-hover:scale-110"
+        className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 fill-current transition-transform duration-200 group-hover:scale-110"
         viewBox="0 0 24 24"
       >
         <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37z" />
@@ -45,7 +44,7 @@ const socialLinks = [
     href: "mailto:contact@cfoco.com",
     icon: (
       <svg
-        className="w-7 h-7 fill-none stroke-current transition-transform duration-200 group-hover:scale-110"
+        className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 fill-none stroke-current transition-transform duration-200 group-hover:scale-110"
         viewBox="0 0 24 24"
         strokeWidth="1.8"
         strokeLinecap="round"
@@ -61,7 +60,7 @@ const socialLinks = [
     href: "https://instagram.com",
     icon: (
       <svg
-        className="w-7 h-7 fill-none stroke-current transition-transform duration-200 group-hover:scale-110"
+        className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 fill-none stroke-current transition-transform duration-200 group-hover:scale-110"
         viewBox="0 0 24 24"
         strokeWidth="1.8"
         strokeLinecap="round"
@@ -82,12 +81,12 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = ({ className = "" }) => {
   return (
     <footer
-      className={`relative w-full h-[600px] overflow-hidden select-none ${matter.className} ${className}`}
+      className={`relative w-full h-[440px] sm:h-[520px] md:h-[600px] overflow-hidden select-none ${matter.className} ${className}`}
     >
       <Reveal className="h-full w-full">
         <div className="relative z-10 w-full h-full px-2 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 flex flex-col justify-between items-center">
           {/* Top Navigation Links */}
-          <nav className="grid grid-cols-3 gap-y-3.5  sm:gap-x-6 md:flex md:flex-wrap justify-center items-center justify-items-center px-2 md:px-0 md:gap-10 lg:gap-14 text-lg  md:text-lg font-normal text-white shrink-0 w-full  sm:max-w-md md:max-w-none mx-auto">
+          <nav className="grid grid-cols-3 gap-y-3 sm:gap-x-6 md:flex md:flex-wrap justify-center items-center justify-items-center px-2 md:px-0 md:gap-10 lg:gap-14 text-sm sm:text-base md:text-lg font-normal text-white shrink-0 w-full sm:max-w-md md:max-w-none mx-auto">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
@@ -102,15 +101,16 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
 
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
-            <div className="relative w-full h-[220px] sm:h-[280px] md:h-[450px] transition-transform duration-500 hover:scale-[1.02]">
+            <div className="relative w-full h-[150px] sm:h-[280px] md:h-[450px]">
               <LazyMount className="h-full w-full">
                 <FooterLogoCanvas modelPath="/cfc_logo.glb" />
               </LazyMount>
             </div>
           </div>
+          
 
           {/* Bottom Footer Bar */}
-          <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-2 sm:gap-6 text-base sm:text-base text-[#B0B0B0] shrink-0">
+          <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-2 sm:gap-6 text-xs sm:text-sm md:text-base text-[#B0B0B0] shrink-0">
             {/* Copyright */}
             <div className="text-center md:text-left order-2 md:order-1 font-semibold">
               <span>Copyright © 2026 </span>
@@ -135,7 +135,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             </div>
 
             {/* Credits */}
-            <div className="text-center text-base md:text-right text-[#B0B0B0] order-3 font-semibold">
+            <div className="text-center md:text-right text-[#B0B0B0] order-3 font-semibold">
               <span>Designed &amp; Developed by </span><br className="md:hidden" />
               <Link
                 href="https://ticglobalservices.com"

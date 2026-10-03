@@ -126,15 +126,15 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-35%] bottom-[20%] min-[425px]:left-[-25%] min-[425px]:bottom-[20%] md:left-10 lg:left-[-6vw] md:bottom-[35%] lg:bottom-[1vh] w-[55vw] min-w-[380px] md:max-w-[90vw] lg:max-w-[95vw] h-full"
+            className="absolute left-[-50%] bottom-[30%] min-[425px]:left-[-35%] min-[425px]:bottom-[30%] md:-left-[24  vw] lg:left-[-25vw] md:bottom-[20%] lg:bottom-[-5vh] w-[70vw] min-w-[380px] md:max-w-[90vw] lg:max-w-[95vw] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
-                src="/left-hand-new.png"
+                src="/left-hand-wbg1.png"
                 alt="Left Hand holding Crispy Chicken"
                 fill
                 priority
-                className="object-contain object-left-bottom rotate-10"
+                className="object-contain object-left-bottom -rotate-5"
               />
             </div>
           </motion.div>
@@ -146,22 +146,22 @@ const Hero = () => {
               y: rightY,
               opacity: rightOpacity,
             }}
-            className="absolute right-[-50%] top-[10%] min-[425px]:right-[-40%] min-[425px]:top-[10%] md:-right-[10%] md:top-[20%] lg:right-[-6vw] lg:top-[-5vh] w-[55vw] min-w-[390px] md:max-w-[80vw] lg:max-w-[95vw] aspect-[4/3]"
+            className="absolute right-[-25%] top-[20%] min-[425px]:right-[-20%] min-[425px]:top-[20%] md:-right-[10%] md:top-[10%] lg:right-[-6vw] lg:top-[-5vh] w-[50vw] md:w-[60vw] min-w-[320px] md:max-w-[80vw] lg:max-w-[95vw] aspect-[4/3]"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image
-                src="/right_hand.png"
+                src="/right-hand.png"
                 alt="Right Hand holding Crispy Chicken"
                 fill
                 priority
-                className="object-cover object-right-top"
+                className="object-contain object-right-top"
               />
             </div>
           </motion.div>
         </div>
 
         {/* Bottom-Right Story Paragraphs */}
-        <div className="w-full mt-[90%] md:mt-[60%] lg:mt-[30%] z-20 flex justify-end items-end md:items-center">
+        <div className="w-full mt-[120%] md:mt-[60%] lg:mt-[30%] z-20 flex justify-end items-end md:items-center">
           <motion.div
             style={{ opacity: textOpacity, y: descY }}
             className="max-w-xl md:max-w-4xl text-center sm:text-right space-y-3"
