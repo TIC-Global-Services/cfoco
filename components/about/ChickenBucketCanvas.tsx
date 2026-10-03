@@ -130,13 +130,13 @@ export default function ChickenBucketCanvas({
   // Hardcoded coordinates tuned from Leva
   const controls = {
     position: { x: 0.1, y: -0.05, z: 0 },
-    rotation: { x: -10, y: -86, z: -1 },
+    rotation: { x: -10, y: -130, z: -10},
     scale: 0.60,
     camera: { x: 0, y: 1.25, z: 4.1 },
     fov: 38,
     interactiveOrbit: true,
-    autoRotate: false,
-    autoRotateSpeed: 0.8,
+    autoRotate: true,
+    autoRotateSpeed: 3.4,
     floatingAnim: false,
     lightIntensity: 2.6,
   };

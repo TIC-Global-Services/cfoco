@@ -23,7 +23,7 @@ export default function MainLayout({
       {/* Particles Layer */}
       <div className="fixed inset-0 pointer-events-none z-[-10]">
         <Particles
-          particleColors={["#ffffff"]}
+          particleColors={["#10214f"]}
           particleCount={900}
           particleSpread={40}
           speed={0.8}

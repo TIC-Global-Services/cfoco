@@ -8,7 +8,7 @@ import { locationsData, LocationData } from "@/data/locations";
 import { MapPin, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
 
-const Globe = dynamic(() => import("./Globe"), { ssr: false });
+import Globe from "./Globe";
 
 
 
@@ -196,7 +196,7 @@ const StepInside = () => {
         </div>
 
         {/* World Map with Animated Moving Pinpoint & Detail Card */}
-        <div className="relative w-full my-4 sm:my-6 flex items-center justify-center min-h-[400px]">
+        <div className="relative w-full my-4 sm:my-1 flex items-center justify-center min-h-[300px]">
           <div className="relative w-full max-w-[800px] flex items-center justify-center overflow-visible">
             <Globe location={activeLocation.coordinates} />
 
@@ -315,7 +315,7 @@ const StepInside = () => {
                         href={`/location/${loc.slug}`}
                         className="group flex flex-col items-center justify-center transition-all duration-500 scale-105 sm:scale-110 py-1"
                       >
-                        <span className="whitespace-nowrap text-4xl sm:text-3xl md:text-[50px] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105 leading-none">
+                        <span className="whitespace-nowrap text-4xl sm:text-3xl md:text-[40px] font-black tracking-tight text-[#F6B90B] transition-transform duration-300 group-hover:scale-105 leading-none">
                           {loc.name}
                         </span>
                       </Link>
