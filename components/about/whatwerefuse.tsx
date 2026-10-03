@@ -92,7 +92,7 @@ const WhatWeRefuse: React.FC = () => {
         <div className="relative w-full h-[260px] sm:h-[320px] flex items-center justify-center overflow-hidden my-2">
           {/* Fried Chicken GIF (Rendered ONLY on mobile/tablet to prevent duplicate decoding) */}
           {isDesktop !== true && (
-            <div className="relative w-[280px] sm:w-[320px] aspect-square z-10 flex items-center justify-center pointer-events-none">
+            <div className="relative w-[330px] sm:w-[320px] aspect-square z-10 flex items-center justify-center pointer-events-none">
               <Image
                 src="/CHICKEN-orbit.gif"
                 alt="Crispy Fried Chicken Orbit"
