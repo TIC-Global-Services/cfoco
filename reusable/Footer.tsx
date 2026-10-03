@@ -81,7 +81,7 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = ({ className = "" }) => {
   return (
     <footer
-      className={`relative w-full h-[440px] sm:h-[520px] md:h-[600px] overflow-hidden select-none ${matter.className} ${className}`}
+      className={`relative w-full h-[460px] sm:h-[520px] md:h-[600px] overflow-hidden select-none ${matter.className} ${className}`}
     >
       <Reveal className="h-full w-full">
         <div className="relative z-10 w-full h-full px-2 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 flex flex-col justify-between items-center">
@@ -101,7 +101,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
 
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
-            <div className="relative w-full h-[150px] sm:h-[280px] md:h-[450px]">
+            <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
               <LazyMount className="h-full w-full">
                 <FooterLogoCanvas modelPath="/cfc_logo.glb" />
               </LazyMount>

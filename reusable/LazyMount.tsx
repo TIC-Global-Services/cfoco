@@ -17,7 +17,15 @@ export default function LazyMount({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setShow(e.isIntersecting), { rootMargin });
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShow(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin }
+    );
     io.observe(el);
     return () => io.disconnect();
   }, [rootMargin]);

@@ -39,9 +39,9 @@ const WhatWeRefuse: React.FC = () => {
           />
         </div>
 
-        {/* CARDS (z-10 behind GIF initially, z-[100] on hover to pop on top) */}
+        {/* CARDS (z-10 behind GIF initially, hover:z-50 pops cleanly on top) */}
         {/* Left Card: Speed */}
-        <div className="absolute left-[2%] lg:left-[5%] xl:left-[8%] top-[38%] -translate-y-1/2 z-10 hover:z-[100] group transition-all duration-300 pointer-events-auto">
+        <div className="absolute left-[2%] lg:left-[5%] xl:left-[8%] top-[38%] -translate-y-1/2 z-10 hover:z-50 group pointer-events-auto cursor-pointer">
           <div className="w-[270px] lg:w-[310px] bg-[#1d232e]/75 backdrop-blur-xl border border-white/15 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] transition-all duration-300 group-hover:scale-105 group-hover:border-[#FFBF00]/60 group-hover:shadow-[0_0_35px_rgba(255,191,0,0.25)]">
             <Rabbit className="w-8 h-8 text-white mb-4 stroke-[1.5]" />
             <h3 className="text-2xl lg:text-[2.25rem] font-bold text-white mb-2">Speed</h3>
@@ -52,7 +52,7 @@ const WhatWeRefuse: React.FC = () => {
         </div>
 
         {/* Right Card: Quality */}
-        <div className="absolute right-[2%] lg:right-[5%] xl:right-[8%] top-[38%] -translate-y-1/2 z-10 hover:z-[100] group transition-all duration-300 pointer-events-auto">
+        <div className="absolute right-[2%] lg:right-[5%] xl:right-[8%] top-[38%] -translate-y-1/2 z-10 hover:z-50 group pointer-events-auto cursor-pointer">
           <div className="w-[270px] lg:w-[310px] bg-[#1d232e]/75 backdrop-blur-xl border border-white/15 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] transition-all duration-300 group-hover:scale-105 group-hover:border-[#FFBF00]/60 group-hover:shadow-[0_0_35px_rgba(255,191,0,0.25)]">
             <Star className="w-8 h-8 text-white mb-4 stroke-[1.5]" />
             <h3 className="text-2xl lg:text-[2.25rem] font-bold text-white mb-2">Quality</h3>
@@ -63,7 +63,7 @@ const WhatWeRefuse: React.FC = () => {
         </div>
 
         {/* Bottom Center Card: Conviviality */}
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-[4%] lg:bottom-[6%] z-10 hover:z-[100] group transition-all duration-300 pointer-events-auto">
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-[4%] lg:bottom-[6%] z-10 hover:z-50 group pointer-events-auto cursor-pointer">
           <div className="w-[290px] lg:w-[330px] bg-[#1d232e]/80 backdrop-blur-xl border border-[#1e82e6]/70 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.9)] transition-all duration-300 group-hover:scale-105 group-hover:border-[#FFBF00] group-hover:shadow-[0_0_40px_rgba(255,191,0,0.35)]">
             <Users className="w-8 h-8 text-[#FFBF00] mb-4 stroke-[1.5]" />
             <h3 className="text-2xl lg:text-[2.25rem] font-bold text-[#FFBF00] mb-2">Conviviality</h3>
