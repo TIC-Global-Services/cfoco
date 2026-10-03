@@ -67,7 +67,7 @@ const GetCrispy = () => {
         >
           <div className="relative w-full max-w-[580px] h-[300px] sm:h-[380px] md:h-[440px] flex items-center justify-center">
             {/* Soft Map Glow */}
-            <div className="absolute inset-0 bg-blue-500/10 blur-2xl rounded-full pointer-events-none" />
+            {/* <div className="absolute inset-0 bg-blue-500/10 blur-2xl rounded-full pointer-events-none" /> */}
 
             {/* Map Graphic with Subtle Float Effect */}
             <motion.div
@@ -79,7 +79,7 @@ const GetCrispy = () => {
                 duration: 6,
                 ease: "easeInOut",
               }}
-              className="relative w-full h-full drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)]"
+              className="relative w-full h-full"
             >
               <Image
                 src="/output.gif"
