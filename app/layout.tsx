@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${dmSans.variable} ${matter.variable} min-h-screen bg-[#0b0d14] antialiased`}
     >
-      <body className="min-h-screen bg-[#0b0d14] flex flex-col text-white">
+      <body className="min-h-screen bg-[#0b0d14] flex flex-col text-white relative">
         <GlobalLoader />
         {children}
       </body>

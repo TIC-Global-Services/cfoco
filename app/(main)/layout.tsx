@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "@/reusable/Navbar";
 import Footer from "@/reusable/Footer";
+import Particles from "@/reusable/Particles";
 
 export default function MainLayout({
   children,
@@ -12,12 +13,27 @@ export default function MainLayout({
 
       {/* Background Image */}
       <div
-        className="fixed inset-0 -z-10 bg-cover bg-bottom bg-no-repeat pointer-events-none"
+        className="fixed inset-0 z-[-20] bg-cover bg-bottom bg-no-repeat pointer-events-none"
         style={{
           backgroundImage: "url('/bg-image-new.png')",
         }}
         aria-hidden="true"
       />
+
+      {/* Particles Layer */}
+      <div className="fixed inset-0 pointer-events-none z-[-10]">
+        <Particles
+          particleColors={["#ffffff"]}
+          particleCount={900}
+          particleSpread={40}
+          speed={0.8}
+          particleBaseSize={100}
+          moveParticlesOnHover
+          alphaParticles={false}
+          disableRotation={false}
+          pixelRatio={1}
+        />
+      </div>
 
       <Navbar />
 

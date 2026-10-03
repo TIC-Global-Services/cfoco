@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 
 // ── Inline Section / Component Spinner ─────────────────────────────────────
 interface LoaderProps {
@@ -49,19 +48,12 @@ export const Loader: React.FC<LoaderProps> = ({
   );
 };
 
-// ── Global Preloader & Route Transition Bar ────────────────────────────────
+// ── Global Preloader ────────────────────────────────────────────────────────
 export const GlobalLoader: React.FC = () => {
-  const pathname = usePathname();
-
   // Initial Fullscreen Preloader States
   const [initialLoading, setInitialLoading] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
   const [progress, setProgress] = useState(0);
-
-  // Route Transition Progress Bar States
-  const [isRouteNavigating, setIsRouteNavigating] = useState(false);
-  const [routeProgress, setRouteProgress] = useState(0);
-  const [prevPathname, setPrevPathname] = useState(pathname);
 
   // 1. Initial Page Load Animation
   useEffect(() => {
@@ -124,46 +116,8 @@ export const GlobalLoader: React.FC = () => {
     };
   }, []);
 
-  // 2. Route Transition Listener
-  useEffect(() => {
-    if (pathname !== prevPathname) {
-      setPrevPathname(pathname);
-      setIsRouteNavigating(true);
-      setRouteProgress(20);
-
-      const t1 = setTimeout(() => setRouteProgress(65), 100);
-      const t2 = setTimeout(() => setRouteProgress(100), 280);
-      const t3 = setTimeout(() => {
-        setIsRouteNavigating(false);
-        setRouteProgress(0);
-      }, 550);
-
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
-      };
-    }
-  }, [pathname, prevPathname]);
-
   return (
     <>
-      {/* ── Top Navigation Bar (Route Transition) ── */}
-      {isRouteNavigating && (
-        <div
-          className="fixed top-0 left-0 right-0 h-[3px] z-[999999] pointer-events-none overflow-hidden"
-          aria-hidden="true"
-        >
-          <div
-            className="h-full bg-gradient-to-r from-[#E52320] via-[#FFBF00] to-[#0066FF] transition-all duration-300 ease-out shadow-[0_0_12px_rgba(255,191,0,0.8)]"
-            style={{
-              width: `${routeProgress}%`,
-              opacity: routeProgress === 100 ? 0 : 1,
-            }}
-          />
-        </div>
-      )}
-
       {/* ── Initial Fullscreen Preloader ── */}
       {initialLoading && (
         <div

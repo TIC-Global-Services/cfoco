@@ -148,7 +148,7 @@ const BuildYourFuture: React.FC = () => {
       const img = new Image();
       img.decoding = "async";
       const frameNum = String(i + 1).padStart(3, "0");
-      img.src = `/burger-sequence/ezgif-frame-${frameNum}.png`;
+      img.src = `/burger-sequence/ezgif-frame-${frameNum}.webp`;
 
       img.onload = () => handleImageLoad(i);
       img.onerror = () => {

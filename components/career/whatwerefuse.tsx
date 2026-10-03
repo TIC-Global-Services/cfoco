@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const jobs = [
@@ -23,7 +24,7 @@ const jobs = [
     pay: "Competitive Salary + Progression Path To Restaurant Manager.",
   },
 ];
-
+const email = "demo@gmail.com"
 const marqueetext = "Your Best Job Yet Starts Here";
 
 const AUTOPLAY_MS = 3500;
@@ -54,7 +55,9 @@ const JobCard = ({ job, compact }: { job: Job; compact?: boolean }) => (
           {job.youare}
         </p>
         <p className="text-white/90">
-          <span className="text-[#F6B90B] font-semibold mr-2">Nice To Have:</span>
+          <span className="text-[#F6B90B] font-semibold mr-2">
+            Nice To Have:
+          </span>
           {job.nicetohave}
         </p>
         <p className="text-white/90">
@@ -91,15 +94,17 @@ const JobCard = ({ job, compact }: { job: Job; compact?: boolean }) => (
         />
       </svg>
 
-      <button
-        type="button"
-        className={`relative z-20 text-white hover:text-[#F6B90B] transition-colors flex items-center gap-2 font-medium ${
-          compact ? "text-sm" : "text-sm sm:text-lg"
-        }`}
-      >
-        Apply Now
-        <ArrowUpRight size={15} />
-      </button>
+      <Link href={`mailto:${email}?subject=Application for ${job.role} at ${job.location}`}>
+        <button
+          type="button"
+          className={`relative z-20 text-white hover:text-[#F6B90B] transition-colors flex items-center gap-2 font-medium ${
+            compact ? "text-sm" : "text-sm sm:text-lg"
+          }`}
+        >
+          Apply Now
+          <ArrowUpRight size={15} />
+        </button>
+      </Link>
     </div>
 
     {/* JOB TITLE (in the notch) */}
@@ -162,7 +167,7 @@ const WhatWeRefuse = () => {
       });
       commitIndex(i);
     },
-    [commitIndex]
+    [commitIndex],
   );
 
   /** Derive the active index from actual scroll position, not from arithmetic. */

@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { matter } from "@/font/fonts";
+import ChickenBucketCanvas from "@/components/about/ChickenBucketCanvas";
 
 const NothingFrozen = () => {
   const marqueePhrases = [
@@ -33,21 +33,13 @@ const NothingFrozen = () => {
         </div>
       </div>
 
-      {/* Bucket Image Area */}
-      <div className="relative z-10 flex justify-center items-start md:-mt-[12%]">
-        <div className="w-full h-[30dvh] md:h-[50dvh] lg:h-[70dvh] transition-transform duration-500 hover:scale-105 ">
-          <Image
-            src="/cfc_bucket.png"
-            alt="CFOCO Chicken Bucket with Dipping Sauce"
-            fill
-            priority
-            className="object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)]"
-          />
-        </div>
+      {/* 3D Chicken Bucket Interactive Area */}
+      <div className="relative z-10 flex justify-center items-center -mt-14 xs:-mt-18 sm:-mt-24 md:-mt-32 lg:-mt-40 xl:-mt-48">
+        <ChickenBucketCanvas modelPath="/chicken_bucket.glb" />
       </div>
 
       {/* Narrative Description */}
-      <div className="relative z-10 md:max-w-4xl mx-auto text-center  px-[3%] md:px-4 mt-10">
+      <div className="relative z-10 md:max-w-4xl mx-auto text-center px-[3%] md:px-4 mt-2 xs:-mt-4 sm:-mt-6 md:-mt-8 lg:mt-1">
         <p className="text-base sm:text-lg md:text-xl font-normal leading-[1.2] text-neutral-200/95 max-w-4xl mx-auto">
           Great Chicken Has Nowhere To Hide. That&apos;s <br className="md:hidden"/>Why We Start With Fresh Cuts, Marinate In-House, And Hand-Breade Every Piece To <br className="md:hidden"/> Order. Our Oil Is Filtered Daily — Because <br className="md:hidden"/> Crispy Is Chemistry, And Chemistry Has Standards.
         </p>

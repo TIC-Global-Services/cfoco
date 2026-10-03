@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
+import FooterLogoCanvas from "@/reusable/FooterLogoCanvas";
 
 interface FooterNavLink {
   label: string;
@@ -97,13 +97,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[220px] sm:h-[280px] md:h-[450px] transition-transform duration-500 hover:scale-[1.02]">
-              <Image
-                src="/cfc-footer-bg.png"
-                alt="CFOCO Logo"
-                fill
-                priority
-                className="object-contain"
-              />
+              <FooterLogoCanvas modelPath="/cfc_logo.glb" />
             </div>
           </div>
 
