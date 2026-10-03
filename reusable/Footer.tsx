@@ -1,10 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
-import FooterLogoCanvas from "@/reusable/FooterLogoCanvas";
+import dynamic from "next/dynamic";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+
+const FooterLogoCanvas = dynamic(() => import("@/reusable/FooterLogoCanvas"), {
+  ssr: false,
+});
 
 interface FooterNavLink {
   label: string;

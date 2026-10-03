@@ -2,7 +2,41 @@
 
 import React from "react";
 import { matter } from "@/font/fonts";
-import ChickenBucketCanvas from "@/components/about/ChickenBucketCanvas";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+
+// Dynamically load the 3D canvas so it doesn't block the initial page load on mobile
+const ChickenBucketCanvas = dynamic(
+  () => import("@/components/about/ChickenBucketCanvas"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="absolute inset-0 flex flex-col items-center justify-center select-none pointer-events-none z-10 min-h-[300px]">
+        <div className="relative w-48 sm:w-60 md:w-72 h-48 sm:h-60 md:h-72 flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#E5A823]/25 via-[#FFBF00]/10 to-transparent blur-2xl animate-pulse" />
+          
+          <div className="relative w-3/4 h-3/4 opacity-60">
+            <Image
+              src="/cfc_bucket.png"
+              alt="Loading 3D Chicken Bucket..."
+              fill
+              sizes="(max-width: 768px) 240px, 320px"
+              className="object-contain filter grayscale"
+              priority
+            />
+          </div>
+
+          <div className="absolute bottom-2 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 shadow-lg">
+            <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-[#E5A823] rounded-full animate-spin" />
+            <span className="text-[11px] font-medium tracking-wider text-neutral-300 uppercase">
+              Loading 3D
+            </span>
+          </div>
+        </div>
+      </div>
+    ),
+  }
+);
 
 const NothingFrozen = () => {
   const marqueePhrases = [
@@ -16,7 +50,7 @@ const NothingFrozen = () => {
     <section className={`relative w-full py-16 md:py-20 px-0 sm:px-0 lg:px-0 bg-transparent select-none overflow-hidden ${matter.className}`}>
       {/* Background Marquee Text */}
       <div className="relative w-full overflow-hidden py-10 pointer-events-none z-0">
-        <div className="animate-marquee flex items-center space-x-12 sm:space-x-16">
+        <div className="animate-marquee flex items-center space-x-12 sm:space-x-16 will-change-transform">
           {marqueePhrases.concat(marqueePhrases).map((phrase, idx) => (
             <span
               key={idx}

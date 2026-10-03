@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense, useRef, useMemo, useEffect, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useGLTF, Center, OrbitControls, Float, Html } from "@react-three/drei";
 import * as THREE from "three";
 import Image from "next/image";
@@ -49,20 +49,38 @@ function BucketModel({
   floatingAnim: boolean;
 }) {
   const { scene } = useGLTF(modelPath);
+  const groupRef = useRef<THREE.Group>(null);
 
   // Convert degrees to radians for exact angle adjustments
-  const rotEuler = useMemo(() => {
-    return new THREE.Euler(
-      (rotation.x * Math.PI) / 180,
-      (rotation.y * Math.PI) / 180,
-      (rotation.z * Math.PI) / 180
+  const baseRotX = (rotation.x * Math.PI) / 180;
+  const baseRotY = (rotation.y * Math.PI) / 180;
+  const baseRotZ = (rotation.z * Math.PI) / 180;
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    
+    // Add a subtle tilt based on the cursor position
+    const targetX = baseRotX + (state.pointer.y * Math.PI) / 32;
+    const targetY = baseRotY + (state.pointer.x * Math.PI) / 32;
+
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(
+      groupRef.current.rotation.x,
+      targetX,
+      0.08
     );
-  }, [rotation.x, rotation.y, rotation.z]);
+    groupRef.current.rotation.y = THREE.MathUtils.lerp(
+      groupRef.current.rotation.y,
+      targetY,
+      0.08
+    );
+    groupRef.current.rotation.z = baseRotZ;
+  });
 
   const modelNode = (
     <group
+      ref={groupRef}
       position={[position.x, position.y, position.z]}
-      rotation={rotEuler}
+      rotation={[baseRotX, baseRotY, baseRotZ]}
       scale={scale}
     >
       <Center>
@@ -127,11 +145,10 @@ export default function ChickenBucketCanvas({
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasContextError, setHasContextError] = useState(false);
 
-  // Hardcoded coordinates tuned from Leva
   const controls = {
     position: { x: 0.1, y: -0.05, z: 0 },
     rotation: { x: -10, y: -130, z: -10},
-    scale: 0.60,
+    scale: 0.55,
     camera: { x: 0, y: 1.25, z: 4.1 },
     fov: 38,
     interactiveOrbit: true,
@@ -140,6 +157,15 @@ export default function ChickenBucketCanvas({
     floatingAnim: false,
     lightIntensity: 2.6,
   };
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Clean disposal on unmount
   useEffect(() => {
@@ -177,7 +203,7 @@ export default function ChickenBucketCanvas({
                 ? "always"
                 : "demand"
             }
-            dpr={[1, 1.5]}
+            dpr={isMobile ? 1 : [1, 1.2]}
             camera={{
               position: [
                 controls.camera.x,

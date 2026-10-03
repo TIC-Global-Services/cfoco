@@ -143,7 +143,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
         {/* Continuous Scrolling Track */}
         <div className="relative w-full h-full flex flex-col justify-center overflow-visible pointer-events-none">
           {/* Centering Wrapper: Its left edge is precisely the horizontal center of the screen for the first item */}
-          <div className="absolute left-1/2 top-[70%] -translate-x-1/2 -translate-y-1/2 w-[100vw] md:w-[50vw]">
+          <div className="absolute left-1/2 top-[50%] md:top-[70%] -translate-x-1/2 -translate-y-1/2 w-[100vw] md:w-[50vw]">
             
             {/* Horizontal Laser Line Background perfectly aligned with the badges */}
             <div className="absolute left-[-100vw] right-[-100vw] h-[2px] top-[44px] sm:top-[48px] -translate-y-1/2 z-0 pointer-events-none">
