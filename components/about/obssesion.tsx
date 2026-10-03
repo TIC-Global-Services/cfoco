@@ -77,6 +77,11 @@ const MilestoneItem = ({
   const scale = useTransform(intensity, (i) => 0.86 + 0.14 * i);
   const ringOpacity = useTransform(intensity, (i) => i);
   const ringScale = useTransform(intensity, (i) => 0.9 + 0.16 * i);
+  const borderColor = useTransform(
+    intensity,
+    [0, 1],
+    ["rgba(255, 255, 255, 0.4)", "rgba(34, 211, 238, 1)"]
+  );
   const titleColor = useTransform(intensity, (i) => (i > 0.45 ? "#67e8f9" : "#ffffff"));
 
   return (
@@ -86,20 +91,50 @@ const MilestoneItem = ({
     >
       {/* Badge Icon Area */}
       <div className="relative mb-3.5 sm:mb-6 h-[88px] sm:h-[96px] flex items-center justify-center w-full">
-        {/* Outer Charging Ring Glow (100% Hardware-Accelerated GPU CSS, replaces heavy SVG filter) */}
+        {/* Outer Charging Ring Glow */}
         <motion.div
-          className="absolute w-[86px] h-[86px] sm:w-[96px] sm:h-[96px] rounded-full pointer-events-none z-0 transform-gpu"
+          className="glow-ring absolute w-[104px] h-[104px] sm:w-[114px] sm:h-[114px] pointer-events-none z-0 transform-gpu"
           style={{
             opacity: ringOpacity,
             scale: ringScale,
-            border: "3px solid #00d4ff",
-            boxShadow: "0 0 16px #00d4ff, inset 0 0 8px rgba(0, 212, 255, 0.6)",
           }}
-        />
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+            <defs>
+              <filter id={`trainRingGlow-${index}`} x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="3.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <circle
+              cx="50"
+              cy="50"
+              r="41"
+              fill="none"
+              stroke="#00d4ff"
+              strokeWidth="4"
+              filter={`url(#trainRingGlow-${index})`}
+            />
+            <circle
+              cx="50"
+              cy="50"
+              r="41"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="1.5"
+              opacity="0.95"
+            />
+          </svg>
+        </motion.div>
 
         {/* Circular Badge Container */}
-        <div
-          className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] rounded-full border border-cyan-400/40 sm:backdrop-blur-md overflow-hidden flex items-center justify-center relative z-10 bg-neutral-950/95 transform-gpu shadow-[0_4px_20px_rgba(0,0,0,0.8)]"
+        <motion.div
+          className="badge-container w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] rounded-full backdrop-blur-md border-t border-b overflow-hidden flex items-center justify-center relative z-10 bg-neutral-950 transform-gpu shadow-[0_4px_20px_rgba(0,0,0,0.8)]"
+          style={{ borderColor, borderWidth: "1px" }}
         >
           <div className="relative w-9 h-9 sm:w-10 sm:h-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
             <Image
@@ -109,7 +144,7 @@ const MilestoneItem = ({
               className="object-contain"
             />
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Year */}

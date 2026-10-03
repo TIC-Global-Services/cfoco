@@ -74,10 +74,10 @@ const WhatWeRefuse: React.FC = () => {
 
         {/* Bottom Center Card: Conviviality */}
         <div className="absolute left-1/2 -translate-x-1/2 bottom-[4%] lg:bottom-[6%] z-10 hover:z-50 group pointer-events-auto cursor-pointer">
-          <div className="w-[290px] lg:w-[330px] bg-[#1d232e]/80 backdrop-blur-xl border border-[#1e82e6]/70 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.9)] transition-all duration-300 group-hover:scale-105 group-hover:border-[#FFBF00] group-hover:shadow-[0_0_40px_rgba(255,191,0,0.35)]">
-            <Users className="w-8 h-8 text-[#FFBF00] mb-4 stroke-[1.5]" />
-            <h3 className="text-2xl lg:text-[2.25rem] font-bold text-[#FFBF00] mb-2">Conviviality</h3>
-            <p className="text-sm lg:text-base text-neutral-200 font-normal leading-[1.3]">
+          <div className="w-[290px] lg:w-[330px] bg-[#1d232e]/75 backdrop-blur-xl border border-white/15 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] transition-all duration-300 group-hover:scale-105 group-hover:border-[#FFBF00]/60 group-hover:shadow-[0_0_35px_rgba(255,191,0,0.25)]">
+            <Users className="w-8 h-8 text-white mb-4 stroke-[1.5]" />
+            <h3 className="text-2xl lg:text-[2.25rem] font-bold text-white mb-2">Conviviality</h3>
+            <p className="text-sm lg:text-base text-neutral-300 font-normal leading-[1.3]">
               Great Meals Are Meant To Be Shared. So Is A Good Time.
             </p>
           </div>
@@ -125,10 +125,10 @@ const WhatWeRefuse: React.FC = () => {
           </div>
 
           {/* Conviviality Card */}
-          <div className="w-full bg-[#1d232e]/85 backdrop-blur-xl border border-[#1e82e6]/70 rounded-2xl p-4 sm:p-5 shadow-lg text-left">
-            <Users className="w-7 h-7 text-[#FFBF00] mb-2.5 stroke-[1.5]" />
-            <h3 className="text-xl sm:text-2xl font-bold text-[#FFBF00] mb-1">Conviviality</h3>
-            <p className="text-xs sm:text-sm text-neutral-200 font-normal leading-relaxed">
+          <div className="w-full bg-[#1d232e]/85 backdrop-blur-xl border border-white/15 rounded-2xl p-4 sm:p-5 shadow-lg text-left">
+            <Users className="w-7 h-7 text-white mb-2.5 stroke-[1.5]" />
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-1">Conviviality</h3>
+            <p className="text-xs sm:text-sm text-neutral-300 font-normal leading-relaxed">
               Great Meals Are Meant To Be Shared. So Is A Good Time.
             </p>
           </div>
