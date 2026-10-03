@@ -6,6 +6,9 @@ import Link from "next/link";
 import { matter } from "@/font/fonts";
 import { locationsData, LocationData } from "@/data/locations";
 import { MapPin, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Globe = dynamic(() => import("./Globe"), { ssr: false });
 
 
 
@@ -193,23 +196,13 @@ const StepInside = () => {
         </div>
 
         {/* World Map with Animated Moving Pinpoint & Detail Card */}
-        <div className="relative w-full my-4 sm:my-6 flex items-center justify-center">
-          <div className="relative w-full aspect-[2.1/1] max-h-[280px] sm:max-h-[340px] md:max-h-[400px]">
-            <Image
-              src="/new-map.png"
-              alt="CFC Global Locations World Map"
-              fill
-              className="object-cover md:object-contain opacity-90 transition-opacity duration-500 hover:opacity-100"
-              priority
-            />
+        <div className="relative w-full my-4 sm:my-6 flex items-center justify-center min-h-[400px]">
+          <div className="relative w-full max-w-[800px] flex items-center justify-center overflow-visible">
+            <Globe location={activeLocation.coordinates} />
 
             {/* ACTIVE PINPOINT — Visible beacon dot + pulsing rings + detail card */}
             <div
-              className="absolute transition-all duration-700 ease-out z-30"
-              style={{
-                top: activeLocation.mapCoords.top,
-                left: activeLocation.mapCoords.left,
-              }}
+              className="absolute transition-all duration-700 ease-out z-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
             >
               
               <span

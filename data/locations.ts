@@ -6,6 +6,10 @@ export interface LocationData {
     top: string;
     left: string;
   };
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
   badge?: string;
   tagline: {
     prefix: string;
@@ -53,6 +57,10 @@ export const locationsData: LocationData[] = [
       top: "14%",
       left: "48.2%",
     },
+    coordinates: {
+      lat: 44.8416106,
+      lng: -0.5810938,
+    },
     tagline: {
       prefix: "Bustling & Bold.",
       highlight: "Our Original.",
@@ -96,6 +104,11 @@ export const locationsData: LocationData[] = [
     mapCoords: {
       top: "15%",
       left: "46.2%",
+    },
+    coordinates: {
+      // Faked to London, UK for global rotation effect
+      lat: 51.5072,
+      lng: -0.1276,
     },
     tagline: {
       prefix: "Drive-Thru & Speed.",
@@ -141,6 +154,11 @@ export const locationsData: LocationData[] = [
       top: "18%",
       left: "46.2%",
     },
+    coordinates: {
+      // Faked to Berlin, Germany for global rotation effect
+      lat: 52.5200,
+      lng: 13.4050,
+    },
     tagline: {
       prefix: "Riverside Chill.",
       highlight: "Right Bank Vibe.",
@@ -182,8 +200,13 @@ export const locationsData: LocationData[] = [
     cityTag: "Talence, Bordeaux",
     badge: "University",
     mapCoords: {
-      top: "20%",
+      top: "10%",
       left: "46.2%",
+    },
+    coordinates: {
+      // Faked to Rome, Italy for global rotation effect
+      lat: 51.9028,
+      lng: 12.4964,
     },
     tagline: {
       prefix: "Campus Energy.",
@@ -228,6 +251,11 @@ export const locationsData: LocationData[] = [
     mapCoords: {
       top: "20%",
       left: "46.8%",
+    },
+    coordinates: {
+      // Faked to Madrid, Spain for global rotation effect
+      lat: 40.4168,
+      lng: -3.7038,
     },
     tagline: {
       prefix: "Suburban Comfort.",
