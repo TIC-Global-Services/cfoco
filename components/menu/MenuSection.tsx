@@ -219,7 +219,7 @@ const MenuSection: React.FC = () => {
                 key={cat.id}
                 onClick={(e) => handleCategoryChange(cat.id, e)}
                 style={{ scrollSnapAlign: "center" }}
-                className="relative flex flex-col items-center justify-end group flex-shrink-0 focus:outline-none transition-all duration-300 w-[120px] sm:w-[150px] md:w-[200px] cursor-pointer pb-2"
+                className="relative flex flex-col items-center justify-end group flex-shrink-0 focus:outline-none transition-all duration-300 w-[120px] sm:w-[150px] md:w-[15vw] cursor-pointer pb-2"
               >
                 <div
                   className={`flex items-center justify-center transition-all duration-300 ${
