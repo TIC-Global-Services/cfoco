@@ -6,6 +6,15 @@ import { Users, Rabbit, Star } from "lucide-react";
 import { matter } from "@/font/fonts";
 
 const WhatWeRefuse: React.FC = () => {
+  const [isDesktop, setIsDesktop] = React.useState<boolean | null>(null);
+
+  React.useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1024);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   return (
     <section
       className={`relative w-full min-h-screen py-10 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between overflow-hidden select-none ${matter.className}`}
@@ -27,17 +36,18 @@ const WhatWeRefuse: React.FC = () => {
       {/* DESKTOP LAYOUT (>= lg): Floating Scene with Orbit GIF & Surrounding Cards */}
       {/* ========================================================================= */}
       <div className="hidden lg:flex max-w-7xl relative w-full h-[650px] lg:h-[750px] items-center justify-center my-auto">
-        {/* CENTER FRIED CHICKEN GIF (z-20, in front of cards initially) */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[420px] lg:w-[920px] aspect-[16/9] flex items-center justify-center pointer-events-none">
-          <Image
-            src="/CHICKEN-orbit.gif"
-            alt="Crispy Fried Chicken Orbit"
-            fill
-            unoptimized
-            className="object-contain drop-shadow-[0_25px_60px_rgba(0,0,0,0.9)]"
-            priority
-          />
-        </div>
+        {/* CENTER FRIED CHICKEN GIF (Rendered ONLY on desktop to prevent duplicate decoding in RAM) */}
+        {isDesktop !== false && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[420px] lg:w-[920px] aspect-[16/9] flex items-center justify-center pointer-events-none">
+            <Image
+              src="/CHICKEN-orbit.gif"
+              alt="Crispy Fried Chicken Orbit"
+              fill
+              unoptimized
+              className="object-contain drop-shadow-[0_25px_60px_rgba(0,0,0,0.9)]"
+            />
+          </div>
+        )}
 
         {/* CARDS (z-10 behind GIF initially, hover:z-50 pops cleanly on top) */}
         {/* Left Card: Speed */}
@@ -80,17 +90,18 @@ const WhatWeRefuse: React.FC = () => {
       <div className="flex lg:hidden flex-col items-center w-full max-w-lg mx-auto z-10 mt-2 sm:mt-4">
         {/* Mobile Graphic Centerpiece */}
         <div className="relative w-full h-[260px] sm:h-[320px] flex items-center justify-center overflow-hidden my-2">
-          {/* Fried Chicken GIF */}
-          <div className="relative w-[450px] sm:w-[240px] aspect-square z-10 flex items-center justify-center pointer-events-none">
-            <Image
-              src="/CHICKEN-orbit.gif"
-              alt="Crispy Fried Chicken Orbit"
-              fill
-              unoptimized
-              className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
-              priority
-            />
-          </div>
+          {/* Fried Chicken GIF (Rendered ONLY on mobile/tablet to prevent duplicate decoding) */}
+          {isDesktop !== true && (
+            <div className="relative w-[280px] sm:w-[320px] aspect-square z-10 flex items-center justify-center pointer-events-none">
+              <Image
+                src="/CHICKEN-orbit.gif"
+                alt="Crispy Fried Chicken Orbit"
+                fill
+                unoptimized
+                className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
+              />
+            </div>
+          )}
         </div>
 
         {/* Mobile Vertical Cards Stack */}

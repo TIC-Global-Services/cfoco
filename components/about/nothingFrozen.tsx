@@ -49,16 +49,15 @@ const NothingFrozen = () => {
   return (
     <section className={`relative w-full py-16 md:py-20 px-0 sm:px-0 lg:px-0 bg-transparent select-none overflow-hidden ${matter.className}`}>
       {/* Background Marquee Text */}
-      <div className="relative w-full overflow-hidden py-10 pointer-events-none z-0">
-        <div className="animate-marquee flex items-center space-x-12 sm:space-x-16 will-change-transform">
+      <div className="relative w-full overflow-hidden py-6 sm:py-10 pointer-events-none z-0">
+        <div className="animate-marquee flex items-center space-x-8 sm:space-x-16 will-change-transform transform-gpu">
           {marqueePhrases.concat(marqueePhrases).map((phrase, idx) => (
             <span
               key={idx}
-              className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight uppercase whitespace-nowrap"
+              className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight uppercase whitespace-nowrap transform-gpu"
               style={{
                 color: "transparent",
                 WebkitTextStroke: "1px #E5A823",
-                // textShadow: "0 0 20px rgba(229, 168, 35, 0.15)",
               }}
             >
               {phrase}
@@ -68,7 +67,7 @@ const NothingFrozen = () => {
       </div>
 
       {/* 3D Chicken Bucket Interactive Area */}
-      <div className="relative z-10 flex justify-center items-center -mt-14 xs:-mt-18 sm:-mt-24 md:-mt-32 lg:-mt-40 xl:-mt-48">
+      <div className="relative z-10 flex justify-center items-center -mt-12 xs:-mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 xl:-mt-48 transform-gpu">
         <ChickenBucketCanvas modelPath="/chicken_bucket.glb" />
       </div>
 

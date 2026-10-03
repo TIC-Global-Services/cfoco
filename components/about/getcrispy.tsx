@@ -85,7 +85,6 @@ const GetCrispy = () => {
                 src="/output.gif"
                 alt="CFOCO Locations Map"
                 fill
-                priority
                 className="object-contain"
               />
             </motion.div>

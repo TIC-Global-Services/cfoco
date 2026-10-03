@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 import { matter } from "@/font/fonts";
-import { motion, useScroll, useTransform, MotionValue, mix } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 
 export interface Milestone {
   year: string;
@@ -68,85 +68,38 @@ const MilestoneItem = ({
 }) => {
   const centerPos = index / Math.max(1, N - 1);
 
-  // useTransform with a callback function bypasses WAAPI and prevents "Offsets must be monotonically non-decreasing" errors
-  const opacity = useTransform(scrollYProgress, (p) => {
-    const intensity = Math.max(0, 1 - Math.abs(p - centerPos) / 0.2);
-    return 0.25 + 0.75 * intensity;
+  // Single unified intensity calculation for maximum mobile performance (60/120fps)
+  const intensity = useTransform(scrollYProgress, (p) => {
+    return Math.max(0, 1 - Math.abs(p - centerPos) / 0.22);
   });
 
-  const scale = useTransform(scrollYProgress, (p) => {
-    const intensity = Math.max(0, 1 - Math.abs(p - centerPos) / 0.2);
-    return 0.85 + 0.15 * intensity;
-  });
-
-  const ringOpacity = useTransform(scrollYProgress, (p) => {
-    const intensity = Math.max(0, 1 - Math.abs(p - centerPos) / 0.2);
-    return intensity;
-  });
-
-  const ringScale = useTransform(scrollYProgress, (p) => {
-    const intensity = Math.max(0, 1 - Math.abs(p - centerPos) / 0.2);
-    return 0.9 + 0.15 * intensity;
-  });
-
-  const borderColor = useTransform(scrollYProgress, (p) => {
-    const intensity = Math.max(0, 1 - Math.abs(p - centerPos) / 0.2);
-    return mix("rgba(255,255,255,0.4)", "rgba(34,211,238,1)")(intensity);
-  });
-
-  const titleColor = useTransform(scrollYProgress, (p) => {
-    const intensity = Math.max(0, 1 - Math.abs(p - centerPos) / 0.2);
-    return mix("#ffffff", "#67e8f9")(intensity);
-  });
+  const opacity = useTransform(intensity, (i) => 0.25 + 0.75 * i);
+  const scale = useTransform(intensity, (i) => 0.86 + 0.14 * i);
+  const ringOpacity = useTransform(intensity, (i) => i);
+  const ringScale = useTransform(intensity, (i) => 0.9 + 0.16 * i);
+  const titleColor = useTransform(intensity, (i) => (i > 0.45 ? "#67e8f9" : "#ffffff"));
 
   return (
     <motion.div
-      className="w-[100vw] md:w-[50vw] shrink-0 flex flex-col items-center text-center pointer-events-auto"
+      className="w-[100vw] md:w-[50vw] shrink-0 flex flex-col items-center text-center pointer-events-auto transform-gpu"
       style={{ opacity, scale }}
     >
       {/* Badge Icon Area */}
-      <div className="relative mb-6 h-[88px] sm:h-[96px] flex items-center justify-center w-full">
-        {/* Outer Charging Ring Glow */}
+      <div className="relative mb-3.5 sm:mb-6 h-[88px] sm:h-[96px] flex items-center justify-center w-full">
+        {/* Outer Charging Ring Glow (100% Hardware-Accelerated GPU CSS, replaces heavy SVG filter) */}
         <motion.div
-          className="absolute w-[104px] h-[104px] sm:w-[114px] sm:h-[114px] pointer-events-none z-0"
-          style={{ opacity: ringOpacity, scale: ringScale }}
-        >
-          <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
-            <defs>
-              <filter id={`trainRingGlow-${index}`} x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="3.5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-            <circle
-              cx="50"
-              cy="50"
-              r="41"
-              fill="none"
-              stroke="#00d4ff"
-              strokeWidth="4"
-              filter={`url(#trainRingGlow-${index})`}
-            />
-            <circle
-              cx="50"
-              cy="50"
-              r="41"
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="1.5"
-              opacity="0.95"
-            />
-          </svg>
-        </motion.div>
+          className="absolute w-[86px] h-[86px] sm:w-[96px] sm:h-[96px] rounded-full pointer-events-none z-0 transform-gpu"
+          style={{
+            opacity: ringOpacity,
+            scale: ringScale,
+            border: "3px solid #00d4ff",
+            boxShadow: "0 0 16px #00d4ff, inset 0 0 8px rgba(0, 212, 255, 0.6)",
+          }}
+        />
 
         {/* Circular Badge Container */}
-        <motion.div
-          className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] rounded-full backdrop-blur-md border-t border-b overflow-hidden flex items-center justify-center relative z-10 bg-neutral-950"
-          style={{ borderColor, borderWidth: "1px" }}
+        <div
+          className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] rounded-full border border-cyan-400/40 sm:backdrop-blur-md overflow-hidden flex items-center justify-center relative z-10 bg-neutral-950/95 transform-gpu shadow-[0_4px_20px_rgba(0,0,0,0.8)]"
         >
           <div className="relative w-9 h-9 sm:w-10 sm:h-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
             <Image
@@ -156,13 +109,13 @@ const MilestoneItem = ({
               className="object-contain"
             />
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Year */}
-      <div className="mb-2">
+      <div className="mb-1.5 sm:mb-2">
         <span
-          className="font-extrabold text-3xl md:text-4xl lg:text-5xl tracking-wider inline-block"
+          className="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-wider inline-block transform-gpu"
           style={{
             color: "transparent",
             WebkitTextStroke: "2px #E52528",
@@ -175,14 +128,14 @@ const MilestoneItem = ({
 
       {/* Title */}
       <motion.h3
-        className="text-xl md:text-2xl lg:text-3xl font-extrabold mb-2 tracking-tight"
+        className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-1.5 sm:mb-2 tracking-tight transition-colors duration-150"
         style={{ color: titleColor }}
       >
         {data.title}
       </motion.h3>
 
       {/* Description */}
-      <div className="text-white text-sm sm:text-base font-normal leading-snug w-full max-w-xs">
+      <div className="text-neutral-200 text-sm sm:text-base font-normal leading-snug w-full max-w-[280px] sm:max-w-xs px-2">
         <p>{data.descLine1}</p>
         <p>{data.descLine2}</p>
       </div>
@@ -207,20 +160,21 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     <div
       ref={targetRef}
       className="relative w-full bg-transparent select-none"
-      style={{ height: `${N * 50 + 100}vh` }} // +100vh ensures the content stays pinned while scrolling
+      // Responsive track height: snappier on mobile, fully extended on desktop
+      style={{ height: `${N * 45 + 80}vh` }}
     >
       <section
-        className={`sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-center ${matter.className}`}
+        className={`sticky top-0 w-full h-screen supports-[height:100svh]:h-[100svh] overflow-hidden flex flex-col justify-center ${matter.className}`}
       >
         {/* Background Ambient Radial Gradient Glow */}
         <div className="absolute inset-0 pointer-events-none" />
 
         {/* Section Header */}
-        <div className="w-full text-center space-y-1 mb-16 sm:mb-20 md:mb-24 px-[5%] absolute top-20 sm:top-24 left-0 right-0 z-20">
-          <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg">
+        <div className="w-full text-center space-y-1 mb-8 sm:mb-16 md:mb-20 px-4 absolute top-14 sm:top-20 md:top-24 left-0 right-0 z-20">
+          <h2 className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg">
             13 Years
           </h2>
-          <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg">
+          <h2 className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg">
             One Obsession
           </h2>
         </div>
@@ -228,8 +182,8 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
         {/* Continuous Scrolling Track */}
         <div className="relative w-full h-full flex flex-col justify-center overflow-visible pointer-events-none">
           {/* Centering Wrapper: Its left edge is precisely the horizontal center of the screen for the first item */}
-          <div className="absolute left-1/2 top-[50%] md:top-[70%] -translate-x-1/2 -translate-y-1/2 w-[100vw] md:w-[50vw]">
-            {/* Horizontal Laser Line Background perfectly aligned with the badges */}
+          <div className="absolute left-1/2 top-[56%] sm:top-[60%] md:top-[68%] -translate-x-1/2 -translate-y-1/2 w-[100vw] md:w-[50vw]">
+            {/* Horizontal Laser Line Background */}
             <div className="absolute left-[-100vw] right-[-100vw] h-[2px] top-[44px] sm:top-[48px] -translate-y-1/2 z-0 pointer-events-none">
               <div
                 className="w-full h-full"
@@ -240,7 +194,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
               />
             </div>
 
-            <motion.div className="flex w-max items-start" style={{ x }}>
+            <motion.div className="flex w-max items-start transform-gpu" style={{ x }}>
               {milestones.map((data, index) => (
                 <MilestoneItem
                   key={index}

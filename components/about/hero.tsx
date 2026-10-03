@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { matter } from "@/font/fonts";
@@ -8,6 +8,14 @@ import MaskedVideoHeadline from "@/components/shared/MaskedVideoHeadline";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -64,31 +72,35 @@ const Hero = () => {
           {/* Large Headline with Video Mask */}
           <div className="w-full flex flex-col items-center justify-center pt-28 sm:pt-32 md:pt-20 lg:pt-[8%]">
             {/* Desktop Headline */}
-            <div className="relative w-full hidden md:flex items-center justify-center">
-              <MaskedVideoHeadline
-                videoSrc="/bg_about_video.mp4"
-                refWidth={1380}
-                refHeight={230}
-                fontSize={115}
-                letterSpacing="-3%"
-                lines={[{ text: "Crispy Since 2011.", y: "58%" }]}
-              />
-            </div>
+            {isDesktop !== false && (
+              <div className="relative w-full hidden md:flex items-center justify-center">
+                <MaskedVideoHeadline
+                  videoSrc="/bg_about_video.mp4"
+                  refWidth={1380}
+                  refHeight={230}
+                  fontSize={115}
+                  letterSpacing="-3%"
+                  lines={[{ text: "Crispy Since 2011.", y: "58%" }]}
+                />
+              </div>
+            )}
 
             {/* Mobile Headline - 2 lines */}
-            <div className="relative w-full sm:max-w-md flex md:hidden items-center justify-center">
-              <MaskedVideoHeadline
-                videoSrc="/bg_about_video.mp4"
-                refWidth={1000}
-                refHeight={440}
-                fontSize={160}
-                letterSpacing="-3%"
-                lines={[
-                  { text: "Crispy Since", y: "120" },
-                  { text: "2011.", y: "295", fontSize: 122 },
-                ]}
-              />
-            </div>
+            {isDesktop !== true && (
+              <div className="relative w-full sm:max-w-md flex md:hidden items-center justify-center">
+                <MaskedVideoHeadline
+                  videoSrc="/bg_about_video.mp4"
+                  refWidth={1000}
+                  refHeight={440}
+                  fontSize={160}
+                  letterSpacing="-3%"
+                  lines={[
+                    { text: "Crispy Since", y: "120" },
+                    { text: "2011.", y: "295", fontSize: 122 },
+                  ]}
+                />
+              </div>
+            )}
 
             {/* Subtitles */}
             <div className="mt-2 sm:mt-0 text-center">

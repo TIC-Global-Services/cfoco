@@ -13,9 +13,7 @@ const page = () => {
   return (
     <main className="relative z-10 w-full flex-1 flex flex-col">
       <Hero />
-      <Reveal>
-        <Obsession />
-      </Reveal>
+      <Obsession />
       <Reveal>
         <NothingFrozen />
       </Reveal>
