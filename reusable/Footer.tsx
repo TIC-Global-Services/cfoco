@@ -6,6 +6,7 @@ import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
 import dynamic from "next/dynamic";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import LazyMount from "./LazyMount";
 
 const FooterLogoCanvas = dynamic(() => import("@/reusable/FooterLogoCanvas"), {
   ssr: false,
@@ -18,12 +19,12 @@ interface FooterNavLink {
 
 const navLinks: FooterNavLink[] = [
   { label: "Menu", href: "/menu" },
-   { label: "Our Story", href: "/our-story" },
+  { label: "Our Story", href: "/our-story" },
   { label: "Franchise", href: "/franchise" },
-   { label: "Policies", href: "/policies" },
+  { label: "Policies", href: "/policies" },
   { label: "Contact Us", href: "/contact" },
   { label: "News & Blogs", href: "/news-blogs" },
- 
+
 ];
 
 const socialLinks = [
@@ -102,7 +103,9 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[220px] sm:h-[280px] md:h-[450px] transition-transform duration-500 hover:scale-[1.02]">
-              <FooterLogoCanvas modelPath="/cfc_logo.glb" />
+              <LazyMount className="h-full w-full">
+                <FooterLogoCanvas modelPath="/cfc_logo.glb" />
+              </LazyMount>
             </div>
           </div>
 
@@ -133,7 +136,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
 
             {/* Credits */}
             <div className="text-center text-base md:text-right text-[#B0B0B0] order-3 font-semibold">
-              <span>Designed &amp; Developed by </span><br className="md:hidden"/>
+              <span>Designed &amp; Developed by </span><br className="md:hidden" />
               <Link
                 href="https://ticglobalservices.com"
                 target="_blank"

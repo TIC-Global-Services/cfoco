@@ -11,7 +11,7 @@ interface ChickenBucketCanvasProps {
   className?: string;
 }
 
-// ── Camera Controller linked to Leva ────────────────────────────────────────
+
 function CameraController({
   pos,
   fov,

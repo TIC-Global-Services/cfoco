@@ -8,21 +8,23 @@ interface GlobeProps {
 }
 
 const DEFAULT_LOCATION = { lat: 44.8378, lng: -0.5792 };
-const SIZE = 600;
+const WARMUP_FRAMES = 90; // redraw every frame at the start so the map image appears
+const REVEAL_FRAME = 12; // then fade the canvas in
 
-const WARMUP_FRAMES = 90; // ~1.5s: redraw every frame so the map image appears the moment it is ready
-const REVEAL_FRAME = 12; // ~0.2s: then fade the canvas in (no empty sphere flash)
-
-// lat/lng -> phi/theta that puts this point in the center of the globe
 const toAngles = (lat: number, lng: number): [number, number] => [
   Math.PI - ((lng * Math.PI) / 180 - Math.PI / 2),
   (lat * Math.PI) / 180,
 ];
 
 export default function Globe({ location }: GlobeProps) {
+  const wrapRef = useRef<HTMLDivElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const [ready, setReady] = useState(false);
+  const [inView, setInView] = useState(false);
+  const [attempt, setAttempt] = useState(0); // bump this to rebuild after a lost context
+  const [failed, setFailed] = useState(false);
 
   const lat = location?.lat ?? DEFAULT_LOCATION.lat;
   const lng = location?.lng ?? DEFAULT_LOCATION.lng;
@@ -32,17 +34,35 @@ export default function Globe({ location }: GlobeProps) {
     target.current = toAngles(lat, lng);
   }, [lat, lng]);
 
+  // 1) Know when the globe is near the screen
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "250px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // 2) Build the globe only while it is near the screen
   useEffect(() => {
     const canvas = canvasRef.current;
     const host = hostRef.current;
-    if (!canvas || !host) return;
+    if (!inView || !canvas || !host) return;
 
+    setReady(false);
+
+    const size = window.innerWidth < 640 ? 420 : 600; // smaller drawing on phones
     let [phi, theta] = target.current;
+    let raf = 0;
+    let frame = 0;
 
     const globe = createGlobe(canvas, {
       devicePixelRatio: 1,
-      width: SIZE,
-      height: SIZE,
+      width: size,
+      height: size,
       phi,
       theta,
       dark: 1,
@@ -56,8 +76,26 @@ export default function Globe({ location }: GlobeProps) {
       offset: [0, 0],
     });
 
-    let raf = 0;
-    let frame = 0;
+    // cobe silently does nothing if WebGL is not available, so check it ourselves
+    const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
+    if (!gl || gl.isContextLost()) {
+      globe.destroy();
+      host.replaceChildren(canvas);
+      setFailed(true);
+      return;
+    }
+
+    const onLost = (e: Event) => {
+      e.preventDefault(); // lets the browser restore the context later
+      setReady(false);
+    };
+    const onRestored = () => setAttempt((n) => n + 1); // rebuild the globe
+    const onVisible = () => {
+      if (document.visibilityState === "visible") frame = 0; // redraw after coming back
+    };
+    canvas.addEventListener("webglcontextlost", onLost);
+    canvas.addEventListener("webglcontextrestored", onRestored);
+    document.addEventListener("visibilitychange", onVisible);
 
     const tick = () => {
       frame++;
@@ -71,13 +109,9 @@ export default function Globe({ location }: GlobeProps) {
         phi += dPhi * 0.08;
         theta += dTheta * 0.08;
       }
-
-      // Redraw while moving, AND during warm-up (cobe does not redraw
-      // by itself when its internal map image finishes loading).
       if (moving || frame <= WARMUP_FRAMES) {
         globe.update({ phi, theta });
       }
-
       if (frame === REVEAL_FRAME) setReady(true);
 
       raf = requestAnimationFrame(tick);
@@ -86,21 +120,32 @@ export default function Globe({ location }: GlobeProps) {
 
     return () => {
       cancelAnimationFrame(raf);
+      canvas.removeEventListener("webglcontextlost", onLost);
+      canvas.removeEventListener("webglcontextrestored", onRestored);
+      document.removeEventListener("visibilitychange", onVisible);
       globe.destroy();
       host.replaceChildren(canvas);
     };
-  }, []);
+  }, [inView, attempt]);
 
   return (
-    <div ref={hostRef} className="relative mx-auto w-full max-w-[500px] shrink-0">
-      <canvas
-        ref={canvasRef}
-        width={SIZE}
-        height={SIZE}
-        className={`block h-auto w-full transition-opacity duration-700 ${
-          ready ? "opacity-100" : "opacity-0"
-        }`}
-      />
+    <div ref={wrapRef} className="relative mx-auto w-full max-w-[500px] shrink-0">
+      {/* host holds ONLY the canvas, because cobe moves it around inside this div */}
+      <div ref={hostRef} className={failed ? "hidden" : "block"}>
+        <canvas
+          ref={canvasRef}
+          width={600}
+          height={600}
+          className={`block h-auto w-full transition-opacity duration-700 ${
+            ready ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </div>
+
+      {/* Simple fallback if the phone gives us no WebGL at all */}
+      {failed && (
+        <div className="aspect-square w-full rounded-full bg-gradient-to-tr from-[#E5A823]/20 via-[#FFBF00]/10 to-transparent" />
+      )}
     </div>
   );
 }
