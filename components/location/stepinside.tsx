@@ -10,6 +10,11 @@ import dynamic from "next/dynamic";
 
 import Globe from "./Globe";
 
+const LiquidGlass = dynamic(
+  () => import("@liquidglass/react").then((mod) => mod.LiquidGlass),
+  { ssr: false }
+);
+
 
 
 const StepInside = () => {
@@ -221,39 +226,53 @@ const StepInside = () => {
                 {/* Connector line from dot down to card */}
                 <div className="w-px h-3 bg-gradient-to-b from-[#FFBF00] to-[#1e82e6]" />
 
-                <div className="w-[220px] sm:w-[270px] bg-[#3a3f47] text-white rounded-2xl p-2.5 sm:p-3.5 border border-[#1e82e6] shadow-[0_14px_40px_rgba(0,0,0,0.85)] text-left transition-all duration-300">
-                  {/* City / Tag Header */}
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFBF00] fill-[#FFBF00] shrink-0" />
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white truncate">
-                      {activeLocation.cityTag}
-                    </span>
-                  </div>
+                <div className="w-[220px] sm:w-[270px]">
+                  <LiquidGlass
+                    borderRadius={20}
+                    blur={18}
+                    contrast={1.35}
+                    brightness={1.2}
+                    saturation={1.5}
+                    shadowIntensity={0.4}
+                    displacementScale={2}
+                    elasticity={1.4}
+                    className="w-full bg-white/[0.08] text-white p-2.5 sm:p-3.5 border-[3px] border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl transition-all duration-300"
+                  >
+                    <div className="w-full text-left">
+                      {/* City / Tag Header */}
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFBF00] fill-[#FFBF00] shrink-0" />
+                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white/90 truncate">
+                          {activeLocation.cityTag}
+                        </span>
+                      </div>
 
-                  {/* Location Title */}
-                  <h4 className="text-sm sm:text-base font-bold text-[#FFBF00] leading-snug">
-                    CFC {activeLocation.name}
-                  </h4>
+                      {/* Location Title */}
+                      <h4 className="text-sm sm:text-base font-bold text-[#FFBF00] leading-snug drop-shadow-[0_0_6px_rgba(255,191,0,0.3)]">
+                        CFC {activeLocation.name}
+                      </h4>
 
-                  {/* Address preview */}
-                  <p className="text-[11px] sm:text-xs text-slate-200 font-normal mt-0.5 mb-2.5 leading-tight line-clamp-2">
-                    {activeLocation.address}
-                  </p>
+                      {/* Address preview */}
+                      <p className="text-[11px] sm:text-xs text-white/70 font-normal mt-0.5 mb-2.5 leading-tight line-clamp-2">
+                        {activeLocation.address}
+                      </p>
 
-                  {/* Action Link Button */}
-                  <div>
-                    <Link
-                      href={`/location/${activeLocation.slug}`}
-                      className="inline-flex items-center gap-1.5 bg-[#96a0ad] hover:bg-[#a5afbc] transition-colors rounded-full pl-3 pr-1 py-0.5 group"
-                    >
-                      <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#1a212d]">
-                        EXPLORE
-                      </span>
-                      <span className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-[#18202d] flex items-center justify-center text-white transition-transform group-hover:scale-105">
-                        <ArrowUpRight className="w-3 h-3 stroke-[2.5]" />
-                      </span>
-                    </Link>
-                  </div>
+                      {/* Action Link Button */}
+                      <div>
+                        <Link
+                          href={`/location/${activeLocation.slug}`}
+                          className="inline-flex items-center gap-1.5 bg-white/50 hover:bg-white/25 backdrop-blur-md border border-white/20 transition-all duration-200 rounded-full pl-3 pr-1 py-0.5 group"
+                        >
+                          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#232E45]">
+                            EXPLORE
+                          </span>
+                          <span className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-[#232E45] border border-white/15 flex items-center justify-center text-white transition-transform group-hover:scale-105">
+                            <ArrowUpRight className="w-3 h-3 stroke-[2.5]" />
+                          </span>
+                        </Link>
+                      </div>
+                    </div>
+                  </LiquidGlass>
                 </div>
               </div>
             </div>
