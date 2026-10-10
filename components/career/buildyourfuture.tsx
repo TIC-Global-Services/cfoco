@@ -33,7 +33,6 @@ const BuildYourFuture: React.FC = () => {
     }
 
     // Search outward (prefer backwards then forwards)
-    let bestDist = Infinity;
     let bestMatch: { img: HTMLImageElement; index: number } | null = null;
 
     for (let offset = 1; offset < TOTAL_FRAMES; offset++) {

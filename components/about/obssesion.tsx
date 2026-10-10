@@ -164,14 +164,12 @@ const MilestoneMarker = ({
   N,
   point,
   scrollYProgress,
-  isMobile,
 }: {
   data: Milestone;
   index: number;
   N: number;
   point: MilestonePoint;
   scrollYProgress: MotionValue<number>;
-  isMobile: boolean;
 }) => {
   const isRed = data.theme === "red" || (!data.theme && index % 2 === 0);
   const targetPos = index / Math.max(1, N - 1);
@@ -524,7 +522,6 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 N={N}
                 point={milestonePoints[index]}
                 scrollYProgress={scrollYProgress}
-                isMobile={isMobile}
               />
             ))}
           </motion.div>

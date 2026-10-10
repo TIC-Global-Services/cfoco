@@ -166,6 +166,7 @@ const SpecularButton = ({
   const fxRef = useRef<HTMLSpanElement>(null);
   const propsRef = useRef<ShaderProps>({} as ShaderProps);
 
+  // eslint-disable-next-line react-hooks/refs
   propsRef.current = { radius, lineColor, baseColor, intensity, shineSize, shineFade, thickness, speed, followMouse, proximity, autoAnimate };
 
   useEffect(() => {

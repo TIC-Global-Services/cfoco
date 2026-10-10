@@ -140,7 +140,7 @@ const WhatWeRefuse: React.FC = () => {
             <Star className="w-8 h-8 text-white mb-4 stroke-[1.5]" />
             <h3 className="text-2xl lg:text-[2.25rem] font-bold text-white mb-2">Quality</h3>
             <p className="text-sm lg:text-base text-neutral-300 font-normal leading-[1.3]">
-              If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen.
+              If It&apos;s Not Crispy Enough To Hear, It Doesn&apos;t Leave The Kitchen.
             </p>
           </div>
         </div>
@@ -198,7 +198,7 @@ const WhatWeRefuse: React.FC = () => {
             <Star className="w-7 h-7 text-white mb-2.5 stroke-[1.5]" />
             <h3 className="text-1xl sm:text-2xl font-bold text-white mb-1">Quality</h3>
             <p className="text-xs sm:text-sm text-neutral-300 font-normal leading-relaxed">
-              If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen.
+              If It&apos;s Not Crispy Enough To Hear, It Doesn&apos;t Leave The Kitchen.
             </p>
           </div>
 

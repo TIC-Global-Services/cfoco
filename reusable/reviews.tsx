@@ -97,6 +97,7 @@ export const GlassSpecularCard = ({
   const cardRef = useRef<HTMLDivElement>(null);
   const fxRef = useRef<HTMLSpanElement>(null);
   const propsRef = useRef({ radius, lineColor, baseColor, intensity, speed, proximity });
+  // eslint-disable-next-line react-hooks/refs
   propsRef.current = { radius, lineColor, baseColor, intensity, speed, proximity };
 
   useEffect(() => {

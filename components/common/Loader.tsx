@@ -58,7 +58,6 @@ export const GlobalLoader: React.FC = () => {
   // 1. Initial Page Load Animation
   useEffect(() => {
     let currentPct = 0;
-    let timer: ReturnType<typeof setInterval>;
     let isComplete = false;
 
     const onWindowLoad = () => {
@@ -71,7 +70,7 @@ export const GlobalLoader: React.FC = () => {
       window.addEventListener("load", onWindowLoad, { once: true });
     }
 
-    timer = setInterval(() => {
+    const timer = setInterval(() => {
       if (!isComplete) {
         // Increment steadily up to 88% while waiting for window load
         if (currentPct < 88) {

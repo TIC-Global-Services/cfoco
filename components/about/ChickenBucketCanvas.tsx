@@ -24,6 +24,7 @@ function CameraController({
     camera.position.set(pos.x, pos.y, pos.z);
     if ("fov" in camera) {
       const persCamera = camera as THREE.PerspectiveCamera;
+      // eslint-disable-next-line react-hooks/immutability
       persCamera.fov = fov;
       persCamera.updateProjectionMatrix();
     }
