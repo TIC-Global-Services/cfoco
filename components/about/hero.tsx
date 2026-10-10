@@ -173,12 +173,12 @@ const Hero = () => {
         </div>
 
         {/* Bottom-Right Story Paragraphs */}
-        <div className="w-full mt-[120%] md:mt-[60%] lg:mt-[30%] z-20 flex justify-end items-end md:items-center">
+        <div className="w-full z-20 flex justify-end items-end pb-8 sm:pb-12 md:pb-14">
           <motion.div
             style={{ opacity: textOpacity, y: descY }}
-            className="max-w-xl md:max-w-4xl text-center sm:text-right space-y-3"
+            className="max-w-xl md:max-w-3xl lg:max-w-4xl text-center sm:text-right space-y-2 sm:space-y-3"
           >
-            <p className="text-sm sm:text-base lg:text-2xl leading-[1.2] text-[#E0E0E0] font-medium whitespace-pre-line">
+            <p className="text-xs sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
               In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:<br className="hidden md:block" />
               Fried Chicken That Promised The World And Delivered Grease. So They Did The
               Stubborn Thing{" "}
@@ -186,7 +186,7 @@ const Hero = () => {
                 They Started Over. Hundreds Of Tests.
               </span>
             </p>
-            <p className="text-sm sm:text-base lg:text-2xl leading-[1.2] text-[#E0E0E0] font-medium">
+            <p className="text-xs sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium">
               One Relentless Question: What Does Perfect Actually Taste Like? The
               Answer Became{" "}
               <span className="text-[#E5A823] font-semibold">CFC</span>. Fresh,
@@ -197,7 +197,7 @@ const Hero = () => {
         </div>
 
         {/* Bottom Floor Ambient Reflection Shadow */}
-        <div className="w-full max-w-5xl mx-auto h-6 bg-gradient-to-t from-transparent via-blue-900/10 to-transparent blur-xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-6 bg-gradient-to-t from-transparent via-blue-900/10 to-transparent blur-xl pointer-events-none" />
       </div>
     </div>
   );
