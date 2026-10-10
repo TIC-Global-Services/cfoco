@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { matter } from "@/font/fonts";
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue, useAnimationFrame, useMotionValue } from "framer-motion";
 
 export interface Milestone {
   year: string;
@@ -83,6 +83,11 @@ export const ROAD_CONFIG = {
   roadWidthMobile: 42,
   shadowWidthDesktop: 64,
   shadowWidthMobile: 52,
+
+  // Road dashed divider line motion settings
+  lineSpeed: 52,         // Continuous cruising flow (pixels per second)
+  lineScrollBoost: 2600, // Dynamic dash acceleration while scrolling
+  lineDirection: -1,     // -1: highway drive flow (along with road translation), 1: forward time flow
 };
 
 interface ObsessionProps {
@@ -425,6 +430,23 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
 
   const trackX = useTransform(scrollYProgress, [0, 1], [trackStartX, trackEndX]);
 
+  // Dynamic road dashed divider line animation
+  const dashOffset = useMotionValue(0);
+  const lastScrollProgressRef = useRef(0);
+
+  useAnimationFrame((_, delta) => {
+    // Clamp delta to prevent big jumps on frame drops or tab unfocus
+    const safeDelta = Math.min(delta, 64);
+    const baseStep = (safeDelta / 1000) * config.lineSpeed * config.lineDirection;
+
+    const currentP = scrollYProgress.get();
+    const scrollDelta =
+      (currentP - lastScrollProgressRef.current) * config.lineScrollBoost * config.lineDirection;
+    lastScrollProgressRef.current = currentP;
+
+    dashOffset.set(dashOffset.get() + baseStep + scrollDelta);
+  });
+
   return (
     <div
       ref={targetRef}
@@ -448,7 +470,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
         {/* Moving Roadmap Highway Canvas */}
         <div className="relative w-full h-full flex flex-col justify-center overflow-visible pointer-events-none">
           <motion.div
-            className="absolute left-0 top-[58%] sm:top-[50%] md:top-[22%] h-[700px] pointer-events-none transform-gpu"
+            className="absolute left-0 top-[30%] sm:top-[50%] md:top-[22%] h-[700px] pointer-events-none transform-gpu"
             style={{
               x: trackX,
             }}
@@ -502,14 +524,19 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 strokeLinejoin="round"
               />
 
-              {/* 3. Center White/Grey Dashed Divider Line */}
-              <path
+              {/* 3. Center White/Grey Dashed Divider Line (Moving Road Line) */}
+              <motion.path
                 d={roadPath}
                 fill="none"
-                stroke="#94a3b8"
-                strokeWidth="2.4"
+                stroke="#e2e8f0"
+                strokeWidth={isMobile ? "2.2" : "2.8"}
                 strokeDasharray={isMobile ? "10 12" : "14 16"}
-                opacity="0.65"
+                style={{
+                  strokeDashoffset: dashOffset,
+                }}
+                opacity="0.85"
+                strokeLinecap="round"
+                filter="drop-shadow(0 0 3px rgba(255, 255, 255, 0.35))"
               />
             </svg>
 
