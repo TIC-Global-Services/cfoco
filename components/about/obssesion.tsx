@@ -218,7 +218,7 @@ const MilestoneMarker = React.memo(({
       >
         {/* Outer Charging Ring Glow (Exactly like before) */}
         <motion.div
-          className="glow-ring absolute w-[104px] h-[104px] sm:w-[70px] sm:h-[70px] pointer-events-none z-0 transform-gpu"
+          className="glow-ring absolute w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] pointer-events-none z-0 transform-gpu"
           style={{
             left: "50%",
             top: 32,
