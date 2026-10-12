@@ -3,7 +3,15 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { matter } from "@/font/fonts";
-import { motion, useScroll, useTransform, MotionValue, useAnimationFrame, useMotionValue } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  MotionValue,
+  useAnimationFrame,
+  useMotionValue,
+  useInView,
+} from "framer-motion";
 
 export interface Milestone {
   year: string;
@@ -163,7 +171,7 @@ interface MilestonePoint {
   y: number;
 }
 
-const MilestoneMarker = ({
+const MilestoneMarker = React.memo(({
   data,
   index,
   N,
@@ -179,7 +187,7 @@ const MilestoneMarker = ({
   const isRed = data.theme === "red" || (!data.theme && index % 2 === 0);
   const targetPos = index / Math.max(1, N - 1);
 
-  // Proximity to viewport center for active item
+  // Proximity to viewport center for active item (pure functional transform prevents invalid WAAPI keyframe offsets)
   const intensity = useTransform(scrollYProgress, (p) => {
     return Math.max(0, 1 - Math.abs(p - targetPos) / 0.22);
   });
@@ -191,18 +199,6 @@ const MilestoneMarker = ({
   const contentScale = useTransform(intensity, (i) => 0.9 + 0.1 * i);
 
   const primaryColor = isRed ? "#EF4444" : "#00D4FF";
-
-  const yearGlow = useTransform(
-    intensity,
-    [0, 0.45, 1],
-    [
-      "drop-shadow(0 0 0px rgba(0,0,0,0))",
-      "drop-shadow(0 0 4px rgba(0,0,0,0.3))",
-      isRed
-        ? "drop-shadow(0 0 16px rgba(239, 68, 68, 0.9))"
-        : "drop-shadow(0 0 16px rgba(0, 212, 255, 0.95))",
-    ]
-  );
 
   return (
     <div
@@ -316,13 +312,22 @@ const MilestoneMarker = ({
           scale: contentScale,
         }}
       >
-        {/* Year: Glows intensely when centered */}
-        <div className="mb-1 sm:mb-1.5">
+        {/* Year: Glows intensely when centered (Pure GPU opacity transition, zero layout repaint) */}
+        <div className="relative inline-block mb-1 sm:mb-1.5">
+          <span
+            className="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-wider inline-block select-none"
+            style={{ color: primaryColor }}
+          >
+            {data.year}
+          </span>
           <motion.span
-            className="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-wider inline-block transform-gpu"
+            className="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-wider inline-block absolute inset-0 select-none pointer-events-none transform-gpu"
             style={{
               color: primaryColor,
-              filter: yearGlow,
+              textShadow: isRed
+                ? "0 0 16px rgba(239, 68, 68, 0.95), 0 0 32px rgba(239, 68, 68, 0.6)"
+                : "0 0 16px rgba(0, 212, 255, 0.95), 0 0 32px rgba(0, 212, 255, 0.6)",
+              opacity: intensity,
             }}
           >
             {data.year}
@@ -342,24 +347,35 @@ const MilestoneMarker = ({
       </motion.div>
     </div>
   );
-};
+});
+
+MilestoneMarker.displayName = "MilestoneMarker";
 
 const Obsession: React.FC<ObsessionProps> = ({ items }) => {
   const milestones = items && items.length > 0 ? items : defaultMilestones;
   const N = milestones.length;
 
   const targetRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(targetRef, { margin: "200px 0px" });
+
   const [viewportWidth, setViewportWidth] = useState<number>(1440);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
+    let lastW = window.innerWidth;
+    setViewportWidth(lastW);
+    setIsMobile(lastW < 768);
+
     const handleResize = () => {
       const w = window.innerWidth;
-      setViewportWidth(w);
-      setIsMobile(w < 768);
+      // Guard against vertical address-bar resizes triggering layout recalculation on mobile
+      if (Math.abs(w - lastW) > 10) {
+        lastW = w;
+        setViewportWidth(w);
+        setIsMobile(w < 768);
+      }
     };
-    handleResize();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -382,10 +398,11 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     }));
   }, [milestones, spacing, startX, heights]);
 
-  // Generate continuous winding highway ribbon that spans edge-to-edge across any screen
+  // Generate continuous winding highway ribbon that spans edge-to-edge across any screen.
+  // Viewport-adaptive extension avoids blowing past mobile GPU texture limits (4096px / 8192px).
   const { roadPath, minX, maxX } = useMemo(() => {
     const pts: RoadPoint[] = [];
-    const EXTENSION = 4200; // Extra road span on both sides so it always hits screen edges
+    const EXTENSION = isMobile ? 650 : 2000;
 
     // 1. Pre-road extension (thousands of pixels to the left)
     // Symmetrically alternates: Low -> High -> Low -> High into 2011 (which is High)
@@ -411,8 +428,8 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
       pts.push({ x, y, isPeakOrValley: true });
     }
 
-    const minRoadX = startX - EXTENSION;
-    const maxRoadX = last.x + EXTENSION;
+    const minRoadX = Math.min(startX - EXTENSION, pts[0]?.x ?? (startX - EXTENSION));
+    const maxRoadX = Math.max(last.x + EXTENSION, pts[pts.length - 1]?.x ?? (last.x + EXTENSION));
     const roadSvg = buildSmoothHighwaySpline(pts, config.curveSmoothness);
 
     return {
@@ -420,7 +437,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
       minX: minRoadX,
       maxX: maxRoadX,
     };
-  }, [milestonePoints, spacing, startX, heights, config.curveSmoothness]);
+  }, [milestonePoints, spacing, startX, heights, config.curveSmoothness, isMobile]);
 
   // Translate track so active milestone aligns directly with viewport center
   const firstX = milestonePoints[0]?.x || 0;
@@ -430,11 +447,15 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
 
   const trackX = useTransform(scrollYProgress, [0, 1], [trackStartX, trackEndX]);
 
-  // Dynamic road dashed divider line animation
-  const dashOffset = useMotionValue(0);
+  // Dynamic road dashed divider line animation:
+  // On desktop: Continuous cruising flow + scroll boost via useAnimationFrame (paused when offscreen)
+  // On mobile: Pure scroll-driven transform to keep 0% CPU overhead and zero touch-scroll hitching
+  const animDashOffset = useMotionValue(0);
   const lastScrollProgressRef = useRef(0);
 
   useAnimationFrame((_, delta) => {
+    if (isMobile || !isInView) return;
+
     // Clamp delta to prevent big jumps on frame drops or tab unfocus
     const safeDelta = Math.min(delta, 64);
     const baseStep = (safeDelta / 1000) * config.lineSpeed * config.lineDirection;
@@ -444,13 +465,21 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
       (currentP - lastScrollProgressRef.current) * config.lineScrollBoost * config.lineDirection;
     lastScrollProgressRef.current = currentP;
 
-    dashOffset.set(dashOffset.get() + baseStep + scrollDelta);
+    animDashOffset.set(animDashOffset.get() + baseStep + scrollDelta);
   });
+
+  const mobileDashOffset = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, config.lineScrollBoost * config.lineDirection * 0.8]
+  );
+
+  const activeDashOffset = isMobile ? mobileDashOffset : animDashOffset;
 
   return (
     <div
       ref={targetRef}
-      className="relative w-full bg-transparent select-none"
+      className="relative w-full bg-transparent select-none overflow-clip"
       // Smooth scroll track
       style={{ height: `${N * 75 + 100}vh` }}
     >
@@ -470,7 +499,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
         {/* Moving Roadmap Highway Canvas */}
         <div className="relative w-full h-full flex flex-col justify-center overflow-visible pointer-events-none">
           <motion.div
-            className="absolute left-0 top-[30%] sm:top-[50%] md:top-[22%] h-[700px] pointer-events-none transform-gpu"
+            className="absolute left-0 top-[30%] sm:top-[50%] md:top-[22%] h-[700px] pointer-events-none transform-gpu will-change-transform"
             style={{
               x: trackX,
             }}
@@ -486,15 +515,6 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
               viewBox={`${minX} 0 ${maxX - minX} 700`}
             >
               <defs>
-                {/* Soft road drop shadow filter */}
-                <filter id="roadShadow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="8" result="shadowBlur" />
-                  <feMerge>
-                    <feMergeNode in="shadowBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-
                 {/* Road surface asphalt gradient */}
                 <linearGradient id="asphaltGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stopColor="#182337" />
@@ -503,18 +523,27 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 </linearGradient>
               </defs>
 
-              {/* 1. Road Heavy Shadow */}
+              {/* 1. Road Soft Outer Shadow (Clean hardware vector strokes, replaces heavy feGaussianBlur) */}
               <path
                 d={roadPath}
                 fill="none"
-                stroke="rgba(0, 0, 0, 0.6)"
+                stroke="rgba(0, 0, 0, 0.28)"
+                strokeWidth={(isMobile ? config.shadowWidthMobile : config.shadowWidthDesktop) + (isMobile ? 10 : 16)}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {/* 2. Road Deep Inner Shadow */}
+              <path
+                d={roadPath}
+                fill="none"
+                stroke="rgba(0, 0, 0, 0.65)"
                 strokeWidth={isMobile ? config.shadowWidthMobile : config.shadowWidthDesktop}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                filter="url(#roadShadow)"
               />
 
-              {/* 2. Asphalt Road Bed */}
+              {/* 3. Asphalt Road Bed */}
               <path
                 d={roadPath}
                 fill="none"
@@ -524,7 +553,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 strokeLinejoin="round"
               />
 
-              {/* 3. Center White/Grey Dashed Divider Line (Moving Road Line) */}
+              {/* 4. Center White/Grey Dashed Divider Line (Moving Road Line) */}
               <motion.path
                 d={roadPath}
                 fill="none"
@@ -532,11 +561,10 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 strokeWidth={isMobile ? "2.2" : "2.8"}
                 strokeDasharray={isMobile ? "10 12" : "14 16"}
                 style={{
-                  strokeDashoffset: dashOffset,
+                  strokeDashoffset: activeDashOffset,
                 }}
                 opacity="0.85"
                 strokeLinecap="round"
-                filter="drop-shadow(0 0 3px rgba(255, 255, 255, 0.35))"
               />
             </svg>
 

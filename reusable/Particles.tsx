@@ -124,10 +124,24 @@ const Particles: React.FC<ParticlesProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const renderer = new Renderer({ dpr: pixelRatio, depth: false, alpha: true });
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({ dpr: pixelRatio, depth: false, alpha: true });
+    } catch (e) {
+      console.warn("Particles: WebGL context creation failed or unsupported:", e);
+      return;
+    }
+
     const gl = renderer.gl;
+    if (!gl) return;
+
     container.appendChild(gl.canvas);
     gl.clearColor(0, 0, 0, 0);
+
+    const handleContextLost = (e: Event) => {
+      e.preventDefault();
+    };
+    gl.canvas.addEventListener('webglcontextlost', handleContextLost, false);
 
     const camera = new Camera(gl, { fov: 15 });
     camera.position.set(0, 0, cameraDistance);
@@ -232,9 +246,11 @@ const Particles: React.FC<ParticlesProps> = ({
         window.removeEventListener('mousemove', handleMouseMove);
       }
       cancelAnimationFrame(animationFrameId);
+      gl.canvas.removeEventListener('webglcontextlost', handleContextLost);
       if (container.contains(gl.canvas)) {
         container.removeChild(gl.canvas);
       }
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
