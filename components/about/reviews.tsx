@@ -4,6 +4,12 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { matter } from "@/font/fonts";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const LiquidGlass = dynamic(
+  () => import("@liquidglass/react").then((mod) => mod.LiquidGlass),
+  { ssr: false }
+);
 
 export interface ReviewCardItem {
   id: string;
@@ -67,47 +73,80 @@ const defaultRightReviews: ReviewCardItem[] = [
   },
 ];
 
-const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
-  return (
-    <div className="relative overflow-hidden bg-[#1a1d2be6] backdrop-blur-md border border-white/10 rounded-[24px] sm:rounded-[30px] py-6 px-5 sm:p-6 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] w-[88vw] max-w-[340px] sm:w-[320px] md:w-[380px] lg:w-[450px] pointer-events-auto">
-      <div className="flex items-center mb-4 text-[#FFBB00]">
-        {Array.from({ length: card.rating }).map((_, i) => (
-          <svg
-            key={i}
-            className="w-4.5 h-4.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 fill-current"
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-          >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        ))}
-      </div>
-
-      <p className="text-base sm:text-sm md:text-base text-neutral-200 font-normal leading-[1.2] mb-4 sm:mb-6">
-        {card.quote}
-      </p>
-
-      <div className="relative flex items-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
-        <div
-          className={`w-12.5 h-12.5 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${
-            card.avatarColor || "from-cyan-400 to-blue-600"
-          } p-[2px] shadow-sm shrink-0`}
+const CardContent = ({ card }: { card: ReviewCardItem }) => (
+  <div className="w-full flex flex-col text-left">
+    <div className="flex items-center mb-4 text-[#FFBB00]">
+      {Array.from({ length: card.rating }).map((_, i) => (
+        <svg
+          key={i}
+          className="w-4.5 h-4.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 fill-current"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
         >
-          <div className="relative w-full h-full rounded-full overflow-hidden bg-[#111726]">
-            <Image
-              alt=""
-              fill
-              sizes="50px"
-              src="/avatar.jpg"
-              className="object-cover"
-            />
-          </div>
-        </div>
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+    </div>
 
-        <span className="text-lg sm:text-sm lg:text-xl font-medium text-white tracking-wide">
-          {card.authorName}
-        </span>
+    <p className="text-base sm:text-sm md:text-base text-neutral-200 font-normal leading-[1.2] mb-4 sm:mb-6">
+      {card.quote}
+    </p>
+
+    <div className="relative flex items-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
+      <div
+        className={`w-12.5 h-12.5 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${
+          card.avatarColor || "from-cyan-400 to-blue-600"
+        } p-[2px] shadow-sm shrink-0`}
+      >
+        <div className="relative w-full h-full rounded-full overflow-hidden bg-[#111726]">
+          <Image
+            alt=""
+            fill
+            sizes="50px"
+            src="/avatar.jpg"
+            className="object-cover"
+          />
+        </div>
       </div>
+
+      <span className="text-lg sm:text-sm lg:text-xl font-medium text-white tracking-wide">
+        {card.authorName}
+      </span>
+    </div>
+  </div>
+);
+
+const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="relative overflow-hidden bg-[#1a1d2be6] backdrop-blur-md border border-white/10 rounded-[24px] sm:rounded-[30px] py-6 px-5 sm:p-6 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] w-[88vw] max-w-[340px] sm:w-[320px] md:w-[380px] lg:w-[450px] pointer-events-auto">
+        <CardContent card={card} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-[88vw] max-w-[340px] sm:w-[320px] md:w-[380px] lg:w-[450px] pointer-events-auto">
+      <LiquidGlass
+        borderRadius={28}
+        blur={12}
+        contrast={1.15}
+        brightness={1.08}
+        saturation={1.15}
+        displacementScale={1.2}
+        elasticity={0.45}
+        shadowIntensity={0.35}
+        zIndex={1}
+        className="w-full border border-white/15 bg-[#141824b3] py-6 px-5 sm:p-6 lg:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.55)] transition-all duration-300 hover:border-white/25 !items-start !justify-start"
+      >
+        <CardContent card={card} />
+      </LiquidGlass>
     </div>
   );
 };

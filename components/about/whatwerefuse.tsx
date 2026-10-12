@@ -4,6 +4,33 @@ import React from "react";
 import Image from "next/image";
 import { Users, Rabbit, Star, X } from "lucide-react";
 import { matter } from "@/font/fonts";
+import { motion, AnimatePresence } from "framer-motion";
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 50 : -50,
+    opacity: 0,
+    scale: 0.96,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.38,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? -50 : 50,
+    opacity: 0,
+    scale: 0.96,
+    transition: {
+      duration: 0.32,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
+};
 
 /* ── Orbit configuration ── */
 const ORBIT_RX = 400;       // horizontal radius (px)
@@ -49,6 +76,38 @@ const CARDS: RefuseCard[] = [
 const WhatWeRefuse: React.FC = () => {
   const [isDesktop, setIsDesktop] = React.useState<boolean | null>(null);
   const [activeCard, setActiveCard] = React.useState<number | null>(null);
+
+  /* ── Mobile single-card slider state ── */
+  const [mobileIndex, setMobileIndex] = React.useState(0);
+  const [isMobilePaused, setIsMobilePaused] = React.useState(false);
+  const [slideDirection, setSlideDirection] = React.useState<1 | -1>(1);
+
+  // Auto-advance interval for mobile slider (4 seconds)
+  React.useEffect(() => {
+    if (isDesktop === true || isMobilePaused) return;
+
+    const timer = setInterval(() => {
+      setSlideDirection(1);
+      setMobileIndex((prev) => (prev + 1) % CARDS.length);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [isDesktop, isMobilePaused]);
+
+  const handleNextMobile = React.useCallback(() => {
+    setSlideDirection(1);
+    setMobileIndex((prev) => (prev + 1) % CARDS.length);
+  }, []);
+
+  const handlePrevMobile = React.useCallback(() => {
+    setSlideDirection(-1);
+    setMobileIndex((prev) => (prev - 1 + CARDS.length) % CARDS.length);
+  }, []);
+
+  const handleSelectMobile = React.useCallback((idx: number) => {
+    setSlideDirection(idx > mobileIndex ? 1 : -1);
+    setMobileIndex(idx);
+  }, [mobileIndex]);
 
   /* ── Orbit animation refs ── */
   const cardRefs = React.useRef<(HTMLDivElement | null)[]>([]);
@@ -317,43 +376,118 @@ const WhatWeRefuse: React.FC = () => {
           )}
         </div>
 
-        {/* Mobile Vertical Cards Stack */}
-        <div className="flex flex-col gap-3.5 sm:gap-4 w-full px-2 mt-2 z-40">
-          {CARDS.map((card, i) => {
-            const Icon = card.icon;
-            const isMobileActive = activeCard === i;
-            return (
-              <div
-                key={card.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveCard(isMobileActive ? null : i);
+        {/* Mobile Single Card Slider with Indicator */}
+        <div
+          className="relative w-full px-2 mt-2 z-40 max-w-[390px] flex flex-col items-center"
+          onMouseEnter={() => setIsMobilePaused(true)}
+          onMouseLeave={() => setIsMobilePaused(false)}
+          onTouchStart={() => setIsMobilePaused(true)}
+          onTouchEnd={() => setIsMobilePaused(false)}
+        >
+          {/* Card Showcase with AnimatePresence */}
+          <div className="relative w-full min-h-[195px] sm:min-h-[210px] flex items-center justify-center">
+            <AnimatePresence mode="wait" custom={slideDirection}>
+              <motion.div
+                key={CARDS[mobileIndex].id}
+                custom={slideDirection}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.25}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -40 || info.velocity.x < -150) {
+                    handleNextMobile();
+                  } else if (info.offset.x > 40 || info.velocity.x > 150) {
+                    handlePrevMobile();
+                  }
                 }}
-                className={`w-full backdrop-blur-xl rounded-2xl p-4 sm:p-5 shadow-lg text-left transition-all duration-300 cursor-pointer ${
-                  isMobileActive
-                    ? "bg-[#1d232e]/95 border border-[#FFBF00] shadow-[0_0_25px_rgba(255,191,0,0.3)] scale-[1.02]"
-                    : "bg-[#1d232e]/85 border border-white/15"
-                }`}
+                className="w-full relative backdrop-blur-xl rounded-2xl p-5 sm:p-6 shadow-[0_16px_40px_rgba(0,0,0,0.7)] text-left bg-[#1d232e]/95 border border-[#FFBF00]/50 shadow-[0_0_30px_rgba(255,191,0,0.22)] cursor-grab active:cursor-grabbing overflow-hidden"
               >
-                <div className="flex items-center justify-between mb-2.5">
-                  <Icon
-                    className={`w-7 h-7 stroke-[1.5] ${
-                      isMobileActive ? "text-[#FFBF00]" : "text-white"
+                {/* Auto-advance progress line at top edge of card */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-white/5 overflow-hidden">
+                  <motion.div
+                    key={`bar-${mobileIndex}-${isMobilePaused}`}
+                    initial={{ width: "0%" }}
+                    animate={{ width: isMobilePaused ? undefined : "100%" }}
+                    transition={{ duration: 4.0, ease: "linear" }}
+                    className="h-full bg-[#FFBF00]"
+                  />
+                </div>
+
+                {/* Card Header with Icon and Principle number */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 rounded-xl bg-[#FFBF00]/10 border border-[#FFBF00]/25 flex items-center justify-center">
+                      {React.createElement(CARDS[mobileIndex].icon, {
+                        className: "w-5 h-5 stroke-[1.8] text-[#FFBF00]",
+                      })}
+                    </div>
+                    <span className="text-xs uppercase tracking-wider font-semibold text-[#FFBF00]/90">
+                      CF&amp;CO Principle 0{mobileIndex + 1}
+                    </span>
+                  </div>
+                  {/* <span className="text-xs font-mono text-white/50">
+                    {mobileIndex + 1} / {CARDS.length}
+                  </span> */}
+                </div>
+
+                <h3 className="text-2xl sm:text-[1.75rem] font-bold text-white mb-2 leading-tight">
+                  {CARDS[mobileIndex].title}
+                </h3>
+                <p className="text-sm sm:text-base text-neutral-300 font-normal leading-[1.35]">
+                  {CARDS[mobileIndex].description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Slider Indicators and Arrow Controls */}
+          <div className="flex items-center justify-center gap-3 mt-4 z-40">
+            {/* <button
+              type="button"
+              onClick={handlePrevMobile}
+              aria-label="Previous card"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 active:scale-95 transition-all cursor-pointer"
+            >
+              <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button> */}
+
+            {/* Indicator Dots */}
+            <div className="flex items-center gap-2">
+              {CARDS.map((c, i) => {
+                const isActive = i === mobileIndex;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => handleSelectMobile(i)}
+                    aria-label={`Go to ${c.title}`}
+                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "w-8 bg-[#FFBF00] shadow-[0_0_12px_rgba(255,191,0,0.7)]"
+                        : "w-2.5 bg-white/20 hover:bg-white/40"
                     }`}
                   />
-                  {isMobileActive && (
-                    <span className="text-xs text-[#FFBF00] font-medium">Selected</span>
-                  )}
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-1">
-                  {card.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-neutral-300 font-normal leading-relaxed">
-                  {card.description}
-                </p>
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+
+            {/* <button
+              type="button"
+              onClick={handleNextMobile}
+              aria-label="Next card"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 active:scale-95 transition-all cursor-pointer"
+            >
+              <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button> */}
+          </div>
         </div>
       </div>
     </section>
