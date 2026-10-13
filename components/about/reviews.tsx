@@ -1,10 +1,19 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
+import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 import { matter } from "@/font/fonts";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+/** useLayoutEffect on the client, useEffect during SSR (avoids Next.js warning) */
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const LiquidGlass = dynamic(
   () => import("@liquidglass/react").then((mod) => mod.LiquidGlass),
@@ -151,42 +160,6 @@ const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
   );
 };
 
-const AnimatedReviewCard = ({
-  card,
-  startP,
-  endP,
-  scrollYProgress,
-  className,
-}: {
-  card: ReviewCardItem;
-  startP: number;
-  endP: number;
-  scrollYProgress: MotionValue<number>;
-  className: string;
-}) => {
-  // y starts completely below viewport ("100vh") and glides upward past the top ("-100vh")
-  const y = useTransform(scrollYProgress, [startP, endP], ["100vh", "-100vh"]);
-
-  const pointerEvents = useTransform(scrollYProgress, (p) =>
-    p >= startP && p <= endP ? "auto" : "none"
-  );
-
-  const visibility = useTransform(scrollYProgress, (p) =>
-    p >= startP ? "visible" : "hidden"
-  );
-
-  return (
-    <motion.div
-      className={`${className} transform-gpu`}
-      style={{ y, pointerEvents, visibility }}
-    >
-      <div className="pointer-events-auto">
-        <ReviewCard card={card} />
-      </div>
-    </motion.div>
-  );
-};
-
 export interface ReviewsProps {
   leftReviews?: ReviewCardItem[];
   rightReviews?: ReviewCardItem[];
@@ -197,88 +170,162 @@ const Reviews = ({
   rightReviews = defaultRightReviews,
 }: ReviewsProps) => {
   const sectionRef = useRef<HTMLElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 1024);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  // GSAP ScrollTrigger timeline configuration
+  // Uses native CSS position:sticky for rock-solid zero-jitter pinning,
+  // while GSAP handles the card glide scrub with buttery smooth inertia.
+  useIsoLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
 
-  // Framer Motion native useScroll:
-  // Starts strictly when the top of the reviews section reaches the top of viewport ("start start")
-  // Clamped at 0 before the section is reached — zero chance of starting early!
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
+      const buildScrollTimeline = (
+        leftCards: HTMLElement[],
+        rightCards: HTMLElement[],
+        cardDuration: number,
+        staggerStep: number,
+        scrubSpeed: number | boolean,
+        leadDelay: number = 0.55
+      ) => {
+        const all = [...leftCards, ...rightCards];
+        const startY = "115vh";
+        const endY = "-115vh";
 
-  // Calculate timing windows for each card.
-  // [0.00 to 0.08]: Clean entrance breathing room — title is presented cleanly, no cards floating yet.
-  // [0.08 to 0.96]: Cards float through the viewport.
-  const getCardTiming = (side: "left" | "right", index: number) => {
-    if (isDesktop) {
-      // Desktop: 2 parallel floating columns with slight horizontal alternation
-      const ranges = {
-        left: [
-          { start: 0.08, end: 0.52 },
-          { start: 0.24, end: 0.68 },
-          { start: 0.40, end: 0.84 },
-        ],
-        right: [
-          { start: 0.16, end: 0.60 },
-          { start: 0.32, end: 0.76 },
-          { start: 0.48, end: 0.92 },
-        ],
+        // Pre-position offscreen with autoAlpha 0 (hides and zeroes opacity)
+        gsap.set(all, {
+          y: startY,
+          autoAlpha: 0,
+          force3D: true,
+          willChange: "transform, opacity",
+        });
+
+        // Trigger strictly when the top of the reviews section reaches the top of the viewport.
+        // Pinned via native CSS position: sticky to eliminate any 1-frame transform jitter.
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: scrubSpeed,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        // 1. Entrance Breathing Room:
+        // When section arrives at 'top top' and pins, the title is presented cleanly first.
+        // Cards ONLY start floating after this initial cushion!
+        tl.to({}, { duration: leadDelay });
+
+        const addCard = (el: HTMLElement, at: number) => {
+          tl.fromTo(
+            el,
+            { y: startY },
+            { y: endY, duration: cardDuration, ease: "none", force3D: true },
+            at
+          )
+            .to(
+              el,
+              { autoAlpha: 1, duration: cardDuration * 0.22, ease: "power1.out" },
+              at
+            )
+            .to(
+              el,
+              { autoAlpha: 0, duration: cardDuration * 0.22, ease: "power1.in" },
+              at + cardDuration * 0.78
+            );
+        };
+
+        const totalPairs = Math.max(leftCards.length, rightCards.length);
+        for (let i = 0; i < totalPairs; i++) {
+          if (leftCards[i]) addCard(leftCards[i], leadDelay + i * staggerStep);
+          if (rightCards[i])
+            addCard(rightCards[i], leadDelay + i * staggerStep + staggerStep * 0.5);
+        }
+
+        // Tail buffer: keeps view clean after last card exits before unsticking
+        tl.to({}, { duration: 0.35 });
       };
-      return ranges[side][index] || { start: 0.08, end: 0.52 };
+
+      const collect = () => ({
+        left: gsap.utils.toArray<HTMLElement>(".review-card-left"),
+        right: gsap.utils.toArray<HTMLElement>(".review-card-right"),
+      });
+
+      // ── Touch & Mobile Screens (< 1024px) ──
+      // Clean entrance delay (0.55s): title is presented first before any card enters.
+      // Tighter stagger (0.72s) ensures continuous flow once cards start.
+      // scrub: 1.2 adds dampened inertia so fast flicks glide smoothly.
+      mm.add("(max-width: 1024px)", () => {
+        const { left, right } = collect();
+        buildScrollTimeline(left, right, 2.4, 0.72, 1.2, 0.55);
+      });
+
+      // ── Desktop Screens (>= 1025px) ──
+      // Clean entrance delay (0.6s) before parallel columns begin floating.
+      mm.add("(min-width: 1025px)", () => {
+        const { left, right } = collect();
+        buildScrollTimeline(left, right, 2.4, 0.85, 1.0, 0.6);
+      });
+    }, sectionRef);
+
+    // Dynamic layout sync: Recalculate ScrollTrigger once late fonts, images, or 3D canvases settle
+    const refresh = () => ScrollTrigger.refresh();
+
+    window.addEventListener("load", refresh);
+    window.addEventListener("resize", refresh);
+    if (typeof document !== "undefined" && "fonts" in document) {
+      (document as Document).fonts.ready.then(refresh);
     }
 
-    // Mobile / Tablet: Sequential 1-by-1 spotlights (left, right, left, right...)
-    // Each card gets its own dedicated window without screen crowding
-    const mobileSchedule = [
-      { side: "left", idx: 0, start: 0.08, end: 0.34 },
-      { side: "right", idx: 0, start: 0.20, end: 0.46 },
-      { side: "left", idx: 1, start: 0.32, end: 0.58 },
-      { side: "right", idx: 1, start: 0.44, end: 0.70 },
-      { side: "left", idx: 2, start: 0.56, end: 0.82 },
-      { side: "right", idx: 2, start: 0.68, end: 0.94 },
-    ];
+    // Refresh after staggered delays to account for dynamic 3D elements loading above
+    const timer1 = setTimeout(refresh, 250);
+    const timer2 = setTimeout(refresh, 800);
+    const timer3 = setTimeout(refresh, 1800);
 
-    const match = mobileSchedule.find(
-      (item) => item.side === side && item.idx === index
-    );
-    return match ? { start: match.start, end: match.end } : { start: 0.08, end: 0.34 };
-  };
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      window.removeEventListener("load", refresh);
+      window.removeEventListener("resize", refresh);
+      ctx.revert();
+    };
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       id="reviews-section"
-      className={`relative w-full bg-transparent select-none ${matter.className} h-[360vh] lg:h-[280vh]`}
+      className={`relative w-full bg-transparent select-none ${matter.className} h-[320vh] lg:h-[280vh]`}
     >
-      {/* Sticky Viewport Container */}
-      <div className="sticky top-0 h-screen supports-[height:100svh]:h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden px-0 sm:px-[5%]">
+      {/* 
+        Native CSS Sticky Viewport Container:
+        Handled directly on the browser's GPU compositor thread.
+        Completely immune to 1-frame JavaScript pin latency — ZERO SHAKING on the center text!
+      */}
+      <div
+        ref={containerRef}
+        className="sticky top-0 h-screen supports-[height:100svh]:h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden relative px-0 sm:px-[5%]"
+      >
         {/* Ambient glows */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[600px] h-[500px] sm:h-[600px] rounded-full pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[600px] h-[500px] sm:h-[600px] rounded-full pointer-events-none transform-gpu"
           style={{
             background:
               "radial-gradient(circle, rgba(37,99,235,0.18) 0%, rgba(37,99,235,0) 70%)",
           }}
         />
         <div
-          className="absolute top-1/3 left-1/4 w-[300px] sm:w-[350px] h-[300px] sm:h-[350px] rounded-full pointer-events-none"
+          className="absolute top-1/3 left-1/4 w-[300px] sm:w-[350px] h-[300px] sm:h-[350px] rounded-full pointer-events-none transform-gpu"
           style={{
             background:
               "radial-gradient(circle, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0) 70%)",
           }}
         />
 
-        {/* Centered title layer */}
-        <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center select-none">
-          <div className="space-y-1">
+        {/* Centered title layer — GPU composited, rock solid with ZERO shake */}
+        <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center select-none transform-gpu">
+          <div className="space-y-1 transform-gpu">
             <h2 className="text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
               16,000
             </h2>
@@ -290,38 +337,32 @@ const Reviews = ({
 
         {/* Floating cards layer */}
         <div className="absolute inset-0 z-10 w-full flex justify-between h-full pointer-events-none px-2 sm:px-4">
-          {/* Left Column */}
+          {/* Left Column (Centered on mobile, aligned left-column on desktop) */}
           <div className="w-full lg:w-1/2 absolute inset-y-0 left-0 h-full pointer-events-none">
-            {leftReviews.map((card, i) => {
-              const { start, end } = getCardTiming("left", i);
-              return (
-                <AnimatedReviewCard
-                  key={`rev-left-${card.id}-${i}`}
-                  card={card}
-                  startP={start}
-                  endP={end}
-                  scrollYProgress={scrollYProgress}
-                  className="absolute inset-0 flex items-center justify-start lg:justify-end px-4 lg:px-0 lg:pr-16 pointer-events-none"
-                />
-              );
-            })}
+            {leftReviews.map((card, i) => (
+              <div
+                key={`rev-left-${card.id}-${i}`}
+                className="review-card-left absolute inset-0 flex items-center justify-center lg:justify-end px-4 lg:px-0 lg:pr-16 pointer-events-none invisible"
+              >
+                <div className="pointer-events-auto">
+                  <ReviewCard card={card} />
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Right Column */}
+          {/* Right Column (Centered on mobile, aligned right-column on desktop) */}
           <div className="w-full lg:w-1/2 absolute inset-y-0 right-0 h-full pointer-events-none">
-            {rightReviews.map((card, i) => {
-              const { start, end } = getCardTiming("right", i);
-              return (
-                <AnimatedReviewCard
-                  key={`rev-right-${card.id}-${i}`}
-                  card={card}
-                  startP={start}
-                  endP={end}
-                  scrollYProgress={scrollYProgress}
-                  className="absolute inset-0 flex items-center justify-end lg:justify-start px-4 lg:px-0 lg:pl-16 pointer-events-none"
-                />
-              );
-            })}
+            {rightReviews.map((card, i) => (
+              <div
+                key={`rev-right-${card.id}-${i}`}
+                className="review-card-right absolute inset-0 flex items-center justify-center lg:justify-start px-4 lg:px-0 lg:pl-16 pointer-events-none invisible"
+              >
+                <div className="pointer-events-auto">
+                  <ReviewCard card={card} />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
