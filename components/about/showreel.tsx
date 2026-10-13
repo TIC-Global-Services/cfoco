@@ -24,7 +24,7 @@ const Showreel = () => {
         >
           {/* Background Kitchen Image */}
           <Image
-            src="/show_reel_thub.png"
+            src="/show_reel_thub.jpg"
             alt="Where The Magic Gets Loud - CFOCO Kitchen"
             fill
             priority

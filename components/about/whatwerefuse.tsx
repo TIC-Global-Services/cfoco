@@ -364,7 +364,7 @@ const WhatWeRefuse: React.FC = () => {
           {isDesktop !== true && (
             <div className="relative w-[340px] sm:w-[320px] aspect-square z-10 flex items-center justify-center pointer-events-none">
               <Image
-                src="/CHICKEN-orbit.gif"
+                src="/chicken-orbit-v2.gif"
                 alt="Crispy Fried Chicken Orbit"
                 fill
                 unoptimized
