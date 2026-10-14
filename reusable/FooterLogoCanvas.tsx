@@ -7,13 +7,14 @@ import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // Preload 3D model asset
-useGLTF.preload("/cfc_logo.glb");
+useGLTF.preload("/cfoco_black_logo.glb");
 
 function LogoModel({ modelPath }: { modelPath: string }) {
   const { scene } = useGLTF(modelPath);
 
   return (
-    <group rotation={[Math.PI / 2, 0, 0]}>
+    // cfoco_black_logo.glb is upright but its front faces -Z: turn it to the camera
+    <group rotation={[0, Math.PI, 0]}>
       <primitive object={scene} />
     </group>
   );
@@ -25,8 +26,8 @@ function LogoModel({ modelPath }: { modelPath: string }) {
  * It accounts for both width and height with safe padding.
  */
 function ResponsiveCamera({
-  modelWidth = 1.875,
-  modelHeight = 0.576,
+  modelWidth = 1.9,
+  modelHeight = 0.69,
 }: {
   modelWidth?: number;
   modelHeight?: number;

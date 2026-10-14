@@ -68,7 +68,7 @@ const NothingFrozen = () => {
 
       {/* 3D Chicken Bucket Interactive Area */}
       <div className="relative z-10 flex justify-center items-center -mt-12 xs:-mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 xl:-mt-48 transform-gpu">
-        <ChickenBucketCanvas modelPath="/chicken_bucket.glb" />
+        <ChickenBucketCanvas modelPath="/models/chicken_bucket_black.glb" />
       </div>
 
       {/* Narrative Description */}

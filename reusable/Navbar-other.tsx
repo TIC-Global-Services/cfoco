@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NAV_ITEMS } from "@/data/navLinks";
 import SpecularButton from "./specularButton";
 
 interface NavItem {
@@ -11,14 +12,7 @@ interface NavItem {
   href: string;
 }
 
-const navItems: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Our Story", href: "/about" },
-  { label: "Location", href: "/location" },
-  { label: "Menu", href: "/menu" },
-  { label: "Career", href: "/career" },
-  { label: "News & Blogs", href: "/news-blogs" },
-];
+const navItems: NavItem[] = NAV_ITEMS;
 
 interface NavbarProps {
   className?: string;

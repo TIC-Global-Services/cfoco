@@ -2,9 +2,12 @@
 
 import React, { Suspense, useRef, useEffect, useState } from "react";
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
-import { useGLTF, Center, OrbitControls, Float, Html } from "@react-three/drei";
+import { useGLTF, Center, OrbitControls, Float, Html, Environment, Lightformer, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 import Image from "next/image";
+
+// models are Draco-compressed: use the bundled decoder instead of a CDN round-trip
+useGLTF.setDecoderPath("/draco/");
 
 interface ChickenBucketCanvasProps {
   modelPath?: string;
@@ -51,7 +54,31 @@ function BucketModel({
   isMobile: boolean;
 }) {
   const { scene } = useGLTF(modelPath);
+  const { gl } = useThree();
   const groupRef = useRef<THREE.Group>(null);
+
+  // quality: sharp textures at grazing angles, studio reflections, and the lowest point
+  // of the model (for the contact shadow)
+  const groundY = React.useMemo(() => {
+    const maxAniso = gl.capabilities.getMaxAnisotropy();
+    scene.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      mats.forEach((m) => {
+        const mat = m as THREE.MeshStandardMaterial;
+        mat.envMapIntensity = 1.35;
+        mat.side = THREE.DoubleSide;
+        (["map", "normalMap", "roughnessMap", "metalnessMap"] as const).forEach((k) => {
+          const t = mat[k];
+          if (t) t.anisotropy = maxAniso;
+        });
+        mat.needsUpdate = true;
+      });
+    });
+    const box = new THREE.Box3().setFromObject(scene);
+    return position.y - ((box.max.y - box.min.y) / 2) * scale - 0.02;
+  }, [scene, gl, position.y, scale]);
 
   const baseRotX = (rotation.x * Math.PI) / 180;
   const baseRotY = (rotation.y * Math.PI) / 180;
@@ -92,20 +119,40 @@ function BucketModel({
     </group>
   );
 
+  const shadow = (
+    <ContactShadows
+      position={[position.x, groundY, position.z]}
+      opacity={0.75}
+      scale={5}
+      blur={2.6}
+      far={1.6}
+      resolution={512}
+      color="#000000"
+    />
+  );
+
   if (floatingAnim) {
     return (
-      <Float
+      <>
+        {shadow}
+        <Float
         speed={1.5}
         rotationIntensity={0.1}
         floatIntensity={0.15}
         floatingRange={[-0.03, 0.03]}
       >
-        {modelNode}
-      </Float>
+          {modelNode}
+        </Float>
+      </>
     );
   }
 
-  return modelNode;
+  return (
+    <>
+      {shadow}
+      {modelNode}
+    </>
+  );
 }
 
 // ── Fallback Placeholder (Shown while loading or if WebGL encounters issues) ─
@@ -160,7 +207,6 @@ export default function ChickenBucketCanvas({
     autoRotate: true,
     autoRotateSpeed: 3.4,
     floatingAnim: false,
-    lightIntensity: 2.6,
   };
 
   useEffect(() => {
@@ -221,7 +267,7 @@ export default function ChickenBucketCanvas({
               : "demand"
           }
           // Cap DPR at 1 on mobile to prevent memory pressure on mobile GPUs
-          dpr={isMobile ? 1 : [1, 1.2]}
+          dpr={isMobile ? [1, 1.5] : [1, 2]}
           camera={{
             position: [controls.camera.x, controls.camera.y, controls.camera.z],
             fov: controls.fov,
@@ -229,13 +275,14 @@ export default function ChickenBucketCanvas({
           gl={{
             alpha: true,
             antialias: true,
-            powerPreference: "default",
+            powerPreference: "high-performance",
             stencil: false,
             depth: true,
           }}
           onCreated={({ gl }) => {
-            gl.toneMapping = THREE.ACESFilmicToneMapping;
-            gl.toneMappingExposure = 1.15;
+            // neutral tone mapping keeps the brand navy / gold true instead of crushing blacks
+            gl.toneMapping = THREE.NeutralToneMapping;
+            gl.toneMappingExposure = 1.05;
             const canvas = gl.domElement;
             canvas.addEventListener("webglcontextlost", (e) => {
               e.preventDefault();
@@ -261,28 +308,24 @@ export default function ChickenBucketCanvas({
             {/* Live Camera Controller */}
             <CameraController pos={controls.camera} fov={controls.fov} />
 
-            {/* Studio Lighting */}
-            <ambientLight intensity={1.3} color="#FFFBF5" />
-            <directionalLight
-              position={[5, 8, 5]}
-              intensity={controls.lightIntensity}
-              color="#FFF5EA"
-            />
-            <directionalLight
-              position={[-5, 5, -2]}
-              intensity={controls.lightIntensity * 0.6}
-              color="#FFE8D6"
-            />
-            <directionalLight
-              position={[0, -2, 4]}
-              intensity={0.9}
-              color="#FFD180"
-            />
-            <directionalLight
-              position={[0, 8, -4]}
-              intensity={1.2}
-              color="#FFFFFF"
-            />
+            {/* Studio lighting: a procedural softbox environment does the work (reflections
+                and fill on the black plastic); a few directional lights add shape. */}
+            <Environment resolution={512} environmentIntensity={1}>
+              <color attach="background" args={["#05060a"]} />
+              {/* big overhead softbox */}
+              <Lightformer form="rect" intensity={3.2} color="#fff6ea" position={[0, 6, 1]} rotation-x={Math.PI / 2} scale={[9, 5, 1]} />
+              {/* tall strips left / right: long, clean highlights down the bucket */}
+              <Lightformer form="rect" intensity={2.6} color="#ffffff" position={[-6, 1.5, 1]} rotation-y={Math.PI / 2} scale={[6, 7, 1]} />
+              <Lightformer form="rect" intensity={2.2} color="#dfe8ff" position={[6, 1.5, 1]} rotation-y={-Math.PI / 2} scale={[6, 7, 1]} />
+              {/* back rim lights separate the dark bucket from the background */}
+              <Lightformer form="rect" intensity={3.4} color="#ffffff" position={[-3, 2, -6]} scale={[2.5, 8, 1]} />
+              <Lightformer form="rect" intensity={3.4} color="#ffffff" position={[3, 2, -6]} scale={[2.5, 8, 1]} />
+              {/* warm kicker from below-front, like the brand glow */}
+              <Lightformer form="ring" intensity={1.6} color="#ffbf5a" position={[0, -2, 5]} scale={4} />
+            </Environment>
+            <ambientLight intensity={0.25} color="#fff4e6" />
+            <directionalLight position={[4, 7, 5]} intensity={1.4} color="#fff2e2" />
+            <directionalLight position={[-5, 3, -3]} intensity={0.9} color="#cfe0ff" />
 
             {/* Tuned 3D Bucket Model */}
             <BucketModel

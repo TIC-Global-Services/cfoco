@@ -82,10 +82,10 @@ const GetCrispy = () => {
               className="relative w-full h-full"
             >
               <Image
-                src="/output.gif"
+                src="/frame_map.gif"
                 alt="CFOCO Locations Map"
                 fill
-                className="object-contain"
+                className="object-cover "
               />
             </motion.div>
           </div>

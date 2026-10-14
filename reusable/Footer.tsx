@@ -7,6 +7,8 @@ import Reveal from "@/reusable/Reveal";
 import dynamic from "next/dynamic";
 import LazyMount from "./LazyMount";
 
+import { FOOTER_LINKS } from "@/data/navLinks";
+
 const FooterLogoCanvas = dynamic(() => import("@/reusable/FooterLogoCanvas"), {
   ssr: false,
 });
@@ -16,15 +18,7 @@ interface FooterNavLink {
   href: string;
 }
 
-const navLinks: FooterNavLink[] = [
-  { label: "Menu", href: "/menu" },
-  { label: "Our Story", href: "/our-story" },
-  { label: "Franchise", href: "/franchise" },
-  { label: "Policies", href: "/policies" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "News & Blogs", href: "/news-blogs" },
-
-];
+const navLinks: FooterNavLink[] = FOOTER_LINKS;
 
 const socialLinks = [
   {
@@ -103,7 +97,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
               <LazyMount className="h-full w-full">
-                <FooterLogoCanvas modelPath="/cfc_logo.glb" />
+                <FooterLogoCanvas modelPath="/cfoco_black_logo.glb" /> 
               </LazyMount>
             </div>
           </div>

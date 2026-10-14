@@ -15,7 +15,7 @@ export default function MainLayout({
       <div
         className="fixed inset-0 z-[-20] bg-cover bg-bottom bg-no-repeat pointer-events-none"
         style={{
-          backgroundImage: "url('/bg-image-new.png')",
+          backgroundImage: "url('/interior_bg.png')",
         }}
         aria-hidden="true"
       />
