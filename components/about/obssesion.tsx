@@ -7,10 +7,12 @@ import {
   motion,
   useScroll,
   useTransform,
+  useMotionValueEvent,
   MotionValue,
   useAnimationFrame,
   useMotionValue,
   useInView,
+  Variants,
 } from "framer-motion";
 
 export interface Milestone {
@@ -171,6 +173,41 @@ interface MilestonePoint {
   y: number;
 }
 
+// Pure vertical Google Maps drop & bounce — zero scale expansion or distortion
+const pinVariants: Variants = {
+  inactive: {
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
+  active: {
+    y: [0, -24, 0, -9, 0, -3, 0],
+    transition: {
+      duration: 0.75,
+      times: [0, 0.32, 0.58, 0.74, 0.86, 0.94, 1],
+      ease: ["easeOut", "easeIn", "easeOut", "easeIn", "easeOut", "easeIn"],
+    },
+  },
+};
+
+// Fixed ground shadow (no scale expansion)
+const shadowVariants: Variants = {
+  inactive: {
+    opacity: 0.25,
+    transition: { duration: 0.3 },
+  },
+  active: {
+    opacity: [0.55, 0.18, 0.6, 0.3, 0.58, 0.45, 0.55],
+    transition: {
+      duration: 0.75,
+      times: [0, 0.32, 0.58, 0.74, 0.86, 0.94, 1],
+      ease: ["easeOut", "easeIn", "easeOut", "easeIn", "easeOut", "easeIn"],
+    },
+  },
+};
+
 const MilestoneMarker = React.memo(({
   data,
   index,
@@ -187,16 +224,23 @@ const MilestoneMarker = React.memo(({
   const isRed = data.theme === "red" || (!data.theme && index % 2 === 0);
   const targetPos = index / Math.max(1, N - 1);
 
-  // Proximity to viewport center for active item (pure functional transform prevents invalid WAAPI keyframe offsets)
+  // Proximity to viewport center for active item
   const intensity = useTransform(scrollYProgress, (p) => {
     return Math.max(0, 1 - Math.abs(p - targetPos) / 0.22);
   });
 
+  const [isActive, setIsActive] = useState(index === 0);
+
+  useMotionValueEvent(intensity, "change", (latest) => {
+    const active = latest > 0.65;
+    if (active !== isActive) {
+      setIsActive(active);
+    }
+  });
+
   const ringOpacity = useTransform(intensity, (i) => i);
-  const ringScale = useTransform(intensity, (i) => 0.9 + 0.16 * i);
-  const markerScale = useTransform(intensity, (i) => 0.88 + 0.22 * i);
   const contentOpacity = useTransform(intensity, (i) => 0.35 + 0.65 * i);
-  const contentScale = useTransform(intensity, (i) => 0.9 + 0.1 * i);
+  const contentScale = useTransform(intensity, (i) => 0.92 + 0.08 * i);
 
   const primaryColor = isRed ? "#EF4444" : "#00D4FF";
 
@@ -208,15 +252,31 @@ const MilestoneMarker = React.memo(({
         top: 0,
       }}
     >
-      {/* 1. Map Pin: tip touches the road surface at point.y */}
+      {/* Ground Contact Shadow (fixed dimensions, zero expansion) */}
       <motion.div
-        className="absolute -translate-x-1/2 flex flex-col items-center"
+        className="absolute -translate-x-1/2 pointer-events-none rounded-full"
+        style={{
+          top: point.y - 4,
+          left: 0,
+          width: 32,
+          height: 8,
+          background:
+            "radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 75%)",
+        }}
+        variants={shadowVariants}
+        animate={isActive ? "active" : "inactive"}
+      />
+
+      {/* 1. Map Pin: pure vertical bounce without any scale expansion */}
+      <motion.div
+        className="absolute -translate-x-1/2 flex flex-col items-center transform-gpu cursor-pointer"
         style={{
           top: point.y - 78,
-          scale: markerScale,
         }}
+        variants={pinVariants}
+        animate={isActive ? "active" : "inactive"}
       >
-        {/* Outer Charging Ring Glow (Exactly like before) */}
+        {/* Outer Charging Ring Glow (fixed size, pure illumination without expansion) */}
         <motion.div
           className="glow-ring absolute w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] pointer-events-none z-0 transform-gpu"
           style={{
@@ -225,7 +285,6 @@ const MilestoneMarker = React.memo(({
             x: "-50%",
             y: "-50%",
             opacity: ringOpacity,
-            scale: ringScale,
           }}
         >
           <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
