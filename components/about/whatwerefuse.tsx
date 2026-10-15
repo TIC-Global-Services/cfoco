@@ -277,7 +277,7 @@ const WhatWeRefuse: React.FC = () => {
       >
         {/* CENTER FRIED CHICKEN GIF (Rendered ONLY on desktop to prevent duplicate decoding in RAM) */}
         {isDesktop !== false && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[420px] lg:w-[920px] aspect-[16/9] flex items-center justify-center pointer-events-none select-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20  lg:w-[920px] aspect-[16/9] flex items-center justify-center pointer-events-none select-none">
             <Image
               src="/CHICKEN-orbit.gif"
               alt="Crispy Fried Chicken Orbit"
@@ -359,10 +359,10 @@ const WhatWeRefuse: React.FC = () => {
 
       <div className="flex lg:hidden flex-col items-center w-full max-w-lg mx-auto z-10 mt-2 sm:mt-0">
         {/* Mobile Graphic Centerpiece */}
-        <div className="relative w-full h-[280px] sm:h-[320px] flex items-center justify-center overflow-hidden my-2">
+        <div className="relative w-full h-[280px] sm:h-[380px] flex items-center justify-center overflow-hidden my-2">
           {/* Fried Chicken GIF (Rendered ONLY on mobile/tablet to prevent duplicate decoding) */}
           {isDesktop !== true && (
-            <div className="relative w-[340px] sm:w-[320px] aspect-square z-10 flex items-center justify-center pointer-events-none">
+            <div className="relative w-[430px] sm:w-[650px] aspect-square z-10 flex items-center justify-center pointer-events-none">
               <Image
                 src="/chicken-orbit-v2.gif"
                 alt="Crispy Fried Chicken Orbit"
