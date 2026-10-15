@@ -67,12 +67,12 @@ const NothingFrozen = () => {
       </div>
 
       {/* 3D Chicken Bucket Interactive Area */}
-      <div className="relative z-10 flex justify-center items-center -mt-12 xs:-mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 xl:-mt-48 transform-gpu">
+      <div className="relative z-10 flex justify-center items-center -mt-12 xs:-mt-16 sm:-mt-24 md:-mt-40 lg:-mt-40 xl:-mt-48 transform-gpu">
         <ChickenBucketCanvas modelPath="/models/chicken_bucket_black.glb" />
       </div>
 
       {/* Narrative Description */}
-      <div className="relative z-10 md:max-w-4xl mx-auto text-center px-[3%] md:px-4 mt-2 xs:-mt-4 sm:-mt-6 md:-mt-8 lg:mt-1">
+      <div className="relative z-10 md:max-w-4xl mx-auto text-center px-[3%] md:px-4 mt-2 xs:-mt-4 sm:-mt-6 md:mt-1 lg:mt-1">
         <p className="text-base sm:text-lg md:text-xl font-normal leading-[1.2] text-neutral-200/95 max-w-4xl mx-auto">
           Great Chicken Has Nowhere To Hide. That&apos;s <br className="md:hidden"/>Why We Start With Fresh Cuts, Marinate In-House, And Hand-Breade Every Piece To <br className="md:hidden"/> Order. Our Oil Is Filtered Daily — Because <br className="md:hidden"/> Crispy Is Chemistry, And Chemistry Has Standards.
         </p>

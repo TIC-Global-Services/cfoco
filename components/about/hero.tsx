@@ -138,7 +138,7 @@ const Hero = () => {
               y: leftY,
               opacity: leftOpacity,
             }}
-            className="absolute left-[-55%] bottom-[30%] min-[425px]:left-[-35%] min-[425px]:bottom-[30%] md:-left-[24  vw] lg:left-[-25vw] md:bottom-[20%] lg:bottom-[-5vh] w-[70vw] min-w-[380px] md:max-w-[90vw] lg:max-w-[95vw] h-full"
+            className="absolute left-[-55%] bottom-[30%] min-[425px]:left-[-35%] min-[425px]:bottom-[30%] md:-left-[24vw] lg:left-[-25vw] md:bottom-[20%] lg:bottom-[-5vh] w-[70vw] min-w-[380px] md:max-w-[90vw] lg:max-w-[95vw] h-full"
           >
             <div className="relative w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]">
               <Image

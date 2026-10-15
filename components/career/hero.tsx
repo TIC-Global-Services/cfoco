@@ -7,7 +7,7 @@ const CareerHero = () => (
   <Hero
     videoSrc="/bg_about_video.mp4"
     sectionClassName="justify-between px-[5%] sm:px-6 lg:px-8"
-    contentClassName="md:justify-start pt-[45%] sm:pt-[50%] lg:pt-38"
+    contentClassName="md:justify-start pt-[45%] sm:pt-[30%] lg:pt-38"
     mobileMaxWidthClassName="sm:max-w-md"
     desktopTitle={{
       refWidth: 2200,
@@ -30,7 +30,7 @@ const CareerHero = () => (
       ],
     }}
     description={
-      <p className="text-xl sm:text-xl md:text-[1.375rem] font-normal tracking-tight text-[#F2F2F2] leading-[1.2] max-w-3xl">
+      <p className="text-xl sm:text-xl md:text-[1.375rem] mt-5 font-normal tracking-tight text-[#F2F2F2] leading-[1.2] max-w-3xl">
         Join a team driven by innovation, collaboration, and a shared passion
         for making a meaningful impact <span className="text-[#CC1518] font-medium">every day.</span>
       </p>
