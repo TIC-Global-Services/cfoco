@@ -253,7 +253,7 @@ const StepInside = () => {
                       </h4>
 
                       {/* Address preview */}
-                      <p className="text-[11px] sm:text-xs text-white/70 font-normal mt-0.5 mb-2.5 leading-tight line-clamp-2">
+                      <p className="text-xs sm:text-xs text-white font-normal mt-0.5 mb-2.5 leading-tight line-clamp-2">
                         {activeLocation.address}
                       </p>
 
