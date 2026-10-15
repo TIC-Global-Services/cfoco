@@ -36,8 +36,8 @@ import {
   useInteractionControls,
 } from "./controls";
 
-const RAW_URL = "/models/chicken.glb";
-const FRIED_URL = "/models/friend_checken.glb";
+const RAW_URL = "/models/raw_chicken.glb";
+const FRIED_URL = "/models/chicken_fried.glb";
 const BUCKET_URL = "/models/bucket_drop.glb";
 
 // ---------------------------------------------------------------------------
