@@ -236,7 +236,7 @@ const StepInside = () => {
                     shadowIntensity={0.4}
                     displacementScale={2}
                     elasticity={1.4}
-                    className="w-full bg-white/[0.08] text-white p-2.5 sm:p-3.5 border-[3px] border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl transition-all duration-300"
+                    className="w-full bg-black/40 text-white p-2.5 sm:p-3.5 border-[3px] border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl transition-all duration-300"
                   >
                     <div className="w-full text-left">
                       {/* City / Tag Header */}

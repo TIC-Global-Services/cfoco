@@ -6,7 +6,7 @@ export interface NavLink {
 /** main navigation, shared by the site navbar and the 3D home navbar */
 export const NAV_ITEMS: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Our Story", href: "/about" },
+  { label: "Our Story", href: "/our-story" },
   { label: "Location", href: "/location" },
   { label: "Menu", href: "/menu" },
   { label: "Career", href: "/career" },
