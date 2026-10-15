@@ -384,9 +384,9 @@ const MilestoneMarker = React.memo(({
             style={{
               color: primaryColor,
               textShadow: isRed
-                ? "0 0 16px rgba(239, 68, 68, 0.95), 0 0 32px rgba(239, 68, 68, 0.6)"
-                : "0 0 16px rgba(0, 212, 255, 0.95), 0 0 32px rgba(0, 212, 255, 0.6)",
-              opacity: intensity,
+                ? "0 0 6px rgba(239, 68, 68, 0.95), 0 0 6px rgba(239, 68, 68, 0.6)"
+                : "0 0 6px rgba(0, 212, 255, 0.95), 0 0 6px rgba(0, 212, 255, 0.6)",
+              // opacity: intensity,  
             }}
           >
             {data.year}
