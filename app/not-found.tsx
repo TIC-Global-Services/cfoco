@@ -75,7 +75,7 @@ export default function NotFound() {
           {/* Action CTAs */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="/about"
+              href="/our-story"
               className="group flex items-center gap-3 pl-6 pr-1.5 py-1.5 rounded-full bg-[#FFFFFF99] hover:bg-[#8799a5]/45 border border-white/20 backdrop-blur-md text-white font-medium text-base sm:text-lg transition-all duration-300 shadow-md hover:shadow-lg hover:border-white/40"
             >
               <span className="tracking-tight font-semibold text-[#232E45] group-hover:text-white transition-colors">
