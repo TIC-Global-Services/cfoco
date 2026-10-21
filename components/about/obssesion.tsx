@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { matter } from "@/font/fonts";
 import {
@@ -12,6 +12,7 @@ import {
   useAnimationFrame,
   useMotionValue,
   useInView,
+  useSpring,
   Variants,
 } from "framer-motion";
 
@@ -110,6 +111,11 @@ interface RoadPoint {
   isPeakOrValley?: boolean;
 }
 
+interface MilestonePoint {
+  x: number;
+  y: number;
+}
+
 /**
  * Builds a mathematically continuous, monotonic cubic Bezier spline.
  * Guarantees zero kinks, zero bumps, and level horizontal tangent at peaks and valleys.
@@ -168,12 +174,94 @@ function buildSmoothHighwaySpline(
   return d;
 }
 
-interface MilestonePoint {
-  x: number;
-  y: number;
+/**
+ * Computes exact (x, y) coordinates and tangent angle along the cubic highway
+ * between milestones for any fractional progress t in [0, N - 1].
+ */
+function getRoadPointAndAngle(
+  t: number,
+  points: MilestonePoint[],
+  smoothness: number = 0.48
+): { x: number; y: number; angle: number } {
+  const n = points.length;
+  if (n < 2) return { x: 0, y: 0, angle: 0 };
+
+  const clampedT = Math.max(0, Math.min(n - 1, t));
+  const i = Math.min(Math.floor(clampedT), n - 2);
+  const u = clampedT - i;
+
+  const p1 = points[i];
+  const p2 = points[i + 1];
+  const dx = p2.x - p1.x;
+
+  // Tangents at milestone peaks & valleys are level (slope = 0)
+  const cp1x = p1.x + dx * smoothness;
+  const cp1y = p1.y;
+  const cp2x = p2.x - dx * smoothness;
+  const cp2y = p2.y;
+
+  // Cubic Bezier interpolation
+  const omt = 1 - u;
+  const omt2 = omt * omt;
+  const omt3 = omt2 * omt;
+  const u2 = u * u;
+  const u3 = u2 * u;
+
+  const x =
+    omt3 * p1.x +
+    3 * omt2 * u * cp1x +
+    3 * omt * u2 * cp2x +
+    u3 * p2.x;
+
+  const y =
+    omt3 * p1.y +
+    3 * omt2 * u * cp1y +
+    3 * omt * u2 * cp2y +
+    u3 * p2.y;
+
+  // Derivative for tangent direction
+  const dxdt =
+    3 * omt2 * (cp1x - p1.x) +
+    6 * omt * u * (cp2x - cp1x) +
+    3 * u2 * (p2.x - cp2x);
+
+  const dydt =
+    3 * omt2 * (cp1y - p1.y) +
+    6 * omt * u * (cp2y - cp1y) +
+    3 * u2 * (p2.y - cp2y);
+
+  const angle = (Math.atan2(dydt, Math.max(1, dxdt)) * 180) / Math.PI;
+
+  return { x, y, angle };
 }
 
-// Pure vertical Google Maps drop & bounce — zero scale expansion or distortion
+/**
+ * Maps linear scroll progress (0..1) into a stepped milestone progress (0..N-1)
+ * with comfortable dwell zones at each year, giving the user a clear feeling
+ * of traveling along the highway from one year to the next.
+ */
+function progressToMilestone(p: number, N: number): number {
+  if (p <= 0) return 0;
+  if (p >= 1) return N - 1;
+
+  const totalSegments = N - 1;
+  const raw = p * totalSegments;
+  const k = Math.min(Math.floor(raw), totalSegments - 1);
+  const frac = raw - k;
+
+  // First 32% of each scroll slice is a stable dwell at the milestone
+  const DWELL = 0.32;
+  if (frac <= DWELL) {
+    return k;
+  }
+
+  // Remaining 68% is smooth accelerating/decelerating highway cruise to next year
+  const travelT = (frac - DWELL) / (1 - DWELL);
+  const smooth = 0.5 - 0.5 * Math.cos(Math.PI * travelT);
+  return k + smooth;
+}
+
+// Pure vertical Google Maps drop & bounce
 const pinVariants: Variants = {
   inactive: {
     y: 0,
@@ -192,7 +280,7 @@ const pinVariants: Variants = {
   },
 };
 
-// Fixed ground shadow (no scale expansion)
+// Fixed ground shadow
 const shadowVariants: Variants = {
   inactive: {
     opacity: 0.25,
@@ -208,39 +296,181 @@ const shadowVariants: Variants = {
   },
 };
 
+/* ─────────────────────────────────────────────────────────────────────────
+   ROAD TRAVELER: CF&CO Crispy Courier driving along the road curves
+   ───────────────────────────────────────────────────────────────────────── */
+const RoadTraveler: React.FC<{ themeColor?: string }> = ({
+  themeColor = "#FFBF00",
+}) => {
+  return (
+    <g className="pointer-events-none select-none">
+      {/* Ground Contact Shadow on Asphalt */}
+      <ellipse
+        cx="-2"
+        cy="15"
+        rx="34"
+        ry="7"
+        fill="rgba(0, 0, 0, 0.8)"
+        filter="blur(2.5px)"
+      />
+
+      {/* Forward Headlight Beam illuminating the road ahead */}
+      <polygon
+        points="22,0 160,-26 160,26 22,5"
+        fill="url(#travelerHeadlightBeam)"
+        opacity="0.55"
+      />
+
+      {/* Headlight bulb flare */}
+      <circle cx="24" cy="2" r="7" fill="#FFF5C4" filter="blur(2.5px)" opacity="0.9" />
+
+      {/* Back Wheel */}
+      <circle cx="-20" cy="11" r="9" fill="#0A0E17" stroke="#334155" strokeWidth="2.5" />
+      <circle cx="-20" cy="11" r="4.5" fill="#1E293B" stroke={themeColor} strokeWidth="1.2" />
+
+      {/* Front Wheel */}
+      <circle cx="20" cy="11" r="9" fill="#0A0E17" stroke="#334155" strokeWidth="2.5" />
+      <circle cx="20" cy="11" r="4.5" fill="#1E293B" stroke={themeColor} strokeWidth="1.2" />
+
+      {/* Chassis Frame */}
+      <path
+        d="M -20 11 L -8 4 L 4 4 L 18 11"
+        stroke="#475569"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+
+      {/* Underglow Neon */}
+      <ellipse
+        cx="0"
+        cy="9"
+        rx="18"
+        ry="4"
+        fill={themeColor}
+        opacity="0.45"
+        filter="blur(3px)"
+      />
+
+      {/* Scooter Body Streamlined Fairing */}
+      <path
+        d="M -16 4 L -6 -6 L 12 -6 L 24 2 L 14 6 L -14 6 Z"
+        fill="#0F172A"
+        stroke="#334155"
+        strokeWidth="1.2"
+      />
+
+      {/* Racing Stripe */}
+      <path
+        d="M -12 2 L 14 2"
+        stroke={themeColor}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+
+      {/* CF&CO Delivery Hotbox (carrying the crispy formula) */}
+      <rect
+        x="-22"
+        y="-18"
+        width="18"
+        height="18"
+        rx="3"
+        fill="#1E293B"
+        stroke={themeColor}
+        strokeWidth="1.5"
+      />
+      {/* Chicken emblem silhouette on hotbox */}
+      <circle cx="-13" cy="-9" r="5" fill="#0F172A" />
+      <path
+        d="M -15 -8 Q -13 -12 -11 -8 Q -12 -6 -15 -8 Z"
+        fill={themeColor}
+      />
+
+      {/* Rider Helmet & Visor */}
+      <circle cx="-1" cy="-14" r="7.5" fill="#1E293B" stroke="#475569" strokeWidth="1" />
+      <path
+        d="M 2 -16 Q 6 -14 5 -11 Q 2 -11 1 -13 Z"
+        fill="#38BDF8"
+        opacity="0.95"
+      />
+
+      {/* Rider Body */}
+      <path d="M -6 -6 Q -2 -10 6 -6 L 8 4 L -4 4 Z" fill="#0F172A" />
+
+      {/* Handlebars */}
+      <path d="M 8 -4 L 14 -2" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" />
+
+      {/* Red Taillight on Hotbox */}
+      <rect x="-24" y="-12" width="2.5" height="5" rx="1" fill="#EF4444" />
+      <circle cx="-24" cy="-9.5" r="3" fill="#EF4444" filter="blur(2px)" opacity="0.9" />
+    </g>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────────────
+   MILESTONE MARKER: Location Pin & Story Card
+   ───────────────────────────────────────────────────────────────────────── */
 const MilestoneMarker = React.memo(({
   data,
   index,
-  N,
   point,
-  scrollYProgress,
+  smoothMilestone,
+  onSelect,
 }: {
   data: Milestone;
   index: number;
-  N: number;
   point: MilestonePoint;
-  scrollYProgress: MotionValue<number>;
+  smoothMilestone: MotionValue<number>;
+  onSelect?: (idx: number) => void;
 }) => {
   const isRed = data.theme === "red" || (!data.theme && index % 2 === 0);
-  const targetPos = index / Math.max(1, N - 1);
 
-  // Proximity to viewport center for active item
-  const intensity = useTransform(scrollYProgress, (p) => {
-    return Math.max(0, 1 - Math.abs(p - targetPos) / 0.22);
-  });
+  // Distance to this milestone station
+  const distMotion = useTransform(smoothMilestone, (m) => Math.abs(m - index));
 
   const [isActive, setIsActive] = useState(index === 0);
 
-  useMotionValueEvent(intensity, "change", (latest) => {
-    const active = latest > 0.65;
+  useMotionValueEvent(distMotion, "change", (dist) => {
+    const active = dist < 0.16;
     if (active !== isActive) {
       setIsActive(active);
     }
   });
 
-  const ringOpacity = useTransform(intensity, (i) => i);
-  const contentOpacity = useTransform(intensity, (i) => 0.35 + 0.65 * i);
-  const contentScale = useTransform(intensity, (i) => 0.92 + 0.08 * i);
+  // Pin charging ring only glows on arrival
+  const ringOpacity = useTransform(distMotion, (dist) => {
+    if (dist >= 0.24) return 0;
+    if (dist <= 0.08) return 1;
+    return (0.24 - dist) / (0.24 - 0.08);
+  });
+
+  // Map pin is subtle in the distance and becomes fully opaque on arrival
+  const pinOpacity = useTransform(distMotion, (dist) => {
+    if (dist >= 0.75) return 0.25;
+    if (dist <= 0.18) return 1;
+    return 0.25 + 0.75 * ((0.75 - dist) / (0.75 - 0.18));
+  });
+
+  // CONTENT (Year, Title, Description) SHOWS ONLY WHEN REACHING THE DESTINATION
+  const contentOpacity = useTransform(distMotion, (dist) => {
+    if (dist >= 0.25) return 0;
+    if (dist <= 0.08) return 1;
+    const t = (0.25 - dist) / (0.25 - 0.08);
+    return 0.5 - 0.5 * Math.cos(Math.PI * t);
+  });
+
+  const contentY = useTransform(distMotion, (dist) => {
+    if (dist >= 0.25) return 18;
+    if (dist <= 0.08) return 0;
+    const t = (0.25 - dist) / (0.25 - 0.08);
+    return (1 - t) * 18;
+  });
+
+  const contentScale = useTransform(distMotion, (dist) => {
+    if (dist >= 0.25) return 0.88;
+    if (dist <= 0.08) return 1;
+    const t = (0.25 - dist) / (0.25 - 0.08);
+    return 0.88 + 0.12 * t;
+  });
 
   const primaryColor = isRed ? "#EF4444" : "#00D4FF";
 
@@ -251,8 +481,9 @@ const MilestoneMarker = React.memo(({
         left: point.x,
         top: 0,
       }}
+      onClick={() => onSelect?.(index)}
     >
-      {/* Ground Contact Shadow (fixed dimensions, zero expansion) */}
+      {/* Ground Contact Shadow */}
       <motion.div
         className="absolute -translate-x-1/2 pointer-events-none rounded-full"
         style={{
@@ -272,11 +503,12 @@ const MilestoneMarker = React.memo(({
         className="absolute -translate-x-1/2 flex flex-col items-center transform-gpu cursor-pointer"
         style={{
           top: point.y - 78,
+          opacity: pinOpacity,
         }}
         variants={pinVariants}
         animate={isActive ? "active" : "inactive"}
       >
-        {/* Outer Charging Ring Glow (fixed size, pure illumination without expansion) */}
+        {/* Outer Charging Ring Glow */}
         <motion.div
           className="glow-ring absolute w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] pointer-events-none z-0 transform-gpu"
           style={{
@@ -329,7 +561,7 @@ const MilestoneMarker = React.memo(({
                 <stop offset="100%" stopColor={isRed ? "#3b0c10" : "#08263a"} />
               </linearGradient>
             </defs>
-            {/* Map pin teardrop path: circle at top, tapering down to sharp tip at (0, 46) */}
+            {/* Map pin teardrop path */}
             <path
               d="M 0 -28 A 28 28 0 0 1 21 18.5 L 0 46 L -21 18.5 A 28 28 0 0 1 0 -28 Z"
               fill={`url(#pinBodyGrad-${index})`}
@@ -362,16 +594,17 @@ const MilestoneMarker = React.memo(({
         </div>
       </motion.div>
 
-      {/* 2. Text Content: Sits cleanly below the road ribbon */}
+      {/* 2. Text Content: Sits cleanly below the road ribbon - SHOWS ONLY ON ARRIVAL */}
       <motion.div
         className="absolute -translate-x-1/2 flex flex-col items-center text-center w-[290px] sm:w-[320px] pointer-events-none"
         style={{
           top: point.y + 44,
           opacity: contentOpacity,
+          y: contentY,
           scale: contentScale,
         }}
       >
-        {/* Year: Glows intensely when centered (Pure GPU opacity transition, zero layout repaint) */}
+        {/* Year: Glows intensely when centered */}
         <div className="relative inline-block mb-1 sm:mb-1.5">
           <span
             className="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-wider inline-block select-none"
@@ -384,9 +617,9 @@ const MilestoneMarker = React.memo(({
             style={{
               color: primaryColor,
               textShadow: isRed
-                ? "0 0 6px rgba(239, 68, 68, 0.95), 0 0 6px rgba(239, 68, 68, 0.6)"
-                : "0 0 6px rgba(0, 212, 255, 0.95), 0 0 6px rgba(0, 212, 255, 0.6)",
-              // opacity: intensity,  
+                ? "0 0 8px rgba(239, 68, 68, 0.95), 0 0 16px rgba(239, 68, 68, 0.6)"
+                : "0 0 8px rgba(0, 212, 255, 0.95), 0 0 16px rgba(0, 212, 255, 0.6)",
+              opacity: contentOpacity,
             }}
           >
             {data.year}
@@ -410,6 +643,9 @@ const MilestoneMarker = React.memo(({
 
 MilestoneMarker.displayName = "MilestoneMarker";
 
+/* ─────────────────────────────────────────────────────────────────────────
+   MAIN OBSESSION COMPONENT
+   ───────────────────────────────────────────────────────────────────────── */
 const Obsession: React.FC<ObsessionProps> = ({ items }) => {
   const milestones = items && items.length > 0 ? items : defaultMilestones;
   const N = milestones.length;
@@ -419,6 +655,8 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
 
   const [viewportWidth, setViewportWidth] = useState<number>(1440);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [activeMilestoneIndex, setActiveMilestoneIndex] = useState<number>(0);
+  const [isTraveling, setIsTraveling] = useState<boolean>(false);
 
   useEffect(() => {
     let lastW = window.innerWidth;
@@ -427,7 +665,6 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
 
     const handleResize = () => {
       const w = window.innerWidth;
-      // Guard against vertical address-bar resizes triggering layout recalculation on mobile
       if (Math.abs(w - lastW) > 10) {
         lastW = w;
         setViewportWidth(w);
@@ -457,14 +694,60 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     }));
   }, [milestones, spacing, startX, heights]);
 
+  // Stepped milestone progress (0..N-1) with comfortable dwell zones at each year
+  const rawMilestoneProgress = useTransform(scrollYProgress, (p) =>
+    progressToMilestone(p, N)
+  );
+
+  // Physics spring smoothing for organic acceleration and highway deceleration
+  const smoothMilestone = useSpring(rawMilestoneProgress, {
+    stiffness: 150,
+    damping: 24,
+    mass: 0.28,
+  });
+
+  // Track active milestone index and traveling state for UI HUD
+  useMotionValueEvent(smoothMilestone, "change", (m) => {
+    const rounded = Math.min(N - 1, Math.max(0, Math.round(m)));
+    if (rounded !== activeMilestoneIndex) {
+      setActiveMilestoneIndex(rounded);
+    }
+    const distToStation = Math.abs(m - rounded);
+    setIsTraveling(distToStation > 0.12);
+  });
+
+  // Smooth camera tracking: keep the road traveler centered horizontally and vertically framed
+  const trackX = useTransform(smoothMilestone, (m) => {
+    const pt = getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness);
+    return viewportWidth / 2 - pt.x;
+  });
+
+  const trackY = useTransform(smoothMilestone, (m) => {
+    const pt = getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness);
+    // Subtle Y undulation keeps High (170) and Low (340) road points perfectly framed
+    return (255 - pt.y) * 0.42;
+  });
+
+  // Traveler position and rotation angle directly on the asphalt curve
+  const travelerX = useTransform(
+    smoothMilestone,
+    (m) => getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness).x
+  );
+  const travelerY = useTransform(
+    smoothMilestone,
+    (m) => getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness).y
+  );
+  const travelerAngle = useTransform(
+    smoothMilestone,
+    (m) => getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness).angle
+  );
+
   // Generate continuous winding highway ribbon that spans edge-to-edge across any screen.
-  // Viewport-adaptive extension avoids blowing past mobile GPU texture limits (4096px / 8192px).
   const { roadPath, minX, maxX } = useMemo(() => {
     const pts: RoadPoint[] = [];
     const EXTENSION = isMobile ? 650 : 2000;
 
     // 1. Pre-road extension (thousands of pixels to the left)
-    // Symmetrically alternates: Low -> High -> Low -> High into 2011 (which is High)
     const leftSteps = Math.ceil(EXTENSION / (spacing * 0.5));
     for (let k = leftSteps; k >= 1; k--) {
       const x = startX - k * spacing * 0.5;
@@ -478,7 +761,6 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     }
 
     // 3. Post-road extension (thousands of pixels to the right)
-    // 2022 is Low (heights[1]). Symmetrically alternates: High -> Low -> High -> Low
     const last = milestonePoints[milestonePoints.length - 1];
     const rightSteps = Math.ceil(EXTENSION / (spacing * 0.5));
     for (let k = 1; k <= rightSteps; k++) {
@@ -498,24 +780,13 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     };
   }, [milestonePoints, spacing, startX, heights, config.curveSmoothness, isMobile]);
 
-  // Translate track so active milestone aligns directly with viewport center
-  const firstX = milestonePoints[0]?.x || 0;
-  const lastX = milestonePoints[N - 1]?.x || 1;
-  const trackStartX = viewportWidth / 2 - firstX;
-  const trackEndX = viewportWidth / 2 - lastX;
-
-  const trackX = useTransform(scrollYProgress, [0, 1], [trackStartX, trackEndX]);
-
-  // Dynamic road dashed divider line animation:
-  // On desktop: Continuous cruising flow + scroll boost via useAnimationFrame (paused when offscreen)
-  // On mobile: Pure scroll-driven transform to keep 0% CPU overhead and zero touch-scroll hitching
+  // Road dashed divider line continuous animation
   const animDashOffset = useMotionValue(0);
   const lastScrollProgressRef = useRef(0);
 
   useAnimationFrame((_, delta) => {
     if (isMobile || !isInView) return;
 
-    // Clamp delta to prevent big jumps on frame drops or tab unfocus
     const safeDelta = Math.min(delta, 64);
     const baseStep = (safeDelta / 1000) * config.lineSpeed * config.lineDirection;
 
@@ -535,18 +806,42 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
 
   const activeDashOffset = isMobile ? mobileDashOffset : animDashOffset;
 
+  /**
+   * Smoothly drives directly to a specific milestone year on click
+   */
+  const scrollToMilestone = useCallback(
+    (index: number) => {
+      if (!targetRef.current) return;
+      const rect = targetRef.current.getBoundingClientRect();
+      const scrollTop = window.scrollY + rect.top;
+      const totalTravel = targetRef.current.offsetHeight - window.innerHeight;
+
+      // Each milestone index corresponds to scroll checkpoint index / (N - 1)
+      const targetP = index / Math.max(1, N - 1);
+      const targetY = scrollTop + targetP * totalTravel;
+
+      window.scrollTo({
+        top: targetY,
+        behavior: "smooth",
+      });
+    },
+    [N]
+  );
+
+  const activeThemeColor =
+    milestones[activeMilestoneIndex]?.theme === "cyan" ? "#00D4FF" : "#EF4444";
+
   return (
     <div
       ref={targetRef}
       className="relative w-full bg-transparent select-none overflow-clip"
-      // Smooth scroll track
-      style={{ height: `${N * 75 + 100}vh` }}
+      style={{ height: `${N * 85 + 100}vh` }}
     >
       <section
         className={`sticky top-0 w-full h-screen supports-[height:100svh]:h-[100svh] overflow-hidden flex flex-col justify-center ${matter.className} bg-transparent`}
       >
         {/* Section Header (Centered at Top) */}
-        <div className="w-full text-center space-y-1 sm:space-y-2 px-4 absolute top-10 sm:top-14 md:top-16 left-0 right-0 z-20 pointer-events-none">
+        <div className="w-full text-center space-y-1 sm:space-y-2 px-4 absolute top-8 sm:top-12 md:top-14 left-0 right-0 z-20 pointer-events-none">
           <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
             13 Years
           </h2>
@@ -558,9 +853,10 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
         {/* Moving Roadmap Highway Canvas */}
         <div className="relative w-full h-full flex flex-col justify-center overflow-visible pointer-events-none">
           <motion.div
-            className="absolute left-0 top-[30%] sm:top-[50%] md:top-[22%] h-[700px] pointer-events-none transform-gpu will-change-transform"
+            className="absolute left-0 top-[26%] sm:top-[24%] md:top-[22%] h-[700px] pointer-events-none transform-gpu will-change-transform"
             style={{
               x: trackX,
+              y: trackY,
             }}
           >
             {/* SVG Road Ribbon Only: spans from minX to maxX edge-to-edge */}
@@ -580,14 +876,31 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                   <stop offset="50%" stopColor="#101726" />
                   <stop offset="100%" stopColor="#0b101b" />
                 </linearGradient>
+
+                {/* Headlight beam gradient extending forward on the road */}
+                <linearGradient
+                  id="travelerHeadlightBeam"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#FFF7D0" stopOpacity="0.85" />
+                  <stop offset="25%" stopColor="#FFE066" stopOpacity="0.45" />
+                  <stop offset="70%" stopColor="#FFBF00" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="#FFBF00" stopOpacity="0" />
+                </linearGradient>
               </defs>
 
-              {/* 1. Road Soft Outer Shadow (Clean hardware vector strokes, replaces heavy feGaussianBlur) */}
+              {/* 1. Road Soft Outer Shadow */}
               <path
                 d={roadPath}
                 fill="none"
                 stroke="rgba(0, 0, 0, 0.28)"
-                strokeWidth={(isMobile ? config.shadowWidthMobile : config.shadowWidthDesktop) + (isMobile ? 10 : 16)}
+                strokeWidth={
+                  (isMobile ? config.shadowWidthMobile : config.shadowWidthDesktop) +
+                  (isMobile ? 10 : 16)
+                }
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
@@ -612,7 +925,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 strokeLinejoin="round"
               />
 
-              {/* 4. Center White/Grey Dashed Divider Line (Moving Road Line) */}
+              {/* 4. Center White/Grey Dashed Divider Line */}
               <motion.path
                 d={roadPath}
                 fill="none"
@@ -625,6 +938,17 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 opacity="0.85"
                 strokeLinecap="round"
               />
+
+              {/* 5. Road Traveler (The CF&CO Courier Driving on the Road) - Commented out as requested */}
+              {/* <motion.g
+                style={{
+                  x: travelerX,
+                  y: travelerY,
+                  rotate: travelerAngle,
+                }}
+              >
+                <RoadTraveler themeColor={activeThemeColor} />
+              </motion.g> */}
             </svg>
 
             {/* Road Location Pins & Milestone Stories */}
@@ -633,9 +957,9 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 key={data.year}
                 data={data}
                 index={index}
-                N={N}
                 point={milestonePoints[index]}
-                scrollYProgress={scrollYProgress}
+                smoothMilestone={smoothMilestone}
+                onSelect={scrollToMilestone}
               />
             ))}
           </motion.div>
