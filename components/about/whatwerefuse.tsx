@@ -1,493 +1,360 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import { Users, Rabbit, Star, X } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Users, Rabbit, Star } from "lucide-react";
 import { matter } from "@/font/fonts";
 import { motion, AnimatePresence } from "framer-motion";
 
-const slideVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 50 : -50,
-    opacity: 0,
-    scale: 0.96,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.38,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  },
-  exit: (direction: number) => ({
-    x: direction > 0 ? -50 : 50,
-    opacity: 0,
-    scale: 0.96,
-    transition: {
-      duration: 0.32,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-};
-
-/* ── Orbit configuration ── */
-const ORBIT_RX = 400;       // horizontal radius (px)
-const ORBIT_RY = 240;       // vertical radius (px)
-const ORBIT_PERIOD = 38000;  // ms per full revolution
-
-interface RefuseCard {
+interface PrincipleCard {
   id: string;
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
-  widthClass: string;
-  offset: number;
 }
 
-const CARDS: RefuseCard[] = [
+const CARDS: PrincipleCard[] = [
   {
     id: "speed",
     icon: Rabbit,
     title: "Speed",
     description: "Fast Food Should Be Fast And Still Be Food.",
-    widthClass: "w-[270px] lg:w-[310px]",
-    offset: 330, // Top-right when baseAngle = 0
-  },
-  {
-    id: "quality",
-    icon: Star,
-    title: "Quality",
-    description: "If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen.",
-    widthClass: "w-[270px] lg:w-[310px]",
-    offset: 90, // Bottom-center (front foreground) when baseAngle = 0
   },
   {
     id: "conviviality",
     icon: Users,
     title: "Conviviality",
     description: "Great Meals Are Meant To Be Shared. So Is A Good Time.",
-    widthClass: "w-[290px] lg:w-[330px]",
-    offset: 210, // Top-left when baseAngle = 0
+  },
+  {
+    id: "quality",
+    icon: Star,
+    title: "Quality",
+    description: "If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen.",
   },
 ];
 
+const AUTOPLAY_INTERVAL = 4000; // 4 seconds per tab
+
 const WhatWeRefuse: React.FC = () => {
-  const [isDesktop, setIsDesktop] = React.useState<boolean | null>(null);
-  const [activeCard, setActiveCard] = React.useState<number | null>(null);
+  // Default to 1 (Conviviality in the middle, matching the reference screenshot)
+  const [activeIndex, setActiveIndex] = useState<number>(1);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  /* ── Mobile single-card slider state ── */
-  const [mobileIndex, setMobileIndex] = React.useState(0);
-  const [isMobilePaused, setIsMobilePaused] = React.useState(false);
-  const [slideDirection, setSlideDirection] = React.useState<1 | -1>(1);
-
-  // Auto-advance interval for mobile slider (4 seconds)
-  React.useEffect(() => {
-    if (isDesktop === true || isMobilePaused) return;
-
-    const timer = setInterval(() => {
-      setSlideDirection(1);
-      setMobileIndex((prev) => (prev + 1) % CARDS.length);
-    }, 4000);
-
-    return () => clearInterval(timer);
-  }, [isDesktop, isMobilePaused]);
-
-  const handleNextMobile = React.useCallback(() => {
-    setSlideDirection(1);
-    setMobileIndex((prev) => (prev + 1) % CARDS.length);
-  }, []);
-
-  const handlePrevMobile = React.useCallback(() => {
-    setSlideDirection(-1);
-    setMobileIndex((prev) => (prev - 1 + CARDS.length) % CARDS.length);
-  }, []);
-
-  const handleSelectMobile = React.useCallback((idx: number) => {
-    setSlideDirection(idx > mobileIndex ? 1 : -1);
-    setMobileIndex(idx);
-  }, [mobileIndex]);
-
-  /* ── Orbit animation refs ── */
-  const cardRefs = React.useRef<(HTMLDivElement | null)[]>([]);
-  const angleRef = React.useRef(0);
-  const targetAngleRef = React.useRef(0);
-  const isRotatingToTargetRef = React.useRef(false);
-  const lastTimeRef = React.useRef(0);
-  const isPausedRef = React.useRef(false);
-  const hoveredCardRef = React.useRef<number | null>(null);
-  const activeCardRef = React.useRef<number | null>(null);
-
-  React.useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 1024);
+  // Check viewport width for responsive card spacing
+  useEffect(() => {
+    const check = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
     check();
     window.addEventListener("resize", check, { passive: true });
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  /* ── 3D Elliptical orbit carousel driven by requestAnimationFrame ── */
-  React.useEffect(() => {
-    if (!isDesktop) return;
+  // Automatic tab rotation timer
+  useEffect(() => {
+    if (isPaused) return;
 
-    lastTimeRef.current = 0;
-    let animId: number;
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % CARDS.length);
+    }, AUTOPLAY_INTERVAL);
 
-    const animate = (now: number) => {
-      if (!lastTimeRef.current) lastTimeRef.current = now;
+    return () => clearInterval(timer);
+  }, [isPaused]);
 
-      const dt = Math.min(now - lastTimeRef.current, 100);
-      lastTimeRef.current = now;
+  const handleNext = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % CARDS.length);
+  }, []);
 
-      // When a card is clicked, smoothly rotate the carousel to align it at front-center (90°)
-      if (isRotatingToTargetRef.current) {
-        const angleDiff = targetAngleRef.current - angleRef.current;
-        const lerp = 1 - Math.exp(-dt * 0.007);
-        angleRef.current += angleDiff * lerp;
+  const handlePrev = useCallback(() => {
+    setActiveIndex((prev) => (prev - 1 + CARDS.length) % CARDS.length);
+  }, []);
 
-        if (Math.abs(angleDiff) < 0.15) {
-          angleRef.current = targetAngleRef.current;
-          isRotatingToTargetRef.current = false;
-        }
-      } else if (!isPausedRef.current && activeCardRef.current === null) {
-        // Continuous gentle orbit
-        angleRef.current += (dt / ORBIT_PERIOD) * 360;
+  const handleSelect = useCallback((idx: number) => {
+    setActiveIndex(idx);
+  }, []);
+
+  /**
+   * Calculate slot for each card relative to activeIndex:
+   *  0  -> Center (Selected)
+   * -1  -> Left
+   * +1  -> Right
+   */
+  const getSlot = (idx: number): -1 | 0 | 1 => {
+    const diff = idx - activeIndex;
+    if (diff === 0) return 0;
+    if (diff === 1 || diff === -2) return 1;
+    return -1;
+  };
+
+  // Touch swipe support
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsPaused(true);
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    setIsPaused(false);
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    touchStartX.current = null;
+
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
       }
-
-      const baseAngle = angleRef.current;
-      const focusedIdx = activeCardRef.current;
-
-      cardRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const angleDeg = (baseAngle + CARDS[i].offset) % 360;
-        const angleRad = (angleDeg * Math.PI) / 180;
-        const x = ORBIT_RX * Math.cos(angleRad);
-        const y = ORBIT_RY * Math.sin(angleRad);
-
-        // Depth scale: larger when closer to camera (sin > 0 at bottom front)
-        const depthScale = 1 + 0.09 * Math.sin(angleRad);
-        const isAtFront = Math.sin(angleRad) > 0.25;
-        const isFocused = focusedIdx === i;
-
-        // Dynamic z-index layering:
-        // - Focused card stopped at front: highest (60)
-        // - Hovered card: 50
-        // - Front cards: 35 (always above Chicken GIF z-20 so spices/chilies never overlap)
-        // - Back cards: 5..14 (behind Chicken GIF z-20 for authentic 3D depth)
-        let z: number;
-        if (isFocused) {
-          z = 60;
-        } else if (hoveredCardRef.current === i) {
-          z = 50;
-        } else if (isAtFront) {
-          z = 35;
-        } else {
-          z = Math.round(5 + 8 * ((Math.sin(angleRad) + 1) / 2));
-        }
-
-        el.style.transform = `translate(calc(-50% + ${x.toFixed(2)}px), calc(-50% + ${y.toFixed(2)}px)) scale(${depthScale.toFixed(3)})`;
-        el.style.zIndex = `${z}`;
-      });
-
-      animId = requestAnimationFrame(animate);
-    };
-
-    animId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animId);
-  }, [isDesktop]);
-
-  /** Resume continuous orbit */
-  const resumeOrbit = React.useCallback(() => {
-    if (activeCardRef.current !== null) {
-      activeCardRef.current = null;
-      isRotatingToTargetRef.current = false;
-      isPausedRef.current = hoveredCardRef.current !== null;
-      setActiveCard(null);
     }
-  }, []);
-
-  /** Click card to rotate it to front-center (90°) and stop there, or toggle to resume */
-  const handleCardClick = React.useCallback((cardIndex: number, e?: React.MouseEvent) => {
-    e?.stopPropagation();
-
-    if (activeCardRef.current === cardIndex) {
-      // Toggle off -> resume orbit
-      activeCardRef.current = null;
-      isRotatingToTargetRef.current = false;
-      isPausedRef.current = hoveredCardRef.current !== null;
-      setActiveCard(null);
-      return;
-    }
-
-    // Normalize angle helper
-    const normalize = (deg: number) => ((deg % 360) + 360) % 360;
-    const cardCurrentAngle = normalize(angleRef.current + CARDS[cardIndex].offset);
-    // Shortest angular difference to reach 90° (front-center)
-    const diff = ((90 - cardCurrentAngle) % 360 + 540) % 360 - 180;
-
-    targetAngleRef.current = angleRef.current + diff;
-    isRotatingToTargetRef.current = true;
-    activeCardRef.current = cardIndex;
-    setActiveCard(cardIndex);
-  }, []);
-
-  /** Pause orbit on card hover */
-  const handleCardHover = React.useCallback((cardIndex: number, hovering: boolean) => {
-    hoveredCardRef.current = hovering ? cardIndex : null;
-    if (activeCardRef.current === null && !isRotatingToTargetRef.current) {
-      isPausedRef.current = hovering;
-    }
-  }, []);
-
-  /** Close/resume on Escape key */
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && activeCardRef.current !== null) {
-        resumeOrbit();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [resumeOrbit]);
+  };
 
   return (
     <section
-      onClick={resumeOrbit}
-      className={`relative w-full min-h-screen py-10 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between overflow-hidden select-none ${matter.className}`}
+      aria-label="What We Refuse To Compromise"
+      className={`relative w-full py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between overflow-hidden select-none ${matter.className}`}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
-      {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
+      {/* ── AMBIENT BACKGROUND GLOWS ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 20%, rgba(255,191,0,0.08) 0%, transparent 60%), radial-gradient(ellipse at 50% 55%, rgba(255,191,0,0.11) 0%, rgba(20,30,50,0.2) 45%, transparent 75%)",
+        }}
+      />
 
-      {/* Header */}
-      <header className="relative z-10 text-center mt-8 sm:mt-12 md:mt-20 mb-4 sm:mb-6 lg:mb-2 pointer-events-none">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-extrabold tracking-tight text-[#FFBF00] leading-none drop-shadow-md">
+      {/* Glossy floor reflection like the reference studio lighting */}
+      <div
+        className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[85%] max-w-5xl h-36 rounded-full pointer-events-none blur-3xl"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(255,191,0,0.2) 0%, rgba(30,58,138,0.22) 45%, transparent 75%)",
+        }}
+      />
+
+      {/* ── HEADER ── */}
+      <header className="relative z-20 text-center max-w-3xl mx-auto flex flex-col items-center pointer-events-none">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[#FFBF00] leading-none drop-shadow-[0_4px_16px_rgba(255,191,0,0.22)]">
           What We Refuse
         </h2>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-extrabold tracking-tight text-[#FFBF00] leading-none mt-1 sm:mt-2 drop-shadow-md">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[#FFBF00] leading-none mt-1 sm:mt-1.5 drop-shadow-[0_4px_16px_rgba(255,191,0,0.22)]">
           To Compromise
         </h2>
-      </header>
 
-      {/* ========================================================================= */}
-      {/* DESKTOP LAYOUT (>= lg): Floating Scene with Orbit GIF & Surrounding Cards */}
-      {/* ========================================================================= */}
-      <div
-        className="hidden lg:flex max-w-7xl relative w-full h-[650px] lg:h-[700px] items-center justify-center my-auto cursor-default"
-        onClick={resumeOrbit}
-      >
-        {/* CENTER FRIED CHICKEN GIF (Rendered ONLY on desktop to prevent duplicate decoding in RAM) */}
-        {isDesktop !== false && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20  lg:w-[920px] aspect-[16/9] flex items-center justify-center pointer-events-none select-none">
-            <Image
-              src="/CHICKEN-orbit.gif"
-              alt="Crispy Fried Chicken Orbit"
-              fill
-              unoptimized
-              className="object-contain drop-shadow-[0_25px_60px_rgba(0,0,0,0.9)] pointer-events-none select-none"
-            />
-          </div>
-        )}
+        {/* Ornamental Gold Divider with Center Diamond */}
+        <div className="flex items-center justify-center gap-2.5 my-3 sm:my-3.5">
+          <div className="h-[1px] w-12 sm:w-16 bg-gradient-to-r from-transparent via-[#FFBF00]/70 to-[#FFBF00]" />
+          <div className="w-1.5 h-1.5 rotate-45 bg-[#FFBF00] shadow-[0_0_8px_#FFBF00]" />
+          <div className="h-[1px] w-12 sm:w-16 bg-gradient-to-l from-transparent via-[#FFBF00]/70 to-[#FFBF00]" />
+        </div>
 
-        {/* ORBITING CARDS — animated via requestAnimationFrame in useEffect */}
-        {CARDS.map((card, i) => {
-          const Icon = card.icon;
-          const isActive = activeCard === i;
-          const hasActive = activeCard !== null;
+        {/* Subtitle */}
+        <p className="text-neutral-400 text-xs sm:text-sm md:text-base font-normal text-center leading-[1.2] max-w-md sm:max-w-lg">
+          We believe great food starts with non-negotiables.
+          <br className="hidden sm:inline" />
+          {" "}Here are the principles we stand by, every single day.
+        </p>
 
-          return (
-            <div
-              key={card.id}
-              ref={(el) => {
-                cardRefs.current[i] = el;
-              }}
-              className="absolute top-1/2 left-1/2 group pointer-events-auto cursor-pointer will-change-transform select-none"
-              onMouseEnter={() => handleCardHover(i, true)}
-              onMouseLeave={() => handleCardHover(i, false)}
-              onClick={(e) => handleCardClick(i, e)}
-            >
-              <div
-                className={`${card.widthClass} relative backdrop-blur-xl rounded-2xl p-6 transition-[border-color,box-shadow,background-color,opacity] duration-300 ${
-                  isActive
-                    ? "bg-[#1d232e]/95 border-2 border-[#FFBF00] shadow-[0_0_40px_rgba(255,191,0,0.35),0_25px_60px_rgba(0,0,0,0.95)] ring-2 ring-[#FFBF00]/30"
-                    : hasActive
-                    ? "bg-[#1d232e]/75 border border-white/15 opacity-65 hover:opacity-100 shadow-[0_20px_50px_rgba(0,0,0,0.85)]"
-                    : "bg-[#1d232e]/75 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.85)] group-hover:border-[#FFBF00]/60 group-hover:shadow-[0_0_35px_rgba(255,191,0,0.25)]"
+        {/* Interactive Pill Tabs */}
+        {/* <nav
+          aria-label="Principles tabs"
+          className="pointer-events-auto flex items-center gap-1.5 sm:gap-2.5 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md mt-4 shadow-[0_8px_25px_rgba(0,0,0,0.5)]"
+        >
+          {CARDS.map((card, idx) => {
+            const isSelected = activeIndex === idx;
+            return (
+              <button
+                key={card.id}
+                type="button"
+                onClick={() => handleSelect(idx)}
+                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
+                  isSelected
+                    ? "bg-[#FFBF00] text-black shadow-[0_0_16px_rgba(255,191,0,0.6)] scale-105"
+                    : "text-neutral-400 hover:text-white hover:bg-white/5"
                 }`}
               >
-                {/* Header with Icon and Close Button */}
-                <div className="flex items-start justify-between mb-4">
-                  <Icon
-                    className={`w-8 h-8 stroke-[1.5] transition-colors duration-300 ${
-                      isActive ? "text-[#FFBF00]" : "text-white"
+                {card.title}
+              </button>
+            );
+          })}
+        </nav> */}
+      </header>
+
+      {/* ── 3D OVERLAPPING CARDS CAROUSEL ── */}
+      <div className="relative w-full max-w-6xl h-[420px] sm:h-[460px] md:h-[490px] flex items-center justify-center my-6 md:my-8">
+        {CARDS.map((card, i) => {
+          const Icon = card.icon;
+          const slot = getSlot(i);
+          const isSelected = slot === 0;
+
+          // Responsive offsets:
+          // Desktop: 310px, Tablet: 260px, Mobile: 190px
+          const offsetPx = isMobile ? 190 : 305;
+          const targetX = slot === 0 ? 0 : slot === -1 ? -offsetPx : offsetPx;
+
+          return (
+            <motion.div
+              key={card.id}
+              onClick={() => handleSelect(i)}
+              initial={false}
+              animate={{
+                x: targetX,
+                scale: isSelected ? 1.05 : 0.92,
+                opacity: isSelected ? 1 : 0.72,
+                zIndex: isSelected ? 35 : 15,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 28,
+              }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform cursor-pointer select-none"
+            >
+              {/* Card Container with Glassmorphism and Active Amber Highlight */}
+              <div
+                className={`w-[265px] xs:w-[290px] sm:w-[325px] md:w-[355px] lg:w-[375px] min-h-[375px] sm:min-h-[405px] md:min-h-[430px] rounded-[1.75rem] sm:rounded-[2rem] p-6 sm:p-8 md:p-9 flex flex-col items-center justify-between text-center transition-all duration-500 ${
+                  isSelected
+                    ? "bg-gradient-to-b from-[#151c2a]/95 via-[#101623]/95 to-[#0b0e16]/98 border-2 border-[#FFBF00]/55 shadow-[0_0_40px_rgba(255,191,0,0.28),0_25px_65px_rgba(0,0,0,0.92)] ring-1 ring-[#FFBF00]/25 backdrop-blur-2xl"
+                    : "bg-gradient-to-b from-[#111724]/85 via-[#0d121c]/85 to-[#080b12]/90 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.85)] hover:border-white/20 backdrop-blur-xl"
+                }`}
+              >
+                {/* Circular Neumorphic Icon Badge with Ambient Glow */}
+                <div className="relative w-20 h-20 sm:w-34 sm:h-34 flex items-center justify-center my-2 shrink-0">
+                  {/* Ambient Glow Halo */}
+                  {/* <div
+                    className={`absolute -inset-4 sm:-inset-6 rounded-full transition-all duration-500 pointer-events-none ${
+                      isSelected
+                        ? "bg-gradient-to-tr from-amber-500/45 via-yellow-400/35 to-amber-600/30 blur-2xl opacity-100 scale-125"
+                        : "bg-amber-500/15 blur-xl opacity-40 scale-100"
                     }`}
-                  />
-                  {/* {isActive && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        resumeOrbit();
-                      }}
-                      className="p-1 rounded-full text-neutral-400 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
-                      aria-label="Close"
-                      title="Resume orbit"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  )} */}
+                  /> */}
+
+                  {/* Badge Disc */}
+                  <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#1d273a] via-[#121927] to-[#0a0e17]  shadow-[inset_0_2px_4px_rgba(255,255,255,0.16),inset_0_-3px_6px_rgba(0,0,0,0.65),0_12px_28px_rgba(0,0,0,0.7)] flex items-center justify-center">
+                    {/* Inner gold accent rim */}
+                    {/* <div className="absolute inset-[3px] rounded-full border border-amber-400/15 pointer-events-none" /> */}
+
+                    {/* Original Lucide Icon with Ambient Gold Color & Glow */}
+                    <div className={`transition-transform duration-500 ${isSelected ? "scale-105" : "scale-95"}`}>
+                      <Icon
+                        className={`w-10 h-10 sm:w-20 sm:h-20 stroke-[1.8] text-[#FFBF00] transition-colors duration-300`}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <h3 className="text-2xl lg:text-[2.25rem] font-bold text-white mb-2 leading-tight">
-                  {card.title}
-                </h3>
-                <p className="text-sm lg:text-base text-neutral-300 font-normal leading-[1.35]">
-                  {card.description}
-                </p>
+                {/* Card Title */}
+                <div className="flex flex-col items-center mt-10 mb-auto">
+                  <h3 className="text-2xl sm:text-[1.85rem] lg:text-3xl font-bold text-white tracking-tight leading-tight">
+                    {card.title}
+                  </h3>
 
-                {/* {isActive && (
-                  <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-[#FFBF00]/90">
-                    <span className="font-semibold tracking-wide">CF&amp;CO Principle</span>
-                    <span className="text-neutral-400">Click to resume orbit</span>
-                  </div>
-                )} */}
+                  {/* Small Gold Accent Bar */}
+                  <div
+                    className={`w-7 sm:w-8 h-[2.5px] rounded-full my-2.5 sm:my-3 transition-all duration-500 ${
+                      isSelected
+                        ? "bg-[#FFBF00] shadow-[0_0_10px_rgba(255,191,0,0.8)] scale-110"
+                        : "bg-[#FFBF00]/60"
+                    }`}
+                  />
+
+                  {/* Principle Description */}
+                  <p className="text-xs sm:text-sm lg:text-[0.95rem] text-neutral-300 font-normal leading-[1.2] max-w-[240px] sm:max-w-[260px] mx-auto">
+                    {card.description}
+                  </p>
+                </div>
+
+                {/* Card Footer Principle Indicator */}
+                {/* <div className="mt-4 pt-3 border-t border-white/5 w-full flex items-center justify-center text-[11px] sm:text-xs">
+                  {isSelected ? (
+                    <span className="font-semibold text-[#FFBF00] tracking-wide flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FFBF00] animate-pulse" />
+                      CF&amp;CO Principle 0{i + 1}
+                    </span>
+                  ) : (
+                    <span className="text-neutral-500 hover:text-neutral-300 transition-colors">
+                      Click to focus
+                    </span>
+                  )}
+                </div> */}
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
 
+     
+      {/* <footer className="relative z-20 flex flex-col items-center gap-3">
+        
+        <div className="flex items-center gap-3">
+          
+          <button
+            type="button"
+            onClick={handlePrev}
+            aria-label="Previous principle"
+            className="w-8 h-8 rounded-full border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/15 hover:border-amber-400/40 active:scale-95 transition-all cursor-pointer flex items-center justify-center"
+          >
+            <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
 
-      <div className="flex lg:hidden flex-col items-center w-full max-w-lg mx-auto z-10 mt-2 sm:mt-0">
-        {/* Mobile Graphic Centerpiece */}
-        <div className="relative w-full h-[280px] sm:h-[380px] flex items-center justify-center overflow-hidden my-2">
-          {/* Fried Chicken GIF (Rendered ONLY on mobile/tablet to prevent duplicate decoding) */}
-          {isDesktop !== true && (
-            <div className="relative w-[430px] sm:w-[650px] aspect-square z-10 flex items-center justify-center pointer-events-none">
-              <Image
-                src="/chicken-orbit-v2.gif"
-                alt="Crispy Fried Chicken Orbit"
-                fill
-                unoptimized
-                className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)] pointer-events-none"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Mobile Single Card Slider with Indicator */}
-        <div
-          className="relative w-full px-2 mt-2 z-40 max-w-[390px] flex flex-col items-center"
-          onMouseEnter={() => setIsMobilePaused(true)}
-          onMouseLeave={() => setIsMobilePaused(false)}
-          onTouchStart={() => setIsMobilePaused(true)}
-          onTouchEnd={() => setIsMobilePaused(false)}
-        >
-          {/* Card Showcase with AnimatePresence */}
-          <div className="relative w-full min-h-[195px] sm:min-h-[210px] flex items-center justify-center">
-            <AnimatePresence mode="wait" custom={slideDirection}>
-              <motion.div
-                key={CARDS[mobileIndex].id}
-                custom={slideDirection}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.25}
-                onDragEnd={(_, info) => {
-                  if (info.offset.x < -40 || info.velocity.x < -150) {
-                    handleNextMobile();
-                  } else if (info.offset.x > 40 || info.velocity.x > 150) {
-                    handlePrevMobile();
-                  }
-                }}
-                className="w-full relative backdrop-blur-xl rounded-2xl p-5 sm:p-6 shadow-[0_16px_40px_rgba(0,0,0,0.7)] text-left bg-[#1d232e]/95 border border-[#FFBF00]/50 shadow-[0_0_30px_rgba(255,191,0,0.22)] cursor-grab active:cursor-grabbing overflow-hidden"
-              >
-                {/* Auto-advance progress line at top edge of card */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-white/5 overflow-hidden">
-                  <motion.div
-                    key={`bar-${mobileIndex}-${isMobilePaused}`}
-                    initial={{ width: "0%" }}
-                    animate={{ width: isMobilePaused ? undefined : "100%" }}
-                    transition={{ duration: 4.0, ease: "linear" }}
-                    className="h-full bg-[#FFBF00]"
-                  />
-                </div>
-
-                {/* Card Header with Icon and Principle number */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-10 h-10 rounded-xl bg-[#FFBF00]/10 border border-[#FFBF00]/25 flex items-center justify-center">
-                      {React.createElement(CARDS[mobileIndex].icon, {
-                        className: "w-5 h-5 stroke-[1.8] text-[#FFBF00]",
-                      })}
-                    </div>
-                    <span className="text-xs uppercase tracking-wider font-semibold text-[#FFBF00]/90">
-                      CF&amp;CO Principle 0{mobileIndex + 1}
-                    </span>
-                  </div>
-                  {/* <span className="text-xs font-mono text-white/50">
-                    {mobileIndex + 1} / {CARDS.length}
-                  </span> */}
-                </div>
-
-                <h3 className="text-2xl sm:text-[1.75rem] font-bold text-white mb-2 leading-tight">
-                  {CARDS[mobileIndex].title}
-                </h3>
-                <p className="text-sm sm:text-base text-neutral-300 font-normal leading-[1.35]">
-                  {CARDS[mobileIndex].description}
-                </p>
-              </motion.div>
-            </AnimatePresence>
+        
+          <div className="flex items-center gap-2 px-2">
+            {CARDS.map((c, idx) => {
+              const isSelected = activeIndex === idx;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => handleSelect(idx)}
+                  aria-label={`Go to ${c.title}`}
+                  className={`relative h-2 rounded-full overflow-hidden transition-all duration-300 cursor-pointer ${
+                    isSelected
+                      ? "w-8 bg-[#FFBF00] shadow-[0_0_12px_rgba(255,191,0,0.8)]"
+                      : "w-2 bg-white/20 hover:bg-white/40"
+                  }`}
+                >
+                  
+                  {isSelected && (
+                    <motion.div
+                      key={`progress-${activeIndex}-${isPaused}`}
+                      initial={{ width: "0%" }}
+                      animate={{ width: isPaused ? undefined : "100%" }}
+                      transition={{ duration: AUTOPLAY_INTERVAL / 1000, ease: "linear" }}
+                      className="absolute inset-0 bg-white/40"
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Slider Indicators and Arrow Controls */}
-          <div className="flex items-center justify-center gap-3 mt-4 z-40">
-            {/* <button
-              type="button"
-              onClick={handlePrevMobile}
-              aria-label="Previous card"
-              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 active:scale-95 transition-all cursor-pointer"
-            >
-              <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button> */}
-
-            {/* Indicator Dots */}
-            <div className="flex items-center gap-2">
-              {CARDS.map((c, i) => {
-                const isActive = i === mobileIndex;
-                return (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => handleSelectMobile(i)}
-                    aria-label={`Go to ${c.title}`}
-                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                      isActive
-                        ? "w-8 bg-[#FFBF00] shadow-[0_0_12px_rgba(255,191,0,0.7)]"
-                        : "w-2.5 bg-white/20 hover:bg-white/40"
-                    }`}
-                  />
-                );
-              })}
-            </div>
-
-            {/* <button
-              type="button"
-              onClick={handleNextMobile}
-              aria-label="Next card"
-              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 active:scale-95 transition-all cursor-pointer"
-            >
-              <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button> */}
-          </div>
+         
+          <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Next principle"
+            className="w-8 h-8 rounded-full border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/15 hover:border-amber-400/40 active:scale-95 transition-all cursor-pointer flex items-center justify-center"
+          >
+            <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
-      </div>
+
+       
+        <div className="flex items-center gap-1.5 text-[11px] text-neutral-400/80 font-mono tracking-wider uppercase">
+          <span>{isPaused ? "Paused" : "Auto-rotating"}</span>
+          <span className="text-[#FFBF00]">·</span>
+          <span className="text-white/60">0{activeIndex + 1} / 03</span>
+        </div>
+      </footer> */}
     </section>
   );
 };
