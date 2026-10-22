@@ -10,7 +10,7 @@ export const NAV_ITEMS: NavLink[] = [
   { label: "Location", href: "/location" },
   { label: "Menu", href: "/menu" },
   { label: "Career", href: "/career" },
-  { label: "News & Blogs", href: "/news-blogs" },
+  { label: "Blogs", href: "/blogs" },
 ];
 
 export const NAV_CTA: NavLink = { label: "Contact Us", href: "/contact" };
@@ -22,5 +22,5 @@ export const FOOTER_LINKS: NavLink[] = [
   { label: "Franchise", href: "/franchise" },
   { label: "Policies", href: "/policies" },
   { label: "Contact Us", href: "/contact" },
-  { label: "News & Blogs", href: "/news-blogs" },
+  { label: "Blogs", href: "/blogs" },
 ];

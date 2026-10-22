@@ -10,6 +10,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cfoco.com'),
   title: "CFOCO - Crispy Since 2011",
   description: "CFOCO is a crispy chicken kitchen that has been serving delicious fried chicken since 2011. Our secret recipe and commitment to quality have made us a favorite among chicken lovers.",
 };

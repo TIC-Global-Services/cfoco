@@ -17,8 +17,7 @@ const navLinks: FooterNavLink[] = [
   { label: "Franchise", href: "/franchise" },
    { label: "Policies", href: "/policies" },
   { label: "Contact Us", href: "/contact" },
-  { label: "News & Blogs", href: "/news-blogs" },
- 
+  { label: "Blogs", href: "/blogs" },
 ];
 
 const socialLinks = [
