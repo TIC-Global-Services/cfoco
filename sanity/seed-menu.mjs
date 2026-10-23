@@ -80,7 +80,7 @@ async function seed() {
       description: item.description,
       imageUrl: item.image,
       order: count,
-      badge: count <= 5 ? '🔥 Best Selling' : 'Signature',
+      badge: '',
       isBestSeller: count <= 5,
     };
 

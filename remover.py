@@ -17,10 +17,11 @@ Optional:
 """
 
 import argparse
+import gc
 import sys
 from pathlib import Path
 
-from rembg import remove
+from rembg import remove, new_session
 from PIL import Image
 
 
@@ -35,19 +36,22 @@ IMAGE_EXTENSIONS = {
 
 
 def remove_backgrounds(input_folder: Path, suffix: str):
-    # Find all images directly inside the folder
+    # Find all images directly inside the folder, excluding already processed suffix files
     images = [
         path
         for path in input_folder.iterdir()
-        if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS
+        if path.is_file()
+        and path.suffix.lower() in IMAGE_EXTENSIONS
+        and not (suffix and path.stem.endswith(suffix))
     ]
 
     if not images:
-        print(f"No images found in: {input_folder}")
+        print(f"No images found in: {input_folder}", flush=True)
         return
 
-    print(f"Found {len(images)} image(s).\n")
+    print(f"Found {len(images)} image(s) to process.\n", flush=True)
 
+    session = new_session("u2net")
     success = 0
     failed = 0
 
@@ -59,17 +63,20 @@ def remove_backgrounds(input_folder: Path, suffix: str):
             )
 
             with Image.open(image_path) as image:
-                # Remove background
-                result = remove(image)
+                # Remove background using persistent session
+                result = remove(image, session=session)
 
                 # Save transparent PNG
                 result.save(output_path)
+                del result
 
+            gc.collect()
             success += 1
 
             print(
                 f"[{index}/{len(images)}] "
-                f"OK -> {output_path.name}"
+                f"OK -> {output_path.name}",
+                flush=True
             )
 
         except Exception as e:
