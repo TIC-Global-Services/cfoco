@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getAllPosts } from '@/sanity/lib/client';
+import { getAllLocationSlugs } from '@/sanity/lib/locations';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cfoco.com';
@@ -50,19 +51,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // 2. Dynamic Blog Pages from Sanity CMS (with graceful fallback)
+  let blogRoutes: MetadataRoute.Sitemap = [];
   try {
     const { posts } = await getAllPosts();
-    const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+    blogRoutes = posts.map((post) => ({
       url: `${baseUrl}/blogs/${post.slug}`,
       lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
       changeFrequency: 'weekly',
       priority: 0.7,
     }));
-
-    return [...staticRoutes, ...blogRoutes];
   } catch (error) {
     console.error('Error fetching blog posts for sitemap:', error);
-    return staticRoutes;
   }
+
+  let locationRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const locationSlugs = await getAllLocationSlugs();
+    locationRoutes = locationSlugs.map((slug) => ({
+      url: `${baseUrl}/location/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+  } catch (error) {
+    console.error('Error fetching location slugs for sitemap:', error);
+  }
+
+  return [...staticRoutes, ...blogRoutes, ...locationRoutes];
 }

@@ -170,7 +170,7 @@ export const SAMPLE_POSTS: Post[] = [
       bio: 'Agronomist and Q-grader working directly with smallholder coffee cooperatives worldwide.',
       image: {
         asset: {
-          url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+          url: '  ',
         },
       },
     },

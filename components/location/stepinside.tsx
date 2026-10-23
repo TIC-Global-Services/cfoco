@@ -17,8 +17,13 @@ const LiquidGlass = dynamic(
 
 
 
-const StepInside = () => {
-  const total = locationsData.length;
+interface StepInsideProps {
+  locations?: LocationData[];
+}
+
+const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) => {
+  const data = locations && locations.length > 0 ? locations : locationsData;
+  const total = data.length;
 
   // We render 3 copies: [set0][set1][set2]. The "real" center set is set1.
   // virtualIndex tracks position inside the full tripled array.
@@ -39,17 +44,22 @@ const StepInside = () => {
     window.addEventListener("resize", checkMobile);
 
     return () => window.removeEventListener("resize", checkMobile);
-  }, [])
+  }, []);
+
+  // Sync virtualIndex if locations length changes
+  useEffect(() => {
+    setVirtualIndex(total);
+  }, [total]);
 
   // The real data index (0..total-1) for map pin & detail card
   const realIndex = ((virtualIndex % total) + total) % total;
-  const activeLocation: LocationData = locationsData[realIndex] || locationsData[0];
+  const activeLocation: LocationData = data[realIndex] || data[0];
   // Constants for the carousel track
   const ITEM_WIDTH = isMobile ? 210 : 380; // px width of each slot
   const ITEM_GAP = 20;    // px gap between items
   const STEP = ITEM_WIDTH + ITEM_GAP; // total distance per item
   // Tripled list for seamless looping
-  const tripled = [...locationsData, ...locationsData, ...locationsData];
+  const tripled = [...data, ...data, ...data];
 
   // After a transition ends, silently snap back to the middle set if we drifted out
   const handleTransitionEnd = useCallback(() => {

@@ -4,128 +4,94 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { matter } from "@/font/fonts";
 import menuData from "@/public/menu_data.json";
+import { MenuItem, MenuCategory } from "@/sanity/lib/menu";
+import { MenuItemModal } from "./MenuItemModal";
 
-interface Category {
+interface CategoryItem {
   id: string;
   name: string;
-  icon: React.ReactNode;
+  icon?: string | React.ReactNode;
 }
 
-interface MenuItem {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  category: string;
-  categoryName: string;
-}
+// Fallback JSON data
+const defaultItems: MenuItem[] = (menuData.items as unknown) as MenuItem[];
 
-// Cast the JSON data
-const allItems: MenuItem[] = menuData.items as MenuItem[];
-
-const categoryIcons: Record<string, React.ReactNode> = {
-  poulet: (
-    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
-      <Image
-        src="/cfc_bucket.png"
-        alt="Poulet"
-        width={140}
-        height={140}
-        className="object-contain drop-shadow-md w-full h-full"
-      />
-    </div>
-  ),
-  burgers: (
-    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
-      <Image
-        src="/category/burger.png"
-        alt="Burgers"
-        width={140}
-        height={140}
-        className="object-contain drop-shadow-md w-full h-full"
-      />
-    </div>
-  ),
-  "riz-box": (
-    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
-      <Image
-        src="/category/riz-box.png"
-        alt="Riz Box"
-        width={140}
-        height={140}
-        className="object-contain drop-shadow-md w-full h-full"
-      />
-    </div>
-  ),
-  tacos: (
-    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
-      <Image
-        src="/category/tacos.png"
-        alt="Tacos"
-        width={140}
-        height={140}
-        className="object-contain drop-shadow-md w-full h-full"
-      />
-    </div>
-  ),
-  wraps: (
-    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
-      <Image
-        src="/category/wraps.png"
-        alt="Wraps"
-        width={140}
-        height={140}
-        className="object-contain drop-shadow-md w-full h-full"
-      />
-    </div>
-  ),
-  desserts: (
-    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
-      <Image
-        src="/category/dessert.png"
-        alt="Desserts"
-        width={140}
-        height={140}
-        className="object-contain drop-shadow-md w-full h-full"
-      />
-    </div>
-  ),
-  sides: (
-    <div className="flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px]">
-      <Image
-        src="/category/sides.png"
-        alt="Sides"
-        width={140}
-        height={140}
-        className="object-contain drop-shadow-md w-full h-full"
-      />
-    </div>
-  ),
+const categoryIcons: Record<string, string> = {
+  poulet: "/cfc_bucket.png",
+  burgers: "/category/burger.png",
+  "riz-box": "/category/riz-box.png",
+  tacos: "/category/tacos.png",
+  wraps: "/category/wraps.png",
+  desserts: "/category/dessert.png",
+  sides: "/category/sides.png",
 };
 
-// Build categories array in display order from JSON
-const categories: Category[] = (menuData.categories as { id: string; name: string }[]).map(
+const defaultCategories: CategoryItem[] = (menuData.categories as { id: string; name: string }[]).map(
   (cat) => ({
     id: cat.id,
     name: cat.name,
-    icon: categoryIcons[cat.id] ?? null,
+    icon: categoryIcons[cat.id] || "/cfc_bucket.png",
   })
 );
 
 const ITEMS_PER_PAGE = 8;
 
-const MenuSection: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? "poulet");
-  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+interface MenuSectionProps {
+  categories?: MenuCategory[];
+  initialItems?: MenuItem[];
+}
+
+const MenuSection: React.FC<MenuSectionProps> = ({
+  categories: dynamicCategories,
+  initialItems = defaultItems,
+}) => {
+  // Normalize categories from Sanity or fallback
+  const resolvedCategories: CategoryItem[] =
+    dynamicCategories && dynamicCategories.length > 0
+      ? dynamicCategories.map((c) => ({
+          id: c.slug || c.id,
+          name: c.name,
+          icon: c.icon || categoryIcons[c.slug || c.id] || "/cfc_bucket.png",
+        }))
+      : defaultCategories;
+
+  const allItems = initialItems && initialItems.length > 0 ? initialItems : defaultItems;
+
+  const [activeCategory, setActiveCategory] = useState<string>(
+    resolvedCategories[0]?.id ?? "poulet"
+  );
+  const [visibleCount, setVisibleCount] = useState<number>(ITEMS_PER_PAGE);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+
+  // Check if item has modal/cardData configured in CMS
+  const hasModalDetails = (item: MenuItem): boolean => {
+    const cd = item.cardData;
+    return Boolean(
+      (cd?.detailedDescription && cd.detailedDescription.trim().length > 0) ||
+      (cd?.includes && cd.includes.length > 0) ||
+      (cd?.gallery && cd.gallery.length > 0) ||
+      (cd?.highlights && cd.highlights.length > 0) ||
+      (item.detailedDescription && item.detailedDescription.trim().length > 0) ||
+      (item.includes && item.includes.length > 0) ||
+      (item.gallery && item.gallery.length > 0) ||
+      (item.highlights && item.highlights.length > 0)
+    );
+  };
+
+  // Sync activeCategory if categories change
+  useEffect(() => {
+    if (resolvedCategories.length > 0 && !resolvedCategories.some((c) => c.id === activeCategory)) {
+      setActiveCategory(resolvedCategories[0].id);
+    }
+  }, [resolvedCategories, activeCategory]);
 
   const checkScroll = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    // Allow a small buffer of 6px to avoid jitter
     setCanScrollLeft(scrollLeft > 6);
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 6);
   }, []);
@@ -151,7 +117,13 @@ const MenuSection: React.FC = () => {
     };
   }, [checkScroll]);
 
-  const filtered = allItems.filter((item) => item.category === activeCategory);
+  // Match items by category slug or name (case-insensitive for non-technical client ease)
+  const filtered = allItems.filter((item) => {
+    const itemCat = (item.category || "").toLowerCase().trim();
+    const activeCat = (activeCategory || "").toLowerCase().trim();
+    return itemCat === activeCat;
+  });
+
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
@@ -175,7 +147,7 @@ const MenuSection: React.FC = () => {
     <section
       className={`relative w-full px-4 sm:px-6 lg:px-[0%] pb-20 select-none ${matter.className}`}
     >
-      {/* Category Navigation Bar - Scrollable with Smart Dynamic Arrows */}
+      {/* Category Navigation Bar - Scrollable with Dynamic Arrows */}
       <div className="relative w-full mb-10 sm:mb-16 group/nav">
         {/* Left Edge Gradient Fade */}
         <div
@@ -184,7 +156,7 @@ const MenuSection: React.FC = () => {
           }`}
         />
 
-        {/* Left Arrow Button - only visible when scrolled right */}
+        {/* Left Arrow Button */}
         <button
           onClick={() => {
             scrollRef.current?.scrollBy({ left: -280, behavior: "smooth" });
@@ -212,8 +184,10 @@ const MenuSection: React.FC = () => {
             scrollbarWidth: "none",
           }}
         >
-          {categories.map((cat) => {
+          {resolvedCategories.map((cat) => {
             const isActive = activeCategory === cat.id;
+            const iconSrc = typeof cat.icon === "string" ? cat.icon : "/cfc_bucket.png";
+
             return (
               <button
                 key={cat.id}
@@ -222,13 +196,19 @@ const MenuSection: React.FC = () => {
                 className="relative flex flex-col items-center justify-end group flex-shrink-0 focus:outline-none transition-all duration-300 w-[120px] sm:w-[15vw] md:w-[15vw] cursor-pointer pb-2"
               >
                 <div
-                  className={`flex items-center justify-center transition-all duration-300 ${
+                  className={`flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px] transition-all duration-300 ${
                     isActive
                       ? "grayscale-0 opacity-100 scale-110 drop-shadow-xl"
                       : "grayscale opacity-55 contrast-125 group-hover:grayscale-0 group-hover:opacity-90 group-hover:scale-105"
                   }`}
                 >
-                  {cat.icon}
+                  <Image
+                    src={iconSrc}
+                    alt={cat.name}
+                    width={140}
+                    height={140}
+                    className="object-contain drop-shadow-md w-full h-full"
+                  />
                 </div>
                 <span
                   className={`mt-4 text-base sm:text-lg md:text-xl lg:text-2xl transition-all duration-200 tracking-tight text-center whitespace-nowrap ${
@@ -239,21 +219,12 @@ const MenuSection: React.FC = () => {
                 >
                   {cat.name}
                 </span>
-
-                {/* Subtle Active Indicator Dot / Pill */}
-                {/* <div
-                  className={`mt-2 h-1 rounded-full transition-all duration-300 ${
-                    isActive
-                      ? "w-8 bg-[#CC1518] shadow-[0_0_8px_rgba(204,21,24,0.5)]"
-                      : "w-0 bg-transparent"
-                  }`}
-                /> */}
               </button>
             );
           })}
         </div>
 
-        {/* Right Arrow Button - only visible when more content exists to the right */}
+        {/* Right Arrow Button */}
         <button
           onClick={() => {
             scrollRef.current?.scrollBy({ left: 280, behavior: "smooth" });
@@ -286,40 +257,64 @@ const MenuSection: React.FC = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
           <p className="text-lg font-medium">No items yet for this category.</p>
-          <p className="text-sm mt-1 opacity-70">Run <code className="bg-white/30 px-1 rounded">python remover.py</code> to process images.</p>
+          <p className="text-sm mt-1 opacity-70">Add items to this category in Sanity Studio.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-6 px-[5%]">
-          {visible.map((item) => (
-            <div
-              key={item.id}
-              className="group relative rounded-3xl p-6 sm:p-7 bg-white/10 hover:bg-white/30 backdrop-blur-xs border-2 border-white/10 hover:border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 cursor-pointer overflow-hidden"
-            >
-              {/* Ambient Card Glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/5 opacity-60 pointer-events-none rounded-3xl" />
+          {visible.map((item) => {
+            const hasDetails = hasModalDetails(item);
+            return (
+              <div
+                key={item.id}
+                onClick={() => {
+                  if (hasDetails) {
+                    setSelectedItem(item);
+                  }
+                }}
+                className={`group relative rounded-3xl p-6 sm:p-7 bg-white/10 hover:bg-white/30 backdrop-blur-xs border-2 border-white/10 hover:border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 overflow-hidden ${
+                  hasDetails ? "cursor-pointer" : ""
+                }`}
+              >
+                {/* Ambient Card Glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/5 opacity-60 pointer-events-none rounded-3xl" />
 
-              {/* Food Image Container */}
-              <div className="relative w-full aspect-square max-h-64 sm:max-h-[35dvh] mx-auto flex items-center justify-center mb-6 overflow-hidden rounded-2xl">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-contain transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
+                {/* Badge if present */}
+                {(item.badge || item.isBestSeller) && (
+                  <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-white/90 text-[#CC1518] text-xs font-bold shadow-sm border border-neutral-100">
+                    {item.badge || "🔥 Best Selling"}
+                  </div>
+                )}
 
-              {/* Content info */}
-              <div className="relative z-10 flex flex-col">
-                <h3 className="text-2xl sm:text-3xl font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors">
-                  {item.title}
-                </h3>
-                <p className="mt-1 text-sm sm:text-lg font-medium text-neutral-700/90 leading-snug">
-                  {item.description}
-                </p>
+                {/* Food Image Container */}
+                <div className="relative w-full aspect-square max-h-64 sm:max-h-[35dvh] mx-auto flex items-center justify-center mb-6 overflow-hidden rounded-2xl">
+                  <Image
+                    src={item.image || "/cfc_bucket.png"}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-contain transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                {/* Content info */}
+                <div className="relative z-10 flex flex-col">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h3 className="text-2xl sm:text-3xl font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors">
+                      {item.title}
+                    </h3>
+                    {item.price && (
+                      <span className="text-lg sm:text-xl font-extrabold text-neutral-800 shrink-0">
+                        {item.price}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-sm sm:text-lg font-medium text-neutral-700/90 leading-snug">
+                    {item.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -345,6 +340,12 @@ const MenuSection: React.FC = () => {
           </button>
         ) : null}
       </div>
+
+      {/* Pop-up detail modal (only rendered/opened if an item with modal cardData is clicked) */}
+      <MenuItemModal
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+      />
     </section>
   );
 };

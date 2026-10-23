@@ -34,7 +34,7 @@ export default async function NewsBlogsPage() {
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight mb-6">
               Stories from the{' '}
               <span className="bg-gradient-to-r from-white via-[#ffd67a] to-[#e9b949] bg-clip-text text-transparent">
-                Heart of Coffee
+                Heart of CFOCO
               </span>
             </h1>
             <p className="text-base sm:text-lg text-neutral-300 font-light leading-relaxed">

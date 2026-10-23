@@ -1,8 +1,10 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { getLocationBySlug, getAllLocationSlugs } from "@/data/locations";
+import { getLocationBySlug, getAllLocationSlugs } from "@/sanity/lib/locations";
 import LocationDetail from "@/components/location/LocationDetail";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 interface PageProps {
   params: Promise<{
@@ -11,7 +13,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const slugs = getAllLocationSlugs();
+  const slugs = await getAllLocationSlugs();
   return slugs.map((slug) => ({
     slug,
   }));
@@ -19,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const location = getLocationBySlug(slug);
+  const location = await getLocationBySlug(slug);
 
   if (!location) {
     return {
@@ -40,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function LocationPage({ params }: PageProps) {
   const { slug } = await params;
-  const location = getLocationBySlug(slug);
+  const location = await getLocationBySlug(slug);
 
   if (!location) {
     notFound();

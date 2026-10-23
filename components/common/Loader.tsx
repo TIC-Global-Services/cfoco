@@ -13,7 +13,8 @@ type Phase = "loading" | "leaving" | "gone";
 export default function GlobalLoader() {
   const pathname = usePathname();
   // decided once, on the first render: later client navigations never show it
-  const [phase, setPhase] = useState<Phase>(pathname === "/" ? "gone" : "loading");
+  const isExcluded = pathname === "/" || pathname?.startsWith("/studio");
+  const [phase, setPhase] = useState<Phase>(isExcluded ? "gone" : "loading");
   const [value, setValue] = useState(0);
 
   useEffect(() => {
