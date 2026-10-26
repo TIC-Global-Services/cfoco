@@ -137,20 +137,20 @@ export function useLightControls() {
     "Light",
     {
       background: "#04060c",
-      intensity: { value: 0.5, min: 0, max: 4, step: 0.05, label: "environment" },
+      intensity: { value: 0.32, min: 0, max: 4, step: 0.05, label: "environment" },
       exposure: { value: 0.5, min: 0.2, max: 3, step: 0.05 },
       ambient: folder({
         ambientColor: { value: "#ffffff", label: "color" },
-        ambientIntensity: { value: 0.3, min: 0, max: 3, step: 0.01, label: "intensity" },
+        ambientIntensity: { value: 0.12, min: 0, max: 3, step: 0.01, label: "intensity" },
       }),
       hemisphere: folder({
         hemiSky: { value: "#9db4ff", label: "sky" },
         hemiGround: { value: "#2a1a10", label: "ground" },
-        hemiIntensity: { value: 3, min: 0, max: 3, step: 0.01, label: "intensity" },
+        hemiIntensity: { value: 1.5, min: 0, max: 3, step: 0.01, label: "intensity" },
       }),
       key: folder({
         keyColor: { value: "#fff1e0", label: "color" },
-        keyIntensity: { value: 1, min: 0, max: 10, step: 0.05, label: "intensity" },
+        keyIntensity: { value: 0.6, min: 0, max: 10, step: 0.05, label: "intensity" },
         keyPos: { ...xyz([4, 6, 8] as V3, 0.25), label: "position" },
       }),
       fill: folder({
@@ -183,14 +183,14 @@ export function useHeroLightControls() {
   return useControls(
     "Hero light",
     {
-      envIntensity: { value: 0.75, min: 0, max: 3, step: 0.05, label: "studio reflections" },
+      envIntensity: { value: 1.05, min: 0, max: 3, step: 0.05, label: "studio reflections" },
       key: folder({
-        keyColor: { value: "#ffd3a1", label: "color" },
-        keyIntensity: { value: 32, min: 0, max: 150, step: 1, label: "intensity" },
+        keyColor: { value: "#ffd9b0", label: "color" },
+        keyIntensity: { value: 48, min: 0, max: 150, step: 1, label: "intensity" },
       }),
       rim: folder({
-        rimColor: { value: "#86a8ff", label: "color" },
-        rimIntensity: { value: 70, min: 0, max: 250, step: 1, label: "intensity" },
+        rimColor: { value: "#cfdcff", label: "color" },
+        rimIntensity: { value: 55, min: 0, max: 250, step: 1, label: "intensity" },
       }),
       cursor: folder({
         cursorColor: { value: "#fff0dc", label: "color" },
@@ -202,8 +202,42 @@ export function useHeroLightControls() {
         bucketEnv: { value: 1.5, min: 0, max: 4, step: 0.05, label: "reflections" },
         bucketGloss: { value: 0.8, min: 0, max: 1, step: 0.01, label: "gloss (clearcoat)" },
         bucketKeyColor: { value: "#fff3e2", label: "light color" },
-        bucketKeyIntensity: { value: 45, min: 0, max: 200, step: 1, label: "light" },
+        bucketKeyIntensity: { value: 55, min: 0, max: 200, step: 1, label: "light" },
       }),
+    },
+    { collapsed: true },
+  );
+}
+
+// ---------- Machines, kitchen and robot lighting ----------
+
+/** the ordering kiosks and the vending machine (world mode in RisingMachines) */
+export function useMachineLightControls() {
+  return useControls(
+    "Machine light",
+    {
+      keyIntensity: { value: 70, min: 0, max: 250, step: 1, label: "key" },
+      keyColor: { value: "#fff1e0", label: "key color" },
+      rimIntensity: { value: 40, min: 0, max: 250, step: 1, label: "rim" },
+      rimColor: { value: "#9fb6ff", label: "rim color" },
+      fillIntensity: { value: 16, min: 0, max: 100, step: 0.5, label: "front fill" },
+      fillColor: { value: "#ffe6c8", label: "fill color" },
+      envIntensity: { value: 1.5, min: 0, max: 4, step: 0.05, label: "reflections" },
+      screenGlow: { value: 1, min: 0, max: 3, step: 0.05, label: "screen glow ×" },
+    },
+    { collapsed: true },
+  );
+}
+
+/** the kitchen's point lights (Kitchen) and the robot's follow spot (ServeRobot) */
+export function useKitchenLightControls() {
+  return useControls(
+    "Kitchen + robot light",
+    {
+      kitchenIntensity: { value: 1, min: 0, max: 4, step: 0.05, label: "kitchen ×" },
+      kitchenColor: { value: "#ffd9a8", label: "kitchen color" },
+      robotIntensity: { value: 30, min: 0, max: 150, step: 1, label: "robot spot" },
+      robotColor: { value: "#fff1e0", label: "robot spot color" },
     },
     { collapsed: true },
   );
@@ -218,7 +252,7 @@ export function usePostControls() {
       enabled: true,
       bloom: { value: 0.4, min: 0, max: 3, step: 0.05 },
       threshold: { value: 1, min: 0, max: 2, step: 0.01, label: "bloom threshold" },
-      vignette: { value: 0.4, min: 0, max: 1, step: 0.01 },
+      vignette: { value: 0.6, min: 0, max: 1, step: 0.01 },
     },
     { collapsed: true },
   );

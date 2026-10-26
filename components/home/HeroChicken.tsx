@@ -7,7 +7,7 @@ import * as THREE from "three";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import "@/lib/home/draco";
 import { normalizeByPrincipalAxes } from "@/lib/home/shape";
-import { Spring, damp, easeOutCubic, sampleTrack, scrollState, smoothstep } from "@/lib/home/scroll";
+import { Spring, damp, robotRide, sampleTrack, scrollState, smoothstep } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
 import { portraitness } from "./CameraRig";
 import {
@@ -18,6 +18,7 @@ import {
   BUCKET_YAW,
   CAMERA,
   CHICKEN_KEYS,
+  CHICKEN_LAND_Y,
   CHICKEN_LENGTH,
   DROP_SIM,
   DROP_START,
@@ -26,6 +27,8 @@ import {
   SWAP_FROM,
   SWAP_TO,
   TOSS_OUT,
+  ROBOT_RUN,
+  WALL,
   type Pose,
 } from "./config";
 import {
@@ -162,7 +165,7 @@ export function HeroChicken() {
       if (!m.isMesh) return;
       m.frustumCulled = false; // morphed — bounds are unreliable
       const mat = (m.material as THREE.MeshStandardMaterial).clone();
-      mat.transparent = true; // opacity drives the opening fade-in
+      mat.transparent = true; // drawn in the transparent pass, like the bucket (see SceneText)
       mat.envMap = studio;
       applyDissolve(mat, dissolve, "raw");
       m.material = mat;
@@ -424,6 +427,15 @@ export function HeroChicken() {
       yawQ: new THREE.Quaternion(),
       leanQ: new THREE.Quaternion(),
       lightC: new THREE.Vector3(),
+      // the bucket's own frame (the lens frame, turning toward the wall's view as it travels there)
+      wallQuat: new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(WALL.eye, WALL.target, new THREE.Vector3(0, 1, 0))),
+      baseQuat: new THREE.Quaternion(),
+      spinQ: new THREE.Quaternion(),
+      wallPos: new THREE.Vector3(),
+      lr: new THREE.Vector3(),
+      lu: new THREE.Vector3(),
+      lb: new THREE.Vector3(),
+      lf: new THREE.Vector3(),
     }),
     [],
   );
@@ -474,8 +486,8 @@ export function HeroChicken() {
     tmp.cursor.y = damp(tmp.cursor.y, scrollState.pointer.y, 12, delta);
     const drift = hero.parallax;
 
-    // ---- the baked drop: plays in real time once the chicken is tossed out, rewinds when scrolled back ----
-    const simTarget = p >= TOSS_OUT ? DROP_SIM.settle : DROP_SIM.from;
+    // ---- the drop: plays in real time once the chicken lets go (it falls; the pile jostles on impact), rewinds when scrolled back ----
+    const simTarget = p >= DROP_START ? DROP_SIM.settle : DROP_SIM.from;
     const prevSim = it.simT;
     if (Number.isNaN(it.simT)) it.simT = simTarget; // (re)load mid-page: no replay
     else if (it.simT < simTarget) it.simT = Math.min(simTarget, it.simT + delta);
@@ -484,7 +496,7 @@ export function HeroChicken() {
       for (const a of rig.dropActions) a.time = it.simT;
       rig.dropMixer.update(0);
     }
-    rig.faller.visible = it.simT > DROP_SIM.from + 0.01;
+    rig.faller.visible = false; // the hero chicken is the piece that falls
     const falling = it.simT > prevSim && it.simT < DROP_SIM.impact;
     scrollState.dropFall = falling ? THREE.MathUtils.clamp((it.simT - (DROP_SIM.impact - 0.35)) / 0.35, 0, 1) : 0;
     // landing: the bucket takes the hit
@@ -504,7 +516,31 @@ export function HeroChicken() {
     rig.bucket.visible = p > BUCKET_KEYS[0].p && p < BUCKET_KEYS[BUCKET_KEYS.length - 1].p;
     // smaller, but with its rim kept where it was (base raised by what the cup lost)
     place(rig.bucket, b.x, b.y + BUCKET_HEIGHT * b.s * (1 - fit) + dip * 0.12, b.d, b.s * fit, bucketC.offset);
+    // …then, once the chicken is in, it travels to the ordering wall (world space) and stands in front of the middle kiosk,
+    // turned to the camera's view of the wall; then it slips into that kiosk's screen, shrinking (see WALL)
+    const wb = smoothstep(WALL.panFrom + 0.05, WALL.panTo, p);
     rig.bucket.quaternion.copy(tmp.camQuat);
+    if (wb > 0) {
+      tmp.wallPos.copy(WALL.bucket);
+      tmp.wallPos.y += Math.sin(Math.PI * wb) * 0.35; // a little hop on the way
+      rig.bucket.position.lerp(tmp.wallPos, wb);
+      rig.bucket.scale.multiplyScalar(1 - 0.38 * wb); // smaller beside the kiosks (they stand ≈2 m)
+      rig.bucket.quaternion.slerp(tmp.wallQuat, wb);
+      // then the robot slides up beside it and takes it on its tray (see ROBOT_RUN): it hops over and rides along
+      const load = smoothstep(ROBOT_RUN.loadFrom, ROBOT_RUN.loadTo, p);
+      if (load > 0 && robotRide.ready) {
+        tmp.wallPos.copy(robotRide.tray);
+        tmp.wallPos.y += Math.sin(Math.PI * load) * 0.2; // lifted straight over and set down
+        rig.bucket.position.lerp(tmp.wallPos, load);
+        rig.bucket.scale.multiplyScalar(1 + (ROBOT_RUN.bucketScale - 1) * load);
+        rig.bucket.quaternion.multiply(tmp.spinQ.setFromAxisAngle(tmp.up, load * Math.PI * 2)); // turns once on the way
+      }
+    }
+    tmp.baseQuat.copy(rig.bucket.quaternion);
+    tmp.lr.set(1, 0, 0).applyQuaternion(tmp.baseQuat);
+    tmp.lu.set(0, 1, 0).applyQuaternion(tmp.baseQuat);
+    tmp.lf.set(0, 0, -1).applyQuaternion(tmp.baseQuat);
+    tmp.lb.copy(tmp.lf).negate();
     // pivots on its base: wobble rolls it on screen, the cursor tips it toward you
     rig.bucket.rotateZ(wob * 0.06 - tmp.pointer.x * 0.04 * ix.lean);
     rig.bucket.rotateX(tmp.pointer.y * 0.035 * ix.lean + bucketHover * 0.03);
@@ -518,14 +554,16 @@ export function HeroChicken() {
     const hop = it.hop.step(0, delta, 55, 0.28);
     const idle = (Math.sin(t * 0.9) * 0.025 + Math.sin(t * 1.7 + 1.3) * 0.01) * motion;
     const cx = free.x + tmp.pointer.x * 0.1 * drift;
-    const cy = free.y + tmp.pointer.y * 0.06 * drift + idle + hop * 0.08;
+    // gravity: the chicken falls from its hover into the cup, landing exactly when the pile is hit
+    const fall = THREE.MathUtils.clamp((it.simT - DROP_SIM.from) / (DROP_SIM.impact - DROP_SIM.from), 0, 1);
+    const cy = free.y + (CHICKEN_LAND_Y - free.y) * fall * fall + tmp.pointer.y * 0.06 * drift + idle + hop * 0.08;
     const cd = free.d;
     const cs = free.s;
 
-    // the opening: invisible at rest, fades + scales in and turns into place as you start scrolling
+    // the opening: rises from below the frame (see CHICKEN_KEYS) and turns into place as you start scrolling
     const fade = smoothstep(0, FADE_IN, p);
     const hoverAmt = it.hoverS.step((it.hover && p < DROP_START) || it.dragging ? 1 : 0, delta, 140, 0.45);
-    const grow = (0.78 + 0.22 * easeOutCubic(fade)) * (1 + (ix.hoverScale - 1) * hoverAmt);
+    const grow = 1 + (ix.hoverScale - 1) * hoverAmt;
     // a touch smaller on phones, so it clears the title above and the copy below
     place(rig.spin, cx, cy, cd, cs * grow * (1 - 0.15 * portrait), chickenC.offset);
 
@@ -559,8 +597,7 @@ export function HeroChicken() {
     }
     it.dragDX = it.dragDY = 0;
 
-    rig.spin.visible = fade > 0.002 && p < TOSS_OUT;
-    for (const m of rig.fadeMats) m.opacity = fade;
+    rig.spin.visible = fade > 0.002 && it.simT < DROP_SIM.impact;
     tmp.yawQ.setFromAxisAngle(tmp.up, yaw.current + it.yaw + Math.min(p, DROP_START) * 1.6 + deg(hero.spin) - (1 - fade) * 2.2);
 
     // lean: toward the cursor, into the path's motion (banking), idle sway, drag pitch
@@ -618,15 +655,15 @@ export function HeroChicken() {
     const bh = BUCKET_HEIGHT * b.s * fit * bucketC.scale * S;
     const c = tmp.lightC
       .copy(rig.bucket.position)
-      .addScaledVector(tmp.camUp, bh * 1.05)
+      .addScaledVector(tmp.lu, bh * 1.05)
       .lerp(rig.spin.position, 1 - smoothstep(DROP_START, TOSS_OUT, p));
 
-    lights.key.position.copy(c).addScaledVector(tmp.right, -2.2 * S).addScaledVector(tmp.camUp, 2.4 * S).addScaledVector(tmp.back, 2.6 * S);
+    lights.key.position.copy(c).addScaledVector(tmp.lr, -2.2 * S).addScaledVector(tmp.lu, 2.4 * S).addScaledVector(tmp.lb, 2.6 * S);
     lights.key.target.position.copy(c);
     lights.key.color.set(heroL.keyColor);
     lights.key.intensity = heroL.keyIntensity * presence;
 
-    lights.rim.position.copy(c).addScaledVector(tmp.right, 2.0 * S).addScaledVector(tmp.camUp, 1.8 * S).addScaledVector(tmp.fwd, 2.4 * S);
+    lights.rim.position.copy(c).addScaledVector(tmp.lr, 2.0 * S).addScaledVector(tmp.lu, 1.8 * S).addScaledVector(tmp.lf, 2.4 * S);
     lights.rim.target.position.copy(c);
     lights.rim.color.set(heroL.rimColor);
     lights.rim.intensity = heroL.rimIntensity * presence;
@@ -635,6 +672,7 @@ export function HeroChicken() {
     tmp.ray.set(tmp.cursor.x, tmp.cursor.y, 0.5).unproject(cam).sub(cam.position).normalize();
     const along = Math.max(0.5, cd - 1.3) / Math.max(0.2, tmp.ray.dot(tmp.fwd));
     lights.cursor.position.copy(cam.position).addScaledVector(tmp.ray, along);
+    lights.cursor.visible = heroL.cursorIntensity > 0; // an unlit light still costs every pixel's shader a loop
     lights.cursor.color.set(heroL.cursorColor);
     lights.cursor.intensity =
       heroL.cursorIntensity * presence * (scrollState.hasPointer ? 1 : 0.5) * (1 + (heroL.cursorHoverBoost - 1) * Math.max(hoverAmt, bucketHover));
@@ -644,9 +682,9 @@ export function HeroChicken() {
     lights.glow.position.copy(c).addScaledVector(tmp.fwd, 0.7 * S).addScaledVector(tmp.camUp, -0.3 * S);
     // bucket key: from the camera side, above and right, aimed at the printed band
     const bucketIn = smoothstep(BUCKET_KEYS[0].p, BUCKET_KEYS[1].p, p) * (1 - smoothstep(BUCKET_KEYS[2].p, BUCKET_KEYS[3].p, p));
-    tmp.pos.copy(rig.bucket.position).addScaledVector(tmp.camUp, bh * 0.55);
+    tmp.pos.copy(rig.bucket.position).addScaledVector(tmp.lu, bh * 0.55);
     lights.bucketKey.target.position.copy(tmp.pos);
-    lights.bucketKey.position.copy(tmp.pos).addScaledVector(tmp.right, 1.6 * S).addScaledVector(tmp.camUp, 2.2 * S).addScaledVector(tmp.back, 3.2 * S);
+    lights.bucketKey.position.copy(tmp.pos).addScaledVector(tmp.lr, 1.6 * S).addScaledVector(tmp.lu, 2.2 * S).addScaledVector(tmp.lb, 3.2 * S);
     lights.bucketKey.color.set(heroL.bucketKeyColor);
     lights.bucketKey.intensity = heroL.bucketKeyIntensity * bucketIn;
 

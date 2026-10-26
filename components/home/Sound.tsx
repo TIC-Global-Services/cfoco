@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { clamp, onProgress, scrollState, smoothstep, soundApi } from "@/lib/home/scroll";
 import { type Sfx, createSfx } from "@/lib/home/sfx";
-import { DROP_START, FOOTER_FROM, HOVER_AT, RISE_FROM, SWAP_FROM, SWAP_TO, TOSS_OUT } from "./config";
+import { FOOTER_FROM, HOVER_AT, RISE_FROM, SWAP_FROM, SWAP_TO } from "./config";
 import { useSoundControls } from "./controls";
 
 type State = "locked" | "on" | "off";
@@ -113,9 +113,8 @@ export function Sound() {
         const fry = smoothstep(SWAP_FROM - 0.2, SWAP_FROM + 0.15, p) * (1 - smoothstep(SWAP_TO - 0.05, SWAP_TO + 0.3, p));
         a.setFry(fry * L.volume);
 
-        // whoosh: inside the rise and the toss as loud as you scroll through them, then the fall
+        // whoosh: inside the rise as loud as you scroll through it, then the fall
         const tRise = clamp((p - RISE_FROM) / (HOVER_AT - RISE_FROM));
-        const tToss = clamp((p - DROP_START) / (TOSS_OUT - DROP_START));
         const fall = scrollState.dropFall;
         const motion = Math.min(1, speed * 0.75);
         if (fall > 0) {
@@ -123,8 +122,6 @@ export function Sound() {
           a.setWhoosh((0.3 + 0.7 * fall * fall) * L.whoosh, 1700 - 1250 * fall);
         } else if (p > RISE_FROM && p < HOVER_AT) {
           a.setWhoosh(motion * Math.sqrt(Math.sin(Math.PI * tRise)) * L.whoosh, 350 + 1500 * tRise);
-        } else if (p > DROP_START && p < TOSS_OUT) {
-          a.setWhoosh(motion * Math.sqrt(Math.sin(Math.PI * tToss)) * L.whoosh, 600 + 1600 * tToss);
         } else {
           a.setWhoosh(0, 500);
         }

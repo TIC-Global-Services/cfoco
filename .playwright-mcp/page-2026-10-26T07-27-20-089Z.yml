@@ -1,0 +1,37 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - region "Site":
+      - navigation "Main":
+        - link "CFOCO home" [ref=e4] [cursor=pointer]:
+          - /url: /
+        - list [ref=e5]:
+          - listitem [ref=e6]:
+            - link "Home" [ref=e7] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e9]:
+            - link "Our Story" [ref=e10] [cursor=pointer]:
+              - /url: /our-story
+          - listitem [ref=e12]:
+            - link "Location" [ref=e13] [cursor=pointer]:
+              - /url: /location
+          - listitem [ref=e15]:
+            - link "Menu" [ref=e16] [cursor=pointer]:
+              - /url: /menu
+          - listitem [ref=e18]:
+            - link "Career" [ref=e19] [cursor=pointer]:
+              - /url: /career
+          - listitem [ref=e21]:
+            - link "Blogs" [ref=e22] [cursor=pointer]:
+              - /url: /blogs
+        - link "Contact Us" [ref=e24] [cursor=pointer]:
+          - /url: /contact
+    - generic:
+      - region "A Journey of Ingredients, Flavor, and Craft"
+    - region "Sound":
+      - button "Turn sound on" [ref=e28] [cursor=pointer]:
+        - generic [ref=e32]: SOUND OFF
+    - status "Loading 0%" [ref=e33]:
+      - generic [ref=e39]:
+        - generic [ref=e40]: Selecting fresh cuts
+        - generic [ref=e41]: 0%
+  - button "Open Next.js Dev Tools" [ref=e49] [cursor=pointer]

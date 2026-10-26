@@ -1,0 +1,128 @@
+[    2599ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[    2643ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[    2916ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[    3257ms] [LOG] [Fast Refresh] done in 452ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[    8724ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[   12720ms] [WARNING] The resource http://localhost:3000/logo.svg was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[   26153ms] [WARNING] The resource http://localhost:3000/logo.svg was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[   60510ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[   60633ms] [LOG] [Fast Refresh] done in 230ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[   63608ms] [WARNING] The resource http://localhost:3000/logo.svg was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[   75836ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[   76130ms] [LOG] [Fast Refresh] done in 395ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[   78961ms] [WARNING] The resource http://localhost:3000/logo.svg was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  194921ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  198057ms] [WARNING] The resource http://localhost:3000/logo.svg was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  200341ms] [LOG] [Fast Refresh] done in 5522ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  218794ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  238307ms] [LOG] [Fast Refresh] done in 19379ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  245304ms] [WARNING] The resource http://localhost:3000/logo.svg was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  245322ms] [LOG] THREE.WebGLRenderer: Context Lost. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  247978ms] TypeError: Cannot read properties of null (reading 'alpha')
+    at EffectComposer.setRenderer (http://localhost:3000/_next/static/chunks/node_modules_postprocessing_build_index_0xi_cl7.js:1184:71)
+    at new EffectComposer (http://localhost:3000/_next/static/chunks/node_modules_postprocessing_build_index_0xi_cl7.js:1129:14)
+    at EffectComposer.EffectComposer.useEffect (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_postprocessing_dist_index_0w1y-q9.js:563:36)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:13287:44)
+    at B (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:7924:70)
+    at ca (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:10992:101)
+    at Yp (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11039:32)
+    at sh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11809:47)
+    at Jr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11798:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11785:210)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11780:359)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11760:191)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11760:191)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+[  248530ms] TypeError: Cannot read properties of null (reading 'alpha')
+    at EffectComposer.setRenderer (http://localhost:3000/_next/static/chunks/node_modules_postprocessing_build_index_0xi_cl7.js:1184:71)
+    at new EffectComposer (http://localhost:3000/_next/static/chunks/node_modules_postprocessing_build_index_0xi_cl7.js:1129:14)
+    at EffectComposer.EffectComposer.useEffect (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_postprocessing_dist_index_0w1y-q9.js:563:36)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:13287:44)
+    at B (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:7924:70)
+    at ca (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:10992:101)
+    at Yp (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11039:32)
+    at sh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11809:47)
+    at Jr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11798:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11785:210)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11780:359)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11760:191)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11791:25)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11760:191)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+    at wr (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11748:21)
+    at lh (http://localhost:3000/_next/static/chunks/node_modules_%40react-three_fiber_dist_1l_phw6._.js:11757:131)
+[  249192ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  249734ms] [LOG] [Fast Refresh] done in 778ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  252743ms] [WARNING] The resource http://localhost:3000/logo.svg was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  275713ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  276127ms] [LOG] [Fast Refresh] done in 514ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[  277087ms] [WARNING] The resource http://localhost:3000/logo.svg was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0

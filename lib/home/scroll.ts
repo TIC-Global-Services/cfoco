@@ -1,3 +1,5 @@
+import { Quaternion, Vector3 } from "three";
+
 // Shared, mutable scroll state. Written by Lenis, read inside rAF loops
 // (R3F useFrame + DOM overlay) so scrolling never triggers React renders.
 
@@ -26,6 +28,13 @@ export const scrollState = {
   /** sound toggle (Sound → the 3D turntable) */
   sound: "locked" as "locked" | "on" | "off",
   soundHover: false,
+};
+
+/** the serving robot (ServeRobot → HeroChicken): where its tray is, in the room, while the bucket rides on it */
+export const robotRide = {
+  tray: new Vector3(),
+  quaternion: new Quaternion(),
+  ready: false,
 };
 
 /** set by Experience once Lenis exists — lets dev tools jump to a section */

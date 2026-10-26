@@ -3,7 +3,8 @@
 import { Canvas, useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer, EffectGroup, ToneMapping, Vignette } from "@react-three/postprocessing";
 import { type BloomEffect, ToneMappingMode } from "postprocessing";
-import { Suspense, useEffect, useMemo } from "react";
+import { PerformanceMonitor } from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { CameraRig } from "./CameraRig";
@@ -13,18 +14,14 @@ import { Kitchen } from "./Kitchen";
 import { RisingMachines } from "./RisingMachines";
 import { Particles } from "./Particles";
 import { Restaurant } from "./Restaurant";
+import { ServeRobot } from "./ServeRobot";
 import { SceneText } from "./SceneText";
 import { Turntable } from "./Turntable";
 import {
   KIOSKS,
+  KIOSK_FACING,
   KIOSK_HEIGHT,
   KIOSK_URL,
-  MEAL,
-  MEAL_MACHINES,
-  ROBOT,
-  ROBOT_FACING,
-  ROBOT_HEIGHT,
-  ROBOT_URL,
   VENDING,
   VENDING_FACING,
   VENDING_HEIGHT,
@@ -52,9 +49,18 @@ export default function Scene() {
     [],
   );
 
+  // resolution: capped by how many pixels the post chain (bloom, glass, MSAA, half-float) has to push — on a big retina
+  // screen 1.5× is ~3.7 M px a frame — then it follows the frame rate: down a step when the machine can't keep up, back up when it can
+  const cap = useMemo(() => {
+    const area = window.innerWidth * window.innerHeight;
+    const byPixels = Math.sqrt((lite ? 1.1e6 : 1.7e6) / Math.max(area, 1));
+    return Math.min(lite ? 1 : 1.5, Math.max(0.75, byPixels));
+  }, [lite]);
+  const [dpr, setDpr] = useState(cap);
+
   return (
     <Canvas
-      dpr={lite ? [1, 1.25] : [1, 1.5]}
+      dpr={dpr}
       // opaque drawing buffer: the HDR buffer carries alpha 0 under 3D text (bloom mask), never the page
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance", stencil: false }}
       camera={{ fov: 53.7, near: 0.05, far: 60, position: [0, 2, 11.5] }}
@@ -73,27 +79,18 @@ export default function Scene() {
         <Restaurant />
         <Kitchen />
         <HeroChicken />
-        <RisingMachines url={KIOSK_URL} height={KIOSK_HEIGHT} machines={KIOSKS} />
-        <RisingMachines url={VENDING_URL} height={VENDING_HEIGHT} machines={VENDING} facing={VENDING_FACING} />
-        <RisingMachines url={ROBOT_URL} height={ROBOT_HEIGHT} machines={ROBOT} facing={ROBOT_FACING} />
-        {MEAL.items.map((m, i) => (
-          <RisingMachines
-            key={m.url}
-            url={m.url}
-            height={m.height}
-            machines={MEAL_MACHINES[i]}
-            phoneFit={0.62}
-            lit={i === 0}
-            clips={m.url.endsWith("fries.glb")}
-          />
-        ))}
+        <RisingMachines url={KIOSK_URL} height={KIOSK_HEIGHT} machines={KIOSKS} facing={KIOSK_FACING} world />
+        <RisingMachines url={VENDING_URL} height={VENDING_HEIGHT} machines={VENDING} facing={VENDING_FACING} world viewedFrom={-1} />
+        <ServeRobot />
         <SceneText />
-        <Turntable />
+        <Warmup />
+        {/* <Turntable /> */}
       </Suspense>
       <Particles lite={lite} />
+      <PerformanceMonitor flipflops={3} onDecline={() => setDpr((d) => Math.max(0.75, d * 0.85))} onIncline={() => setDpr((d) => Math.min(cap, d / 0.85))} />
       <CameraRig />
       {post.enabled && (
-        <EffectComposer multisampling={lite ? 0 : 4} frameBufferType={THREE.HalfFloatType}>
+        <EffectComposer multisampling={lite ? 0 : 2} frameBufferType={THREE.HalfFloatType}>
           {/* own pass: the glass re-samples its input, so bloom has to be baked in before it */}
           <EffectGroup>
             <Bloom
@@ -190,6 +187,48 @@ function Studio({ intensity, exposure }: { intensity: number; exposure: number }
     scene.environmentIntensity = intensity;
     gl.toneMappingExposure = exposure;
   }, [scene, gl, intensity, exposure]);
+
+  return null;
+}
+
+/**
+ * Compiles every shader and uploads every texture up front, while the loader is still up: the robot, the kitchen's
+ * furniture, the hero's pieces and the machines are all hidden until their scroll step, and the first frame each
+ * shows in used to stall on its programs (and 1 GB of textures) mid-scroll.
+ */
+function Warmup() {
+  const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
+  const camera = useThree((s) => s.camera);
+
+  useEffect(() => {
+    let dead = false;
+    const id = window.setTimeout(() => {
+      const hidden: THREE.Object3D[] = [];
+      const seen = new Set<THREE.Texture>();
+      scene.traverse((o) => {
+        if (!o.visible && !(o as THREE.Light).isLight) {
+          hidden.push(o);
+          o.visible = true;
+        }
+        const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+        for (const mat of Array.isArray(m) ? m : m ? [m] : []) {
+          for (const v of Object.values(mat)) if (v && (v as THREE.Texture).isTexture) seen.add(v as THREE.Texture);
+        }
+      });
+      try {
+        gl.compile(scene, camera);
+        if (!dead) seen.forEach((t) => gl.initTexture(t));
+      } catch {
+        /* a warm-up only */
+      }
+      hidden.forEach((o) => (o.visible = false));
+    }, 1200);
+    return () => {
+      dead = true;
+      window.clearTimeout(id);
+    };
+  }, [gl, scene, camera]);
 
   return null;
 }

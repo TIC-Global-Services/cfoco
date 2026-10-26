@@ -7,7 +7,7 @@ import "@/lib/home/draco";
 import { LOGO } from "./config";
 import { useLogoControls, useRoomControls } from "./controls";
 
-const URL = "/models/interior_environment.glb";
+const URL = "/models/interior_environment2.glb";
 
 /** the neon CFOCO logo on the back wall: its group, and its letters (white), comb (red), beak / ring (yellow) */
 const LOGO_NODE = "Empty005"; // "Empty.005" — the loader strips the dots

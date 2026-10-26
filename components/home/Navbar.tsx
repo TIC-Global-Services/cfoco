@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { NAV_CTA, NAV_ITEMS } from "@/data/navLinks";
+import { onProgress, smoothstep } from "@/lib/home/scroll";
+import { FOOTER_FROM, FOOTER_TO } from "./config";
 
 // Top navigation. Like the copy and the footer it is drawn in 3D by SceneText
 // (type, logo, pills and icons), pinned to the lens so it holds still while the
@@ -14,9 +16,25 @@ import { NAV_CTA, NAV_ITEMS } from "@/data/navLinks";
 const LINKS = NAV_ITEMS;
 
 export function Navbar() {
+  const root = useRef<HTMLElement>(null);
+
+  // the footer has its own links: the navbar fades out as it comes in (SceneText reads the opacity / visibility, like the sections')
+  useEffect(
+    () =>
+      onProgress((p) => {
+        const el = root.current;
+        if (!el) return;
+        const k = 1 - smoothstep(FOOTER_FROM - 0.1, FOOTER_FROM + 0.25, p);
+        el.style.opacity = k.toFixed(3);
+        el.style.visibility = k > 0.001 ? "visible" : "hidden";
+      }),
+    [],
+  );
+
   return (
     // a <section> so SceneText picks it up; always shown, revealed with the opening
     <section
+      ref={root}
       aria-label="Site"
       data-index={-1}
       data-t3d-pinned
