@@ -12,14 +12,28 @@ interface LocationVirtualTourProps {
 export default function LocationVirtualTour({ location }: LocationVirtualTourProps) {
   const [showTourModal, setShowTourModal] = useState(false);
 
+  const backgroundImage = location.virtualTour?.backgroundImage || location.images?.virtualTour || "/cfc_ambience.jpg";
+  const heading = location.virtualTour?.heading || location.tourTitle || "Step Inside The Crunch";
+  const buttonText = location.virtualTour?.buttonText || location.tourSubtitle || "Take A Virtual Tour";
+  const virtualTourUrl = location.virtualTour?.virtualTourUrl;
+
+  const handleTourClick = () => {
+    if (virtualTourUrl && virtualTourUrl.startsWith("http")) {
+      window.open(virtualTourUrl, "_blank", "noopener,noreferrer");
+    } else {
+      setShowTourModal(true);
+    }
+  };
+
   return (
     <>
       {/* 3. VIRTUAL TOUR BANNER (Matches Bottom Card in Mockup) */}
-      <div className="relative w-full aspect-[9/16] md:aspect-[16/8] rounded-[20px] sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl group cursor-pointer"
-        // onClick={() => setShowTourModal(true)}
+      <div
+        onClick={handleTourClick}
+        className="relative w-full aspect-[9/16] md:aspect-[16/8] rounded-[20px] sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl group cursor-pointer"
       >
         <Image
-          src={"/cfc_ambience.jpg"}
+          src={backgroundImage}
           alt={`${location.name} Virtual Tour`}
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -32,14 +46,14 @@ export default function LocationVirtualTour({ location }: LocationVirtualTourPro
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
           <div className="max-w-xs md:max-w-5xl leading-none">
             <h2 className="text-[2.125rem] sm:text-5xl lg:text-[4.375rem] font-bold text-[#F6B90B] tracking-tight drop-shadow-md">
-              {location.tourTitle}
+              {heading}
             </h2>
 
             <button
               type="button"
-              className="mt-4 sm:mt-6 inline-flex items-center gap-2 text-base md:text-lg lg:text-xl font-semibold text-white"
+              className="mt-4 sm:mt-6 inline-flex items-center gap-2 text-base md:text-lg lg:text-xl font-semibold text-white group-hover:text-[#FFBF00] transition-colors"
             >
-              <span>{location.tourSubtitle}</span>
+              <span>{buttonText}</span>
               <RectangleGoggles />
             </button>
           </div>

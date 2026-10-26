@@ -5,24 +5,44 @@ import { PortableText as PortableTextComponent, PortableTextComponents } from '@
 import Image from 'next/image';
 import { urlForImage } from '@/sanity/lib/image';
 
+function getImageDimensions(value: any) {
+  const ref = value?.asset?._ref || value?.asset?._id;
+  if (ref) {
+    const match = ref.match(/-(\d+)x(\d+)-/);
+    if (match) {
+      return {
+        width: parseInt(match[1], 10),
+        height: parseInt(match[2], 10),
+      };
+    }
+  }
+  if (value?.asset?.metadata?.dimensions) {
+    return value.asset.metadata.dimensions;
+  }
+  return { width: 1200, height: 800 };
+}
+
 const portableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }: any) => {
       const imageUrl = value?.asset?.url || (urlForImage(value)?.url() ?? null);
       if (!imageUrl) return null;
 
+      const dimensions = getImageDimensions(value);
+
       return (
-        <figure className="my-10 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-2xl">
-          <div className="relative aspect-[16/9] w-full overflow-hidden">
+        <figure className="my-10 flex flex-col items-center">
+          <div className="overflow-hidden max-w-full">
             <Image
               src={imageUrl}
               alt={value.alt || 'CFOCO Blog Image'}
-              fill
-              className="object-cover transition-transform duration-700 hover:scale-105"
+              width={dimensions.width}
+              height={dimensions.height}
+              className="w-auto h-auto max-w-full max-h-[650px] object-contain rounded-2xl mx-auto"
             />
           </div>
           {value.caption && (
-            <figcaption className="p-3 text-center text-xs tracking-wider uppercase text-neutral-400">
+            <figcaption className="mt-3 text-center text-xs tracking-wider uppercase text-neutral-400">
               {value.caption}
             </figcaption>
           )}

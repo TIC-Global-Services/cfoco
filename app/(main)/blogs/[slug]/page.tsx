@@ -89,7 +89,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <article className="relative z-10 w-full flex-1 flex flex-col">
-      <div className="max-w-4xl mx-auto px-6 sm:px-8 py-10 sm:py-16 w-full">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 py-10 sm:py-16 w-full">
         {/* Back Link */}
         <Reveal>
           <div className="mb-8">
@@ -142,7 +142,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       src={authorImageUrl}
                       alt={post.author?.name || 'Author'}
                       fill
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                 ) : (
@@ -183,8 +183,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               alt={post.mainImage?.alt || post.title}
               fill
               priority
-              sizes="(max-width: 1024px) 100vw, 900px"
-              className="object-cover"
+              // sizes="(max-width: 1024px) 100vw, 900px"
+              className="object-contain"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
           </div>
@@ -212,7 +212,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       src={authorImageUrl}
                       alt={post.author.name}
                       fill
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                 )}

@@ -11,6 +11,14 @@ interface LocationBentoGridProps {
 export default function LocationBentoGrid({ location }: LocationBentoGridProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const kioskImg = location.experience?.orderingKioskImage || location.images?.kiosks || "/locations/kiosks.jpg";
+  const diningImg = location.experience?.interiorImages?.dining || location.images?.dining || "/locations/dining.jpg";
+  const barStoolsImg = location.experience?.interiorImages?.barStools || location.images?.barStools || "/locations/bar_stools.jpg";
+  const counterImg = location.experience?.interiorImages?.counter || location.images?.counter || "/locations/counter.jpg";
+  const signatureDish = location.experience?.signatureDish || location.signatureDish;
+  const openingHours = location.experience?.openingHours || location.openingHours;
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (!scrollRef.current) return;
@@ -67,7 +75,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
           <div className="w-full shrink-0 snap-center">
             <div className="relative w-full h-[280px] rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src={location.images.kiosks}
+                src={kioskImg}
                 alt="CFC Digital Ordering Kiosks"
                 fill
                 className="object-cover"
@@ -79,7 +87,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
           <div className="w-full shrink-0 snap-center">
             <div className="relative w-full h-[300px] rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src={location.images.dining}
+                src={diningImg}
                 alt="CFC Dining Area"
                 fill
                 className="object-cover"
@@ -91,7 +99,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
           <div className="w-full shrink-0 snap-center">
             <div className="relative w-full h-[280px] rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src={location.images.barStools}
+                src={barStoolsImg}
                 alt="CFC High Top Seating"
                 fill
                 className="object-cover"
@@ -112,10 +120,10 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
                 <div className="flex items-end gap-3">
                   <div className="text-right mb-[2px]">
                     <p className="text-[#CC1518] font-normal text-sm">
-                      {location.signatureDish.title}
+                      {signatureDish.title}
                     </p>
                     <p className="text-white font-medium text-xs">
-                      {location.signatureDish.subtitle}
+                      {signatureDish.subtitle}
                     </p>
                   </div>
                   <div className="text-right">
@@ -135,7 +143,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
           <div className="w-full shrink-0 snap-center">
             <div className="relative w-full h-[300px] rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src={location.images.counter}
+                src={counterImg}
                 alt="CFC Service Counter"
                 fill
                 className="object-cover"
@@ -153,9 +161,9 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
                   </div>
                   <div className="text-sm leading-snug text-white font-medium mb-[2px]">
                     <p>
-                      {location.openingHours.weekday} · {location.openingHours.weekend}
+                      {openingHours.weekday} · {openingHours.weekend}
                     </p>
-                    <p>{location.openingHours.sunday}</p>
+                    <p>{openingHours.sunday}</p>
                   </div>
                 </div>
               </div>
@@ -185,7 +193,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         {/* Kiosks Card */}
         <div className="relative w-full h-[260px] md:h-[300px] md:col-span-7 rounded-2xl sm:rounded-3xl overflow-hidden group shadow-lg">
           <Image
-            src={location.images.kiosks}
+            src={kioskImg}
             alt="CFC Digital Ordering Kiosks"
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -195,7 +203,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         {/* Dining Room Card */}
         <div className="relative w-full h-[260px] md:h-[300px] md:col-span-5 rounded-2xl sm:rounded-3xl overflow-hidden group shadow-lg">
           <Image
-            src={location.images.dining}
+            src={diningImg}
             alt="CFC Dining Area"
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -205,7 +213,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         {/* Bar Stools / High-top Seating Card */}
         <div className="relative w-full h-[300px] md:h-full md:col-span-4 md:row-span-2 rounded-2xl sm:rounded-3xl overflow-hidden group shadow-lg">
           <Image
-            src={location.images.barStools}
+            src={barStoolsImg}
             alt="CFC High Top Seating"
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -225,10 +233,10 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
             <div className="flex items-end gap-3 md:gap-4 lg:gap-6">
               <div className="text-right mb-[2px] md:mb-1 lg:mb-1">
                 <p className="text-[#CC1518] font-normal text-sm md:text-lg lg:text-2xl">
-                  {location.signatureDish.title}
+                  {signatureDish.title}
                 </p>
                 <p className="text-white font-medium text-xs md:text-lg lg:text-2xl">
-                  {location.signatureDish.subtitle}
+                  {signatureDish.subtitle}
                 </p>
               </div>
               <div className="text-right lg:leading-[12]">
@@ -246,7 +254,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         {/* Opening Hours Card */}
         <div className="relative w-full h-[200px] md:h-[240px] md:col-span-8 rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg group">
           <Image
-            src={location.images.counter}
+            src={counterImg}
             alt="CFC Service Counter"
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -265,9 +273,9 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
               </div>
               <div className="text-sm md:text-lg lg:text-2xl leading-snug text-white font-medium mb-[2px] sm:mb-1">
                 <p>
-                  {location.openingHours.weekday} · {location.openingHours.weekend}
+                  {openingHours.weekday} · {openingHours.weekend}
                 </p>
-                <p>{location.openingHours.sunday}</p>
+                <p>{openingHours.sunday}</p>
               </div>
             </div>
           </div>

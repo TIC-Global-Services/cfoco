@@ -65,11 +65,46 @@ export const LOCATIONS_QUERY = groq`
     _id,
     name,
     "slug": slug.current,
-    cityTag,
+    city,
+    country,
+    address,
+    latitude,
+    longitude,
     badge,
-    coordinates {
-      lat,
-      lng
+    order,
+    "hero": {
+      "backgroundImage": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
+      "locationLabel": coalesce(heroLocationLabel, hero.locationLabel, cityTag, name),
+      "heading": coalesce(heroHeading, hero.heading, name),
+      "description": coalesce(heroDescription, hero.description, tagline.description, ""),
+      "directionsUrl": coalesce(heroDirectionsUrl, hero.directionsUrl, mapsUrl, "")
+    },
+    "experience": {
+      "interiorImages": {
+        "dining": coalesce(interiorImages.dining.asset->url, interiorImages.diningUrl, experience.interiorImages.dining.asset->url, experience.interiorImages.diningUrl, images.dining.asset->url, images.diningUrl, "/locations/dining.jpg"),
+        "barStools": coalesce(interiorImages.barStools.asset->url, interiorImages.barStoolsUrl, experience.interiorImages.barStools.asset->url, experience.interiorImages.barStoolsUrl, images.barStools.asset->url, images.barStoolsUrl, "/locations/bar_stools.jpg"),
+        "counter": coalesce(interiorImages.counter.asset->url, interiorImages.counterUrl, experience.interiorImages.counter.asset->url, experience.interiorImages.counterUrl, images.counter.asset->url, images.counterUrl, "/locations/counter.jpg")
+      },
+      "orderingKioskImage": coalesce(orderingKioskImage.asset->url, orderingKioskImageUrl, experience.orderingKioskImage.asset->url, experience.orderingKioskImageUrl, images.kiosks.asset->url, images.kiosksUrl, "/locations/kiosks.jpg"),
+      "signatureDish": {
+        "badge": coalesce(signatureDish.badge, experience.signatureDish.badge, "Signature Dish"),
+        "title": coalesce(signatureDish.title, experience.signatureDish.title, ""),
+        "subtitle": coalesce(signatureDish.subtitle, experience.signatureDish.subtitle, ""),
+        "image": coalesce(signatureDish.image.asset->url, signatureDish.imageUrl, experience.signatureDish.image.asset->url, experience.signatureDish.imageUrl, "/fried-chickens.png")
+      },
+      "openingHours": coalesce(openingHours, experience.openingHours)
+    },
+    "virtualTour": {
+      "backgroundImage": coalesce(virtualTourBackgroundImage.asset->url, virtualTourBackgroundImageUrl, virtualTour.backgroundImage.asset->url, virtualTour.backgroundImageUrl, images.virtualTour.asset->url, images.virtualTourUrl, "/cfc_ambience.jpg"),
+      "heading": coalesce(virtualTourHeading, virtualTour.heading, tourTitle, "Step Inside The Crunch"),
+      "buttonText": coalesce(virtualTourButtonText, virtualTour.buttonText, tourSubtitle, "Take A Virtual Tour"),
+      "virtualTourUrl": coalesce(virtualTourUrl, virtualTour.virtualTourUrl, "")
+    },
+    // Backwards-compatible aliases
+    "cityTag": coalesce(cityTag, city, name),
+    "coordinates": {
+      "lat": coalesce(latitude, coordinates.lat, 0),
+      "lng": coalesce(longitude, coordinates.lng, 0)
     },
     mapCoords {
       top,
@@ -80,29 +115,20 @@ export const LOCATIONS_QUERY = groq`
       highlight,
       description
     },
-    address,
     phone,
-    mapsUrl,
+    "mapsUrl": coalesce(heroDirectionsUrl, hero.directionsUrl, mapsUrl, ""),
     "images": {
-      "storefront": coalesce(images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
-      "kiosks": coalesce(images.kiosks.asset->url, images.kiosksUrl, "/locations/kiosks.jpg"),
-      "dining": coalesce(images.dining.asset->url, images.diningUrl, "/locations/dining.jpg"),
-      "barStools": coalesce(images.barStools.asset->url, images.barStoolsUrl, "/locations/bar_stools.jpg"),
-      "counter": coalesce(images.counter.asset->url, images.counterUrl, "/locations/counter.jpg"),
-      "virtualTour": coalesce(images.virtualTour.asset->url, images.virtualTourUrl, "/locations/virtual_tour.jpg")
+      "storefront": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
+      "kiosks": coalesce(orderingKioskImage.asset->url, orderingKioskImageUrl, experience.orderingKioskImage.asset->url, experience.orderingKioskImageUrl, images.kiosks.asset->url, images.kiosksUrl, "/locations/kiosks.jpg"),
+      "dining": coalesce(interiorImages.dining.asset->url, interiorImages.diningUrl, experience.interiorImages.dining.asset->url, experience.interiorImages.diningUrl, images.dining.asset->url, images.diningUrl, "/locations/dining.jpg"),
+      "barStools": coalesce(interiorImages.barStools.asset->url, interiorImages.barStoolsUrl, experience.interiorImages.barStools.asset->url, experience.interiorImages.barStoolsUrl, images.barStools.asset->url, images.barStoolsUrl, "/locations/bar_stools.jpg"),
+      "counter": coalesce(interiorImages.counter.asset->url, interiorImages.counterUrl, experience.interiorImages.counter.asset->url, experience.interiorImages.counterUrl, images.counter.asset->url, images.counterUrl, "/locations/counter.jpg"),
+      "virtualTour": coalesce(virtualTourBackgroundImage.asset->url, virtualTourBackgroundImageUrl, virtualTour.backgroundImage.asset->url, virtualTour.backgroundImageUrl, images.virtualTour.asset->url, images.virtualTourUrl, "/locations/virtual_tour.jpg")
     },
-    signatureDish {
-      badge,
-      title,
-      subtitle
-    },
-    openingHours {
-      weekday,
-      weekend,
-      sunday
-    },
-    tourTitle,
-    tourSubtitle,
+    "signatureDish": coalesce(signatureDish, experience.signatureDish),
+    "openingHours": coalesce(openingHours, experience.openingHours),
+    "tourTitle": coalesce(virtualTourHeading, virtualTour.heading, tourTitle, "Step Inside The Crunch"),
+    "tourSubtitle": coalesce(virtualTourButtonText, virtualTour.buttonText, tourSubtitle, "Take A Virtual Tour"),
     features,
     stats {
       established,
@@ -117,11 +143,46 @@ export const LOCATION_BY_SLUG_QUERY = groq`
     _id,
     name,
     "slug": slug.current,
-    cityTag,
+    city,
+    country,
+    address,
+    latitude,
+    longitude,
     badge,
-    coordinates {
-      lat,
-      lng
+    order,
+    "hero": {
+      "backgroundImage": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
+      "locationLabel": coalesce(heroLocationLabel, hero.locationLabel, cityTag, name),
+      "heading": coalesce(heroHeading, hero.heading, name),
+      "description": coalesce(heroDescription, hero.description, tagline.description, ""),
+      "directionsUrl": coalesce(heroDirectionsUrl, hero.directionsUrl, mapsUrl, "")
+    },
+    "experience": {
+      "interiorImages": {
+        "dining": coalesce(interiorImages.dining.asset->url, interiorImages.diningUrl, experience.interiorImages.dining.asset->url, experience.interiorImages.diningUrl, images.dining.asset->url, images.diningUrl, "/locations/dining.jpg"),
+        "barStools": coalesce(interiorImages.barStools.asset->url, interiorImages.barStoolsUrl, experience.interiorImages.barStools.asset->url, experience.interiorImages.barStoolsUrl, images.barStools.asset->url, images.barStoolsUrl, "/locations/bar_stools.jpg"),
+        "counter": coalesce(interiorImages.counter.asset->url, interiorImages.counterUrl, experience.interiorImages.counter.asset->url, experience.interiorImages.counterUrl, images.counter.asset->url, images.counterUrl, "/locations/counter.jpg")
+      },
+      "orderingKioskImage": coalesce(orderingKioskImage.asset->url, orderingKioskImageUrl, experience.orderingKioskImage.asset->url, experience.orderingKioskImageUrl, images.kiosks.asset->url, images.kiosksUrl, "/locations/kiosks.jpg"),
+      "signatureDish": {
+        "badge": coalesce(signatureDish.badge, experience.signatureDish.badge, "Signature Dish"),
+        "title": coalesce(signatureDish.title, experience.signatureDish.title, ""),
+        "subtitle": coalesce(signatureDish.subtitle, experience.signatureDish.subtitle, ""),
+        "image": coalesce(signatureDish.image.asset->url, signatureDish.imageUrl, experience.signatureDish.image.asset->url, experience.signatureDish.imageUrl, "/fried-chickens.png")
+      },
+      "openingHours": coalesce(openingHours, experience.openingHours)
+    },
+    "virtualTour": {
+      "backgroundImage": coalesce(virtualTourBackgroundImage.asset->url, virtualTourBackgroundImageUrl, virtualTour.backgroundImage.asset->url, virtualTour.backgroundImageUrl, images.virtualTour.asset->url, images.virtualTourUrl, "/cfc_ambience.jpg"),
+      "heading": coalesce(virtualTourHeading, virtualTour.heading, tourTitle, "Step Inside The Crunch"),
+      "buttonText": coalesce(virtualTourButtonText, virtualTour.buttonText, tourSubtitle, "Take A Virtual Tour"),
+      "virtualTourUrl": coalesce(virtualTourUrl, virtualTour.virtualTourUrl, "")
+    },
+    // Backwards-compatible aliases
+    "cityTag": coalesce(cityTag, city, name),
+    "coordinates": {
+      "lat": coalesce(latitude, coordinates.lat, 0),
+      "lng": coalesce(longitude, coordinates.lng, 0)
     },
     mapCoords {
       top,
@@ -132,29 +193,20 @@ export const LOCATION_BY_SLUG_QUERY = groq`
       highlight,
       description
     },
-    address,
     phone,
-    mapsUrl,
+    "mapsUrl": coalesce(heroDirectionsUrl, hero.directionsUrl, mapsUrl, ""),
     "images": {
-      "storefront": coalesce(images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
-      "kiosks": coalesce(images.kiosks.asset->url, images.kiosksUrl, "/locations/kiosks.jpg"),
-      "dining": coalesce(images.dining.asset->url, images.diningUrl, "/locations/dining.jpg"),
-      "barStools": coalesce(images.barStools.asset->url, images.barStoolsUrl, "/locations/bar_stools.jpg"),
-      "counter": coalesce(images.counter.asset->url, images.counterUrl, "/locations/counter.jpg"),
-      "virtualTour": coalesce(images.virtualTour.asset->url, images.virtualTourUrl, "/locations/virtual_tour.jpg")
+      "storefront": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
+      "kiosks": coalesce(orderingKioskImage.asset->url, orderingKioskImageUrl, experience.orderingKioskImage.asset->url, experience.orderingKioskImageUrl, images.kiosks.asset->url, images.kiosksUrl, "/locations/kiosks.jpg"),
+      "dining": coalesce(interiorImages.dining.asset->url, interiorImages.diningUrl, experience.interiorImages.dining.asset->url, experience.interiorImages.diningUrl, images.dining.asset->url, images.diningUrl, "/locations/dining.jpg"),
+      "barStools": coalesce(interiorImages.barStools.asset->url, interiorImages.barStoolsUrl, experience.interiorImages.barStools.asset->url, experience.interiorImages.barStoolsUrl, images.barStools.asset->url, images.barStoolsUrl, "/locations/bar_stools.jpg"),
+      "counter": coalesce(interiorImages.counter.asset->url, interiorImages.counterUrl, experience.interiorImages.counter.asset->url, experience.interiorImages.counterUrl, images.counter.asset->url, images.counterUrl, "/locations/counter.jpg"),
+      "virtualTour": coalesce(virtualTourBackgroundImage.asset->url, virtualTourBackgroundImageUrl, virtualTour.backgroundImage.asset->url, virtualTour.backgroundImageUrl, images.virtualTour.asset->url, images.virtualTourUrl, "/locations/virtual_tour.jpg")
     },
-    signatureDish {
-      badge,
-      title,
-      subtitle
-    },
-    openingHours {
-      weekday,
-      weekend,
-      sunday
-    },
-    tourTitle,
-    tourSubtitle,
+    "signatureDish": coalesce(signatureDish, experience.signatureDish),
+    "openingHours": coalesce(openingHours, experience.openingHours),
+    "tourTitle": coalesce(virtualTourHeading, virtualTour.heading, tourTitle, "Step Inside The Crunch"),
+    "tourSubtitle": coalesce(virtualTourButtonText, virtualTour.buttonText, tourSubtitle, "Take A Virtual Tour"),
     features,
     stats {
       established,

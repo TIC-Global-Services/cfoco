@@ -11,12 +11,18 @@ interface LocationHeroProps {
 }
 
 export default function LocationHero({ location }: LocationHeroProps) {
+  const heroImage = location.hero?.backgroundImage || location.images?.storefront || "/location_details-hero.jpg";
+  const locationLabel = location.hero?.locationLabel || location.cityTag || location.city;
+  const heading = location.hero?.heading || location.name;
+  const description = location.hero?.description || (location.tagline ? `${location.tagline.prefix} ${location.tagline.highlight} ${location.tagline.description}` : "");
+  const directionsUrl = location.hero?.directionsUrl || location.mapsUrl || "#";
+
   return (
     <div className="relative w-full aspect-[9/16] lg:h-[800px] rounded-2xl sm:rounded-[20px] overflow-hidden border border-white/10 shadow-2xl group">
       {/* 1. TOP HERO STOREFRONT BANNER (Matches Top Card in Mockup) */}
       <Image
-        src={location.images.storefront}
-        alt={`${location.name} Storefront`}
+        src={heroImage}
+        alt={`${heading} Storefront`}
         fill
         priority
         className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -29,7 +35,7 @@ export default function LocationHero({ location }: LocationHeroProps) {
       {/* Top Right Location Pin Badge */}
       <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex items-center text-white text-xs sm:text-lg font-medium">
         <MapPinIcon className="w-5 h-5 text-[#232E45] mr-2" />
-        <span>{location.cityTag}</span>
+        <span>{locationLabel}</span>
       </div>
 
       {/* Bottom Hero Content */}
@@ -39,23 +45,20 @@ export default function LocationHero({ location }: LocationHeroProps) {
             CFC Tasty
           </span>
           <h1 className="text-[34px] md:text-[4rem] lg:text-[6.25rem] font-extrabold text-[#FFBF00] tracking-tight leading-none whitespace-pre-line">
-            {location.name}
+            {heading}
           </h1>
           <p className="text-base sm:text-base lg:text-2xl text-[#FFFFFF] font-medium tracking-tight leading-[1.2] mt-2 sm:mt-3 whitespace-pre-line">
-            {location.tagline.prefix}{" "}
-            <span className="text-[#CC1518] font-medium">{location.tagline.highlight}</span>{" "}
-            {location.tagline.description}
+            {description}
           </p>
         </div>
 
         {/* Get Directions Button */}
         <Link
-          href={location.mapsUrl}
+          href={directionsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="self-start md:self-end inline-flex items-center gap-2 bg-white text-[#232E45] hover:bg-neutral-100 font-semibold px-5 py-2.5 sm:px-8 sm:py-2.5 rounded-full text-xs md:text-lg  transition-all duration-300 shadow-xl hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transform hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
+          className="self-start md:self-end inline-flex items-center gap-2 bg-white text-[#232E45] hover:bg-neutral-100 font-semibold px-5 py-2.5 sm:px-8 sm:py-2.5 rounded-full text-xs md:text-lg transition-all duration-300 shadow-xl hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transform hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
         >
-          {/* <Navigation className="w-4 h-4 fill-black" /> */}
           <span>Get Directions</span>
         </Link>
       </div>

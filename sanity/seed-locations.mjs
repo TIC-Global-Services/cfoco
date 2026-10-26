@@ -299,23 +299,73 @@ async function seed() {
   console.log(`🚀 Starting location seed for project: ${projectId} (${dataset})...`);
 
   for (const loc of locations) {
+    const cityName = loc.cityTag.split(',')[0].trim();
     const doc = {
       _id: `location-${loc.slug}`,
       _type: 'location',
+      // 1. Basic Information (Tab 1)
       name: loc.name,
       slug: { _type: 'slug', current: loc.slug },
-      cityTag: loc.cityTag,
+      city: cityName,
+      country: 'France',
+      address: loc.address,
+      latitude: loc.coordinates.lat,
+      longitude: loc.coordinates.lng,
       badge: loc.badge,
       order: loc.order,
+
+      // 2. Hero Section (Tab 2)
+      heroBackgroundImageUrl: loc.images.storefrontUrl,
+      heroLocationLabel: loc.cityTag,
+      heroHeading: loc.name,
+      heroDescription: `${loc.tagline.prefix} ${loc.tagline.highlight} ${loc.tagline.description}`.replace(/\n/g, ' '),
+      heroDirectionsUrl: loc.mapsUrl,
+
+      // 3. Experience Section (Tab 3)
+      interiorImages: {
+        diningUrl: loc.images.diningUrl,
+        barStoolsUrl: loc.images.barStoolsUrl,
+        counterUrl: loc.images.counterUrl,
+      },
+      orderingKioskImageUrl: loc.images.kiosksUrl,
+      signatureDish: {
+        badge: loc.signatureDish.badge,
+        title: loc.signatureDish.title,
+        subtitle: loc.signatureDish.subtitle,
+        imageUrl: "/fried-chickens.png",
+      },
+      openingHours: loc.openingHours,
+
+      // 4. Virtual Tour Section (Tab 4)
+      virtualTourBackgroundImageUrl: "/cfc_ambience.jpg",
+      virtualTourHeading: loc.tourTitle || "Step Inside The Crunch",
+      virtualTourButtonText: loc.tourSubtitle || "Take A Virtual Tour",
+      virtualTourUrl: `https://my.matterport.com/show/?m=sample-${loc.slug}`,
+
+      // Backward compatibility objects
+      hero: {
+        backgroundImageUrl: loc.images.storefrontUrl,
+        locationLabel: loc.cityTag,
+        heading: loc.name,
+        description: `${loc.tagline.prefix} ${loc.tagline.highlight} ${loc.tagline.description}`.replace(/\n/g, ' '),
+        directionsUrl: loc.mapsUrl,
+      },
+      experience: {
+        orderingKioskImageUrl: loc.images.kiosksUrl,
+      },
+      virtualTour: {
+        backgroundImageUrl: "/cfc_ambience.jpg",
+        heading: loc.tourTitle || "Step Inside The Crunch",
+        buttonText: loc.tourSubtitle || "Take A Virtual Tour",
+        virtualTourUrl: `https://my.matterport.com/show/?m=sample-${loc.slug}`,
+      },
+      cityTag: loc.cityTag,
       coordinates: loc.coordinates,
       mapCoords: loc.mapCoords,
       tagline: loc.tagline,
-      address: loc.address,
       phone: loc.phone,
       mapsUrl: loc.mapsUrl,
       images: loc.images,
-      signatureDish: loc.signatureDish,
-      openingHours: loc.openingHours,
       tourTitle: loc.tourTitle,
       tourSubtitle: loc.tourSubtitle,
       features: loc.features,
