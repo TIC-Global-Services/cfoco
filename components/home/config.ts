@@ -487,3 +487,25 @@ export const MODEL_SLOTS: {
   { section: "kitchen", url: null, anchor: { forward: 4.5, right: 0.4, up: -0.6 } },
   { section: "future", url: null, anchor: { forward: 3.2, right: 0.2, up: -0.4 } },
 ];
+
+// ---------------------------------------------------------------------------
+// Lights in the three.js editor (?debug → "Lights ↔ three.js editor"): the room
+// is exported with its lights, they are moved in threejs.org/editor, and
+// `npm run lights:import <file>` writes them back into controls.ts.
+// ---------------------------------------------------------------------------
+
+/** the scene's pieces that go into the export (their root groups carry these names) */
+export const EXPORT_NAMES = {
+  restaurant: "restaurant",
+  kitchen: "kitchen",
+  machines: "machines",
+  robot: "robot",
+} as const;
+
+/** the room lights (Light panel), by the names they have in the export: keep them when editing */
+export const EDITOR_LIGHTS = {
+  key: "key light",
+  fill: "fill light",
+  point: "point light",
+  spot: "spot light",
+} as const;

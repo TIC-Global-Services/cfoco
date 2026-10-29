@@ -224,9 +224,6 @@ function boxTexture(b: NonNullable<Item["box"]>) {
 
 type Live = { x: number; y: number; z: number; rx: number; ry: number; h: number; open: number };
 
-const GLOW = new THREE.Color("#d9a46c");
-const SHADOW = new THREE.Color("#000000");
-
 const easeOutQuart = (x: number) => 1 - Math.pow(1 - x, 4);
 
 /**
@@ -249,7 +246,8 @@ function reveal(it: Item, p: number, now: number, reduced: boolean) {
   return easeOutQuart(THREE.MathUtils.clamp((k - it.order * st) / span, 0, 1));
 }
 
-export function SceneText() {
+/** `hdr`: the post chain is on (it tone-maps at the end), so the type is drawn hot to land on white after it */
+export function SceneText({ hdr = true }: { hdr?: boolean }) {
   const ctl = useTextControls();
   const [items, setItems] = useState<Item[]>([]);
   const groups = useRef<(THREE.Group | null)[]>([]);
@@ -259,10 +257,10 @@ export function SceneText() {
   const mats = useMemo(() => {
     const grad = gradientTexture();
     // solid colours and icons, made on first use
-    const extra = new Map<string, { mat: THREE.MeshBasicMaterial; base: THREE.Color }>();
+    const extra = new Map<string, { mat: THREE.MeshBasicMaterial; base: THREE.Color; boost: number }>();
     const get = (key: string, make: () => THREE.MeshBasicMaterial, color: string, boost = 1) => {
       let e = extra.get(key);
-      if (!e) extra.set(key, (e = { mat: make(), base: new THREE.Color(color).multiplyScalar(boost) }));
+      if (!e) extra.set(key, (e = { mat: make(), base: new THREE.Color(color), boost }));
       return e.mat;
     };
     return {
@@ -342,7 +340,6 @@ export function SceneText() {
       camRight: new THREE.Vector3(),
       camUp2: new THREE.Vector3(),
       camFwd: new THREE.Vector3(),
-      outline: new THREE.Color(),
     }),
     [],
   );
@@ -363,11 +360,12 @@ export function SceneText() {
     const halfH = D * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const wpp = (2 * halfH) / vh; // world units per css px at depth D
 
-    // HDR level that lands on white after exposure + tone mapping
-    const gain = 1.12 / Math.max(state.gl.toneMappingExposure, 0.05);
+    // with the post chain: the HDR level that lands on white after exposure + tone mapping; without it the type isn't
+    // tone mapped (toneMapped: false), so it is drawn at its own colours (hotter, the logo's red / yellow washed out)
+    const gain = hdr ? 1.12 / Math.max(state.gl.toneMappingExposure, 0.05) : 1;
     mats.plain.color.setScalar(gain);
     mats.gradient.color.setScalar(gain);
-    for (const { mat, base } of mats.extra.values()) mat.color.copy(base).multiplyScalar(gain);
+    for (const { mat, base, boost } of mats.extra.values()) mat.color.copy(base).multiplyScalar(gain * (hdr ? boost : 1));
     // the moving camera's frame, for sections pinned to the lens (the footer)
     const cam = state.camera as THREE.PerspectiveCamera;
     const camRight = tmp.camRight.set(1, 0, 0).applyQuaternion(cam.quaternion);
@@ -411,7 +409,7 @@ export function SceneText() {
       let trx = -d * 0.45 * away * motion;
       let try_ = 0;
       // the cursor draws a block toward it: it leans to face the pointer and floats forward
-      // (not the footer: it holds still, its links only glow)
+      // (not the footer: it holds still)
       if (on && !it.pinned) {
         const dx = Math.max(r.left - tmp.cur.x, 0, tmp.cur.x - r.right);
         const dy = Math.max(r.top - tmp.cur.y, 0, tmp.cur.y - r.bottom);
@@ -422,7 +420,7 @@ export function SceneText() {
         trx += dirY * 0.12 * near * ctl.lean;
         tz -= 0.35 * near * ctl.lean;
       }
-      // links: hovered / focused ones glow (and, outside the footer, float forward)
+      // links: hovered / focused ones float forward (not the pinned navbar / footer)
       L.h = damp(L.h, it.link?.matches(":hover, :focus-visible") ? 1 : 0, 10, dt);
       if (!it.pinned) tz -= 0.25 * L.h * motion;
       L.z = damp(L.z, tz, 6, dt);
@@ -468,8 +466,8 @@ export function SceneText() {
         if (tt.text !== txt) tt.text = txt;
       }
       mesh.fillOpacity = fo;
-      mesh.outlineOpacity = (0.16 + 0.5 * L.h) * fo;
-      if (it.link) (mesh as unknown as { outlineColor: number }).outlineColor = tmp.outline.copy(SHADOW).lerp(GLOW, L.h).getHex();
+      // a faint shadow under the type; hovering a link no longer lights it up
+      mesh.outlineOpacity = 0.16 * fo;
       // layout props re-run troika's layout, so only touch them when they really change (resize)
       const tm = mesh as unknown as { fontSize: number; maxWidth: number };
       const fs = it.fontPx * wpp;

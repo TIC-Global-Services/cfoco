@@ -130,7 +130,7 @@ html.lenis body {
   }
 }
 
-/* ---------- navbar (Navbar.tsx): drawn in 3D by SceneText; pills via --box-* ---------- */
+/* ---------- navbar (Navbar.tsx): plain DOM over the canvas ---------- */
 @layer components {
   .nav-link {
     display: inline-flex;
@@ -177,6 +177,7 @@ html.lenis body {
     border-radius: 9999px;
     background: var(--box-bg);
     border: 1px solid var(--box-border);
+    color: #fff;
   }
   .nav-icon {
     display: block;
@@ -187,16 +188,6 @@ html.lenis body {
     outline: 2px solid rgb(255 255 255 / 0.7);
     outline-offset: 3px;
     border-radius: 9999px;
-  }
-  /* 3D on: SceneText draws the pills and the logo */
-  .t3d .nav-link--current,
-  .t3d .nav-cta,
-  .t3d .nav-cta-arrow {
-    background: transparent;
-    border-color: transparent;
-  }
-  .t3d [data-t3d-img] {
-    opacity: 0;
   }
 }
 
@@ -227,10 +218,6 @@ html.lenis body {
     font-size: 15px;
     font-weight: 500;
     color: #fff;
-  }
-  .t3d .nav-menu {
-    background: transparent;
-    border-color: transparent;
   }
 }
 
@@ -263,16 +250,18 @@ html.lenis body {
   }
 }
 
-/* ---------- navbar on phones: menu button + sheet (drawn in 3D by SceneText) ---------- */
+/* ---------- navbar on phones: menu button + sheet ---------- */
 @layer components {
   .nav-burger {
-    position: relative;
+    display: grid;
+    place-items: center;
     width: 44px;
     height: 44px;
+    color: #fff;
   }
-  .nav-burger > span {
-    position: absolute;
-    inset: 11px;
+  .nav-burger > .nav-icon {
+    width: 22px;
+    height: 22px;
   }
   .nav-sheet {
     --box-bg: rgb(16 18 28 / 0.95);
@@ -306,9 +295,5 @@ html.lenis body {
     padding: 6px 10px 6px 26px;
     font-size: 15px;
     color: rgb(255 255 255 / 0.75);
-  }
-  .t3d .nav-sheet {
-    background: transparent;
-    border-color: transparent;
   }
 }

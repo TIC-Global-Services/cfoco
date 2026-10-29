@@ -1,10 +1,12 @@
 "use client";
 
 import { useGLTF } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import { useMemo } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
-import { KITCHEN } from "./config";
+import { sharpen } from "@/lib/home/textures";
+import { EXPORT_NAMES, KITCHEN } from "./config";
 import { useKitchenLightControls, useRoomControls } from "./controls";
 
 const URL = "/models/kitchen_new_layer.glb";
@@ -15,6 +17,7 @@ const URL = "/models/kitchen_new_layer.glb";
  */
 export function Kitchen() {
   const { scene } = useGLTF(URL);
+  const gl = useThree((s) => s.gl);
   const room = useRoomControls();
   const kl = useKitchenLightControls();
   // Its lighting is baked into its textures (the warm pools on the walls, the shine on the steel), so it is shown as
@@ -46,12 +49,14 @@ export function Kitchen() {
       });
       mesh.material = Array.isArray(mesh.material) ? mats : mats[0];
     });
+    sharpen(m, gl);
     return m;
-  }, [scene, kl.kitchenColor, kl.kitchenIntensity]);
+  }, [scene, gl, kl.kitchenColor, kl.kitchenIntensity]);
 
   // the model is in its own frame: KITCHEN.origin / KITCHEN.turn put it in the room's, then the same placement as the room itself
   return (
     <group
+      name={EXPORT_NAMES.kitchen}
       position={room.position}
       rotation={room.rotation.map((d) => THREE.MathUtils.degToRad(d)) as [number, number, number]}
       scale={room.scale}

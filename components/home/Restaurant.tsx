@@ -1,10 +1,12 @@
 "use client";
 
 import { useGLTF } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
-import { LOGO } from "./config";
+import { sharpen } from "@/lib/home/textures";
+import { EXPORT_NAMES, LOGO } from "./config";
 import { useLogoControls, useRoomControls } from "./controls";
 
 const URL = "/models/interior_environment_new.glb";
@@ -28,6 +30,7 @@ const LOGO_CENTER = LOGO.center.clone();
 /** The room, as authored. Only the camera/helper nodes are dropped; the neon logo is tunable (Logo panel). */
 export function Restaurant() {
   const { scene } = useGLTF(URL);
+  const gl = useThree((s) => s.gl);
   const room = useRoomControls();
   const logoC = useLogoControls();
 
@@ -38,11 +41,11 @@ export function Restaurant() {
     model.updateMatrixWorld(true);
     // own copies of the logo's materials (the cached GLTF stays as authored), with their authored glow
     const parts = new Map<string, { part: Part; mat: THREE.MeshStandardMaterial; glow: number; base: number }>();
+    const baked = new Map<THREE.Material, THREE.MeshBasicMaterial>();
     model.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
       const mat = mesh.material as THREE.MeshStandardMaterial;
-      if (mat.map) mat.map.anisotropy = 4;
       // real transmission re-renders the whole scene every frame for one thin glass strip: plain see-through glass instead
       if ((mat as THREE.MeshPhysicalMaterial).transmission > 0) {
         mesh.material = new THREE.MeshStandardMaterial({
@@ -66,8 +69,27 @@ export function Restaurant() {
           parts.set(mat.name, (e = { part, mat: mat.clone(), glow: mat.emissiveIntensity, base }));
         }
         mesh.material = e.mat;
+        return;
+      }
+      // its lighting is baked into the textures: shown as baked, unlit (the neon and the moons keep their own glow)
+      if (mat.map && !mat.emissiveMap) {
+        let b = baked.get(mat);
+        if (!b) {
+          b = new THREE.MeshBasicMaterial({
+            name: mat.name,
+            map: mat.map,
+            color: mat.color,
+            transparent: mat.transparent,
+            opacity: mat.opacity,
+            alphaTest: mat.alphaTest,
+            side: mat.side,
+          });
+          baked.set(mat, b);
+        }
+        mesh.material = b;
       }
     });
+    sharpen(model, gl);
     const node = model.getObjectByName(LOGO_NODE);
     if (node) {
       const curves: THREE.Object3D[] = [];
@@ -81,7 +103,7 @@ export function Restaurant() {
       scale: node.scale.clone(),
     };
     return { model, logo, parts };
-  }, [scene]);
+  }, [scene, gl]);
 
   useEffect(() => {
     const colour = { letters: logoC.letters, comb: logoC.comb, beak: logoC.beak };
@@ -105,6 +127,7 @@ export function Restaurant() {
 
   return (
     <group
+      name={EXPORT_NAMES.restaurant}
       position={room.position}
       rotation={room.rotation.map((d) => THREE.MathUtils.degToRad(d)) as [number, number, number]}
       scale={room.scale}

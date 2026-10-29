@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "lights:import": "node scripts/lights-from-editor.mjs",
     "seed:categories": "node sanity/seed-categories.mjs",
     "seed:menu": "node sanity/seed-menu.mjs",
     "seed:locations": "node sanity/seed-locations.mjs",

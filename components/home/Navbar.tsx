@@ -6,12 +6,9 @@ import { NAV_CTA, NAV_ITEMS } from "@/data/navLinks";
 import { onProgress, smoothstep } from "@/lib/home/scroll";
 import { FOOTER_FROM, FOOTER_TO } from "./config";
 
-// Top navigation. Like the copy and the footer it is drawn in 3D by SceneText
-// (type, logo, pills and icons), pinned to the lens so it holds still while the
-// cursor moves; this DOM is its layout and the real, focusable links. The
-// pills' look lives in --box-* variables so SceneText can draw them too.
-// Franchise opens a dropdown (hover, focus or click); its panel and links are
-// 3D as well, faded by SceneText from the data-open flag.
+// Top navigation: plain DOM on top of the canvas (not drawn in 3D like the copy),
+// so the logo, type and pills stay as sharp as on the other pages whatever
+// resolution the canvas renders at.
 
 const LINKS = NAV_ITEMS;
 
@@ -32,23 +29,16 @@ export function Navbar() {
   );
 
   return (
-    // a <section> so SceneText picks it up; always shown, revealed with the opening
     <section
       ref={root}
       aria-label="Site"
-      data-index={-1}
-      data-t3d-pinned
-      data-t3d-layer="top"
-      data-reveal="intro"
       className="navbar pointer-events-none fixed inset-x-0 top-0 z-20"
       style={{ opacity: 1, visibility: "visible" }}
     >
       <nav aria-label="Main" className="flex items-center justify-between px-(--gutter) pt-5">
         <Link href="/" aria-label="CFOCO home" className="pointer-events-auto block">
-          {/* eslint-disable-next-line @next/next/no-img-element -- drawn in 3D; this only reserves the space */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- a fixed-size logo, nothing for next/image to do */}
           <img
-            data-t3d
-            data-t3d-img="/logo.png"
             src="/logo.png"
             alt=""
             width={1086}
@@ -65,11 +55,9 @@ export function Navbar() {
                 <Link
                   href={l.href}
                   aria-current={current ? "page" : undefined}
-                  data-t3d={current ? "" : undefined}
-                  data-t3d-box={current ? "" : undefined}
                   className={`nav-link ${current ? "nav-link--current" : ""}`}
                 >
-                  <span data-t3d className="whitespace-nowrap">
+                  <span className="whitespace-nowrap">
                     {l.label}
                   </span>
                 </Link>
@@ -78,12 +66,10 @@ export function Navbar() {
           })}
         </ul>
 
-        <Link href={NAV_CTA.href} data-t3d data-t3d-box className="nav-cta pointer-events-auto hidden lg:inline-flex">
-          <span data-t3d data-t3d-color="#3b4252" className="whitespace-nowrap">
-            {NAV_CTA.label}
-          </span>
-          <span data-t3d data-t3d-box className="nav-cta-arrow" aria-hidden>
-            <span data-t3d data-t3d-icon="arrow-up-right" className="nav-icon" />
+        <Link href={NAV_CTA.href} className="nav-cta pointer-events-auto hidden lg:inline-flex">
+          <span className="whitespace-nowrap">{NAV_CTA.label}</span>
+          <span className="nav-cta-arrow" aria-hidden>
+            <Icon name="arrow-up-right" />
           </span>
         </Link>
 
@@ -93,7 +79,21 @@ export function Navbar() {
   );
 }
 
-/** Phones: a menu button that drops a panel with every link (3D too, faded from data-open). */
+const ICONS = {
+  "arrow-up-right": "M7 17L17 7M17 7H7M17 7V17",
+  menu: "M4 7h16M4 12h16M4 17h16",
+  close: "M6 6l12 12M18 6L6 18",
+} as const;
+
+function Icon({ name }: { name: keyof typeof ICONS }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="nav-icon">
+      <path d={ICONS[name]} />
+    </svg>
+  );
+}
+
+/** Phones: a menu button that drops a panel with every link (faded from data-open). */
 function MobileMenu() {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
@@ -121,10 +121,9 @@ function MobileMenu() {
         onClick={() => setOpen((o) => !o)}
         className="nav-burger pointer-events-auto"
       >
-        <span data-t3d data-t3d-icon="menu" data-t3d-gate data-open={!open} />
-        <span data-t3d data-t3d-icon="close" data-t3d-gate data-open={open} />
+        <Icon name={open ? "close" : "menu"} />
       </button>
-      <div id="nav-mobile" className="nav-sheet" data-t3d data-t3d-box data-t3d-gate data-open={open}>
+      <div id="nav-mobile" className="nav-sheet" data-open={open}>
         <ul>
           {LINKS.map((l) => (
             <li key={l.label}>
@@ -134,19 +133,17 @@ function MobileMenu() {
                 onClick={() => setOpen(false)}
                 className="nav-sheet-link"
               >
-                <span data-t3d className="whitespace-nowrap">
+                <span className="whitespace-nowrap">
                   {l.label}
                 </span>
               </Link>
             </li>
           ))}
         </ul>
-        <Link href={NAV_CTA.href} tabIndex={open ? 0 : -1} data-t3d data-t3d-box className="nav-cta mt-4 w-full justify-between">
-          <span data-t3d data-t3d-color="#3b4252" className="whitespace-nowrap">
-            {NAV_CTA.label}
-          </span>
-          <span data-t3d data-t3d-box className="nav-cta-arrow" aria-hidden>
-            <span data-t3d data-t3d-icon="arrow-up-right" className="nav-icon" />
+        <Link href={NAV_CTA.href} tabIndex={open ? 0 : -1} className="nav-cta mt-4 w-full justify-between">
+          <span className="whitespace-nowrap">{NAV_CTA.label}</span>
+          <span className="nav-cta-arrow" aria-hidden>
+            <Icon name="arrow-up-right" />
           </span>
         </Link>
       </div>

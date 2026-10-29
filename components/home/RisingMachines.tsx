@@ -5,11 +5,12 @@ import { type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
+import { sharpen } from "@/lib/home/textures";
 import { Spring, clamp, damp, easeInBack, easeInOutOvershoot, easeOutCubic, scrollState, smoothstep } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
 import { portraitness } from "./CameraRig";
 import { useMachineLightControls } from "./controls";
-import { CAMERA, KIOSK_URL, VENDING_URL, type RisingMachine } from "./config";
+import { CAMERA, EXPORT_NAMES, KIOSK_URL, VENDING_URL, type RisingMachine } from "./config";
 
 /** a soft dark blob, fading to nothing at the edge */
 export function shadowTexture() {
@@ -86,6 +87,7 @@ export function RisingMachines({
     const size = box.getSize(new THREE.Vector3());
     const scale = height / size.y;
     const group = new THREE.Group();
+    group.name = EXPORT_NAMES.machines;
 
     // standing in the room: a soft contact shadow on the floor under each, so it reads as planted
     const shadowMat = new THREE.MeshBasicMaterial({ map: shadowTexture(), transparent: true, depthWrite: false, opacity: 0 });
@@ -114,6 +116,7 @@ export function RisingMachines({
           screens.push(mat);
         } else mats.push(mat);
       });
+      sharpen(model, gl);
       const scaled = new THREE.Group();
       scaled.scale.setScalar(scale);
       scaled.add(model);
@@ -151,7 +154,7 @@ export function RisingMachines({
     });
 
     return { group, kiosks, scale, width: size.x * scale, depth: size.z * scale };
-  }, [gltf, studio, height, machines, clips]);
+  }, [gltf, gl, studio, height, machines, clips]);
 
   // a key from above-front and a cool rim from behind, always mounted (no recompiles)
   const lights = useMemo(() => {

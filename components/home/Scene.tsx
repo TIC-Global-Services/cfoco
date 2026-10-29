@@ -15,6 +15,7 @@ import { Kitchen } from "./Kitchen";
 import { RisingMachines } from "./RisingMachines";
 import { Particles } from "./Particles";
 import { Restaurant } from "./Restaurant";
+import { EditorExport } from "./EditorExport";
 import { RouteEditor } from "./RouteEditor";
 import { ServeRobot } from "./ServeRobot";
 import { SceneText } from "./SceneText";
@@ -50,12 +51,13 @@ export default function Scene() {
   // …and with low-core machines: lighter resolution and no MSAA so it stays smooth
   const lite = useMemo(() => touch || (navigator.hardwareConcurrency ?? 8) <= 4, [touch]);
 
-  // resolution: capped by how many pixels the post chain (bloom, glass, MSAA, half-float) has to push — on a big retina
-  // screen 1.5× is ~3.7 M px a frame — then it follows the frame rate: down a step when the machine can't keep up, back up when it can
+  // resolution: the screen's own pixel density (a retina screen is 2×; below it every texture is softer than in a
+  // model viewer), capped by a pixel budget for very big windows — then it follows the frame rate: down a step when
+  // the machine can't keep up, back up when it can
   const cap = useMemo(() => {
     const area = window.innerWidth * window.innerHeight;
-    const byPixels = Math.sqrt((lite ? 1.1e6 : 1.7e6) / Math.max(area, 1));
-    return Math.min(lite ? 1 : 1.5, Math.max(0.75, byPixels));
+    const byPixels = Math.sqrt((lite ? 2.5e6 : 7e6) / Math.max(area, 1));
+    return Math.max(0.75, Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2, byPixels));
   }, [lite]);
   const [dpr, setDpr] = useState(cap);
 
@@ -63,7 +65,8 @@ export default function Scene() {
     <Canvas
       dpr={dpr}
       // opaque drawing buffer: the HDR buffer carries alpha 0 under 3D text (bloom mask), never the page
-      gl={{ antialias: true, alpha: false, powerPreference: "high-performance", stencil: false }}
+      // retina screens (2×): no MSAA — the pixels are already finer than its edges, and at that size it costs the most
+      gl={{ antialias: (window.devicePixelRatio || 1) < 1.5, alpha: false, powerPreference: "high-performance", stencil: false }}
       camera={{ fov: 53.7, near: 0.05, far: 60, position: [0, 2, 11.5] }}
       onCreated={(state) => {
         state.gl.outputColorSpace = THREE.SRGBColorSpace;
@@ -83,14 +86,23 @@ export default function Scene() {
         <RisingMachines url={KIOSK_URL} height={KIOSK_HEIGHT} machines={KIOSKS} facing={KIOSK_FACING} world />
         <RisingMachines url={VENDING_URL} height={VENDING_HEIGHT} machines={VENDING} facing={VENDING_FACING} world viewDir={[0, 1]} />
         <ServeRobot />
-        <SceneText />
+        <SceneText hdr={post.enabled} />
         <Warmup />
         {/* <Turntable /> */}
       </Suspense>
       <Particles lite={lite} />
-      <PerformanceMonitor flipflops={3} onDecline={() => setDpr((d) => Math.max(0.75, d * 0.85))} onIncline={() => setDpr((d) => Math.min(cap, d / 0.85))} />
+      {/* only once the loader has cleared: while models and textures upload every frame is slow, and it used to drop the
+          resolution for good before the page was even shown (desktops never below 1×) */}
+      <AfterIntro>
+        <PerformanceMonitor
+          flipflops={3}
+          onDecline={() => setDpr((d) => Math.max(lite ? 0.75 : 1, d * 0.85))}
+          onIncline={() => setDpr((d) => Math.min(cap, d / 0.85))}
+        />
+      </AfterIntro>
       <CameraRig />
       {scrollState.debug && <RouteEditor />}
+      {scrollState.debug && <EditorExport />}
       {post.enabled && (
         <EffectComposer multisampling={lite ? 0 : 2} frameBufferType={THREE.HalfFloatType}>
           {/* own pass: the glass re-samples its input, so bloom has to be baked in before it */}
@@ -111,6 +123,19 @@ export default function Scene() {
       )}
     </Canvas>
   );
+}
+
+/** renders its children once the loader has cleared (and the opening has had a second to settle) */
+function AfterIntro({ children }: { children: React.ReactNode }) {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    if (on) return;
+    const id = window.setInterval(() => {
+      if (performance.now() / 1000 > scrollState.introAt + 1) setOn(true);
+    }, 250);
+    return () => window.clearInterval(id);
+  }, [on]);
+  return on ? <>{children}</> : null;
 }
 
 /**

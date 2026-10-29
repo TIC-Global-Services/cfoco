@@ -5,10 +5,11 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
+import { sharpen } from "@/lib/home/textures";
 import { clamp, easeInOutOvershoot, robotRide, routesChanged, scrollState, smoothstep } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
 import { useKitchenLightControls } from "./controls";
-import { ROBOT_FACING, ROBOT_HEIGHT, ROBOT_RUN, ROBOT_URL } from "./config";
+import { EXPORT_NAMES, ROBOT_FACING, ROBOT_HEIGHT, ROBOT_RUN, ROBOT_URL } from "./config";
 import { shadowTexture } from "./RisingMachines";
 
 const ease = (t: number) => t * t * (3 - 2 * t);
@@ -48,6 +49,7 @@ export function ServeRobot() {
       m.material = mat;
       mats.push(mat);
     });
+    sharpen(model, gl);
     const scale = ROBOT_HEIGHT / size.y;
     const scaled = new THREE.Group();
     scaled.scale.setScalar(scale);
@@ -103,9 +105,10 @@ export function ServeRobot() {
     // a key from above, following it (the room is dim)
     const key = new THREE.SpotLight("#fff1e0", 0, 12, 0.8, 0.9, 2);
     const group = new THREE.Group();
+    group.name = EXPORT_NAMES.robot;
     group.add(pivot, shadow, key, key.target);
     return { group, pivot, shadow, mats, route, inKitchen, outKitchen, loop, key, hiddenY: -ROBOT_HEIGHT - 0.3 };
-  }, [gltf, trayGltfs, studio]);
+  }, [gltf, gl, trayGltfs, studio]);
 
   const tmp = useMemo(
     () => ({

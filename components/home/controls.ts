@@ -137,20 +137,20 @@ export function useLightControls() {
     "Light",
     {
       background: "#04060c",
-      intensity: { value: 0.32, min: 0, max: 4, step: 0.05, label: "environment" },
-      exposure: { value: 0.5, min: 0.2, max: 3, step: 0.05 },
+      intensity: { value: 1, min: 0, max: 4, step: 0.05, label: "environment" },
+      exposure: { value: 1, min: 0.2, max: 3, step: 0.05 },
       ambient: folder({
         ambientColor: { value: "#ffffff", label: "color" },
-        ambientIntensity: { value: 0.12, min: 0, max: 3, step: 0.01, label: "intensity" },
+        ambientIntensity: { value: 0, min: 0, max: 3, step: 0.01, label: "intensity" },
       }),
       hemisphere: folder({
         hemiSky: { value: "#9db4ff", label: "sky" },
         hemiGround: { value: "#2a1a10", label: "ground" },
-        hemiIntensity: { value: 1.5, min: 0, max: 3, step: 0.01, label: "intensity" },
+        hemiIntensity: { value: 0, min: 0, max: 3, step: 0.01, label: "intensity" },
       }),
       key: folder({
         keyColor: { value: "#fff1e0", label: "color" },
-        keyIntensity: { value: 0.6, min: 0, max: 10, step: 0.05, label: "intensity" },
+        keyIntensity: { value: 0, min: 0, max: 10, step: 0.05, label: "intensity" },
         keyPos: { ...xyz([4, 6, 8] as V3, 0.25), label: "position" },
       }),
       fill: folder({
@@ -216,14 +216,14 @@ export function useMachineLightControls() {
   return useControls(
     "Machine light",
     {
-      keyIntensity: { value: 10, min: 0, max: 250, step: 1, label: "key" },
+      keyIntensity: { value: 0, min: 0, max: 250, step: 1, label: "key" },
       keyColor: { value: "#fff1e0", label: "key color" },
-      rimIntensity: { value: 20, min: 0, max: 250, step: 1, label: "rim" },
+      rimIntensity: { value: 0, min: 0, max: 250, step: 1, label: "rim" },
       rimColor: { value: "#9fb6ff", label: "rim color" },
-      fillIntensity: { value: 2, min: 0, max: 100, step: 0.5, label: "front fill" },
+      fillIntensity: { value: 0, min: 0, max: 100, step: 0.5, label: "front fill" },
       fillColor: { value: "#ffe6c8", label: "fill color" },
-      envIntensity: { value: 1.5, min: 0, max: 4, step: 0.05, label: "reflections" },
-      screenGlow: { value: 0.1, min: 0, max: 3, step: 0.05, label: "screen glow ×" },
+      envIntensity: { value: 1, min: 0, max: 4, step: 0.05, label: "reflections" },
+      screenGlow: { value: 1, min: 0, max: 3, step: 0.05, label: "screen glow ×" },
     },
     { collapsed: true },
   );
@@ -237,7 +237,7 @@ export function useKitchenLightControls() {
       // the kitchen is shown as baked (unlit): these scale / tint its textures
       kitchenIntensity: { value: 1, min: 0, max: 2, step: 0.05, label: "kitchen brightness" },
       kitchenColor: { value: "#ffffff", label: "kitchen tint" },
-      robotIntensity: { value: 30, min: 0, max: 150, step: 1, label: "robot spot" },
+      robotIntensity: { value: 0, min: 0, max: 150, step: 1, label: "robot spot" },
       robotColor: { value: "#fff1e0", label: "robot spot color" },
     },
     { collapsed: true },
@@ -250,7 +250,8 @@ export function usePostControls() {
   return useControls(
     "Post",
     {
-      enabled: true,
+      // off: the scene is shown as baked, straight to the screen (tone mapping falls back to the renderer's)
+      enabled: false,
       bloom: { value: 0.1, min: 0, max: 3, step: 0.05 },
       threshold: { value: 0.1, min: 0, max: 2, step: 0.01, label: "bloom threshold" },
       vignette: { value: 0.1, min: 0, max: 1, step: 0.01 },
