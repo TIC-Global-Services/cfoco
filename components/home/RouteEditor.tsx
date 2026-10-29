@@ -16,6 +16,7 @@ import { ROBOT_RUN, VENDING_STOP } from "./config";
  */
 
 const ROUTES = [
+  { key: "comeRoute", label: "parked → bucket", color: "#4ade80" },
   { key: "route", label: "kiosks → vending", color: "#33d1ff" },
   { key: "kitchenRoute", label: "vending → kitchen", color: "#ffb020" },
   { key: "exitRoute", label: "kitchen → patrol", color: "#9b7bff" },

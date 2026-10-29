@@ -41,7 +41,9 @@ import {
 
 const RAW_URL = "/models/raw_chicken.glb";
 const FRIED_URL = "/models/chicken_fried.glb";
-const BUCKET_URL = "/models/bucket_drop.glb";
+const BUCKET_URL = "/models/bucket_drop_new.glb";
+/** the fried crust: × its roughness map (≈0.82, matte) — a little oil sheen on the ridges */
+const CRUST_ROUGHNESS = 0.8;
 
 // ---------------------------------------------------------------------------
 // Raw ⇄ fried swap. Both meshes carry the same dissolve field (a bottom-to-top
@@ -156,6 +158,9 @@ export function HeroChicken() {
     const fadeMats: THREE.MeshStandardMaterial[] = [];
     const heroMats: THREE.MeshStandardMaterial[] = [];
     const bucketMats: THREE.MeshStandardMaterial[] = [];
+    // the hero casts and takes its own shadows (the crust's folds, the pile in the cup): nothing else in the room does
+    const rawMeshes: THREE.Mesh[] = [];
+    const friedMeshes: THREE.Mesh[] = [];
     const maxAniso = gl.capabilities.getMaxAnisotropy();
 
     // --- raw chicken (morph-target animation) ---
@@ -164,6 +169,8 @@ export function HeroChicken() {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       m.frustumCulled = false; // morphed — bounds are unreliable
+      m.castShadow = m.receiveShadow = true;
+      rawMeshes.push(m);
       const mat = (m.material as THREE.MeshStandardMaterial).clone();
       mat.transparent = true; // drawn in the transparent pass, like the bucket (see SceneText)
       mat.envMap = studio;
@@ -187,9 +194,12 @@ export function HeroChicken() {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       m.frustumCulled = false;
+      m.castShadow = m.receiveShadow = true;
+      friedMeshes.push(m);
       const mat = (m.material as THREE.MeshStandardMaterial).clone();
       mat.transparent = true;
       mat.envMap = studio;
+      mat.roughness = CRUST_ROUGHNESS;
       applyDissolve(mat, dissolve, "fried");
       m.material = mat;
       fadeMats.push(mat);
@@ -219,6 +229,7 @@ export function HeroChicken() {
     bucketModel.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
+      m.castShadow = m.receiveShadow = true;
       const src = m.material as THREE.MeshStandardMaterial;
       let mat: THREE.MeshStandardMaterial;
       if (m.name === "Circle" || m.name === "Circle002") {
@@ -243,6 +254,7 @@ export function HeroChicken() {
       } else {
         // fried pieces: lit like the hero
         mat = src.clone();
+        mat.roughness = CRUST_ROUGHNESS;
         pileMats.push(mat);
       }
       mat.envMap = studio;
@@ -261,7 +273,8 @@ export function HeroChicken() {
       a.play();
       return a;
     });
-    const faller = bucketModel.getObjectByName("fried011")!;
+    // the piece that drops in from above ("Mesh_0.001"; the loader strips the dots)
+    const faller = bucketModel.getObjectByName("Mesh_0001")!;
     const scaled = new THREE.Group();
     scaled.scale.setScalar(bucketScale);
     scaled.add(bucketModel);
@@ -282,6 +295,8 @@ export function HeroChicken() {
       bucketRadius,
       fadeMats,
       heroMats,
+      rawMeshes,
+      friedMeshes,
       bucketMats,
       dropMixer,
       dropActions,
@@ -297,6 +312,15 @@ export function HeroChicken() {
     const cursor = new THREE.PointLight("#ffffff", 0, 5, 2);
     const glow = new THREE.PointLight("#ff7a1f", 0, 7, 2);
     const bucketKey = new THREE.SpotLight("#ffffff", 0, 12, 0.5, 0.8, 2);
+    // the keys throw the hero's shadows (only the hero's meshes cast and take them)
+    for (const l of [key, bucketKey]) {
+      l.castShadow = true;
+      l.shadow.mapSize.set(1024, 1024);
+      l.shadow.bias = -0.0004;
+      l.shadow.normalBias = 0.02;
+      l.shadow.radius = 4;
+      l.shadow.camera.near = 0.3;
+    }
     const group = new THREE.Group();
     group.add(key, key.target, rim, rim.target, cursor, glow, bucketKey, bucketKey.target);
     return { group, key, rim, cursor, glow, bucketKey };
@@ -628,6 +652,9 @@ export function HeroChicken() {
     rig.dissolve.uExtent.value = CHICKEN_LENGTH * rig.spin.scale.x;
     rig.rawObj.visible = mix < 1;
     rig.friedObj.visible = mix > 0;
+    // the dissolve isn't in the shadow pass: only the half that is mostly showing casts
+    for (const m of rig.rawMeshes) m.castShadow = mix < 0.5;
+    for (const m of rig.friedMeshes) m.castShadow = mix >= 0.5;
 
     // authored animation, scrubbed by scroll (only while the raw one is visible)
     if (rig.rawObj.visible) {

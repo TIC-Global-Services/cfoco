@@ -183,26 +183,26 @@ export function useHeroLightControls() {
   return useControls(
     "Hero light",
     {
-      envIntensity: { value: 1.05, min: 0, max: 3, step: 0.05, label: "studio reflections" },
+      envIntensity: { value: 0.7, min: 0, max: 3, step: 0.05, label: "studio reflections" },
       key: folder({
-        keyColor: { value: "#ffd9b0", label: "color" },
-        keyIntensity: { value: 48, min: 0, max: 150, step: 1, label: "intensity" },
+        keyColor: { value: "#fff0dc", label: "color" },
+        keyIntensity: { value: 60, min: 0, max: 150, step: 1, label: "intensity" },
       }),
       rim: folder({
-        rimColor: { value: "#cfdcff", label: "color" },
-        rimIntensity: { value: 55, min: 0, max: 250, step: 1, label: "intensity" },
+        rimColor: { value: "#ffe2c0", label: "color" },
+        rimIntensity: { value: 35, min: 0, max: 250, step: 1, label: "intensity" },
       }),
       cursor: folder({
         cursorColor: { value: "#fff0dc", label: "color" },
         cursorIntensity: { value: 0, min: 0, max: 40, step: 0.5, label: "intensity" },
         cursorHoverBoost: { value: 1.6, min: 1, max: 5, step: 0.1, label: "on hover ×" },
       }),
-      fryGlow: { value: 7, min: 0, max: 60, step: 0.5, label: "fry glow (swap)" },
+      fryGlow: { value: 4, min: 0, max: 60, step: 0.5, label: "fry glow (swap)" },
       bucket: folder({
-        bucketEnv: { value: 1.5, min: 0, max: 4, step: 0.05, label: "reflections" },
-        bucketGloss: { value: 0.8, min: 0, max: 1, step: 0.01, label: "gloss (clearcoat)" },
+        bucketEnv: { value: 0.6, min: 0, max: 4, step: 0.05, label: "reflections" },
+        bucketGloss: { value: 0.45, min: 0, max: 1, step: 0.01, label: "gloss (clearcoat)" },
         bucketKeyColor: { value: "#fff3e2", label: "light color" },
-        bucketKeyIntensity: { value: 55, min: 0, max: 200, step: 1, label: "light" },
+        bucketKeyIntensity: { value: 22, min: 0, max: 200, step: 1, label: "light" },
       }),
     },
     { collapsed: true },

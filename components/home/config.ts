@@ -232,7 +232,7 @@ export const DROP_START = 4.3;
 export const TOSS_OUT = 4.5;
 
 /**
- * The bucket model (bucket_drop.glb) carries a baked physics drop: one piece
+ * The bucket model (bucket_drop_new.glb) carries a baked physics drop: one piece
  * falls from far above into the pile and the others jostle. Clip seconds:
  */
 export const DROP_SIM = {
@@ -391,13 +391,17 @@ export const ROBOT_HEIGHT = 2.0;
 export const ROBOT_FACING = 0;
 
 const ROBOT_START = new THREE.Vector3(-3.4, 0, 5.0);
+/** where it waits from the start: parked beside the first kiosk (z 4.7), facing into the room */
+const ROBOT_PARK = new THREE.Vector3(-5.4, 0, 3.2);
 /** where it waits at the vending machine: parked beside it (its left side, x 6.1), facing the kitchen wall like it */
 export const VENDING_STOP = new THREE.Vector3(5.5, 0, 10.9);
 
 export const ROBOT_RUN = {
-  /** slides up out of the floor… */
-  riseFrom: 5.9,
-  riseTo: 6.4,
+  /** stands parked by the kiosks from the start, and comes forward to the bucket… */
+  comeFrom: 5.9,
+  comeTo: 6.4,
+  /** from its parking spot round to beside the bucket (it ends facing into the room, +x, for the bucket to hop on) */
+  comeRoute: [ROBOT_PARK, new THREE.Vector3(-4.6, 0, 3.6), ROBOT_START],
   /** …the bucket hops onto it… */
   loadFrom: 6.4,
   loadTo: 6.9,

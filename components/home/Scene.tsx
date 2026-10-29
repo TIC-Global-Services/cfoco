@@ -64,6 +64,8 @@ export default function Scene() {
   return (
     <Canvas
       dpr={dpr}
+      // soft shadow maps — only the hero's key lights cast (see HeroChicken)
+      shadows="soft"
       // opaque drawing buffer: the HDR buffer carries alpha 0 under 3D text (bloom mask), never the page
       // retina screens (2×): no MSAA — the pixels are already finer than its edges, and at that size it costs the most
       gl={{ antialias: (window.devicePixelRatio || 1) < 1.5, alpha: false, powerPreference: "high-performance", stencil: false }}

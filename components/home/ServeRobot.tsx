@@ -6,7 +6,7 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
 import { sharpen } from "@/lib/home/textures";
-import { clamp, easeInOutOvershoot, robotRide, routesChanged, scrollState, smoothstep } from "@/lib/home/scroll";
+import { clamp, robotRide, routesChanged, scrollState, smoothstep } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
 import { useKitchenLightControls } from "./controls";
 import { EXPORT_NAMES, ROBOT_FACING, ROBOT_HEIGHT, ROBOT_RUN, ROBOT_URL } from "./config";
@@ -18,8 +18,8 @@ const ease = (t: number) => t * t * (3 - 2 * t);
 const turnTo = (a: number, b: number) => a + Math.atan2(Math.sin(b - a), Math.cos(b - a));
 
 /**
- * The serving robot. It slides up out of the floor at the ordering wall, the
- * bucket is put on its tray (HeroChicken reads `robotRide`), and it drives the
+ * The serving robot. It stands parked by the ordering kiosks from the start, comes
+ * forward to the bucket, the bucket is put on its tray (HeroChicken reads `robotRide`), and it drives the
  * bucket across the restaurant to the vending machine — scrubbed by scroll, so
  * it rewinds too. Afterwards it rolls up and down the middle of the room on its own.
  */
@@ -90,6 +90,7 @@ export function ServeRobot() {
     const w = Math.max(size.x, size.z) * scale * 1.7;
     shadow.scale.set(w, 1, w);
 
+    const come = new THREE.CatmullRomCurve3(ROBOT_RUN.comeRoute, false, "catmullrom", 0.5);
     const route = new THREE.CatmullRomCurve3(ROBOT_RUN.route, false, "catmullrom", 0.5);
     const inKitchen = new THREE.CatmullRomCurve3(ROBOT_RUN.kitchenRoute, false, "catmullrom", 0.5);
     const outKitchen = new THREE.CatmullRomCurve3(ROBOT_RUN.exitRoute, false, "catmullrom", 0.5);
@@ -107,7 +108,7 @@ export function ServeRobot() {
     const group = new THREE.Group();
     group.name = EXPORT_NAMES.robot;
     group.add(pivot, shadow, key, key.target);
-    return { group, pivot, shadow, mats, route, inKitchen, outKitchen, loop, key, hiddenY: -ROBOT_HEIGHT - 0.3 };
+    return { group, pivot, shadow, mats, come, route, inKitchen, outKitchen, loop, key };
   }, [gltf, gl, trayGltfs, studio]);
 
   const tmp = useMemo(
@@ -128,15 +129,10 @@ export function ServeRobot() {
     const p = scrollState.progress;
     const R = ROBOT_RUN;
     // the route editor (?debug) moves the waypoints in place: re-measure the curves
-    if (routesChanged()) for (const c of [rig.route, rig.inKitchen, rig.outKitchen]) c.updateArcLengths();
-    const rise = clamp((p - R.riseFrom) / (R.riseTo - R.riseFrom));
-    rig.group.visible = rise > 0;
-    robotRide.ready = rise > 0;
-    if (!rig.group.visible) {
-      rig.key.intensity = 0;
-      tmp.yaw = NaN;
-      return;
-    }
+    if (routesChanged()) for (const c of [rig.come, rig.route, rig.inKitchen, rig.outKitchen]) c.updateArcLengths();
+    // always there: parked by the kiosks until it comes forward to the bucket (c up to 1)
+    const c = ease(clamp((p - R.comeFrom) / (R.comeTo - R.comeFrom)));
+    robotRide.ready = true;
 
     // where it is: at the wall until it sets off, along the route, waiting at the vending machine, then on patrol
     const s = ease(clamp((p - R.driveFrom) / (R.driveTo - R.driveFrom)));
@@ -156,9 +152,12 @@ export function ServeRobot() {
     } else if (k > 0) {
       onRoute.copy(rig.inKitchen.getPointAt(k));
       rig.inKitchen.getTangentAt(Math.min(Math.max(k, 0.001), 0.999), tmp.tan);
-    } else {
+    } else if (s > 0 || c >= 1) {
       onRoute.copy(route.getPointAt(s));
       route.getTangentAt(Math.min(Math.max(s, 0.001), 0.999), tmp.tan);
+    } else {
+      onRoute.copy(rig.come.getPointAt(c));
+      rig.come.getTangentAt(Math.min(Math.max(c, 0.001), 0.999), tmp.tan);
     }
     let heading = Math.atan2(tmp.tan.x, tmp.tan.z);
 
@@ -171,25 +170,26 @@ export function ServeRobot() {
       heading += (turnTo(heading, Math.atan2(tmp.tan.x, tmp.tan.z)) - heading) * ease(patrol);
     }
 
-    // it comes up facing into the room (+x), then swings round to its heading as it sets off
+    // it drives over from its parking spot along its way, turns to face into the room (+x) at the bucket for it to
+    // hop on, then swings round to its heading as it sets off
     const faceRoom = Math.PI / 2;
+    const settle = smoothstep(0.7, 1, c);
+    const waiting = faceRoom + (turnTo(faceRoom, Math.atan2(tmp.tan.x, tmp.tan.z)) - faceRoom) * (c < 1 ? 1 - settle : 0);
     const swing = smoothstep(R.driveFrom - 0.05, R.driveFrom + 0.25, p);
-    const target = turnTo(faceRoom, heading);
-    const yaw = faceRoom + (target - faceRoom) * swing;
+    const target = turnTo(waiting, heading);
+    const yaw = waiting + (target - waiting) * swing;
     tmp.yaw = Number.isNaN(tmp.yaw) ? yaw : tmp.yaw + (turnTo(tmp.yaw, yaw) - tmp.yaw) * (1 - Math.exp(-delta * 8));
 
-    // slides up out of the floor with a little overshoot
-    const lift = rig.hiddenY * (1 - easeInOutOvershoot(rise, 0.09));
-    rig.pivot.position.set(onRoute.x, lift, onRoute.z);
+    rig.pivot.position.set(onRoute.x, 0, onRoute.z);
     rig.pivot.rotation.set(0, tmp.yaw + ROBOT_FACING, 0);
     rig.shadow.position.set(onRoute.x, 0.012, onRoute.z);
-    (rig.shadow.material as THREE.MeshBasicMaterial).opacity = 0.55 * smoothstep(0.5, 1, rise);
+    (rig.shadow.material as THREE.MeshBasicMaterial).opacity = 0.55;
 
     // the bucket rides on the tray
     const back = ROBOT_RUN.trayBack;
     robotRide.tray.set(
       onRoute.x - Math.sin(tmp.yaw + ROBOT_FACING) * back,
-      ROBOT_HEIGHT * ROBOT_RUN.trayY + lift,
+      ROBOT_HEIGHT * ROBOT_RUN.trayY,
       onRoute.z - Math.cos(tmp.yaw + ROBOT_FACING) * back,
     );
     robotRide.quaternion.setFromAxisAngle(tmp.up, tmp.yaw);
@@ -197,7 +197,7 @@ export function ServeRobot() {
     rig.key.position.set(onRoute.x - 1.2, 3.4, onRoute.z + 2.0);
     rig.key.target.position.set(onRoute.x, ROBOT_HEIGHT * 0.5, onRoute.z);
     rig.key.color.set(kl.robotColor);
-    rig.key.intensity = kl.robotIntensity * smoothstep(0, 0.4, rise);
+    rig.key.intensity = kl.robotIntensity;
   }, -2);
 
   return <primitive object={rig.group} />;
