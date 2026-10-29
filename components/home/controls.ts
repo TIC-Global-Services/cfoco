@@ -216,14 +216,14 @@ export function useMachineLightControls() {
   return useControls(
     "Machine light",
     {
-      keyIntensity: { value: 70, min: 0, max: 250, step: 1, label: "key" },
+      keyIntensity: { value: 10, min: 0, max: 250, step: 1, label: "key" },
       keyColor: { value: "#fff1e0", label: "key color" },
-      rimIntensity: { value: 40, min: 0, max: 250, step: 1, label: "rim" },
+      rimIntensity: { value: 20, min: 0, max: 250, step: 1, label: "rim" },
       rimColor: { value: "#9fb6ff", label: "rim color" },
-      fillIntensity: { value: 16, min: 0, max: 100, step: 0.5, label: "front fill" },
+      fillIntensity: { value: 2, min: 0, max: 100, step: 0.5, label: "front fill" },
       fillColor: { value: "#ffe6c8", label: "fill color" },
       envIntensity: { value: 1.5, min: 0, max: 4, step: 0.05, label: "reflections" },
-      screenGlow: { value: 1, min: 0, max: 3, step: 0.05, label: "screen glow ×" },
+      screenGlow: { value: 0.1, min: 0, max: 3, step: 0.05, label: "screen glow ×" },
     },
     { collapsed: true },
   );
@@ -234,8 +234,9 @@ export function useKitchenLightControls() {
   return useControls(
     "Kitchen + robot light",
     {
-      kitchenIntensity: { value: 1, min: 0, max: 4, step: 0.05, label: "kitchen ×" },
-      kitchenColor: { value: "#ffd9a8", label: "kitchen color" },
+      // the kitchen is shown as baked (unlit): these scale / tint its textures
+      kitchenIntensity: { value: 1, min: 0, max: 2, step: 0.05, label: "kitchen brightness" },
+      kitchenColor: { value: "#ffffff", label: "kitchen tint" },
       robotIntensity: { value: 30, min: 0, max: 150, step: 1, label: "robot spot" },
       robotColor: { value: "#fff1e0", label: "robot spot color" },
     },
@@ -250,9 +251,9 @@ export function usePostControls() {
     "Post",
     {
       enabled: true,
-      bloom: { value: 0.4, min: 0, max: 3, step: 0.05 },
-      threshold: { value: 1, min: 0, max: 2, step: 0.01, label: "bloom threshold" },
-      vignette: { value: 0.6, min: 0, max: 1, step: 0.01 },
+      bloom: { value: 0.1, min: 0, max: 3, step: 0.05 },
+      threshold: { value: 0.1, min: 0, max: 2, step: 0.01, label: "bloom threshold" },
+      vignette: { value: 0.1, min: 0, max: 1, step: 0.01 },
     },
     { collapsed: true },
   );

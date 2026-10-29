@@ -37,6 +37,18 @@ export const robotRide = {
   ready: false,
 };
 
+/** bumped by the route editor (?debug) when it moves a waypoint, so the robot's curves re-measure */
+export const routeEdit = { version: 0, measured: -1 };
+export function bumpRoutes() {
+  routeEdit.version++;
+}
+/** true once per edit: the caller re-measures its curves */
+export function routesChanged() {
+  if (routeEdit.measured === routeEdit.version) return false;
+  routeEdit.measured = routeEdit.version;
+  return true;
+}
+
 /** set by Experience once Lenis exists — lets dev tools jump to a section */
 /** set by Sound — lets the 3D turntable flip the sound like the button does */
 export const soundApi: { toggle: () => void } = { toggle: () => {} };

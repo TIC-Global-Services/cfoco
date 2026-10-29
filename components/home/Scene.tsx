@@ -7,6 +7,7 @@ import { PerformanceMonitor } from "@react-three/drei";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { scrollState } from "@/lib/home/scroll";
 import { CameraRig } from "./CameraRig";
 import { GlassEffect } from "./GlassEffect";
 import { HeroChicken } from "./HeroChicken";
@@ -14,6 +15,7 @@ import { Kitchen } from "./Kitchen";
 import { RisingMachines } from "./RisingMachines";
 import { Particles } from "./Particles";
 import { Restaurant } from "./Restaurant";
+import { RouteEditor } from "./RouteEditor";
 import { ServeRobot } from "./ServeRobot";
 import { SceneText } from "./SceneText";
 import { Turntable } from "./Turntable";
@@ -80,7 +82,7 @@ export default function Scene() {
         <Kitchen />
         <HeroChicken />
         <RisingMachines url={KIOSK_URL} height={KIOSK_HEIGHT} machines={KIOSKS} facing={KIOSK_FACING} world />
-        <RisingMachines url={VENDING_URL} height={VENDING_HEIGHT} machines={VENDING} facing={VENDING_FACING} world viewedFrom={-1} />
+        <RisingMachines url={VENDING_URL} height={VENDING_HEIGHT} machines={VENDING} facing={VENDING_FACING} world viewDir={[0, 1]} />
         <ServeRobot />
         <SceneText />
         <Warmup />
@@ -89,6 +91,7 @@ export default function Scene() {
       <Particles lite={lite} />
       <PerformanceMonitor flipflops={3} onDecline={() => setDpr((d) => Math.max(0.75, d * 0.85))} onIncline={() => setDpr((d) => Math.min(cap, d / 0.85))} />
       <CameraRig />
+      {scrollState.debug && <RouteEditor />}
       {post.enabled && (
         <EffectComposer multisampling={lite ? 0 : 2} frameBufferType={THREE.HalfFloatType}>
           {/* own pass: the glass re-samples its input, so bloom has to be baked in before it */}

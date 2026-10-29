@@ -5,7 +5,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
-import { clamp, easeInOutOvershoot, robotRide, scrollState, smoothstep } from "@/lib/home/scroll";
+import { clamp, easeInOutOvershoot, robotRide, routesChanged, scrollState, smoothstep } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
 import { useKitchenLightControls } from "./controls";
 import { ROBOT_FACING, ROBOT_HEIGHT, ROBOT_RUN, ROBOT_URL } from "./config";
@@ -124,6 +124,8 @@ export function ServeRobot() {
   useFrame((state, delta) => {
     const p = scrollState.progress;
     const R = ROBOT_RUN;
+    // the route editor (?debug) moves the waypoints in place: re-measure the curves
+    if (routesChanged()) for (const c of [rig.route, rig.inKitchen, rig.outKitchen]) c.updateArcLengths();
     const rise = clamp((p - R.riseFrom) / (R.riseTo - R.riseFrom));
     rig.group.visible = rise > 0;
     robotRide.ready = rise > 0;

@@ -7,11 +7,20 @@ import "@/lib/home/draco";
 import { LOGO } from "./config";
 import { useLogoControls, useRoomControls } from "./controls";
 
-const URL = "/models/interior_environment2.glb";
+const URL = "/models/interior_environment_new.glb";
+
+/**
+ * This cut is authored turned 180° and moved off the origin: this puts it back in the room's frame,
+ * which the camera, the logo, the kitchen and every placement in config.ts are in.
+ */
+const MODEL_TURN = Math.PI;
+const MODEL_OFFSET = new THREE.Vector3(7.913, 0, 12.174);
 
 /** the neon CFOCO logo on the back wall: its group, and its letters (white), comb (red), beak / ring (yellow) */
 const LOGO_NODE = "Empty005"; // "Empty.005" — the loader strips the dots
-const LOGO_PARTS = { "Material.014": "letters", "Material.015": "comb", "Material.016": "beak" } as const;
+/** the logo's curves: in this cut they sit beside LOGO_NODE instead of under it, so they are put back under it */
+const LOGO_CURVES = /^Curve0(1[4-9]|2[0-6])$/; // "Curve.014" … "Curve.026"
+const LOGO_PARTS = { "Material.031": "letters", "Material.032": "comb", "Material.033": "beak" } as const;
 type Part = (typeof LOGO_PARTS)[keyof typeof LOGO_PARTS];
 /** where the outro camera aims, as authored (the logo panel moves it) */
 const LOGO_CENTER = LOGO.center.clone();
@@ -24,6 +33,9 @@ export function Restaurant() {
 
   const { model, logo, parts } = useMemo(() => {
     const model = scene.clone(true);
+    model.rotation.y = MODEL_TURN;
+    model.position.copy(MODEL_OFFSET);
+    model.updateMatrixWorld(true);
     // own copies of the logo's materials (the cached GLTF stays as authored), with their authored glow
     const parts = new Map<string, { part: Part; mat: THREE.MeshStandardMaterial; glow: number; base: number }>();
     model.traverse((o) => {
@@ -31,6 +43,20 @@ export function Restaurant() {
       if (!mesh.isMesh) return;
       const mat = mesh.material as THREE.MeshStandardMaterial;
       if (mat.map) mat.map.anisotropy = 4;
+      // real transmission re-renders the whole scene every frame for one thin glass strip: plain see-through glass instead
+      if ((mat as THREE.MeshPhysicalMaterial).transmission > 0) {
+        mesh.material = new THREE.MeshStandardMaterial({
+          name: mat.name,
+          color: mat.color,
+          roughness: mat.roughness,
+          metalness: 0,
+          transparent: true,
+          opacity: 0.25,
+          depthWrite: false,
+          side: mat.side,
+        });
+        return;
+      }
       const part = LOGO_PARTS[mat.name as keyof typeof LOGO_PARTS];
       if (part) {
         let e = parts.get(mat.name);
@@ -43,6 +69,11 @@ export function Restaurant() {
       }
     });
     const node = model.getObjectByName(LOGO_NODE);
+    if (node) {
+      const curves: THREE.Object3D[] = [];
+      model.traverse((o) => LOGO_CURVES.test(o.name) && o.parent !== node && curves.push(o));
+      for (const c of curves) node.attach(c); // keeps where they are
+    }
     const logo = node && {
       node,
       position: node.position.clone(),

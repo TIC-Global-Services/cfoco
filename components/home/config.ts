@@ -149,7 +149,8 @@ export const LOGO = {
 // ---------------------------------------------------------------------------
 
 export const CAMERA = {
-  position: new THREE.Vector3(0, 2.0387, 13.5099),
+  // in front of the kitchen's front wall (z 12.0), which closes the room behind it
+  position: new THREE.Vector3(0, 2.0387, 11.7),
   target: new THREE.Vector3(0, 2.0387, -40.0),
   fov: 53.7,
 };
@@ -295,7 +296,7 @@ export type RisingMachine = {
   outTo: number;
 };
 
-export const KIOSK_URL = "/models/ordering_machine_new.glb";
+export const KIOSK_URL = "/models/ordering_machine_final.glb";
 /** kiosk height, metres (the model is ≈1.9 m) — they stand in the room (world space) along its left wall, not in front of the lens: x = along the room's width, y = floor, d = z */
 export const KIOSK_HEIGHT = 2.8;
 /** turns the model's front to +z (toward the lens) before the room placement below */
@@ -317,11 +318,16 @@ export const VENDING_URL = "/models/vending_new.glb";
 export const VENDING_HEIGHT = 2.7;
 /** the model's front faces +z already */
 export const VENDING_FACING = 0;
-const VENDING_X = 6.6;
-const VENDING_Z = 9.0;
+/**
+ * In the right-hand corner by the kitchen: its back against the kitchen's front wall (z 11.99), its side against the
+ * right wall (x 7.87). At this height the model is 1.73 m wide and 1.75 m deep, so its centre stands 0.9 m in from each.
+ * Beside the main camera (z 11.7), so it never gets into the hero view.
+ */
+const VENDING_X = 6.97;
+const VENDING_Z = 11.08;
 export const VENDING: RisingMachine[] = [
-  // slides up out of the floor with the intro (seconds after it starts) and stays; the front looks into the room, turned a little toward the camera's side (the camera looks across from the front-left)
-  { x: VENDING_X, y: 0, d: VENDING_Z, yaw: -Math.PI / 2 + 0.6, from: 0.9, to: 1.8, outFrom: 0, outTo: 0 },
+  // slides up out of the floor with the intro (seconds after it starts) and stays; square to the kitchen wall, its front looking straight down the room (-z)
+  { x: VENDING_X, y: 0, d: VENDING_Z, yaw: Math.PI, from: 0.9, to: 1.8, outFrom: 0, outTo: 0 },
 ];
 
 /**
@@ -330,24 +336,25 @@ export const VENDING: RisingMachine[] = [
  */
 export const VEND_VIEW = {
   /** from the wall's view to this one is WALL.backFrom → backTo; from here on to the kitchen, KITCHEN.outFrom → outTo */
-  eye: new THREE.Vector3(3.0, 1.8, 13.5),
+  // in front of it and to the left, over the front booths: the robot comes along their near side and parks beside it
+  eye: new THREE.Vector3(3.4, 2.0, 5.4),
   target: new THREE.Vector3(VENDING_X, 1.3, VENDING_Z),
   fov: 56,
 };
 
 // ---------------------------------------------------------------------------
-// Kitchen (kitchen_layer_new.glb), on the restaurant's open side, where it was
+// Kitchen (kitchen_new_layer.glb), on the restaurant's open side, where it was
 // built. It always stands there. For its step the camera leaves its locked spot
 // for the kitchen's own authored camera (the "Camera" node in the model) and
 // comes back.
 // ---------------------------------------------------------------------------
 
 /**
- * The model is in its own frame; this puts it into the room's. It is the placement the first kitchen cut was moved by
- * (x 8.08, z 7.97, turned 180°), then moved on 6.3 m (+z) so the whole kitchen stands behind the main camera (z 13.5):
- * it never gets into the hero view, and its open front looks out the back of the room.
+ * The model is in its own frame; this puts it into the room's (turned 180°). Its front wall, with the doorway on the
+ * left (x -5.1 to -0.2), stands at z 12.0–12.2: flush with the restaurant's open end (z 12.0), so the two meet with
+ * no gap. The whole kitchen stands behind the main camera, so it never gets into the hero view.
  */
-const KITCHEN_ORIGIN = new THREE.Vector3(8.0826, 0, 7.9703 + 6.3);
+const KITCHEN_ORIGIN = new THREE.Vector3(8.0826, 0, 12.24);
 const KITCHEN_TURN = Math.PI;
 /** the model's authored camera, in its own frame (looking +z) */
 const KITCHEN_CAM = new THREE.Vector3(3.4351, 1.932, -9.5943);
@@ -384,6 +391,8 @@ export const ROBOT_HEIGHT = 2.0;
 export const ROBOT_FACING = 0;
 
 const ROBOT_START = new THREE.Vector3(-3.4, 0, 5.0);
+/** where it waits at the vending machine: parked beside it (its left side, x 6.1), facing the kitchen wall like it */
+export const VENDING_STOP = new THREE.Vector3(5.5, 0, 10.9);
 
 export const ROBOT_RUN = {
   /** slides up out of the floor… */
@@ -404,33 +413,44 @@ export const ROBOT_RUN = {
   exitDelay: 0.8,
   exitTime: 6,
   start: ROBOT_START,
-  /** the way across: along the wall, behind the camera's spot at the wall, then over to the vending machine */
+  /**
+   * The way across, round the front booths: from the kiosks it heads off to the right of the wall view (deeper into the
+   * room, -z), along the far side of the booths, up the lane on their right and round to park beside the vending
+   * machine, the camera (VEND_VIEW, over the booths) turning after it. That lane is 1.35 m wide below 2.1 m (booths
+   * to x 5.25, the leaf ledge from x 6.6), so it keeps to x 5.95: ~0.2 m either side. Edit it on the page: ?debug.
+   */
   route: [
     ROBOT_START,
-    new THREE.Vector3(-3.1, 0, 7.6),
-    new THREE.Vector3(-1.4, 0, 10.1),
-    new THREE.Vector3(1.8, 0, 10.7),
-    new THREE.Vector3(4.5, 0, 9.5),
+    new THREE.Vector3(-2.3, 0, 2.7),
+    new THREE.Vector3(-0.2, 0, 1.7),
+    new THREE.Vector3(2.6, 0, 1.5),
+    new THREE.Vector3(4.9, 0, 1.9),
+    new THREE.Vector3(5.95, 0, 3.4),
+    new THREE.Vector3(5.95, 0, 5.4),
+    new THREE.Vector3(5.75, 0, 7.4),
+    new THREE.Vector3(5.2, 0, 9.0),
+    VENDING_STOP,
   ],
-  /** on from the vending machine through the kitchen's doorway (the front wall at z 14.3 runs from x -0.2 to the right, so the way in is on the left of it; counters stand at x 0.9–4.5, z 14.3–15.3), room coords */
+  /** on from the vending machine through the kitchen's doorway (the front wall at z 12.0–12.2 runs from x -0.2 to the right, so the way in is on the left of it, x -5.1 to -0.2; counters stand at x 0.9–4.5, z 12.2–13.3), room coords */
   kitchenRoute: [
-    new THREE.Vector3(4.5, 0, 9.5),
-    new THREE.Vector3(2.6, 0, 11.3),
-    new THREE.Vector3(-0.6, 0, 12.6),
-    new THREE.Vector3(-2.4, 0, 13.6),
-    new THREE.Vector3(-2.6, 0, 15.2),
-    new THREE.Vector3(-1.4, 0, 17.0),
-    new THREE.Vector3(1.0, 0, 18.4),
-    new THREE.Vector3(3.2, 0, 18.8),
+    VENDING_STOP,
+    new THREE.Vector3(4.2, 0, 10.3),
+    new THREE.Vector3(2.0, 0, 10.3),
+    new THREE.Vector3(-0.8, 0, 10.6),
+    new THREE.Vector3(-2.4, 0, 11.6),
+    new THREE.Vector3(-2.6, 0, 13.2),
+    new THREE.Vector3(-1.4, 0, 15.0),
+    new THREE.Vector3(1.0, 0, 16.4),
+    new THREE.Vector3(3.2, 0, 16.8),
   ],
   /** and back out through the same doorway, then straight into the room (it joins the patrol from there, not via the vending machine) */
   exitRoute: [
-    new THREE.Vector3(3.2, 0, 18.8),
-    new THREE.Vector3(1.0, 0, 18.4),
-    new THREE.Vector3(-1.4, 0, 17.0),
-    new THREE.Vector3(-2.6, 0, 15.2),
-    new THREE.Vector3(-2.4, 0, 13.6),
-    new THREE.Vector3(-1.8, 0, 11.4),
+    new THREE.Vector3(3.2, 0, 16.8),
+    new THREE.Vector3(1.0, 0, 16.4),
+    new THREE.Vector3(-1.4, 0, 15.0),
+    new THREE.Vector3(-2.6, 0, 13.2),
+    new THREE.Vector3(-2.4, 0, 11.6),
+    new THREE.Vector3(-1.8, 0, 10.0),
     new THREE.Vector3(-1.0, 0, 8.6),
   ],
   /** the middle aisle, a closed loop (seconds per lap) */

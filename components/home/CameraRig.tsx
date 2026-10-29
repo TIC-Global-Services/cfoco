@@ -64,9 +64,9 @@ export function CameraRig() {
       exitPath: new THREE.CatmullRomCurve3(
         [
           new THREE.Vector3(),
-          new THREE.Vector3(-1.0, 1.9, 19.5),
-          new THREE.Vector3(-2.4, 1.9, 15.4),
-          new THREE.Vector3(-1.4, 1.95, 12.8),
+          new THREE.Vector3(-1.0, 1.9, 17.5),
+          new THREE.Vector3(-2.4, 1.9, 13.4),
+          new THREE.Vector3(-1.4, 1.95, 10.8),
           new THREE.Vector3(),
         ],
         false,

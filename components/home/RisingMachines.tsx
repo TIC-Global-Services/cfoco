@@ -54,7 +54,7 @@ export function RisingMachines({
   clips = false,
   phoneFit,
   world = false,
-  viewedFrom = 1,
+  viewDir = [-1, 0],
 }: {
   url: string;
   height: number;
@@ -64,8 +64,8 @@ export function RisingMachines({
   clips?: boolean;
   phoneFit?: number;
   world?: boolean;
-  /** world only: the way the camera looks at them — 1: down -x (the left wall's kiosks), -1: down +x (the right wall's vending machine) */
-  viewedFrom?: 1 | -1;
+  /** world only: the way the camera looks at them, on the floor (x, z) — [-1, 0]: down -x (the left wall's kiosks), [0, 1]: down +z (the vending machine against the kitchen wall) */
+  viewDir?: readonly [number, number];
 }) {
   const gltf = useGLTF(url);
   const ml = useMachineLightControls();
@@ -198,8 +198,8 @@ export function RisingMachines({
     tmp.right.set(1, 0, 0).applyQuaternion(tmp.q);
     tmp.camUp.set(0, 1, 0).applyQuaternion(tmp.q);
     tmp.fwd.set(0, 0, -1).applyQuaternion(tmp.q);
-    // in the room: the lights are laid out for a view down -x, toward the left wall
-    if (world) tmp.right.set(0, 0, -viewedFrom), tmp.fwd.set(-viewedFrom, 0, 0);
+    // in the room: the lights are laid out for the way the camera looks at them
+    if (world) tmp.fwd.set(viewDir[0], 0, viewDir[1]), tmp.right.set(-viewDir[1], 0, viewDir[0]);
     const kf = world ? 1 : Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)) / Math.tan(THREE.MathUtils.degToRad(CAMERA.fov / 2));
     // phones: three across won't fit the narrow frame — smaller, closer together, the sides further forward
     const portrait = world ? 0 : portraitness(state.size.width / state.size.height);
