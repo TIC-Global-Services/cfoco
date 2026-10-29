@@ -45,11 +45,10 @@ export default function Scene() {
   const light = useLightControls();
   const post = usePostControls();
   const glass = useGlassControls();
-  // phones / tablets / low-core machines: lighter resolution and no MSAA so it stays smooth
-  const lite = useMemo(
-    () => window.matchMedia("(pointer: coarse)").matches || (navigator.hardwareConcurrency ?? 8) <= 4,
-    [],
-  );
+  // phones / tablets (a touch screen as the main pointer): no bloom
+  const touch = useMemo(() => window.matchMedia("(pointer: coarse)").matches, []);
+  // …and with low-core machines: lighter resolution and no MSAA so it stays smooth
+  const lite = useMemo(() => touch || (navigator.hardwareConcurrency ?? 8) <= 4, [touch]);
 
   // resolution: capped by how many pixels the post chain (bloom, glass, MSAA, half-float) has to push — on a big retina
   // screen 1.5× is ~3.7 M px a frame — then it follows the frame rate: down a step when the machine can't keep up, back up when it can
@@ -95,7 +94,7 @@ export default function Scene() {
       {post.enabled && (
         <EffectComposer multisampling={lite ? 0 : 2} frameBufferType={THREE.HalfFloatType}>
           {/* own pass: the glass re-samples its input, so bloom has to be baked in before it */}
-          <EffectGroup>
+          <EffectGroup enabled={!touch}>
             <Bloom
               ref={maskBloomByAlpha}
               mipmapBlur
