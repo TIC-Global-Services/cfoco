@@ -5,7 +5,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useMemo } from "react";
 import { damp, robotRide, scrollState, smoothstep } from "@/lib/home/scroll";
-import { CAMERA, KITCHEN, LOGO, ROBOT_RUN, VEND_VIEW, WALL, ZOOM_FROM, ZOOM_TO } from "./config";
+import { CAMERA, KITCHEN, LOGO, ROBOT_RUN, WALL, ZOOM_FROM, ZOOM_TO } from "./config";
 import { INTRO_FLIGHT } from "./Loader";
 import { useCameraControls, useInteractionControls } from "./controls";
 
@@ -59,20 +59,13 @@ export function CameraRig() {
       base: new THREE.Vector3(),
       pivotBase: new THREE.Vector3(),
       eyeR: new THREE.Vector3(),
-      chaseEye: new THREE.Vector3(),
-      chaseK: 0,
-      exitPath: new THREE.CatmullRomCurve3(
-        [
-          new THREE.Vector3(),
-          new THREE.Vector3(-1.0, 1.9, 17.5),
-          new THREE.Vector3(-2.4, 1.9, 13.4),
-          new THREE.Vector3(-1.4, 1.95, 10.8),
-          new THREE.Vector3(),
-        ],
+      eyeK: new THREE.Vector3(),
+      // from the wall into the kitchen the camera goes through the doorway, not across the counters
+      inPath: new THREE.CatmullRomCurve3(
+        [new THREE.Vector3(), new THREE.Vector3(-1.2, 1.9, 9.5), new THREE.Vector3(-1.2, 1.9, 13.2), new THREE.Vector3(-0.6, 1.95, 15.4), new THREE.Vector3()],
         false,
         "centripetal",
       ),
-      eyeK: new THREE.Vector3(),
     }),
     [],
   );
@@ -97,16 +90,12 @@ export function CameraRig() {
     // ordering wall: once the chicken is in the bucket, swing over to the left wall's kiosks, then return (see WALL)
     // …then across the room to the vending machine on the right (see VEND_VIEW), then straight on to the kitchen and
     // back from there (see KITCHEN). The views cross-fade: their weights add up to 1 while it moves between two of them
-    const hand = smoothstep(WALL.backFrom, WALL.backTo, p);
     const toKitchen = smoothstep(KITCHEN.outFrom, KITCHEN.outTo, p);
-    const wOut = smoothstep(WALL.panFrom, WALL.panTo, p) * (1 - hand);
-    const vOut = hand * (1 - toKitchen);
-    const kOut = toKitchen * (1 - smoothstep(KITCHEN.backFrom, KITCHEN.backTo, p));
+    const wOut = smoothstep(WALL.panFrom, WALL.panTo, p) * (1 - toKitchen);
     const wk = wOut * wOut * wOut * (wOut * (wOut * 6 - 15) + 10);
-    const vk = vOut * vOut * vOut * (vOut * (vOut * 6 - 15) + 10);
-    const kk = kOut * kOut * kOut * (kOut * (kOut * 6 - 15) + 10);
+    const kk = toKitchen * toKitchen * toKitchen * (toKitchen * (toKitchen * 6 - 15) + 10); // stays 1 until the outro takes over
     const portrait = portraitness(state.size.width / state.size.height);
-    if (wk > 0 || vk > 0 || kk > 0) {
+    if (wk > 0 || kk > 0) {
       tmp.base.copy(camera.position);
       tmp.pivotBase.copy(tmp.pivot);
       const sway = (v: THREE.Vector3, k: number) => v.addScaledVector(tmp.up, tmp.p.y * 0.25 * k).addScaledVector(tmp.right, tmp.p.x * 0.5 * k);
@@ -115,44 +104,35 @@ export function CameraRig() {
       tmp.eyeK.addScaledVector(tmp.right, tmp.p.x * 1.5).addScaledVector(tmp.up, tmp.p.y * 0.75);
       camera.position
         .addScaledVector(sway(tmp.eye.copy(WALL.eye), 1).sub(tmp.base), wk)
-        .addScaledVector(sway(tmp.eyeR.copy(VEND_VIEW.eye), 1).sub(tmp.base), vk)
         .addScaledVector(tmp.eyeK.sub(tmp.base), kk);
       tmp.pivot
         .addScaledVector(tmp.aim.copy(WALL.target).sub(tmp.pivotBase), wk)
-        .addScaledVector(tmp.aim.copy(VEND_VIEW.target).sub(tmp.pivotBase), vk)
         .addScaledVector(tmp.aim.copy(KITCHEN.target).sub(tmp.pivotBase), kk);
-      // leaving the kitchen the camera backs out the same way the robot goes (the doorway), not through the wall
-      const back = smoothstep(KITCHEN.backFrom, KITCHEN.backTo, p);
-      if (back > 0 && back < 1) {
-        const pts = tmp.exitPath.points;
-        pts[0].copy(KITCHEN.eye);
-        pts[4].copy(tmp.base);
-        camera.position.copy(tmp.exitPath.getPoint(back * back * back * (back * (back * 6 - 15) + 10)));
+      if (toKitchen > 0 && toKitchen < 1) {
+        const pts = tmp.inPath.points;
+        pts[0].copy(WALL.eye);
+        pts[4].copy(tmp.eyeK.copy(KITCHEN.eye));
+        camera.position.copy(tmp.inPath.getPoint(kk));
       }
-      // while the robot drives the bucket across and on into the kitchen, the camera goes with it
-      const R = ROBOT_RUN;
-      const follow = smoothstep(R.driveFrom, R.driveFrom + 0.5, p) * (1 - smoothstep(R.kitchenTo - 0.15, R.kitchenTo + 0.3, p));
-      if (follow > 0 && robotRide.ready) {
-        tmp.aim.copy(robotRide.tray);
-        tmp.aim.y = 0.95;
-        tmp.pivot.lerp(tmp.aim, follow);
-      }
-    }
-
-    // going in, the camera trails the robot through the doorway instead of cutting across the walls
-    if (robotRide.ready) {
-      const R = ROBOT_RUN;
-      const chase = smoothstep(R.kitchenFrom + 0.15, R.kitchenFrom + 0.8, p) * (1 - smoothstep(R.kitchenTo, R.kitchenTo + 0.5, p));
-      if (chase > 0) {
-        tmp.aim.set(0, 0, 1).applyQuaternion(robotRide.quaternion);
-        tmp.eyeR.set(robotRide.tray.x - tmp.aim.x * 3.2, 1.9, robotRide.tray.z - tmp.aim.z * 3.2);
-        // the eye trails its mark a little, so the turn after the robot is a sweep, not a snap
-        if (tmp.chaseK === 0) tmp.chaseEye.copy(camera.position);
-        tmp.chaseEye.lerp(tmp.eyeR, 1 - Math.exp(-delta * 3));
-        tmp.chaseK = 1;
-        camera.position.lerp(tmp.chaseEye, chase * chase * (3 - 2 * chase));
-      } else {
-        tmp.chaseK = 0;
+      if (robotRide.ready) {
+        // the robot has reached the doorway: zoom in on it, wherever it is
+        const zk = smoothstep(KITCHEN.zoomFrom, KITCHEN.zoomTo, p) * kk;
+        if (zk > 0) {
+          tmp.aim.set(robotRide.tray.x, 0, robotRide.tray.z);
+          camera.position.lerp(tmp.eyeR.copy(tmp.aim).add(KITCHEN.zoomEye), zk);
+          tmp.pivot.lerp(tmp.aim.add(KITCHEN.zoomAim), zk);
+        }
+        // …then it turns and drives out down the room, slowly: the camera trails behind it
+        const R = ROBOT_RUN;
+        const ck = smoothstep(R.leadFrom, R.leadFrom + 0.8, p);
+        if (ck > 0) {
+          // behind it along its heading, mostly straight down the room (-z): its last turn toward the side doesn't swing the view
+          tmp.aim.set(0, 0, 1).applyQuaternion(robotRide.quaternion).multiplyScalar(0.4).z -= 0.6;
+          tmp.aim.normalize();
+          tmp.eyeR.set(robotRide.tray.x - tmp.aim.x * R.followBack, R.followHeight, robotRide.tray.z - tmp.aim.z * R.followBack);
+          camera.position.lerp(tmp.eyeR, ck);
+          tmp.pivot.lerp(tmp.aim.set(robotRide.tray.x, 1.0, robotRide.tray.z), ck);
+        }
       }
     }
 
@@ -175,8 +155,7 @@ export function CameraRig() {
     camera.lookAt(tmp.pivot);
     const fov =
       fovForAspect(state.size.width / state.size.height) +
-      (KITCHEN.fov - CAMERA.fov) * kk * (1 - portrait) +
-      ((WALL.fov - CAMERA.fov) * wk + (VEND_VIEW.fov - CAMERA.fov) * vk) * (1 - portrait);
+      ((KITCHEN.fov - CAMERA.fov) * kk * (1 - z) + (WALL.fov - CAMERA.fov) * wk) * (1 - portrait);
     if (Math.abs(camera.fov - fov) > 1e-3) {
       camera.fov = fov;
       camera.updateProjectionMatrix();

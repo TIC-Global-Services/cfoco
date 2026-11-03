@@ -112,7 +112,7 @@ html.lenis body {
   }
 }
 
-/* ---------- footer (Footer.tsx): frames the neon logo; drawn in 3D by SceneText ---------- */
+/* ---------- footer (Footer.tsx): frames the neon logo; plain DOM text like the navbar ---------- */
 @layer components {
   .footer nav {
     font-size: clamp(15px, 1.3vw, 22px);
@@ -121,7 +121,23 @@ html.lenis body {
   .footer-bar {
     font-size: clamp(12px, 0.95vw, 15px);
     font-weight: 500;
-    color: rgb(255 255 255 / 0.82);
+    color: rgb(255 255 255 / 0.9);
+    text-shadow: 0 1px 10px rgb(0 0 0 / 0.55);
+  }
+  /* a dark glass pill behind each credit, so the type reads over the marble and the sofas */
+  .footer-pill {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 9px 18px;
+    border-radius: 9999px;
+    background: rgb(6 10 22 / 0.62);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    text-shadow: none;
   }
   .footer a:focus-visible {
     outline: 2px solid rgb(255 255 255 / 0.7);
@@ -221,7 +237,7 @@ html.lenis body {
   }
 }
 
-/* ---------- sound toggle (Sound.tsx): speaker icon + label, drawn in 3D by SceneText ---------- */
+/* ---------- sound toggle (Sound.tsx): speaker icon + label, plain DOM text like the navbar ---------- */
 @layer components {
   .sound-btn {
     display: inline-flex;
@@ -238,10 +254,6 @@ html.lenis body {
     position: relative;
     width: 18px;
     height: 18px;
-  }
-  .sound-icon > span {
-    position: absolute;
-    inset: 0;
   }
   .sound-btn:focus-visible {
     outline: 2px solid rgb(255 255 255 / 0.7);

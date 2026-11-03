@@ -59,16 +59,14 @@ export function Sound() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // the button bows out while the footer is up (its credits own that corner)
+  // while the footer is up the button steps up above its credits bar (which owns the bottom corner) and stays
   const bar = useRef<HTMLElement>(null);
   useEffect(
     () =>
       onProgress((p) => {
         const el = bar.current;
         if (!el) return;
-        const k = 1 - smoothstep(FOOTER_FROM - 0.2, FOOTER_FROM + 0.1, p);
-        el.style.opacity = k.toFixed(3);
-        el.style.visibility = k > 0.001 ? "visible" : "hidden";
+        el.style.bottom = p > FOOTER_FROM - 0.2 ? "calc(3.2vh + 3.4rem)" : "";
       }),
     [],
   );
@@ -157,14 +155,11 @@ export function Sound() {
 
   const on = state === "on";
   return (
-    // drawn in 3D by SceneText (pinned to the lens, so it holds still); this is the real button
+    // plain DOM text, like the navbar
     <section
       ref={bar}
       aria-label="Sound"
-      data-index={-2}
-      data-t3d-pinned
-      data-reveal="intro"
-      className="pointer-events-none fixed right-(--gutter) bottom-6 z-20"
+      className="pointer-events-none fixed right-(--gutter) bottom-6 z-20 transition-[bottom] duration-500"
       style={{ opacity: 1, visibility: "visible" }}
     >
       <button
@@ -178,14 +173,12 @@ export function Sound() {
         }}
         className="sound-btn pointer-events-auto"
       >
-        {/* speaker with waves when on, crossed out when off — both laid out, SceneText fades between them */}
-        <span className="sound-icon" aria-hidden>
-          <span data-t3d data-t3d-icon="volume-on" data-t3d-gate data-open={on} />
-          <span data-t3d data-t3d-icon="volume-off" data-t3d-gate data-open={!on} />
-        </span>
-        <span data-t3d data-t3d-live className="whitespace-nowrap">
-          {on ? "SOUND ON" : "SOUND OFF"}
-        </span>
+        {/* plain DOM text over the canvas, like the navbar: speaker with waves when on, crossed out when off */}
+        <svg className="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M11 5 6 9H2v6h4l5 4V5z" />
+          {on ? <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" /> : <path d="m22 9-6 6M16 9l6 6" />}
+        </svg>
+        <span className="whitespace-nowrap">{on ? "SOUND ON" : "SOUND OFF"}</span>
       </button>
     </section>
   );

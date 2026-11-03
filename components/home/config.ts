@@ -119,7 +119,7 @@ export const SHOW_COPY = false;
 
 const LAST = SECTIONS.length - 1;
 /** scroll the scenes have outgrown the copy by (the kitchen, the meal and the robot run past the last section), in section units */
-const SCENES_PAST_COPY = 2.6;
+const SCENES_PAST_COPY = 0.2;
 /** where the outro starts counting from */
 const OUTRO_AT = LAST + SCENES_PAST_COPY;
 /** extra scroll after that, in section units */
@@ -189,9 +189,6 @@ export const WALL = {
   /** the camera swings over… */
   panFrom: 4.6,
   panTo: 5.4,
-  /** …and moves on to the vending machine (VEND_VIEW) */
-  backFrom: 7.3,
-  backTo: 7.9,
   /** the view of the wall: the kiosks run along it, the bucket in front of the middle one */
   /** square on to the wall: looking straight along -x */
   eye: new THREE.Vector3(-0.2, 1.8, 6.7),
@@ -199,6 +196,10 @@ export const WALL = {
   fov: 56,
   /** where the bucket stands (base-centre): in front of the middle kiosk (z 6.7) */
   bucket: new THREE.Vector3(-3.6, 0, 6.7),
+  /** the middle kiosk's screen, its centre (world space; the screen is ≈0.65 m wide, ≈1.0 m tall): the bucket slips into it, shrinking, then comes back out for the robot */
+  screen: new THREE.Vector3(-5.85, 1.9, 6.7),
+  /** bucket size while in the screen, relative to its hero size (the wall size is 0.62) */
+  screenScale: 0.31,
 };
 
 /** `ease` (optional) shapes the segment that ends on this key */
@@ -209,7 +210,7 @@ const BUCKET_S = 0.6;
 /** the pose keys below stop here: the bucket then belongs to the robot (ROBOT_RUN) */
 const ROBOT_RUN_FROM = 6.0;
 /** where the cup's rim sits when the bucket is "up": the whole bucket (cup, logo and pile) is in frame, centred, with room above for the hovering chicken */
-const BUCKET_RIM_Y = 0.1;
+const BUCKET_RIM_Y = -0.35;
 /** bucket base-centre height when it is "up" */
 const BUCKET_UP_Y = BUCKET_RIM_Y - BUCKET_HEIGHT * BUCKET_S;
 /** the hovering chicken sits a little behind the bucket (4.0), so it drops into the back half of the cup */
@@ -252,11 +253,11 @@ export const CHICKEN_KEYS: Pose[] = [
   { p: SWAP_TO, x: 0, y: 0.0, d: 4.0, s: 1.05 },
   // …and keeps holding through "The Final Crunch" (section 3, text visible ≈2.6–3.4)
   { p: RISE_FROM, x: 0, y: 0.0, d: 4.0, s: 1.05 },
-  // rises to hover above where the bucket mouth will be…
-  { p: HOVER_AT, x: 0, y: 1.2, d: CHICKEN_HOVER_D, s: 0.62 },
+  // shrinks to fit the cup, where it is (no rise)…
+  { p: HOVER_AT, x: 0, y: 0.0, d: CHICKEN_HOVER_D, s: 0.62 },
   // …and waits there while the bucket comes up from below; from DROP_START it falls straight
   // into the cup in real time (HeroChicken, driven by the bucket's drop clock)
-  { p: TOSS_OUT, x: 0, y: 1.2, d: CHICKEN_HOVER_D, s: 0.62 },
+  { p: TOSS_OUT, x: 0, y: 0.0, d: CHICKEN_HOVER_D, s: 0.62 },
 ];
 
 /** bucket base-centre. Rises from below the frame once the chicken is up; from WALL.panFrom it travels to the kiosks (HeroChicken), where the robot takes it. */
@@ -313,35 +314,6 @@ export const KIOSKS: RisingMachine[] = [
   { x: WALL_KIOSK_X, y: 0, d: WALL_KIOSK_Z + 2.0, yaw: FACE_ROOM + 0.3, from: 0.7, to: 1.6, outFrom: 0, outTo: 0 },
 ];
 
-export const VENDING_URL = "/models/vending_new.glb";
-/** vending machine height, metres (the model is ≈0.75 m, so it is scaled up; deep, so it takes ≈1.5 m of floor) — it stands in the room (world space) on the right, against the right wall, in front of the right-hand booths (nearer the camera, out of the hero view) */
-export const VENDING_HEIGHT = 2.7;
-/** the model's front faces +z already */
-export const VENDING_FACING = 0;
-/**
- * In the right-hand corner by the kitchen: its back against the kitchen's front wall (z 11.99), its side against the
- * right wall (x 7.87). At this height the model is 1.73 m wide and 1.75 m deep, so its centre stands 0.9 m in from each.
- * Beside the main camera (z 11.7), so it never gets into the hero view.
- */
-const VENDING_X = 6.97;
-const VENDING_Z = 11.08;
-export const VENDING: RisingMachine[] = [
-  // slides up out of the floor with the intro (seconds after it starts) and stays; square to the kitchen wall, its front looking straight down the room (-z)
-  { x: VENDING_X, y: 0, d: VENDING_Z, yaw: Math.PI, from: 0.9, to: 1.8, outFrom: 0, outTo: 0 },
-];
-
-/**
- * The vending view. When the camera has finished at the ordering wall it swings
- * across the room to the vending machine, then returns for the kitchen.
- */
-export const VEND_VIEW = {
-  /** from the wall's view to this one is WALL.backFrom → backTo; from here on to the kitchen, KITCHEN.outFrom → outTo */
-  // in front of it and to the left, over the front booths: the robot comes along their near side and parks beside it
-  eye: new THREE.Vector3(3.4, 2.0, 5.4),
-  target: new THREE.Vector3(VENDING_X, 1.3, VENDING_Z),
-  fov: 56,
-};
-
 // ---------------------------------------------------------------------------
 // Kitchen (kitchen_new_layer.glb), on the restaurant's open side, where it was
 // built. It always stands there. For its step the camera leaves its locked spot
@@ -362,12 +334,15 @@ const KITCHEN_CAM = new THREE.Vector3(3.4351, 1.932, -9.5943);
 export const KITCHEN = {
   origin: KITCHEN_ORIGIN,
   turn: KITCHEN_TURN,
-  /** the camera moves on into it, straight from the vending machine… */
-  outFrom: 9.4,
-  outTo: 10.1,
-  /** …and comes back to its spot */
-  backFrom: 11.3,
-  backTo: 12.4,
+  /** the camera moves on into it, straight from the ordering wall… */
+  outFrom: 6.2,
+  outTo: 7.1,
+  /** …holds the kitchen view (outTo → zoomFrom: the robot drives in at its left meanwhile, like the pause at the ordering wall), then zooms in on the robot (until it drives off: ROBOT_RUN.leadFrom) */
+  zoomFrom: 7.9,
+  zoomTo: 8.5,
+  /** the zoomed view, from the robot's stop (KITCHEN_STOP): in front of it, a little above its middle */
+  zoomEye: new THREE.Vector3(0.5, 1.5, 3.8),
+  zoomAim: new THREE.Vector3(0, 1.0, 0),
   /** the authored camera, in the room's frame: looks straight down -z into the kitchen */
   eye: new THREE.Vector3(KITCHEN_ORIGIN.x - KITCHEN_CAM.x, KITCHEN_CAM.y, KITCHEN_ORIGIN.z - KITCHEN_CAM.z),
   target: new THREE.Vector3(KITCHEN_ORIGIN.x - KITCHEN_CAM.x, KITCHEN_CAM.y, KITCHEN_ORIGIN.z - KITCHEN_CAM.z - 8),
@@ -377,10 +352,10 @@ export const KITCHEN = {
 
 
 // ---------------------------------------------------------------------------
-// The serving robot ("Served By The Future"). Once the bucket stands at the
-// ordering wall the robot slides up out of the floor beside it, the bucket hops
-// onto its tray and the robot drives it across the restaurant to the vending
-// machine; after that it keeps rolling up and down the middle of the room.
+// The serving robot ("Served By The Future"). It stands parked by the ordering
+// kiosks. The bucket slips into the middle kiosk's screen; as the camera leaves
+// for the kitchen the bucket hops onto the robot's tray, and the robot drives to
+// the kitchen's doorway and stops there facing the camera (+z), bucket aboard.
 // World space (metres), floor at y = 0. Scroll positions as everywhere else.
 // ---------------------------------------------------------------------------
 
@@ -393,72 +368,45 @@ export const ROBOT_FACING = 0;
 const ROBOT_START = new THREE.Vector3(-3.4, 0, 5.0);
 /** where it waits from the start: parked beside the first kiosk (z 4.7), facing into the room */
 const ROBOT_PARK = new THREE.Vector3(-5.4, 0, 3.2);
-/** where it waits at the vending machine: parked beside it (its left side, x 6.1), facing the kitchen wall like it */
-export const VENDING_STOP = new THREE.Vector3(5.5, 0, 10.9);
+/** where it stops: just inside the kitchen's doorway (x -5.1 to -0.2, front wall z 12.0–12.2), facing the kitchen camera (+z) */
+export const KITCHEN_STOP = new THREE.Vector3(-1.2, 0, 12.7);
+/** where it ends: off to the left of the aisle, short of the tables and chairs (they start ≈3 m further down the room), so it never touches them and the camera glides past it clear */
+const AISLE_STOP = new THREE.Vector3(-2.6, 0, 6.2);
 
 export const ROBOT_RUN = {
-  /** stands parked by the kiosks from the start, and comes forward to the bucket… */
-  comeFrom: 5.9,
-  comeTo: 6.4,
-  /** from its parking spot round to beside the bucket (it ends facing into the room, +x, for the bucket to hop on) */
-  comeRoute: [ROBOT_PARK, new THREE.Vector3(-4.6, 0, 3.6), ROBOT_START],
-  /** …the bucket hops onto it… */
-  loadFrom: 6.4,
-  loadTo: 6.9,
-  /** …it drives to the vending machine… */
-  driveFrom: 6.9,
-  driveTo: 8.3,
-  /** …waits there, then carries on into the kitchen (the camera goes with it)… */
-  kitchenFrom: 8.6,
-  kitchenTo: 9.8,
-  /** …and rolls back out by itself, then off on patrol */
-  /** (on its own clock, not the scroll: once the camera has reached the kitchen it waits `exitDelay` seconds, then drives out in `exitTime` and carries on patrolling) */
-  exitAt: 10.1,
-  exitDelay: 0.8,
-  exitTime: 6,
+  /** the bucket changes from the kiosk screen to the robot's tray, unseen, once the camera has swung away from the wall (it is turning into the kitchen: KITCHEN.outFrom → outTo) */
+  loadAt: 6.8,
+  /** …the robot drives to the kitchen doorway, as the camera moves there */
+  driveFrom: 6.5,
+  driveTo: 7.6,
+  /** (it stays at the doorway, camera zoomed in on it, from zoomTo to here: a short pause) after the zoom it turns round and drives out, down the room, slowly, the camera behind it, and stops in the aisle before the tables; the outro's glide to the logo then carries on past it */
+  leadFrom: 8.6,
+  leadTo: 10.5,
+  leadRoute: [
+    KITCHEN_STOP,
+    new THREE.Vector3(-1.2, 0, 11.5),
+    new THREE.Vector3(-1.3, 0, 10.2),
+    new THREE.Vector3(-1.1, 0, 8.6),
+    new THREE.Vector3(-1.5, 0, 7.5),
+    AISLE_STOP,
+  ],
+  /** the camera behind it: metres back from the robot, and its height */
+  followBack: 3.4,
+  followHeight: 1.9,
+  /** its heading at the doorway, radians (0 = square to the kitchen camera; a turn from that shows the bucket on its tray, which stands behind its face) */
+  stopYaw: 0.9,
   start: ROBOT_START,
-  /**
-   * The way across, round the front booths: from the kiosks it heads off to the right of the wall view (deeper into the
-   * room, -z), along the far side of the booths, up the lane on their right and round to park beside the vending
-   * machine, the camera (VEND_VIEW, over the booths) turning after it. That lane is 1.35 m wide below 2.1 m (booths
-   * to x 5.25, the leaf ledge from x 6.6), so it keeps to x 5.95: ~0.2 m either side. Edit it on the page: ?debug.
-   */
+  /** from its parking spot, round the middle aisle and down to the kitchen's doorway. Edit it on the page: ?debug. */
   route: [
+    ROBOT_PARK,
+    new THREE.Vector3(-4.4, 0, 4.0),
     ROBOT_START,
-    new THREE.Vector3(-2.3, 0, 2.7),
-    new THREE.Vector3(-0.2, 0, 1.7),
-    new THREE.Vector3(2.6, 0, 1.5),
-    new THREE.Vector3(4.9, 0, 1.9),
-    new THREE.Vector3(5.95, 0, 3.4),
-    new THREE.Vector3(5.95, 0, 5.4),
-    new THREE.Vector3(5.75, 0, 7.4),
-    new THREE.Vector3(5.2, 0, 9.0),
-    VENDING_STOP,
+    new THREE.Vector3(-2.2, 0, 7.0),
+    new THREE.Vector3(-1.2, 0, 8.6),
+    new THREE.Vector3(-1.3, 0, 10.2),
+    new THREE.Vector3(-1.2, 0, 11.5),
+    KITCHEN_STOP,
   ],
-  /** on from the vending machine through the kitchen's doorway (the front wall at z 12.0–12.2 runs from x -0.2 to the right, so the way in is on the left of it, x -5.1 to -0.2; counters stand at x 0.9–4.5, z 12.2–13.3), room coords */
-  kitchenRoute: [
-    VENDING_STOP,
-    new THREE.Vector3(4.2, 0, 10.3),
-    new THREE.Vector3(2.0, 0, 10.3),
-    new THREE.Vector3(-0.8, 0, 10.6),
-    new THREE.Vector3(-2.4, 0, 11.6),
-    new THREE.Vector3(-2.6, 0, 13.2),
-    new THREE.Vector3(-1.4, 0, 15.0),
-    new THREE.Vector3(1.0, 0, 16.4),
-    new THREE.Vector3(3.2, 0, 16.8),
-  ],
-  /** and back out through the same doorway, then straight into the room (it joins the patrol from there, not via the vending machine) */
-  exitRoute: [
-    new THREE.Vector3(3.2, 0, 16.8),
-    new THREE.Vector3(1.0, 0, 16.4),
-    new THREE.Vector3(-1.4, 0, 15.0),
-    new THREE.Vector3(-2.6, 0, 13.2),
-    new THREE.Vector3(-2.4, 0, 11.6),
-    new THREE.Vector3(-1.8, 0, 10.0),
-    new THREE.Vector3(-1.0, 0, 8.6),
-  ],
-  /** the middle aisle, a closed loop (seconds per lap) */
-  patrol: { centre: new THREE.Vector3(-0.5, 0, 5.0), rx: 1.0, rz: 3.5, lap: 45 },
   /**
    * The robot's trays (measured on the model): four discs between two pillars, the top one at 0.735 of its height,
    * then 0.565, 0.41 and 0.255; ≈0.3 m apart. The pillars stand at local z ±0.41 (z runs along the tray), x runs
@@ -470,8 +418,8 @@ export const ROBOT_RUN = {
     { url: "/models/fries.glb", trayY: 0.575, height: 0.26, x: 0, z: -0.17, yaw: -Math.PI / 2 },
     { url: "/models/coke.glb", trayY: 0.575, height: 0.26, x: 0, z: 0.17, yaw: 0 },
   ],
-  /** the bucket's size on the tray, relative to its size at the wall */
-  bucketScale: 0.33,
+  /** the bucket's size on the tray, relative to its size in the screen */
+  bucketScale: 0.66,
 };
 
 /**

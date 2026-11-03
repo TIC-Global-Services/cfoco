@@ -544,20 +544,20 @@ export function HeroChicken() {
     // turned to the camera's view of the wall; then it slips into that kiosk's screen, shrinking (see WALL)
     const wb = smoothstep(WALL.panFrom + 0.05, WALL.panTo, p);
     rig.bucket.quaternion.copy(tmp.camQuat);
+    scrollState.screenWhite = 0;
     if (wb > 0) {
-      tmp.wallPos.copy(WALL.bucket);
-      tmp.wallPos.y += Math.sin(Math.PI * wb) * 0.35; // a little hop on the way
+      // straight from the hero spot into the middle kiosk's screen, shrinking away…
+      tmp.wallPos.copy(WALL.screen);
+      tmp.wallPos.y -= BUCKET_HEIGHT * b.s * WALL.screenScale * 0.7; // the bucket's base: half its height (cup + pile) below the screen's centre
       rig.bucket.position.lerp(tmp.wallPos, wb);
-      rig.bucket.scale.multiplyScalar(1 - 0.38 * wb); // smaller beside the kiosks (they stand ≈2 m)
+      rig.bucket.scale.multiplyScalar(1 + (WALL.screenScale - 1) * wb);
       rig.bucket.quaternion.slerp(tmp.wallQuat, wb);
-      // then the robot slides up beside it and takes it on its tray (see ROBOT_RUN): it hops over and rides along
-      const load = smoothstep(ROBOT_RUN.loadFrom, ROBOT_RUN.loadTo, p);
-      if (load > 0 && robotRide.ready) {
-        tmp.wallPos.copy(robotRide.tray);
-        tmp.wallPos.y += Math.sin(Math.PI * load) * 0.2; // lifted straight over and set down
-        rig.bucket.position.lerp(tmp.wallPos, load);
-        rig.bucket.scale.multiplyScalar(1 + (ROBOT_RUN.bucketScale - 1) * load);
-        rig.bucket.quaternion.multiply(tmp.spinQ.setFromAxisAngle(tmp.up, load * Math.PI * 2)); // turns once on the way
+      // once the camera has swung away from the wall, the bucket is on the robot's tray (unseen: no hop across the room)
+      const onRobot = p >= ROBOT_RUN.loadAt && robotRide.ready;
+      scrollState.screenWhite = onRobot ? 0 : wb;
+      if (onRobot) {
+        rig.bucket.position.copy(robotRide.tray);
+        rig.bucket.scale.multiplyScalar(ROBOT_RUN.bucketScale); // tray size, relative to its size in the screen
       }
     }
     tmp.baseQuat.copy(rig.bucket.quaternion);

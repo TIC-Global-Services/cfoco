@@ -21,6 +21,8 @@ export const scrollState = {
   /** bucket drop (HeroChicken → Sound): 0..1 while the piece falls in, and a count of landings */
   dropFall: 0,
   dropHits: 0,
+  /** 0..1: the middle kiosk's screen goes full white while the bucket is in it (HeroChicken → RisingMachines) */
+  screenWhite: 0,
   /** seconds (performance clock) when the loader has cleared — the opening copy reveals from here */
   introAt: Infinity,
   /** seconds (performance clock) when the opening camera flight starts (-Infinity: skip it) */

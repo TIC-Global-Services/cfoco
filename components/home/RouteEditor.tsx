@@ -6,7 +6,7 @@ import { button, useControls } from "leva";
 import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { bumpRoutes } from "@/lib/home/scroll";
-import { ROBOT_RUN, VENDING_STOP } from "./config";
+import { KITCHEN_STOP, ROBOT_RUN } from "./config";
 
 /**
  * ?debug only: the robot's routes on the floor, to shape them by hand. Click a waypoint and drag it (the arrows move
@@ -16,17 +16,15 @@ import { ROBOT_RUN, VENDING_STOP } from "./config";
  */
 
 const ROUTES = [
-  { key: "comeRoute", label: "parked → bucket", color: "#4ade80" },
-  { key: "route", label: "kiosks → vending", color: "#33d1ff" },
-  { key: "kitchenRoute", label: "vending → kitchen", color: "#ffb020" },
-  { key: "exitRoute", label: "kitchen → patrol", color: "#9b7bff" },
+  { key: "route", label: "parked → kitchen doorway", color: "#33d1ff" },
+  { key: "leadRoute", label: "kitchen → logo wall", color: "#ffb020" },
 ] as const;
 type RouteKey = (typeof ROUTES)[number]["key"];
 
 /** points two routes share: moving one moves it in both, and the code keeps their names */
 const NAMED = new Map<THREE.Vector3, string>([
   [ROBOT_RUN.start, "ROBOT_START"],
-  [VENDING_STOP, "VENDING_STOP"],
+  [KITCHEN_STOP, "KITCHEN_STOP"],
 ]);
 const STORE = "cfoco.robot-routes";
 /** half the robot's width, metres */

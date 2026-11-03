@@ -10,9 +10,17 @@ import { Spring, clamp, damp, easeInBack, easeInOutOvershoot, easeOutCubic, scro
 import { createStudioEnv } from "@/lib/home/studio";
 import { portraitness } from "./CameraRig";
 import { useMachineLightControls } from "./controls";
-import { CAMERA, EXPORT_NAMES, KIOSK_URL, VENDING_URL, type RisingMachine } from "./config";
+import { CAMERA, EXPORT_NAMES, KIOSK_URL, type RisingMachine } from "./config";
 
 /** a soft dark blob, fading to nothing at the edge */
+/** 1×1 white, swapped in for the screen's emissive image while it is "full white" */
+const whiteTex = (() => {
+  const t = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.needsUpdate = true;
+  return t;
+})();
+
 export function shadowTexture() {
   const c = document.createElement("canvas");
   c.width = c.height = 128;
@@ -293,7 +301,16 @@ export function RisingMachines({
       // screen boots up as it lands, then breathes; dims as it leaves
       const on = smoothstep(0.75, 1, rise) * (1 - smoothstep(0, 0.5, out));
       const flicker = on < 1 && on > 0 ? 0.6 + 0.4 * Math.sin(t * 60 + it.i) : 1;
-      for (const m of it.screens) m.emissiveIntensity = m.userData.emissive * (world ? ml.screenGlow : 1) * on * flicker * (0.92 + 0.08 * Math.sin(t * 2 + it.i));
+      // the centre kiosk's screen goes full white while the bucket is in it
+      const white = world && it.i === 0 ? scrollState.screenWhite : 0;
+      for (const m of it.screens) {
+        const base = m.userData.emissive * (world ? ml.screenGlow : 1) * on * flicker * (0.92 + 0.08 * Math.sin(t * 2 + it.i));
+        m.userData.map ??= m.emissiveMap;
+        m.emissiveMap = white > 0.5 ? whiteTex : m.userData.map;
+        m.emissiveIntensity = base + (Math.max(base, 1.2) - base) * white;
+        if (white > 0 || m.userData.wasWhite) m.emissive.setScalar(1); // plain white while the bucket is in
+        m.userData.wasWhite = white > 0;
+      }
       for (const m of it.mats) m.envMapIntensity = world ? ml.envIntensity : 0.9;
 
       if (world ? k.d === machines[0].d : side === 0) tmp.c.copy(pivot.position);
@@ -352,4 +369,3 @@ export function RisingMachines({
 }
 
 useGLTF.preload(KIOSK_URL);
-useGLTF.preload(VENDING_URL);

@@ -25,10 +25,6 @@ import {
   KIOSK_FACING,
   KIOSK_HEIGHT,
   KIOSK_URL,
-  VENDING,
-  VENDING_FACING,
-  VENDING_HEIGHT,
-  VENDING_URL,
 } from "./config";
 import { useGlassControls, useLightControls, usePostControls, useSectionControls } from "./controls";
 
@@ -86,7 +82,6 @@ export default function Scene() {
         <Kitchen />
         <HeroChicken />
         <RisingMachines url={KIOSK_URL} height={KIOSK_HEIGHT} machines={KIOSKS} facing={KIOSK_FACING} world />
-        <RisingMachines url={VENDING_URL} height={VENDING_HEIGHT} machines={VENDING} facing={VENDING_FACING} world viewDir={[0, 1]} />
         <ServeRobot />
         <SceneText hdr={post.enabled} />
         <Warmup />

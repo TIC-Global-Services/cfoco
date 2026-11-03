@@ -18,10 +18,8 @@ const ease = (t: number) => t * t * (3 - 2 * t);
 const turnTo = (a: number, b: number) => a + Math.atan2(Math.sin(b - a), Math.cos(b - a));
 
 /**
- * The serving robot. It stands parked by the ordering kiosks from the start, comes
- * forward to the bucket, the bucket is put on its tray (HeroChicken reads `robotRide`), and it drives the
- * bucket across the restaurant to the vending machine — scrubbed by scroll, so
- * it rewinds too. Afterwards it rolls up and down the middle of the room on its own.
+ * The serving robot. Parked by the ordering kiosks; once the bucket has hopped onto its tray (HeroChicken reads
+ * `robotRide`) it drives to the kitchen's doorway and stops facing the camera — scrubbed by scroll, so it rewinds too.
  */
 export function ServeRobot() {
   const gltf = useGLTF(ROBOT_URL);
@@ -90,25 +88,15 @@ export function ServeRobot() {
     const w = Math.max(size.x, size.z) * scale * 1.7;
     shadow.scale.set(w, 1, w);
 
-    const come = new THREE.CatmullRomCurve3(ROBOT_RUN.comeRoute, false, "catmullrom", 0.5);
     const route = new THREE.CatmullRomCurve3(ROBOT_RUN.route, false, "catmullrom", 0.5);
-    const inKitchen = new THREE.CatmullRomCurve3(ROBOT_RUN.kitchenRoute, false, "catmullrom", 0.5);
-    const outKitchen = new THREE.CatmullRomCurve3(ROBOT_RUN.exitRoute, false, "catmullrom", 0.5);
-    const { centre, rx, rz } = ROBOT_RUN.patrol;
-    const loop = new THREE.CatmullRomCurve3(
-      Array.from({ length: 16 }, (_, i) => {
-        const a = (i / 16) * Math.PI * 2;
-        return new THREE.Vector3(centre.x + Math.sin(a) * rx, 0, centre.z + Math.cos(a) * rz);
-      }),
-      true,
-    );
+    const lead = new THREE.CatmullRomCurve3(ROBOT_RUN.leadRoute, false, "catmullrom", 0.5);
 
     // a key from above, following it (the room is dim)
     const key = new THREE.SpotLight("#fff1e0", 0, 12, 0.8, 0.9, 2);
     const group = new THREE.Group();
     group.name = EXPORT_NAMES.robot;
     group.add(pivot, shadow, key, key.target);
-    return { group, pivot, shadow, mats, come, route, inKitchen, outKitchen, loop, key };
+    return { group, pivot, shadow, mats, route, lead, key };
   }, [gltf, gl, trayGltfs, studio]);
 
   const tmp = useMemo(
@@ -117,7 +105,6 @@ export function ServeRobot() {
       b: new THREE.Vector3(),
       tan: new THREE.Vector3(),
       yaw: NaN,
-      exitAt: NaN,
       quat: new THREE.Quaternion(),
       up: new THREE.Vector3(0, 1, 0),
     }),
@@ -128,56 +115,34 @@ export function ServeRobot() {
   useFrame((state, delta) => {
     const p = scrollState.progress;
     const R = ROBOT_RUN;
-    // the route editor (?debug) moves the waypoints in place: re-measure the curves
-    if (routesChanged()) for (const c of [rig.come, rig.route, rig.inKitchen, rig.outKitchen]) c.updateArcLengths();
-    // always there: parked by the kiosks until it comes forward to the bucket (c up to 1)
-    const c = ease(clamp((p - R.comeFrom) / (R.comeTo - R.comeFrom)));
+    // the route editor (?debug) moves the waypoints in place: re-measure the curve
+    if (routesChanged()) for (const c of [rig.route, rig.lead]) c.updateArcLengths();
     robotRide.ready = true;
-
-    // where it is: at the wall until it sets off, along the route, waiting at the vending machine, then on patrol
-    const s = ease(clamp((p - R.driveFrom) / (R.driveTo - R.driveFrom)));
-    const route = rig.route;
-    // on into the kitchen (k up to 1), and back out again (r)
-    const k = ease(clamp((p - R.kitchenFrom) / (R.kitchenTo - R.kitchenFrom)));
-    // the way out runs on the clock once the kitchen view is reached (scrolling back before that resets it)
-    const now = state.clock.elapsedTime;
-    if (p < R.exitAt) tmp.exitAt = NaN;
-    else if (Number.isNaN(tmp.exitAt)) tmp.exitAt = now;
-    const raw = Number.isNaN(tmp.exitAt) ? 0 : clamp((now - tmp.exitAt - R.exitDelay) / R.exitTime);
-    const r = ease(raw);
+    // parked by the kiosks until the camera leaves for the kitchen, then along the route to the doorway
+    const du = clamp((p - R.driveFrom) / (R.driveTo - R.driveFrom));
+    const s = du * 0.65 + ease(du) * 0.35; // mostly steady speed
     const onRoute = tmp.a;
-    if (r > 0) {
-      onRoute.copy(rig.outKitchen.getPointAt(r));
-      rig.outKitchen.getTangentAt(Math.min(Math.max(r, 0.001), 0.999), tmp.tan);
-    } else if (k > 0) {
-      onRoute.copy(rig.inKitchen.getPointAt(k));
-      rig.inKitchen.getTangentAt(Math.min(Math.max(k, 0.001), 0.999), tmp.tan);
-    } else if (s > 0 || c >= 1) {
-      onRoute.copy(route.getPointAt(s));
-      route.getTangentAt(Math.min(Math.max(s, 0.001), 0.999), tmp.tan);
-    } else {
-      onRoute.copy(rig.come.getPointAt(c));
-      rig.come.getTangentAt(Math.min(Math.max(c, 0.001), 0.999), tmp.tan);
-    }
-    let heading = Math.atan2(tmp.tan.x, tmp.tan.z);
-
-    const patrol = smoothstep(0.8, 1, raw);
-    if (patrol > 0) {
-      const u = (((state.clock.elapsedTime / R.patrol.lap) % 1) + 1) % 1;
-      rig.loop.getPointAt(u, tmp.b);
-      rig.loop.getTangentAt(u, tmp.tan);
-      onRoute.lerp(tmp.b, ease(patrol));
-      heading += (turnTo(heading, Math.atan2(tmp.tan.x, tmp.tan.z)) - heading) * ease(patrol);
-    }
-
-    // it drives over from its parking spot along its way, turns to face into the room (+x) at the bucket for it to
-    // hop on, then swings round to its heading as it sets off
+    onRoute.copy(rig.route.getPointAt(s));
+    rig.route.getTangentAt(Math.min(Math.max(s, 0.001), 0.999), tmp.tan);
+    // parked facing into the room (+x), swings round to its heading as it sets off, and ends turned toward the kitchen camera (+z) at the doorway
     const faceRoom = Math.PI / 2;
-    const settle = smoothstep(0.7, 1, c);
-    const waiting = faceRoom + (turnTo(faceRoom, Math.atan2(tmp.tan.x, tmp.tan.z)) - faceRoom) * (c < 1 ? 1 - settle : 0);
+    const heading = Math.atan2(tmp.tan.x, tmp.tan.z);
     const swing = smoothstep(R.driveFrom - 0.05, R.driveFrom + 0.25, p);
-    const target = turnTo(waiting, heading);
-    const yaw = waiting + (target - waiting) * swing;
+    const square = smoothstep(0.82, 1, s);
+    const driving = turnTo(faceRoom, heading);
+    const aim = driving + (turnTo(driving, R.stopYaw) - driving) * square;
+    let yaw = faceRoom + (aim - faceRoom) * swing;
+    // then it turns round and drives out, back down the room (the camera follows it)
+    // mostly steady speed (a little ease at either end), so the way out never seems to stall
+    const u = clamp((p - R.leadFrom) / (R.leadTo - R.leadFrom));
+    const out = u * 0.65 + ease(u) * 0.35;
+    if (out > 0) {
+      onRoute.copy(rig.lead.getPointAt(out));
+      rig.lead.getTangentAt(Math.min(Math.max(out, 0.001), 0.999), tmp.tan);
+      const back = Math.atan2(tmp.tan.x, tmp.tan.z);
+      const turn = smoothstep(0, 0.08, out);
+      yaw = R.stopYaw + (turnTo(R.stopYaw, back) - R.stopYaw) * turn;
+    }
     tmp.yaw = Number.isNaN(tmp.yaw) ? yaw : tmp.yaw + (turnTo(tmp.yaw, yaw) - tmp.yaw) * (1 - Math.exp(-delta * 8));
 
     rig.pivot.position.set(onRoute.x, 0, onRoute.z);
