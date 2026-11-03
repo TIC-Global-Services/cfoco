@@ -39,8 +39,8 @@ import {
   useInteractionControls,
 } from "./controls";
 
-const RAW_URL = "/models/raw_chicken.glb";
-const FRIED_URL = "/models/chicken_fried.glb";
+const RAW_URL = "/models/new_raw_chicken_photoreal_v2.glb";
+const FRIED_URL = "/models/new_fried_chicken.glb";
 const BUCKET_URL = "/models/bucket_drop_new.glb";
 /** the fried crust: × its roughness map (≈0.82, matte) — a little oil sheen on the ridges */
 const CRUST_ROUGHNESS = 0.8;
@@ -157,6 +157,8 @@ export function HeroChicken() {
 
     const fadeMats: THREE.MeshStandardMaterial[] = [];
     const heroMats: THREE.MeshStandardMaterial[] = [];
+    const rawMats: THREE.MeshStandardMaterial[] = [];
+    const friedMats: THREE.MeshStandardMaterial[] = [];
     const bucketMats: THREE.MeshStandardMaterial[] = [];
     // the hero casts and takes its own shadows (the crust's folds, the pile in the cup): nothing else in the room does
     const rawMeshes: THREE.Mesh[] = [];
@@ -177,6 +179,7 @@ export function HeroChicken() {
       applyDissolve(mat, dissolve, "raw");
       m.material = mat;
       fadeMats.push(mat);
+      rawMats.push(mat);
     });
     const mixer = new THREE.AnimationMixer(rawModel);
     const actions = raw.animations.map((clip) => {
@@ -203,6 +206,7 @@ export function HeroChicken() {
       applyDissolve(mat, dissolve, "fried");
       m.material = mat;
       fadeMats.push(mat);
+      friedMats.push(mat);
     });
     const friedNorm = normalizeByPrincipalAxes(friedModel, CHICKEN_LENGTH);
     heroMats.push(...fadeMats);
@@ -295,6 +299,8 @@ export function HeroChicken() {
       bucketRadius,
       fadeMats,
       heroMats,
+      rawMats,
+      friedMats,
       rawMeshes,
       friedMeshes,
       bucketMats,
@@ -671,6 +677,17 @@ export function HeroChicken() {
 
     // ---- lights ----
     for (const m of rig.heroMats) m.envMapIntensity = heroL.envIntensity;
+    const tune = (mats: THREE.MeshStandardMaterial[], rough: number, metal: number, normal: number, tint: string, bright: number, env: number) => {
+      for (const m of mats) {
+        m.roughness = rough;
+        m.metalness = metal;
+        m.normalScale.setScalar(normal);
+        m.color.set(tint).multiplyScalar(bright);
+        m.envMapIntensity = heroL.envIntensity * env;
+      }
+    };
+    tune(rig.rawMats, heroL.rawRough, heroL.rawMetal, heroL.rawNormal, heroL.rawTint, heroL.rawBright, heroL.rawEnv);
+    tune(rig.friedMats, heroL.friedRough, heroL.friedMetal, heroL.friedNormal, heroL.friedTint, heroL.friedBright, heroL.friedEnv);
     for (const m of rig.bucketMats) {
       m.envMapIntensity = heroL.bucketEnv;
       if ((m as THREE.MeshPhysicalMaterial).isMeshPhysicalMaterial) (m as THREE.MeshPhysicalMaterial).clearcoat = heroL.bucketGloss;

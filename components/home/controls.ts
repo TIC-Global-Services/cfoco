@@ -198,6 +198,22 @@ export function useHeroLightControls() {
         cursorHoverBoost: { value: 1.6, min: 1, max: 5, step: 0.1, label: "on hover ×" },
       }),
       fryGlow: { value: 4, min: 0, max: 60, step: 0.5, label: "fry glow (swap)" },
+      raw: folder({
+        rawRough: { value: 0.62, min: 0, max: 1, step: 0.01, label: "roughness" },
+        rawMetal: { value: 0, min: 0, max: 1, step: 0.01, label: "metalness" },
+        rawNormal: { value: 1, min: 0, max: 3, step: 0.05, label: "normal strength" },
+        rawTint: { value: "#ffffff", label: "tint" },
+        rawBright: { value: 1, min: 0, max: 3, step: 0.01, label: "brightness" },
+        rawEnv: { value: 1, min: 0, max: 4, step: 0.05, label: "reflections ×" },
+      }, { collapsed: true }),
+      fried: folder({
+        friedRough: { value: 0.8, min: 0, max: 1, step: 0.01, label: "roughness" },
+        friedMetal: { value: 1, min: 0, max: 1, step: 0.01, label: "metalness" },
+        friedNormal: { value: 1, min: 0, max: 3, step: 0.05, label: "normal strength" },
+        friedTint: { value: "#ffffff", label: "tint" },
+        friedBright: { value: 1, min: 0, max: 3, step: 0.01, label: "brightness" },
+        friedEnv: { value: 1, min: 0, max: 4, step: 0.05, label: "reflections ×" },
+      }, { collapsed: true }),
       bucket: folder({
         bucketEnv: { value: 0.6, min: 0, max: 4, step: 0.05, label: "reflections" },
         bucketGloss: { value: 0.45, min: 0, max: 1, step: 0.01, label: "gloss (clearcoat)" },
