@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { Phone, Mail, MapPin, ArrowUpRight, ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 const ContactForm = () => {
   return (
@@ -185,9 +186,11 @@ const ContactForm = () => {
             </div>
             <div className="flex items-start gap-5">
               <Mail className="w-5 h-5 text-white shrink-0 mt-0.5" />
-              <span className="text-white font-light text-base">
-                demo@gmail.com
-              </span>
+              <Link href="mailto:Contact@cfoco.fr">
+                <span className="text-white font-light text-base">
+                  Contact@cfoco.fr
+                </span>
+              </Link>
             </div>
             <div className="flex items-start gap-5">
               <MapPin className="w-5 h-5 text-white shrink-0 mt-0.5" />

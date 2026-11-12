@@ -75,6 +75,7 @@ export const LOCATIONS_QUERY = groq`
     "hero": {
       "backgroundImage": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
       "locationLabel": coalesce(heroLocationLabel, hero.locationLabel, cityTag, name),
+      "subheading": coalesce(heroSubheading, hero.subheading, "CFC Tasty"),
       "heading": coalesce(heroHeading, hero.heading, name),
       "description": coalesce(heroDescription, hero.description, tagline.description, ""),
       "directionsUrl": coalesce(heroDirectionsUrl, hero.directionsUrl, mapsUrl, "")
@@ -153,6 +154,7 @@ export const LOCATION_BY_SLUG_QUERY = groq`
     "hero": {
       "backgroundImage": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
       "locationLabel": coalesce(heroLocationLabel, hero.locationLabel, cityTag, name),
+      "subheading": coalesce(heroSubheading, hero.subheading, "CFC Tasty"),
       "heading": coalesce(heroHeading, hero.heading, name),
       "description": coalesce(heroDescription, hero.description, tagline.description, ""),
       "directionsUrl": coalesce(heroDirectionsUrl, hero.directionsUrl, mapsUrl, "")

@@ -16,6 +16,7 @@ export default function LocationHero({ location }: LocationHeroProps) {
   const heading = location.hero?.heading || location.name;
   const description = location.hero?.description || (location.tagline ? `${location.tagline.prefix} ${location.tagline.highlight} ${location.tagline.description}` : "");
   const directionsUrl = location.hero?.directionsUrl || location.mapsUrl || "#";
+  const subheading = location.hero?.subheading || "CFC Tasty";
 
   return (
     <div className="relative w-full aspect-[9/16] lg:h-[800px] rounded-2xl sm:rounded-[20px] overflow-hidden border border-white/10 shadow-2xl group">
@@ -39,10 +40,10 @@ export default function LocationHero({ location }: LocationHeroProps) {
       </div>
 
       {/* Bottom Hero Content */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 flex flex-col items-center text-center gap-6">
+      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-10 flex flex-col items-start justify-start gap-6">
         <div className="max-w-4xl">
           <span className="text-[34px] md:text-[2rem] lg:text-[4.375rem] font-bold text-[#FFBF00] tracking-wide leading-none block">
-            CFC Tasty
+            {subheading}
           </span>
           <h1 className="text-[34px] md:text-[4rem] lg:text-[6.25rem] font-extrabold text-[#FFBF00] tracking-tight leading-none whitespace-pre-line">
             {heading}

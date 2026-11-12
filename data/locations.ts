@@ -44,6 +44,7 @@
 export interface LocationHero {
   backgroundImage: string;
   locationLabel: string;
+  subheading?: string;
   heading: string;
   description: string;
   directionsUrl: string;
@@ -182,6 +183,7 @@ export const locationsData: LocationData[] = [
     hero: {
       backgroundImage: "/location_details-hero.jpg",
       locationLabel: "Bordeaux, France",
+      subheading: "CFC Tasty",
       heading: "Bordeaux Centre",
       description: "Right In The Heart Of The City. Where It All Started In 2011, And Where The Lines Still Form At Lunch.",
       directionsUrl: "https://maps.google.com/?q=14+Rue+Sainte-Catherine+Bordeaux",
@@ -274,6 +276,7 @@ export const locationsData: LocationData[] = [
     hero: {
       backgroundImage: "/location_details-hero.jpg",
       locationLabel: "Mérignac, France",
+      subheading: "CFC Tasty",
       heading: "Mérignac",
       description: "Moments From The Terminal. Quick Service Counter And Takeaway Station For Travelers In Need Of Real Crunch.",
       directionsUrl: "https://maps.google.com/?q=55+Avenue+John+Fitzgerald+Kennedy+Merignac",
@@ -366,6 +369,7 @@ export const locationsData: LocationData[] = [
     hero: {
       backgroundImage: "/location_details-hero.jpg",
       locationLabel: "Bastide, Bordeaux",
+      subheading: "CFC Tasty",
       heading: "Bordeaux Bastide",
       description: "Overlooking The Garonne River. Sunset Views With Serious Crunch, Craft Sauces, And A Relaxed Terrace.",
       directionsUrl: "https://maps.google.com/?q=28+Avenue+Thiers+Bordeaux",
@@ -458,6 +462,7 @@ export const locationsData: LocationData[] = [
     hero: {
       backgroundImage: "/location_details-hero.jpg",
       locationLabel: "Talence, Bordeaux",
+      subheading: "CFC Tasty",
       heading: "Talence",
       description: "Steps From The University. Packed With Student Deals, High-Top Charging Bars, And Non-Stop Crispy Vibes.",
       directionsUrl: "https://maps.google.com/?q=120+Cours+Gambetta+Talence",
@@ -550,6 +555,7 @@ export const locationsData: LocationData[] = [
     hero: {
       backgroundImage: "/location_details-hero.jpg",
       locationLabel: "Pessac, France",
+      subheading: "CFC Tasty",
       heading: "Pessac",
       description: "A Spacious Gathering Spot For Families And Friends. Easy Parking, Generous Seating, And Fresh Chicken Daily.",
       directionsUrl: "https://maps.google.com/?q=42+Avenue+Pasteur+Pessac",

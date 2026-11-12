@@ -115,6 +115,14 @@ export const locationType = defineType({
       group: 'hero',
     }),
     defineField({
+      name: 'heroSubheading',
+      title: 'Hero Subheading',
+      type: 'string',
+      description: 'Subheading displayed above the main heading (e.g., CFC Tasty)',
+      initialValue: 'CFC Tasty',
+      group: 'hero',
+    }),
+    defineField({
       name: 'heroHeading',
       title: 'Heading',
       type: 'string',
