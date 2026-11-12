@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import { locationsData, LocationData } from "@/data/locations";
-import { MapPin, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
 
 import Globe from "./Globe";
@@ -16,6 +16,8 @@ const LiquidGlass = dynamic(
 );
 
 
+
+const FALLBACK_LOCATION_IMAGE = "/locations/bordeaux_front.jpg";
 
 interface StepInsideProps {
   locations?: LocationData[];
@@ -54,6 +56,12 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
   // The real data index (0..total-1) for map pin & detail card
   const realIndex = ((virtualIndex % total) + total) % total;
   const activeLocation: LocationData = data[realIndex] || data[0];
+  const [failedImageSrc, setFailedImageSrc] = useState<string | null>(null);
+  const resolvedCardImage = activeLocation.cardImage || FALLBACK_LOCATION_IMAGE;
+  const cardImageSrc =
+    failedImageSrc === resolvedCardImage ? FALLBACK_LOCATION_IMAGE : resolvedCardImage;
+  const cardDescription =
+    activeLocation.hero?.description || activeLocation.tagline?.description || "";
   // Constants for the carousel track
   const ITEM_WIDTH = isMobile ? 210 : 380; // px width of each slot
   const ITEM_GAP = 20;    // px gap between items
@@ -236,9 +244,9 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
                 {/* Connector line from dot down to card */}
                 <div className="w-px h-3 bg-gradient-to-b from-[#FFBF00] to-[#1e82e6]" />
 
-                <div className="w-[220px] sm:w-[270px]">
+                <div className="w-[300px] sm:w-[440px] md:w-[480px]">
                   <LiquidGlass
-                    borderRadius={20}
+                    borderRadius={24}
                     blur={18}
                     contrast={1.35}
                     brightness={1.2}
@@ -246,40 +254,54 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
                     shadowIntensity={0.4}
                     displacementScale={2}
                     elasticity={1.4}
-                    className="w-full bg-black/40 text-white p-2.5 sm:p-3.5 border-[3px] border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl transition-all duration-300"
+                    className="w-full bg-[#141923]/80 text-white p-2.5 sm:p-4 border border-white/25 shadow-[0_12px_36px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-xl transition-all duration-300"
                   >
-                    <div className="w-full text-left">
-                      {/* City / Tag Header */}
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFBF00] fill-[#FFBF00] shrink-0" />
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white/90 truncate">
-                          {activeLocation.cityTag}
-                        </span>
+                    <div className="w-full flex items-stretch gap-3 sm:gap-5 text-left">
+                      {/* Restaurant Image (Left) */}
+                      <div className="relative w-24 sm:w-36 md:w-40 aspect-square shrink-0 rounded-xl sm:rounded-2xl overflow-hidden border border-white/15 bg-[#232a3b]">
+                        <Image
+                          src={cardImageSrc}
+                          alt={activeLocation.name}
+                          fill
+                          sizes="(max-width: 640px) 96px, 160px"
+                          className="object-cover"
+                          onError={() => setFailedImageSrc(resolvedCardImage)}
+                        />
                       </div>
 
-                      {/* Location Title */}
-                      <h4 className="text-sm sm:text-base font-bold text-[#FFBF00] leading-snug drop-shadow-[0_0_6px_rgba(255,191,0,0.3)]">
-                        CFC {activeLocation.name}
-                      </h4>
+                      {/* Details & CTA (Right) */}
+                      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                        <div>
+                          {/* Restaurant Name */}
+                          <h4 className="text-lg sm:text-2xl font-extrabold text-[#FFBF00] leading-tight truncate drop-shadow-[0_0_6px_rgba(255,191,0,0.25)]">
+                            {activeLocation.name}
+                          </h4>
 
-                      {/* Address preview */}
-                      <p className="text-xs sm:text-xs text-white font-normal mt-0.5 mb-2.5 leading-tight line-clamp-2">
-                        {activeLocation.address}
-                      </p>
+                          {/* Address */}
+                          <p
+                            className="text-xs sm:text-sm text-white/95 font-normal mt-0.5 truncate"
+                            title={activeLocation.address}
+                          >
+                            {activeLocation.address}
+                          </p>
 
-                      {/* Action Link Button */}
-                      <div>
-                        <Link
-                          href={`/location/${activeLocation.slug}`}
-                          className="inline-flex items-center gap-1.5 bg-white/50 hover:bg-white/25 backdrop-blur-md border border-white/20 transition-all duration-200 rounded-full pl-3 pr-1 py-0.5 group"
-                        >
-                          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#232E45]">
-                            EXPLORE
-                          </span>
-                          <span className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-[#232E45] border border-white/15 flex items-center justify-center text-white transition-transform group-hover:scale-105">
-                            <ArrowUpRight className="w-3 h-3 stroke-[2.5]" />
-                          </span>
-                        </Link>
+                          {/* 2-line Description */}
+                          {cardDescription && (
+                            <p className="text-[11px] sm:text-xs text-neutral-300/85 font-normal leading-relaxed mt-2 sm:mt-2.5 line-clamp-2">
+                              {cardDescription}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Explore Button */}
+                        <div className="mt-2.5 sm:mt-3 flex justify-end">
+                          <Link
+                            href={`/location/${activeLocation.slug}`}
+                            className="inline-flex items-center justify-center rounded-full bg-[#cfd6e2] hover:bg-white text-[#141923] font-bold text-[11px] sm:text-xs px-4 sm:px-5 py-1.5 sm:py-2 transition-all duration-200 shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                          >
+                            Explore more
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </LiquidGlass>

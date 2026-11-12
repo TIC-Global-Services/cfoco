@@ -1,7 +1,7 @@
 import { createClient, type QueryParams } from 'next-sanity';
 import { apiVersion, dataset, projectId, isSanityConfigured, useCdn, token } from '../env';
-import { POSTS_QUERY, POST_QUERY } from './queries';
-import { Post } from './types';
+import { POSTS_QUERY, POST_QUERY, JOB_POSTS_QUERY } from './queries';
+import { Post, JobPost } from './types';
 
 export const client = createClient({
   projectId: projectId || 'placeholder',
@@ -27,16 +27,6 @@ export const SAMPLE_POSTS: Post[] = [
         url: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80',
       },
       alt: 'Artisan espresso extraction at CFOCO',
-    },
-    author: {
-      name: 'Alex Rivera',
-      role: 'Master Roaster',
-      bio: 'Over a decade dedicated to the science of specialty coffee roasting and extraction profiling.',
-      image: {
-        asset: {
-          url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-        },
-      },
     },
     categories: [
       { _id: 'cat-1', title: 'Brewing & Craft', slug: 'brewing-craft' },
@@ -109,16 +99,6 @@ export const SAMPLE_POSTS: Post[] = [
       },
       alt: 'Atmospheric interior of CFOCO space',
     },
-    author: {
-      name: 'Elena Vance',
-      role: 'Creative Director',
-      bio: 'Architectural designer specializing in sensory hospitality spaces and tactile minimalism.',
-      image: {
-        asset: {
-          url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-        },
-      },
-    },
     categories: [
       { _id: 'cat-3', title: 'Design & Spaces', slug: 'design-spaces' },
     ],
@@ -163,16 +143,6 @@ export const SAMPLE_POSTS: Post[] = [
         url: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=80',
       },
       alt: 'Freshly harvested coffee cherries on high altitude slope',
-    },
-    author: {
-      name: 'Marcus Chen',
-      role: 'Green Coffee Buyer',
-      bio: 'Agronomist and Q-grader working directly with smallholder coffee cooperatives worldwide.',
-      image: {
-        asset: {
-          url: '  ',
-        },
-      },
     },
     categories: [
       { _id: 'cat-4', title: 'Sustainability', slug: 'sustainability' },
@@ -278,5 +248,24 @@ export async function getPostBySlug(slug: string): Promise<{ post: Post | null; 
     console.error(`Error fetching post [${slug}] from Sanity:`, error);
     const fallback = SAMPLE_POSTS.find((p) => p.slug === slug) || null;
     return { post: fallback, isLive: false };
+  }
+}
+
+/**
+ * Fetch all job posts from Sanity.
+ * Falls back to an empty array gracefully so the page never crashes.
+ */
+export async function getJobPosts(): Promise<JobPost[]> {
+  if (!isSanityConfigured) return [];
+
+  try {
+    const jobs = await sanityFetch<JobPost[]>({
+      query: JOB_POSTS_QUERY,
+      tags: ['jobPost'],
+    });
+    return jobs ?? [];
+  } catch (error) {
+    console.error('Error fetching job posts from Sanity:', error);
+    return [];
   }
 }

@@ -1,11 +1,14 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { matter } from "@/font/fonts";
+import { JobPost } from "@/sanity/lib/types";
 
-const jobs = [
+// ── Fallback static jobs (shown when Sanity returns nothing) ─────────────────
+const FALLBACK_JOBS: JobPost[] = [
   {
+    _id: "fallback-1",
     location: "Bordeaux Centre",
     type: "Full & Part-Time",
     role: "Delivery Coordinator",
@@ -13,8 +16,12 @@ const jobs = [
     nicetohave: "Team-Lead Or Supervisory Experience In Food/Retail.",
     hours: "Full-Time, Rotating Shifts.",
     pay: "Competitive Salary + Progression Path To Restaurant Manager.",
+    applyMethod: "email",
+    applyEmail: "careers@cfoco.fr",
+    applySubject: "Application for {role} at {location}",
   },
   {
+    _id: "fallback-2",
     location: "Mérignac",
     type: "Full-Time",
     role: "Store Supervisor",
@@ -22,119 +29,106 @@ const jobs = [
     nicetohave: "Team-Lead Or Supervisory Experience In Food/Retail.",
     hours: "Full-Time, Rotating Shifts.",
     pay: "Competitive Salary + Progression Path To Restaurant Manager.",
+    applyMethod: "email",
+    applyEmail: "careers@cfoco.fr",
+    applySubject: "Application for {role} at {location}",
   },
 ];
-const email = "demo@gmail.com"
-const marqueetext = "Your Best Job Yet Starts Here";
 
+const marqueetext = "Your Best Job Yet Starts Here";
 const AUTOPLAY_MS = 3500;
 const RESUME_AFTER_TOUCH_MS = 6000;
 
-type Job = (typeof jobs)[number];
+// ── Build the href for the Apply Now button ──────────────────────────────────
+function buildApplyHref(job: JobPost): string {
+  if (job.applyMethod === "link" && job.applyLink) {
+    return job.applyLink;
+  }
+  // email (default)
+  const email = job.applyEmail ?? "careers@cfoco.fr";
+  const rawSubject = job.applySubject ?? "Application for {role} at {location}";
+  const subject = rawSubject
+    .replace("{role}", job.role)
+    .replace("{location}", job.location);
+  return `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+}
 
-/** Card markup shared by the desktop grid and the mobile slider. */
-const JobCard = ({ job, compact }: { job: Job; compact?: boolean }) => (
-  <div className="relative w-full flex flex-col h-full group">
-    {/* TOP BLOCK */}
-    <div
-      className={`w-full bg-[#0a0a0f] border border-[#0066FF] rounded-t-[1.3rem] rounded-br-[1.3rem] rounded-bl-none relative z-0 ${
-        compact ? "p-6 pb-4" : "p-6 sm:p-8 pb-4"
-      }`}
-    >
-      <h3
-        className={`text-white font-semibold mb-6 ${
-          compact ? "text-xl" : "text-xl sm:text-2xl"
-        }`}
-      >
-        {job.location} · {job.type}
-      </h3>
+// ── Job Card ─────────────────────────────────────────────────────────────────
+const JobCard = ({ job }: { job: JobPost }) => {
+  const details = [
+    { label: "You Are", value: job.youare },
+    { label: "Nice To Have", value: job.nicetohave },
+    { label: "Hours", value: job.hours },
+    { label: "Pay", value: job.pay },
+  ].filter((item): item is { label: string; value: string } =>
+    Boolean(item.value)
+  );
 
-      <div className={compact ? "text-sm" : "text-sm sm:text-base"}>
-        <p className="text-white/90">
-          <span className="text-[#F6B90B] font-semibold mr-2">You Are:</span>
-          {job.youare}
+  const isExternalLink = job.applyMethod === "link" && Boolean(job.applyLink);
+
+  return (
+    <article className="flex h-full w-full flex-col justify-between rounded-[20px] sm:rounded-[24px] border border-white/15 bg-[#0a0c12]/90 p-5 sm:p-7 md:p-8 backdrop-blur-md transition-colors duration-300 hover:border-[#F6B90B]/50">
+      <div>
+        {/* Location & Employment Type */}
+        <p className="text-xs sm:text-sm font-medium text-white/75 tracking-tight leading-[1.3] mb-1.5">
+          {job.location}
+          {job.type ? ` · ${job.type}` : ""}
         </p>
-        <p className="text-white/90">
-          <span className="text-[#F6B90B] font-semibold mr-2">
-            Nice To Have:
-          </span>
-          {job.nicetohave}
-        </p>
-        <p className="text-white/90">
-          <span className="text-[#F6B90B] font-semibold mr-2">Hours:</span>
-          {job.hours}
-        </p>
-        <p className="text-white/90 leading-snug">
-          <span className="text-[#F6B90B] font-semibold mr-2">Pay:</span>
-          {job.pay}
-        </p>
+
+        {/* Role Title */}
+        <h3 className="text-xl sm:text-2xl md:text-[1.75rem] font-bold text-[#F6B90B] tracking-tight leading-[1.3] mb-5 sm:mb-6">
+          {job.role}
+        </h3>
+
+        {/* Details */}
+        {details.length > 0 && (
+          <div className="space-y-2.5 sm:space-y-3 border-t border-white/10 pt-4 sm:pt-5">
+            {details.map(({ label, value }) => (
+              <p
+                key={label}
+                className="text-sm sm:text-base text-white/90 leading-[1.3] tracking-tight"
+              >
+                <span className="text-[#F6B90B] font-semibold mr-2">
+                  {label}:
+                </span>
+                {value}
+              </p>
+            ))}
+          </div>
+        )}
       </div>
-    </div>
 
-    {/* BOTTOM BLOCK (Apply Now, with the inverted corner) */}
-    <div
-      className={`bg-[#0a0a0f] border-b border-l border-r border-[#0066FF] rounded-b-[1.3rem] relative z-10 ${
-        compact ? "w-[48%] p-5" : "w-[45%] sm:w-[42%] p-6"
-      }`}
-    >
-      <div className="absolute -top-[2px] left-0 right-0 h-[4px] bg-[#0a0a0f]" />
-
-      <svg
-        className="absolute -top-[1px] left-full w-[24px] h-[24px] pointer-events-none"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path d="M 0 0 L 0 24 A 24 24 0 0 1 24 0 Z" fill="#0a0a0f" />
-        <path
-          d="M 0 24 A 24 24 0 0 1 24 0"
-          fill="none"
-          stroke="#0066FF"
-          strokeWidth="1.5"
-        />
-      </svg>
-
-      <Link href={`mailto:${email}?subject=Application for ${job.role} at ${job.location}`}>
-        <button
-          type="button"
-          className={`relative z-20 text-white hover:text-[#F6B90B] transition-colors flex items-center gap-2 font-medium ${
-            compact ? "text-sm" : "text-sm sm:text-lg"
-          }`}
+      {/* Footer */}
+      <div className="mt-6 sm:mt-8 pt-4 border-t border-white/10 flex items-center justify-end">
+        <a
+          href={buildApplyHref(job)}
+          {...(isExternalLink
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+          className="group/btn inline-flex items-center gap-3 rounded-full bg-white/80 hover:bg-white py-1 pl-4 pr-1 text-xs sm:text-sm font-semibold text-[#232E45] transition-colors duration-200"
         >
-          Apply Now
-          <ArrowUpRight size={15} />
-        </button>
-      </Link>
-    </div>
+          <span className="tracking-tight leading-[1.3]">Apply Now</span>
+          <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-[#1e293b] text-white transition-transform duration-200 group-hover/btn:scale-105">
+            <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+          </span>
+        </a>
+      </div>
+    </article>
+  );
+};
 
-    {/* JOB TITLE (in the notch) */}
-    <div
-      className={`absolute flex items-center justify-end z-20 pointer-events-none ${
-        compact
-          ? "bottom-3 sm:bottom-5 right-3 w-[50%]"
-          : "bottom-4 sm:bottom-6 right-3 sm:right-4 w-[52%]"
-      }`}
-    >
-      <span
-        className={`text-[#F6B90B] font-bold text-right leading-tight break-words ${
-          compact ? "text-base sm:text-xl" : "text-lg sm:text-2xl"
-        }`}
-      >
-        {job.role}
-      </span>
-    </div>
-  </div>
-);
+// ── Main Section ─────────────────────────────────────────────────────────────
+interface WhatWeRefuseProps {
+  jobs?: JobPost[];
+}
 
-const WhatWeRefuse = () => {
+const WhatWeRefuse = ({ jobs: jobsProp }: WhatWeRefuseProps) => {
+  const jobs = jobsProp && jobsProp.length > 0 ? jobsProp : FALLBACK_JOBS;
+
   const [activeSlide, setActiveSlide] = useState(0);
-
   const scrollRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Mirror of activeSlide for use inside intervals/handlers without re-binding.
   const indexRef = useRef(0);
-  // Autoplay is suspended while the user is touching, and for a while after.
   const pausedRef = useRef(false);
   const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rafRef = useRef<number | null>(null);
@@ -149,18 +143,11 @@ const WhatWeRefuse = () => {
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /**
-   * Scroll to a slide by measuring its real position.
-   * The old code used `index * clientWidth`, which is wrong the moment the
-   * track has `gap-4`: the true pitch is clientWidth + 16px, so every slide
-   * after the first landed short and the snap points fought the scroll.
-   */
   const goTo = useCallback(
     (i: number, smooth = true) => {
       const track = scrollRef.current;
       const slide = slideRefs.current[i];
       if (!track || !slide) return;
-
       track.scrollTo({
         left: slide.offsetLeft - track.offsetLeft,
         behavior: smooth && !prefersReducedMotion() ? "smooth" : "auto",
@@ -170,20 +157,15 @@ const WhatWeRefuse = () => {
     [commitIndex],
   );
 
-  /** Derive the active index from actual scroll position, not from arithmetic. */
   const handleScroll = useCallback(() => {
-    // rAF throttle: iOS fires scroll continuously during momentum, and an
-    // unthrottled setState there is the main source of stutter.
     if (rafRef.current !== null) return;
     rafRef.current = requestAnimationFrame(() => {
       rafRef.current = null;
       const track = scrollRef.current;
       if (!track) return;
-
       const viewportCenter = track.scrollLeft + track.clientWidth / 2;
       let best = 0;
       let bestDist = Infinity;
-
       slideRefs.current.forEach((slide, i) => {
         if (!slide) return;
         const center =
@@ -194,12 +176,10 @@ const WhatWeRefuse = () => {
           best = i;
         }
       });
-
       commitIndex(best);
     });
   }, [commitIndex]);
 
-  /** Pause autoplay while the finger is down, resume after a quiet period. */
   const pauseAutoplay = useCallback(() => {
     pausedRef.current = true;
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
@@ -215,30 +195,21 @@ const WhatWeRefuse = () => {
   useEffect(() => {
     const track = scrollRef.current;
     if (!track || jobs.length < 2) return;
-
-    // passive listeners so touch handling never blocks the compositor
     const opts: AddEventListenerOptions = { passive: true };
     track.addEventListener("touchstart", pauseAutoplay, opts);
     track.addEventListener("pointerdown", pauseAutoplay, opts);
     track.addEventListener("touchend", scheduleResume, opts);
     track.addEventListener("touchcancel", scheduleResume, opts);
     track.addEventListener("pointerup", scheduleResume, opts);
-
     const onVisibility = () => {
-      // Never advance in a backgrounded tab — the queued scrolls all fire at
-      // once on return, which looks like the slider "jumping" on wake.
       if (document.hidden) pauseAutoplay();
       else scheduleResume();
     };
     document.addEventListener("visibilitychange", onVisibility);
-
     const interval = setInterval(() => {
       if (pausedRef.current || document.hidden) return;
-      // No side effects inside a setState updater — that one ran twice under
-      // React StrictMode in dev and double-advanced the slider.
       goTo((indexRef.current + 1) % jobs.length);
     }, AUTOPLAY_MS);
-
     return () => {
       clearInterval(interval);
       if (resumeTimer.current) clearTimeout(resumeTimer.current);
@@ -250,27 +221,33 @@ const WhatWeRefuse = () => {
       track.removeEventListener("pointerup", scheduleResume);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [goTo, pauseAutoplay, scheduleResume]);
+  }, [goTo, pauseAutoplay, scheduleResume, jobs.length]);
 
   return (
-    <section className="relative w-full py-20 overflow-hidden font-sans">
+    <section className={`relative w-full py-16 sm:py-20 overflow-hidden ${matter.className}`}>
       <div className="px-4 sm:px-[5%] relative z-10">
         {/* Title */}
-        <div className="text-center mb-16 md:mb-24">
-          <h2 className="text-[#F6B90B] font-bold">
-            <span className="block text-3xl md:text-[3.125rem] leading-none">
+        <div className="text-center mb-12 sm:mb-16 md:mb-20">
+          <h2 className="text-[#F6B90B] font-bold tracking-tight">
+            <span className="block text-3xl md:text-[3.125rem] leading-[1.3]">
               What We Refuse
             </span>
-            <span className="block text-3xl md:text-[4.375rem] leading-none">
+            <span className="block text-3xl md:text-[4.375rem] leading-[1.1]">
               To Compromise
             </span>
           </h2>
         </div>
 
-        {/* Desktop grid */}
-        <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-4 max-w-6xl mx-auto">
-          {jobs.map((job, idx) => (
-            <JobCard key={idx} job={job} />
+        {/* Desktop & Tablet grid */}
+        <div
+          className={`hidden md:grid gap-6 lg:gap-8 mx-auto items-stretch ${
+            jobs.length === 1
+              ? "grid-cols-1 max-w-2xl"
+              : "grid-cols-2 max-w-6xl"
+          }`}
+        >
+          {jobs.map((job) => (
+            <JobCard key={job._id} job={job} />
           ))}
         </div>
 
@@ -282,30 +259,25 @@ const WhatWeRefuse = () => {
             role="region"
             aria-roledescription="carousel"
             aria-label="Open positions"
-            className="flex w-full overflow-x-auto snap-x snap-mandatory gap-4"
+            className="flex w-full items-stretch overflow-x-auto snap-x snap-mandatory gap-4"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
-              // Keeps the iOS edge-swipe "back" gesture from stealing the drag,
-              // and stops the whole page from rubber-banding sideways.
               overscrollBehaviorX: "contain",
-              // Never set `scroll-behavior: smooth` in CSS here — it makes every
-              // finger-drag go through the smooth-scroll engine on iOS and feel
-              // laggy. Smoothness is opted into per-call in goTo() instead.
               scrollBehavior: "auto",
               touchAction: "pan-x pan-y",
             }}
           >
             {jobs.map((job, idx) => (
               <div
-                key={idx}
+                key={job._id}
                 ref={(el) => {
                   slideRefs.current[idx] = el;
                 }}
-                className="w-full shrink-0 snap-center"
+                className="w-full shrink-0 snap-center flex"
                 aria-hidden={activeSlide !== idx}
               >
-                <JobCard job={job} compact />
+                <JobCard job={job} />
               </div>
             ))}
           </div>
@@ -323,14 +295,13 @@ const WhatWeRefuse = () => {
                 }}
                 aria-label={`Go to slide ${index + 1}`}
                 aria-current={activeSlide === index}
-                // min tap target: the 4px-tall bar alone is unhittable on phones
                 className="py-3 -my-3 px-1 -mx-1"
               >
                 <span
-                  className={`block h-1 rounded-full transition-all duration-300 ${
+                  className={`block h-1.5 rounded-full transition-all duration-300 ${
                     activeSlide === index
-                      ? "w-7 bg-[#CC1518]"
-                      : "w-2 bg-[#CC1518]/40"
+                      ? "w-7 bg-[#F6B90B]"
+                      : "w-2 bg-white/25"
                   }`}
                 />
               </button>

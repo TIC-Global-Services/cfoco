@@ -19,10 +19,6 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
     (post.mainImage ? urlForImage(post.mainImage)?.url() : null) ||
     'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80';
 
-  const authorImageUrl =
-    post.author?.image?.asset?.url ||
-    (post.author?.image ? urlForImage(post.author.image)?.url() : null);
-
   const formattedDate = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('en-US', {
         month: 'short',
@@ -109,35 +105,8 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
           )}
         </div>
 
-        {/* Footer: Author & Read more */}
-        <div className="flex items-center justify-between border-t border-white/10 pt-4 mt-auto">
-          {post.author ? (
-            <div className="flex items-center gap-3">
-              {authorImageUrl ? (
-                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#e9b949]/30">
-                  <Image
-                    src={authorImageUrl}
-                    alt={post.author.name || 'Author'}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-[#e9b949]">
-                  {post.author.name?.charAt(0)?.toUpperCase() || 'A'}
-                </div>
-              )}
-              <div className="text-left">
-                <p className="text-xs font-medium text-white">{post.author.name || 'Author'}</p>
-                {post.author.role && (
-                  <p className="text-[10px] text-neutral-400">{post.author.role}</p>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div />
-          )}
-
+        {/* Footer: Read more */}
+        <div className="flex items-center justify-end border-t border-white/10 pt-4 mt-auto">
           <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-[#e9b949] transition-transform duration-300 group-hover:translate-x-1">
             Read Story
             <ArrowUpRight className="w-4 h-4" />

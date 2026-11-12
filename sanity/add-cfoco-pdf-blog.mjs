@@ -140,20 +140,7 @@ function imageBlock(assetId, alt = '', caption = '') {
 async function run() {
   console.log(`🚀 Adding CFOCO News & Blog content to Sanity (${dataset})...\n`);
 
-  // 1. Author: L'équipe CFOCO
-  console.log('--- Step 1: Author ---');
-  const authorDoc = {
-    _id: 'author-lequipe-cfoco',
-    _type: 'author',
-    name: "L'équipe CFOCO",
-    slug: { _type: 'slug', current: 'lequipe-cfoco' },
-    role: 'Histoire & Rédaction',
-    bio: "L'équipe fondatrice et les artisans du goût qui font vivre CFOCO au quotidien depuis 2011.",
-  };
-  await mutate([{ createOrReplace: authorDoc }]);
-  console.log('✅ Author created/updated: "L\'équipe CFOCO"');
-
-  // 2. Category: Notre histoire
+  // 1. Category: Notre histoire
   console.log('\n--- Step 2: Category ---');
   const categoryDoc = {
     _id: 'category-notre-histoire',
@@ -326,10 +313,6 @@ async function run() {
         _ref: image1._id,
       },
       alt: 'De la friteuse au bucket : rituel de préparation CFC aux Capucins depuis 2011',
-    },
-    author: {
-      _type: 'reference',
-      _ref: 'author-lequipe-cfoco',
     },
     categories: [
       {

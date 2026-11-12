@@ -88,6 +88,21 @@ export const locationType = defineType({
       initialValue: 1,
       group: 'basicInfo',
     }),
+    defineField({
+      name: 'cardImage',
+      title: 'Restaurant Card Image',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Image shown on the Step Inside location card. Falls back to the Hero Background Image or default storefront photo if empty.',
+      group: 'basicInfo',
+    }),
+    defineField({
+      name: 'cardImageUrl',
+      title: 'Restaurant Card Image URL Fallback',
+      type: 'string',
+      description: 'Optional fallback image path if no card image is uploaded (e.g. /locations/bordeaux_front.jpg)',
+      group: 'basicInfo',
+    }),
 
     // ========================================================================
     // TAB 2: HERO SECTION

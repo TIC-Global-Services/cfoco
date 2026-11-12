@@ -51,8 +51,7 @@ export default function BlogListClient({ initialPosts, isLive: _isLive }: BlogLi
       const matchesSearch =
         q === '' ||
         post.title?.toLowerCase().includes(q) ||
-        post.excerpt?.toLowerCase().includes(q) ||
-        post.author?.name?.toLowerCase().includes(q);
+        post.excerpt?.toLowerCase().includes(q);
 
       const matchesCategory =
         selectedCategory === 'All' ||

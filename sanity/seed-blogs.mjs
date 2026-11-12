@@ -202,30 +202,7 @@ function imageBlock(assetId, alt = '', caption = '') {
 async function seedBlogs() {
   console.log(`\n🚀 Starting Blog Seeding for project "${projectId}" (${dataset})...\n`);
 
-  // 1. Upload Author Image & Create Author
-  const authorAssetId = await uploadLocalImage('avatar.jpg');
-  const authorDoc = {
-    _id: 'author-antoine-laurent',
-    _type: 'author',
-    name: 'Antoine Laurent',
-    slug: { _type: 'slug', current: 'antoine-laurent' },
-    role: 'Executive Chef & Culinary Director',
-    bio: 'Antoine brings 15 years of French culinary discipline to the art of crispy fried chicken. He spent years obsessing over flour hydration, temperature thresholds, and spice blends to create CFC’s unmistakable shatter-crunch.',
-    ...(authorAssetId && {
-      image: {
-        _type: 'image',
-        asset: {
-          _type: 'reference',
-          _ref: authorAssetId,
-        },
-      },
-    }),
-  };
-
-  await client.createOrReplace(authorDoc);
-  console.log(`✅ Author created: "${authorDoc.name}"`);
-
-  // 2. Seed 10 Categories
+  // 1. Seed 10 Categories
   console.log('\n--- Seeding 10 Blog Categories ---');
   for (const cat of categoriesData) {
     const catDoc = {
@@ -461,10 +438,6 @@ async function seedBlogs() {
       slug: { _type: 'slug', current: post.slug },
       publishedAt: post.publishedAt,
       excerpt: post.excerpt,
-      author: {
-        _type: 'reference',
-        _ref: 'author-antoine-laurent',
-      },
       categories: post.categoryIds.map((catId) => ({
         _type: 'reference',
         _ref: catId,

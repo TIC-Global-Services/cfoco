@@ -22,12 +22,6 @@ export const postType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: { type: 'author' },
-    }),
-    defineField({
       name: 'mainImage',
       title: 'Main Image',
       type: 'image',
@@ -127,15 +121,14 @@ export const postType = defineType({
   preview: {
     select: {
       title: 'title',
-      author: 'author.name',
       media: 'mainImage',
       date: 'publishedAt',
     },
     prepare(selection) {
-      const { author, date } = selection;
+      const { date } = selection;
       return {
         ...selection,
-        subtitle: author && date ? `by ${author} • ${new Date(date).toLocaleDateString()}` : author ? `by ${author}` : '',
+        subtitle: date ? new Date(date).toLocaleDateString() : '',
       };
     },
   },

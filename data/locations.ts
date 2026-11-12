@@ -133,6 +133,7 @@ export interface LocationData {
   longitude: number;
   badge?: string;
   order?: number;
+  cardImage?: string;
 
   // ─── 2. Hero Section ───────────────────────────────────────────────────────
   hero: LocationHero;

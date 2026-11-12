@@ -27,6 +27,10 @@ export default defineConfig({
             S.listItem()
               .title('Blogs')
               .child(S.documentTypeList('post').title('Blogs')),
+            S.divider(),
+            S.listItem()
+              .title('Job Posts')
+              .child(S.documentTypeList('jobPost').title('Job Posts')),
           ]),
     }),
   ],

@@ -1,8 +1,16 @@
-export interface Author {
-  name: string;
-  role?: string;
-  bio?: string;
-  image?: any;
+export interface JobPost {
+  _id: string;
+  role: string;
+  location: string;
+  type?: string;
+  youare?: string;
+  nicetohave?: string;
+  hours?: string;
+  pay?: string;
+  applyMethod: 'email' | 'link';
+  applyEmail?: string;
+  applySubject?: string;
+  applyLink?: string;
 }
 
 export interface Category {
@@ -24,7 +32,6 @@ export interface Post {
     };
     alt?: string;
   };
-  author?: Author;
   categories?: Category[];
   body?: any;
 }

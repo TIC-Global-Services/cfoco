@@ -21,7 +21,7 @@ export default function MainLayout({
       />
 
       {/* Particles Layer */}
-      <div className="fixed inset-0 pointer-events-none z-[-10]">
+      {/* <div className="fixed inset-0 pointer-events-none z-[-10]">
         <Particles
           particleColors={["#10214f"]}
           particleCount={900}
@@ -33,7 +33,7 @@ export default function MainLayout({
           disableRotation={false}
           pixelRatio={1}
         />
-      </div>
+      </div> */}
 
       <Navbar />
 

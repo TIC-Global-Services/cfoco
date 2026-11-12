@@ -8,7 +8,7 @@ import { urlForImage } from '@/sanity/lib/image';
 import PortableText from '@/components/blog/PortableText';
 import BlogCard from '@/components/blog/BlogCard';
 import Reveal from '@/reusable/Reveal';
-import { ArrowLeft, Calendar, Clock, Share2, Tag, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Share2, Tag } from 'lucide-react';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -75,10 +75,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     (post.mainImage ? urlForImage(post.mainImage)?.url() : null) ||
     'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1600&q=80';
 
-  const authorImageUrl =
-    post.author?.image?.asset?.url ||
-    (post.author?.image ? urlForImage(post.author.image)?.url() : null);
-
   const formattedDate = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('en-US', {
         month: 'long',
@@ -133,44 +129,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </p>
             )}
 
-            {/* Author & Meta bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-y border-white/10 py-4">
-              <div className="flex items-center gap-3">
-                {authorImageUrl ? (
-                  <div className="relative w-11 h-11 rounded-full overflow-hidden border border-[#e9b949]/40">
-                    <Image
-                      src={authorImageUrl}
-                      alt={post.author?.name || 'Author'}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-sm font-bold text-[#e9b949] border border-white/10">
-                    {post.author?.name?.charAt(0) || <User className="w-5 h-5" />}
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm font-medium text-white">
-                    {post.author?.name || 'CFOCO Editorial'}
-                  </p>
-                  {post.author?.role && (
-                    <p className="text-xs text-neutral-400">{post.author.role}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 text-xs tracking-wider uppercase text-neutral-400">
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-[#e9b949]" />
-                  {formattedDate}
-                </span>
-                <span className="text-white/20">•</span>
-                <span className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-neutral-400" />
-                  4 min read
-                </span>
-              </div>
+            {/* Meta bar */}
+            <div className="flex flex-wrap items-center gap-4 border-y border-white/10 py-4 text-xs tracking-wider uppercase text-neutral-400">
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#e9b949]" />
+                {formattedDate}
+              </span>
+              <span className="text-white/20">•</span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-neutral-400" />
+                4 min read
+              </span>
             </div>
           </header>
         </Reveal>
@@ -200,40 +169,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
           </div>
         </Reveal>
-
-        {/* Author Bio Box */}
-        {post.author && post.author.bio && (
-          <Reveal>
-            <div className="mb-16 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 backdrop-blur-md">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                {authorImageUrl && (
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#e9b949]/40 shrink-0">
-                    <Image
-                      src={authorImageUrl}
-                      alt={post.author.name}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                )}
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs uppercase tracking-wider text-[#e9b949] font-medium">
-                      About the Author
-                    </span>
-                  </div>
-                  <h4 className="text-base font-semibold text-white">{post.author.name}</h4>
-                  {post.author.role && (
-                    <p className="text-xs text-neutral-400 mb-2">{post.author.role}</p>
-                  )}
-                  <p className="text-sm text-neutral-300 font-light leading-relaxed">
-                    {post.author.bio}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        )}
 
         {/* More Stories */}
         {relatedPosts.length > 0 && (

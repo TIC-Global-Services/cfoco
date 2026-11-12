@@ -14,11 +14,6 @@ export const POSTS_QUERY = groq`
       },
       alt
     },
-    "author": author->{
-      name,
-      role,
-      image
-    },
     "categories": categories[]->{
       _id,
       title,
@@ -40,12 +35,6 @@ export const POST_QUERY = groq`
         url
       },
       alt
-    },
-    "author": author->{
-      name,
-      role,
-      bio,
-      image
     },
     "categories": categories[]->{
       _id,
@@ -72,6 +61,7 @@ export const LOCATIONS_QUERY = groq`
     longitude,
     badge,
     order,
+    "cardImage": coalesce(cardImage.asset->url, cardImageUrl, heroBackgroundImage.asset->url, hero.backgroundImage.asset->url, images.storefront.asset->url, "/locations/bordeaux_front.jpg"),
     "hero": {
       "backgroundImage": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
       "locationLabel": coalesce(heroLocationLabel, hero.locationLabel, cityTag, name),
@@ -151,6 +141,7 @@ export const LOCATION_BY_SLUG_QUERY = groq`
     longitude,
     badge,
     order,
+    "cardImage": coalesce(cardImage.asset->url, cardImageUrl, heroBackgroundImage.asset->url, hero.backgroundImage.asset->url, images.storefront.asset->url, "/locations/bordeaux_front.jpg"),
     "hero": {
       "backgroundImage": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
       "locationLabel": coalesce(heroLocationLabel, hero.locationLabel, cityTag, name),
@@ -290,3 +281,20 @@ export const MENU_ITEMS_QUERY = groq`
 
 
 
+
+export const JOB_POSTS_QUERY = groq`
+  *[_type == "jobPost"] | order(_createdAt desc) {
+    _id,
+    role,
+    location,
+    type,
+    youare,
+    nicetohave,
+    hours,
+    pay,
+    applyMethod,
+    applyEmail,
+    applySubject,
+    applyLink
+  }
+`;
