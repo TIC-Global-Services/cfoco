@@ -46,32 +46,85 @@ const client = createClient({
   token,
 });
 
-// Import locations data
+// Import the 4 official CFC locations
 const locations = [
   {
-    slug: "bordeaux-centre",
-    name: "Bordeaux Centre",
-    cityTag: "Bordeaux, France",
-    badge: "Flagship",
+    slug: "bordeauxlac",
+    name: "Bordeauxlac",
+    cityTag: "Bordeaux Lac, France",
+    badge: "Bordeaux Lac",
     order: 1,
+    rating: 4.7,
+    reviewCount: 2183,
+    mapCoords: {
+      top: "12%",
+      left: "47%",
+    },
+    coordinates: {
+      lat: 44.8911124,
+      lng: -0.5463199,
+    },
+    tagline: {
+      prefix: "Lakeside Crunch.",
+      highlight: "Bordeaux Lac.",
+      description: "Located near the lake in Bordeaux. Crispy fried chicken, generous portions, and fast, friendly service.",
+    },
+    address: "32 Rue Yves Glotin, 33300 Bordeaux, France",
+    phone: "+33 5 56 00 12 34",
+    mapsUrl: "https://www.google.com/maps/place/32+Rue+Yves+Glotin,+33300+Bordeaux,+France/@44.8911124,-0.5463199,17z/data=!3m1!4b1!4m6!3m5!1s0xd55291f32352769:0x5b86a8c7c92e5f40!8m2!3d44.8911124!4d-0.5463199!16s%2Fg%2F11cpfnkhm1?entry=ttu&g_ep=EgoyMDI2MTExMC4wIKXMDSoASAFQAw%3D%3D",
+    images: {
+      storefrontUrl: "/locations/bordeaux_front.jpg",
+      kiosksUrl: "/locations/kiosks.jpg",
+      diningUrl: "/locations/dining.jpg",
+      barStoolsUrl: "/locations/bar_stools.jpg",
+      counterUrl: "/locations/counter.jpg",
+      virtualTourUrl: "/locations/virtual_tour.jpg",
+    },
+    signatureDish: {
+      badge: "Signature Dish",
+      title: "The Original Tender Box.",
+      subtitle: "The Recipe That Started The Obsession",
+    },
+    openingHours: {
+      weekday: "Mon–Thu 11:00–23:00",
+      weekend: "Fri–Sat 11:00–01:00",
+      sunday: "Sun 12:00–22:00",
+    },
+    tourTitle: "Step Inside The Crunch",
+    tourSubtitle: "Take A Virtual Tour",
+    features: ["Digital Kiosks", "Dine-In", "Takeaway", "Late Night", "WiFi"],
+    stats: {
+      established: "2018",
+      capacity: "85 Seats",
+      averageWait: "4 Mins",
+    },
+  },
+  {
+    slug: "bordeaux",
+    name: "Bordeaux",
+    cityTag: "Bordeaux Centre, France",
+    badge: "Flagship",
+    order: 2,
+    rating: 4.8,
+    reviewCount: 2183,
     mapCoords: {
       top: "14%",
       left: "48.2%",
     },
     coordinates: {
-      lat: 44.8416106,
-      lng: -0.5810938,
+      lat: 44.8298661,
+      lng: -0.568634,
     },
     tagline: {
       prefix: "Bustling & Bold.",
       highlight: "Our Original.",
-      description: "Right In The Heart Of The City. \nWhere It All Started In 2011, And Where The Lines Still Form At Lunch.",
+      description: "Right In The Heart Of Bordeaux. Where It All Started In 2011, And Where The Lines Still Form At Lunch.",
     },
-    address: "14 Rue Sainte-Catherine, 33000 Bordeaux",
+    address: "69 Cours de la Marne, 33800 Bordeaux, France",
     phone: "+33 5 56 00 12 34",
-    mapsUrl: "https://maps.google.com/?q=14+Rue+Sainte-Catherine+Bordeaux",
+    mapsUrl: "https://www.google.com/maps?q=Cfc,+69+Cr+de+la+Marne,+33800+Bordeaux,+France&ftid=0xd5527b60605d33d:0x14b9f742a04055b7&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,100821555,47071704,94218641,94282134,100835699,94286869,100820247,100822504&g_ep=CAISEjI2LjM5LjAuOTg0OTU2MzcwMBgAINeCAypnLDk0Mjk3Njk5LDk0MjMxMTg4LDk0MjgwNTY4LDEwMDgyMTU1NSw0NzA3MTcwNCw5NDIxODY0MSw5NDI4MjEzNCwxMDA4MzU2OTksOTQyODY4NjksMTAwODIwMjQ3LDEwMDgyMjUwNEICSU4%3D&skid=52b789de-1a58-4ab0-9da0-d3611203d4b1&g_st=iw",
     images: {
-      storefrontUrl: "/location_details-hero.jpg",
+      storefrontUrl: "/locations/bordeaux_front.jpg",
       kiosksUrl: "/locations/kiosks.jpg",
       diningUrl: "/locations/dining.jpg",
       barStoolsUrl: "/locations/bar_stools.jpg",
@@ -98,78 +151,31 @@ const locations = [
     },
   },
   {
-    slug: "merignac",
-    name: "Mérignac",
-    cityTag: "Mérignac, France",
-    badge: "Airport Hub",
-    order: 2,
-    mapCoords: {
-      top: "15%",
-      left: "46.2%",
-    },
-    coordinates: {
-      lat: 51.5072,
-      lng: -0.1276,
-    },
-    tagline: {
-      prefix: "Drive-Thru & Speed.",
-      highlight: "Airport Corridor.",
-      description: "Designed For Those On The Move. Ultra-Fast Service, Generous Parking, And The Same Golden Crispy Crunch.",
-    },
-    address: "85 Avenue John Fitzgerald Kennedy, 33700 Mérignac",
-    phone: "+33 5 56 00 56 78",
-    mapsUrl: "https://maps.google.com/?q=85+Avenue+JFK+Merignac",
-    images: {
-      storefrontUrl: "/location_details-hero.jpg",
-      kiosksUrl: "/locations/kiosks.jpg",
-      diningUrl: "/locations/dining.jpg",
-      barStoolsUrl: "/locations/bar_stools.jpg",
-      counterUrl: "/locations/counter.jpg",
-      virtualTourUrl: "/locations/virtual_tour.jpg",
-    },
-    signatureDish: {
-      badge: "Signature Dish",
-      title: "The Mega Crunch Bucket.",
-      subtitle: "Freshly Dipped Wings & Tenders For The Crew",
-    },
-    openingHours: {
-      weekday: "Mon–Thu 11:00–23:30",
-      weekend: "Fri–Sat 11:00–01:30",
-      sunday: "Sun 11:30–23:00",
-    },
-    tourTitle: "Step Inside The Crunch",
-    tourSubtitle: "Take A Virtual Tour",
-    features: ["Drive-Thru", "Free Parking", "Express Kiosks", "Family Zone", "Fast Pick-Up"],
-    stats: {
-      established: "2016",
-      capacity: "120 Seats",
-      averageWait: "3 Mins",
-    },
-  },
-  {
-    slug: "bordeaux-bastide",
-    name: "Bordeaux Bastide",
-    cityTag: "Bastide, Bordeaux",
-    badge: "Riverside",
+    slug: "bouscat",
+    name: "Bouscat",
+    cityTag: "Le Bouscat, France",
+    badge: "Gourmet Hub",
     order: 3,
+    rating: 4.6,
+    reviewCount: 2289,
     mapCoords: {
       top: "18%",
       left: "46.2%",
     },
     coordinates: {
-      lat: 52.5200,
-      lng: 13.4050,
+      lat: 44.854328,
+      lng: -0.593309,
     },
     tagline: {
-      prefix: "Riverside Chill.",
-      highlight: "Right Bank Vibe.",
-      description: "Overlooking The Garonne River. Sunset Views With Serious Crunch, Craft Sauces, And A Relaxed Terrace.",
+      prefix: "Gourmet & Chill.",
+      highlight: "Avenue Vibe.",
+      description: "Nestled In Le Bouscat. Modern Aesthetic, Warm Amber Glow, And Uncompromising Crunch Fresh From The Fryers.",
     },
-    address: "28 Avenue Thiers, 33100 Bordeaux",
+    address: "13bis Boulevard Pierre 1er, 33110 Le Bouscat, France",
     phone: "+33 5 56 00 90 12",
-    mapsUrl: "https://maps.google.com/?q=28+Avenue+Thiers+Bordeaux",
+    mapsUrl: "https://www.google.com/maps?q=CFC,+13bis+Bd+Pierre+1er,+33110+Le+Bouscat,+France&ftid=0xd55295f654ce2cb:0x64afcf131183132b&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,100821555,47071704,94218641,94282134,100835699,94286869,100820247,100822504&g_ep=CAISEjI2LjM5LjAuOTg0OTU2MzcwMBgAINeCAypnLDk0Mjk3Njk5LDk0MjMxMTg4LDk0MjgwNTY4LDEwMDgyMTU1NSw0NzA3MTcwNCw5NDIxODY0MSw5NDI4MjEzNCwxMDA4MzU2OTksOTQyODY4NjksMTAwODIwMjQ3LDEwMDgyMjUwNEICSU4%3D&skid=ae67aa00-28ab-486e-a736-046720f73c95&g_st=iw",
     images: {
-      storefrontUrl: "/location_details-hero.jpg",
+      storefrontUrl: "/locations/bordeaux_front.jpg",
       kiosksUrl: "/locations/kiosks.jpg",
       diningUrl: "/locations/dining.jpg",
       barStoolsUrl: "/locations/bar_stools.jpg",
@@ -188,37 +194,39 @@ const locations = [
     },
     tourTitle: "Step Inside The Crunch",
     tourSubtitle: "Take A Virtual Tour",
-    features: ["Riverside Terrace", "Outdoor Seating", "Cocktail Bar", "Late Night", "Pet Friendly"],
+    features: ["Outdoor Terrace", "Dine-In", "Express Kiosks", "Late Night", "WiFi"],
     stats: {
       established: "2019",
-      capacity: "95 Seats",
-      averageWait: "5 Mins",
+      capacity: "90 Seats",
+      averageWait: "4 Mins",
     },
   },
   {
     slug: "talence",
     name: "Talence",
-    cityTag: "Talence, Bordeaux",
+    cityTag: "Talence, France",
     badge: "University",
     order: 4,
+    rating: 5,
+    reviewCount: 5242,
     mapCoords: {
       top: "10%",
       left: "46.2%",
     },
     coordinates: {
-      lat: 51.9028,
-      lng: 12.4964,
+      lat: 44.8010635,
+      lng: -0.5952759,
     },
     tagline: {
       prefix: "Campus Energy.",
       highlight: "Student Hub.",
-      description: "Steps From The University. Packed With Student Deals, High-Top Charging Bars, And Non-Stop Crispy Vibes.",
+      description: "Steps From The University Campus. Packed With Student Deals, High-Top Charging Bars, And Non-Stop Crispy Vibes.",
     },
-    address: "120 Cours Gambetta, 33400 Talence",
+    address: "120 Cours Gambetta, 33400 Talence, France",
     phone: "+33 5 56 00 34 56",
-    mapsUrl: "https://maps.google.com/?q=120+Cours+Gambetta+Talence",
+    mapsUrl: "https://www.google.com/maps/place/CFC+Talence/@44.801064,-0.595276,17z/data=!4m6!3m5!1s0xd5527fb67c01f6f:0xa701a80dc754c8df!8m2!3d44.8010635!4d-0.5952759!16s%2Fg%2F11j8lz4s7x?hl=fr&entry=ttu&g_ep=EgoyMDI2MTExMC4wIKXMDSoASAFQAw%3D%3D",
     images: {
-      storefrontUrl: "/location_details-hero.jpg",
+      storefrontUrl: "/locations/bordeaux_front.jpg",
       kiosksUrl: "/locations/kiosks.jpg",
       diningUrl: "/locations/dining.jpg",
       barStoolsUrl: "/locations/bar_stools.jpg",
@@ -240,64 +248,68 @@ const locations = [
     features: ["Charging Stations", "Study Friendly", "Student Discount", "Fast WiFi", "Group Tables"],
     stats: {
       established: "2021",
-      capacity: "110 Seats",
-      averageWait: "4 Mins",
-    },
-  },
-  {
-    slug: "pessac",
-    name: "Pessac",
-    cityTag: "Pessac, France",
-    badge: "Family Haven",
-    order: 5,
-    mapCoords: {
-      top: "20%",
-      left: "46.8%",
-    },
-    coordinates: {
-      lat: 40.4168,
-      lng: -3.7038,
-    },
-    tagline: {
-      prefix: "Suburban Comfort.",
-      highlight: "Family Haven.",
-      description: "A Spacious Gathering Spot For Families And Friends. Easy Parking, Generous Seating, And Fresh Chicken Daily.",
-    },
-    address: "42 Avenue Pasteur, 33600 Pessac",
-    phone: "+33 5 56 00 78 90",
-    mapsUrl: "https://maps.google.com/?q=42+Avenue+Pasteur+Pessac",
-    images: {
-      storefrontUrl: "/location_details-hero.jpg",
-      kiosksUrl: "/locations/kiosks.jpg",
-      diningUrl: "/locations/dining.jpg",
-      barStoolsUrl: "/locations/bar_stools.jpg",
-      counterUrl: "/locations/counter.jpg",
-      virtualTourUrl: "/locations/virtual_tour.jpg",
-    },
-    signatureDish: {
-      badge: "Signature Dish",
-      title: "Family Feast Sharing Platter.",
-      subtitle: "30 Tenders, 4 Large Dips, Hand-Cut Fries",
-    },
-    openingHours: {
-      weekday: "Mon–Thu 11:00–22:30",
-      weekend: "Fri–Sat 11:00–00:00",
-      sunday: "Sun 11:30–22:00",
-    },
-    tourTitle: "Step Inside The Crunch",
-    tourSubtitle: "Take A Virtual Tour",
-    features: ["Kids Play Area", "Free Parking", "Large Booths", "Disabled Access", "Takeaway"],
-    stats: {
-      established: "2023",
-      capacity: "140 Seats",
+      capacity: "95 Seats",
       averageWait: "4 Mins",
     },
   },
 ];
 
+// Separate Location Reviews Section document (overall review count + 6 general cards)
+const locationReviewsDoc = {
+  _id: 'locationReviews',
+  _type: 'locationReviews',
+  overallReviewCount: '11,897',
+  title: "Reviews Can't Be Wrong",
+  reviews: [
+    {
+      _key: 'rev_1',
+      authorName: 'Yousra Djeddou',
+      rating: 5,
+      quote: '“Formules interessantes à partager, on a pris la box wings-tenders cétait pas mal dutout et généreux. Service rapide et efficace.”',
+      avatarColor: 'from-cyan-500 to-blue-600',
+    },
+    {
+      _key: 'rev_2',
+      authorName: 'Arm',
+      rating: 5,
+      quote: "“A very nice, clean restaurant with fast service and a warm welcome. There's an outdoor terrace. The tacos are good and quite generous”",
+      avatarColor: 'from-amber-400 to-orange-500',
+    },
+    {
+      _key: 'rev_3',
+      authorName: 'Camille Roussel',
+      rating: 5,
+      quote: '“Des tenders croustillants marinés au babeurre, des sauces maison qui font toute la différence. Accueil au top !”',
+      avatarColor: 'from-emerald-400 to-teal-600',
+    },
+    {
+      _key: 'rev_4',
+      authorName: 'Med saleck',
+      rating: 5,
+      quote: '“Beautiful place!! The tacos were delicious, the music was great, and just for the service”',
+      avatarColor: 'from-blue-500 to-indigo-600',
+    },
+    {
+      _key: 'rev_5',
+      authorName: 'Timeo scerri',
+      rating: 5,
+      quote: '“The staff were very pleasant and smiling, the food was excellent and served quickly, and the music created a great atmosphere. I highly recommend it”',
+      avatarColor: 'from-rose-400 to-red-500',
+    },
+    {
+      _key: 'rev_6',
+      authorName: 'Thomas Dubois',
+      rating: 5,
+      quote: '“Un vrai régal à chaque passage. Le bucket à partager et les frites croustillantes sont tout simplement incontournables.”',
+      avatarColor: 'from-purple-500 to-pink-500',
+    },
+  ],
+};
+
 async function seed() {
   console.log(`🚀 Starting location seed for project: ${projectId} (${dataset})...`);
 
+  // 1. Seed each restaurant location
   for (const loc of locations) {
     const cityName = loc.cityTag.split(',')[0].trim();
     const doc = {
@@ -313,6 +325,9 @@ async function seed() {
       longitude: loc.coordinates.lng,
       badge: loc.badge,
       order: loc.order,
+      rating: loc.rating,
+      reviewCount: loc.reviewCount,
+      cardImageUrl: loc.images.storefrontUrl,
 
       // 2. Hero Section (Tab 2)
       heroBackgroundImageUrl: loc.images.storefrontUrl,
@@ -343,22 +358,6 @@ async function seed() {
       virtualTourUrl: `https://my.matterport.com/show/?m=sample-${loc.slug}`,
 
       // Backward compatibility objects
-      hero: {
-        backgroundImageUrl: loc.images.storefrontUrl,
-        locationLabel: loc.cityTag,
-        heading: loc.name,
-        description: `${loc.tagline.prefix} ${loc.tagline.highlight} ${loc.tagline.description}`.replace(/\n/g, ' '),
-        directionsUrl: loc.mapsUrl,
-      },
-      experience: {
-        orderingKioskImageUrl: loc.images.kiosksUrl,
-      },
-      virtualTour: {
-        backgroundImageUrl: "/cfc_ambience.jpg",
-        heading: loc.tourTitle || "Step Inside The Crunch",
-        buttonText: loc.tourSubtitle || "Take A Virtual Tour",
-        virtualTourUrl: `https://my.matterport.com/show/?m=sample-${loc.slug}`,
-      },
       cityTag: loc.cityTag,
       coordinates: loc.coordinates,
       mapCoords: loc.mapCoords,
@@ -376,7 +375,7 @@ async function seed() {
     for (let attempt = 1; attempt <= 3 && !success; attempt++) {
       try {
         const res = await client.createOrReplace(doc);
-        console.log(`✅ Uploaded / Replaced location: "${res.name}" (ID: ${res._id})`);
+        console.log(`✅ Uploaded / Replaced location: "${res.name}" (ID: ${res._id}, Rating: ${res.rating})`);
         success = true;
       } catch (err) {
         if (attempt === 3) {
@@ -389,7 +388,15 @@ async function seed() {
     }
   }
 
-  console.log('\n🎉 Finished seeding locations to Sanity!');
+  // 2. Seed the separate Location Reviews section
+  try {
+    const res = await client.createOrReplace(locationReviewsDoc);
+    console.log(`✅ Uploaded separate Location Reviews document: ID "${res._id}" (Count: ${res.overallReviewCount})`);
+  } catch (err) {
+    console.error('❌ Failed to upload location reviews section:', err.message);
+  }
+
+  console.log('\n🎉 Finished seeding locations & separate reviews section to Sanity!');
 }
 
 seed().catch(console.error);

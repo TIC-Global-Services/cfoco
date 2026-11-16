@@ -9,6 +9,7 @@ export const locationType = defineType({
     { name: 'hero', title: 'Hero Section' },
     { name: 'experience', title: 'Experience Section' },
     { name: 'virtualTour', title: 'Virtual Tour Section' },
+    { name: 'reviews', title: 'Reviews & Rating' },
   ],
   fields: [
     // ========================================================================
@@ -102,6 +103,23 @@ export const locationType = defineType({
       type: 'string',
       description: 'Optional fallback image path if no card image is uploaded (e.g. /locations/bordeaux_front.jpg)',
       group: 'basicInfo',
+    }),
+    defineField({
+      name: 'rating',
+      title: 'Google Rating (Stars)',
+      type: 'number',
+      description: 'Overall star rating for this restaurant (e.g., 4.7, 4.8, 5.0)',
+      initialValue: 4.8,
+      validation: (Rule) => Rule.min(1).max(5),
+      group: ['basicInfo', 'reviews'],
+    }),
+    defineField({
+      name: 'reviewCount',
+      title: 'Google Review Count',
+      type: 'number',
+      description: 'Total Google reviews count for this restaurant (e.g., 2183, 2289, 5242)',
+      initialValue: 2183,
+      group: ['basicInfo', 'reviews'],
     }),
 
     // ========================================================================
@@ -320,6 +338,66 @@ export const locationType = defineType({
       type: 'url',
       description: 'URL to the 360° interactive experience (e.g. Matterport or web tour)',
       group: 'virtualTour',
+    }),
+
+    // ========================================================================
+    // TAB 5: REVIEWS & RATING SECTION
+    // ========================================================================
+    defineField({
+      name: 'reviews',
+      title: 'Customer Reviews',
+      type: 'array',
+      description: 'Customer reviews specific to this restaurant location',
+      group: 'reviews',
+      of: [
+        {
+          type: 'object',
+          name: 'reviewItem',
+          title: 'Review',
+          fields: [
+            defineField({
+              name: 'authorName',
+              title: 'Customer Name',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'rating',
+              title: 'Rating (1-5)',
+              type: 'number',
+              initialValue: 5,
+              validation: (Rule) => Rule.required().min(1).max(5),
+            }),
+            defineField({
+              name: 'quote',
+              title: 'Review Quote',
+              type: 'text',
+              rows: 3,
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'avatarColor',
+              title: 'Avatar Gradient Color',
+              type: 'string',
+              description: 'Tailwind gradient classes e.g. "from-amber-400 to-orange-500"',
+              initialValue: 'from-amber-400 to-orange-500',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'authorName',
+              subtitle: 'quote',
+              rating: 'rating',
+            },
+            prepare({ title, subtitle, rating }) {
+              return {
+                title: `${title || 'Customer'} (${'★'.repeat(rating || 5)})`,
+                subtitle,
+              };
+            },
+          },
+        },
+      ],
     }),
 
     // ========================================================================

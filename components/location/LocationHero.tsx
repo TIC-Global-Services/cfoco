@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Navigation, MapPin, MapPinCheck, MapPinIcon } from "lucide-react";
+import { MapPinIcon } from "lucide-react";
 import { LocationData } from "@/data/locations";
 import Link from "next/link";
 
@@ -33,10 +33,22 @@ export default function LocationHero({ location }: LocationHeroProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-black/40 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent" />
 
-      {/* Top Right Location Pin Badge */}
-      <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex items-center text-white text-xs sm:text-lg font-medium">
-        <MapPinIcon className="w-5 h-5 text-[#232E45] mr-2" />
-        <span>{locationLabel}</span>
+      {/* Top Right Location Pin & Rating Badges */}
+      <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex flex-wrap items-center gap-2 text-white text-xs sm:text-base font-medium z-10">
+        <div className="flex items-center bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
+          <MapPinIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#FFBF00] mr-2" />
+          <span>{locationLabel}</span>
+        </div>
+        {location.rating && (
+          <div className="flex items-center gap-1 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 text-[#FFBF00] font-semibold text-xs sm:text-sm">
+            <span>★ {location.rating.toFixed(1)}</span>
+            {location.reviewCount && (
+              <span className="text-white/80 font-normal">
+                ({location.reviewCount.toLocaleString()} avis)
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Bottom Hero Content */}

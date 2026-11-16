@@ -1,7 +1,7 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { schema } from './sanity/schemas';
-import { apiVersion, dataset, projectId } from './sanity/env';
+import { dataset, projectId } from './sanity/env';
 
 export default defineConfig({
   basePath: '/studio',
@@ -23,6 +23,15 @@ export default defineConfig({
             S.listItem()
               .title('Restaurant Locations')
               .child(S.documentTypeList('location').title('Restaurant Locations')),
+            S.divider(),
+            S.listItem()
+              .title('Location Reviews (Overall & 6 Reviews)')
+              .child(
+                S.document()
+                  .schemaType('locationReviews')
+                  .documentId('locationReviews')
+                  .title('Location Reviews Section')
+              ),
             S.divider(),
             S.listItem()
               .title('Blogs')

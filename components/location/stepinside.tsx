@@ -50,7 +50,10 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
 
   // Sync virtualIndex if locations length changes
   useEffect(() => {
-    setVirtualIndex(total);
+    const timer = setTimeout(() => {
+      setVirtualIndex(total);
+    }, 0);
+    return () => clearTimeout(timer);
   }, [total]);
 
   // The real data index (0..total-1) for map pin & detail card
@@ -244,7 +247,7 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
                 {/* Connector line from dot down to card */}
                 <div className="w-px h-3 bg-gradient-to-b from-[#FFBF00] to-[#1e82e6]" />
 
-                <div className="w-[300px] sm:w-[440px] md:w-[480px]">
+                <div className="w-[310px] sm:w-[450px] md:w-[490px]">
                   <LiquidGlass
                     borderRadius={24}
                     blur={18}
@@ -254,9 +257,9 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
                     shadowIntensity={0.4}
                     displacementScale={2}
                     elasticity={1.4}
-                    className="w-full bg-[#141923]/80 text-white p-2.5 sm:p-4 border border-white/25 shadow-[0_12px_36px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-xl transition-all duration-300"
+                    className="w-full bg-[#141923]/85 text-white p-3 sm:p-4 border border-white/25 shadow-[0_12px_36px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-xl transition-all duration-300 rounded-[24px]"
                   >
-                    <div className="w-full flex items-stretch gap-3 sm:gap-5 text-left">
+                    <div className="w-full flex items-stretch gap-3 sm:gap-4.5 text-left">
                       {/* Restaurant Image (Left) */}
                       <div className="relative w-24 sm:w-36 md:w-40 aspect-square shrink-0 rounded-xl sm:rounded-2xl overflow-hidden border border-white/15 bg-[#232a3b]">
                         <Image
@@ -273,21 +276,35 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
                       <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                         <div>
                           {/* Restaurant Name */}
-                          <h4 className="text-lg sm:text-2xl font-extrabold text-[#FFBF00] leading-tight truncate drop-shadow-[0_0_6px_rgba(255,191,0,0.25)]">
+                          <h4 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#FFBF00] leading-[1.3] tracking-tight truncate drop-shadow-[0_0_6px_rgba(255,191,0,0.25)]">
                             {activeLocation.name}
                           </h4>
 
                           {/* Address */}
                           <p
-                            className="text-xs sm:text-sm text-white/95 font-normal mt-0.5 truncate"
+                            className="text-xs sm:text-sm text-neutral-300 font-normal mt-0.5 sm:mt-1 truncate leading-[1.3] tracking-tight"
                             title={activeLocation.address}
                           >
                             {activeLocation.address}
                           </p>
 
+                          {/* Rating & Reviews */}
+                          {activeLocation.rating && (
+                            <div className="flex items-center gap-1.5 mt-1 sm:mt-1.5 text-[11px] sm:text-xs font-semibold text-[#FFBF00]">
+                              <span className="flex items-center gap-0.5">
+                                ★ {Number(activeLocation.rating).toFixed(1)}
+                              </span>
+                              {activeLocation.reviewCount && (
+                                <span className="text-neutral-400 font-normal">
+                                  ({activeLocation.reviewCount.toLocaleString()} avis Google)
+                                </span>
+                              )}
+                            </div>
+                          )}
+
                           {/* 2-line Description */}
                           {cardDescription && (
-                            <p className="text-[11px] sm:text-xs text-neutral-300/85 font-normal leading-relaxed mt-2 sm:mt-2.5 line-clamp-2">
+                            <p className="text-[11px] sm:text-xs text-neutral-300/85 font-normal leading-[1.3] tracking-tight mt-1.5 sm:mt-2 line-clamp-2">
                               {cardDescription}
                             </p>
                           )}
@@ -297,7 +314,7 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
                         <div className="mt-2.5 sm:mt-3 flex justify-end">
                           <Link
                             href={`/location/${activeLocation.slug}`}
-                            className="inline-flex items-center justify-center rounded-full bg-[#cfd6e2] hover:bg-white text-[#141923] font-bold text-[11px] sm:text-xs px-4 sm:px-5 py-1.5 sm:py-2 transition-all duration-200 shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                            className="inline-flex items-center justify-center rounded-full bg-[#cfd6e2] hover:bg-white text-[#141923] font-bold text-[11px] sm:text-xs px-4 sm:px-5 py-1.5 sm:py-2 transition-all duration-200 shadow-sm hover:scale-[1.02] active:scale-[0.98] tracking-tight"
                           >
                             Explore more
                           </Link>

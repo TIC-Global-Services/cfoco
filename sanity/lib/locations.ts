@@ -1,6 +1,6 @@
 import { client } from './client';
 import { isSanityConfigured } from '../env';
-import { LOCATIONS_QUERY, LOCATION_BY_SLUG_QUERY, LOCATION_SLUGS_QUERY } from './queries';
+import { LOCATIONS_QUERY, LOCATION_BY_SLUG_QUERY, LOCATION_SLUGS_QUERY, LOCATION_REVIEWS_QUERY } from './queries';
 import { locationsData, LocationData } from '@/data/locations';
 
 /**
@@ -90,4 +90,49 @@ export async function getAllLocationSlugs(): Promise<string[]> {
   }
 
   return locationsData.map((loc) => loc.slug);
+}
+
+export interface LocationReviewCard {
+  id?: string;
+  authorName: string;
+  rating: number;
+  quote: string;
+  avatarColor?: string;
+}
+
+export interface LocationReviewsSectionData {
+  _id?: string;
+  overallReviewCount?: string | number;
+  title?: string;
+  reviews?: LocationReviewCard[];
+}
+
+/**
+ * Fetch the separate Location Reviews section (overall reviews count + 6 general cards) from Sanity.
+ */
+export async function getLocationReviewsSection(): Promise<LocationReviewsSectionData | null> {
+  if (!isSanityConfigured) {
+    return null;
+  }
+
+  try {
+    const data = await client.fetch<LocationReviewsSectionData | null>(
+      LOCATION_REVIEWS_QUERY,
+      {},
+      {
+        next: {
+          revalidate: process.env.NODE_ENV === 'development' ? 0 : 60,
+          tags: ['locationReviews', 'locations'],
+        },
+      }
+    );
+
+    if (data && (data.overallReviewCount || (Array.isArray(data.reviews) && data.reviews.length > 0))) {
+      return data;
+    }
+  } catch (error) {
+    console.error('Error fetching location reviews section from Sanity, using fallback:', error);
+  }
+
+  return null;
 }

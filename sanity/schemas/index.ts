@@ -2,10 +2,11 @@ import { type SchemaTypeDefinition } from 'sanity';
 import { menuCategoryType } from './menuCategory';
 import { menuItemType } from './menuItem';
 import { locationType } from './location';
+import { locationReviewsType } from './locationReviews';
 import { postType } from './post';
 import { categoryType } from './category';
 import { jobPostType } from './jobPost';
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [menuCategoryType, menuItemType, locationType, postType, categoryType, jobPostType],
+  types: [menuCategoryType, menuItemType, locationType, locationReviewsType, postType, categoryType, jobPostType],
 };

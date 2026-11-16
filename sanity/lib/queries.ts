@@ -61,6 +61,15 @@ export const LOCATIONS_QUERY = groq`
     longitude,
     badge,
     order,
+    rating,
+    reviewCount,
+    "reviews": reviews[]{
+      "id": coalesce(_key, _id),
+      authorName,
+      rating,
+      quote,
+      avatarColor
+    },
     "cardImage": coalesce(cardImage.asset->url, cardImageUrl, heroBackgroundImage.asset->url, hero.backgroundImage.asset->url, images.storefront.asset->url, "/locations/bordeaux_front.jpg"),
     "hero": {
       "backgroundImage": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
@@ -141,6 +150,15 @@ export const LOCATION_BY_SLUG_QUERY = groq`
     longitude,
     badge,
     order,
+    rating,
+    reviewCount,
+    "reviews": reviews[]{
+      "id": coalesce(_key, _id),
+      authorName,
+      rating,
+      quote,
+      avatarColor
+    },
     "cardImage": coalesce(cardImage.asset->url, cardImageUrl, heroBackgroundImage.asset->url, hero.backgroundImage.asset->url, images.storefront.asset->url, "/locations/bordeaux_front.jpg"),
     "hero": {
       "backgroundImage": coalesce(heroBackgroundImage.asset->url, heroBackgroundImageUrl, hero.backgroundImage.asset->url, hero.backgroundImageUrl, images.storefront.asset->url, images.storefrontUrl, "/location_details-hero.jpg"),
@@ -296,5 +314,20 @@ export const JOB_POSTS_QUERY = groq`
     applyEmail,
     applySubject,
     applyLink
+  }
+`;
+
+export const LOCATION_REVIEWS_QUERY = groq`
+  *[_type == "locationReviews"][0] {
+    _id,
+    overallReviewCount,
+    title,
+    "reviews": reviews[]{
+      "id": coalesce(_key, _id),
+      authorName,
+      rating,
+      quote,
+      avatarColor
+    }
   }
 `;
