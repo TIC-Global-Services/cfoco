@@ -21,24 +21,24 @@ const defaultLeftReviews: ReviewCardItem[] = [
     id: "rev-1",
     rating: 5,
     quote:
-      "“The crunch is unreal. Every bite is crispy, juicy, and packed with flavor. Definitely my new go-to spot!”",
-    authorName: "Michael Chen",
+      "“Formules interessantes à partager, on a pris la box wings-tenders cétait pas mal dutout et généreux. Service rapide et efficace.”",
+    authorName: "Yousra Djeddou",
     avatarColor: "from-cyan-500 to-blue-600",
   },
   {
     id: "rev-2",
     rating: 5,
     quote:
-      "“Hands down the freshest chicken in town. The secret recipe coating is unmatched anywhere else.”",
-    authorName: "Sarah Jenkins",
+      "“A very nice, clean restaurant with fast service and a warm welcome. There's an outdoor terrace. The tacos are good and quite generous.”",
+    authorName: "Arm",
     avatarColor: "from-amber-400 to-orange-500",
   },
   {
     id: "rev-3",
     rating: 5,
     quote:
-      "“Crispy chemistry at its finest. You can literally hear the quality before the first bite.”",
-    authorName: "Marcus Vance",
+      "“Des tenders croustillants marinés au babeurre, des sauces maison qui font toute la différence. Accueil au top !”",
+    authorName: "Camille Roussel",
     avatarColor: "from-emerald-400 to-teal-600",
   },
 ];
@@ -48,24 +48,24 @@ const defaultRightReviews: ReviewCardItem[] = [
     id: "rev-4",
     rating: 5,
     quote:
-      "“From the food to the vibe, everything feels premium. The burgers are hands down some of the best I've had.”",
-    authorName: "Michael Chen",
+      "“Beautiful place!! The tacos were delicious, the music was great, and just for the service!”",
+    authorName: "Med saleck",
     avatarColor: "from-blue-500 to-indigo-600",
   },
   {
     id: "rev-5",
     rating: 5,
     quote:
-      "“No frozen shortcuts and you can genuinely taste the difference. Absolute perfection!”",
-    authorName: "Elena Rostova",
+      "“The staff were very pleasant and smiling, the food was excellent and served quickly, and the music created a great atmosphere. I highly recommend it.”",
+    authorName: "Timeo scerri",
     avatarColor: "from-rose-400 to-red-500",
   },
   {
     id: "rev-6",
     rating: 5,
     quote:
-      "“The dipping sauces alone deserve an award. Fast service without losing an ounce of quality.”",
-    authorName: "David Ross",
+      "“Un vrai régal à chaque passage. Le bucket à partager et les frites croustillantes sont tout simplement incontournables.”",
+    authorName: "Thomas Dubois",
     avatarColor: "from-purple-500 to-pink-500",
   },
 ];
@@ -118,14 +118,37 @@ const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
 export interface ReviewsProps {
   leftReviews?: ReviewCardItem[];
   rightReviews?: ReviewCardItem[];
+  reviews?: ReviewCardItem[];
+  reviewCount?: number | string;
+  rating?: number;
+  heading?: string;
 }
 
 const Reviews = ({
   leftReviews = defaultLeftReviews,
   rightReviews = defaultRightReviews,
+  reviews,
+  reviewCount,
+  heading,
 }: ReviewsProps) => {
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const effectiveLeftReviews =
+    reviews && reviews.length > 0
+      ? reviews.filter((_, i) => i % 2 === 0)
+      : leftReviews;
+  const effectiveRightReviews =
+    reviews && reviews.length > 0
+      ? reviews.filter((_, i) => i % 2 === 1)
+      : rightReviews;
+
+  const displayCount =
+    reviewCount != null
+      ? typeof reviewCount === "number"
+        ? reviewCount.toLocaleString()
+        : reviewCount
+      : "11,897";
 
   // GSAP ScrollTrigger timeline configuration using native CSS position: sticky
   // Completely immune to JavaScript pin latency and layout shifts — keeps the title and viewport rock-solid in the center!
@@ -232,7 +255,7 @@ const Reviews = ({
       window.removeEventListener("resize", refresh);
       ctx.revert();
     };
-  }, []);
+  }, [effectiveLeftReviews, effectiveRightReviews]);
 
   return (
     <section
@@ -265,10 +288,10 @@ const Reviews = ({
         <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center select-none">
           <div className="z-10 space-y-1">
             <h2 className="text-6xl sm:text-7xl md:text-8xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-              16,000
+              {displayCount}
             </h2>
             <h2 className="text-2xl sm:text-5xl md:text-6xl lg:text-[4.735rem] font-bold tracking-tight text-white leading-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-              Reviews Can&apos;t Be Wrong
+              {heading || "Reviews Can't Be Wrong"}
             </h2>
           </div>
         </div>
@@ -276,7 +299,7 @@ const Reviews = ({
         {/* Floating cards layer */}
         <div className="absolute inset-0 z-10 w-full flex justify-between h-full pointer-events-none px-2 sm:px-4">
           <div className="w-full lg:w-1/2 absolute inset-y-0 left-0 h-full pointer-events-none">
-            {leftReviews.map((card, i) => (
+            {effectiveLeftReviews.map((card, i) => (
               <div
                 key={`rev-left-${card.id}-${i}`}
                 className="review-card-left absolute inset-0 flex items-center justify-start lg:justify-end pl-3 xs:pl-4 sm:pl-6 lg:pl-0 lg:pr-16 pointer-events-none invisible"
@@ -289,7 +312,7 @@ const Reviews = ({
           </div>
 
           <div className="w-full lg:w-1/2 absolute inset-y-0 right-0 h-full pointer-events-none">
-            {rightReviews.map((card, i) => (
+            {effectiveRightReviews.map((card, i) => (
               <div
                 key={`rev-right-${card.id}-${i}`}
                 className="review-card-right absolute inset-0 flex items-center justify-end lg:justify-start pr-3 xs:pr-4 sm:pr-6 lg:pr-0 lg:pl-16 pointer-events-none invisible"

@@ -318,7 +318,7 @@ export const JOB_POSTS_QUERY = groq`
 `;
 
 export const LOCATION_REVIEWS_QUERY = groq`
-  *[_type == "locationReviews"][0] {
+  *[_type == "locationReviews" || _id in ["locationReviews", "drafts.locationReviews"]] | order(_updatedAt desc)[0] {
     _id,
     overallReviewCount,
     title,
