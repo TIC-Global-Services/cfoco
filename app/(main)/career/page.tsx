@@ -1,7 +1,7 @@
 import React from 'react'
 import Hero from '@/components/career/hero'
 import Reachoutanyway from '@/components/career/reachout'
-import WhatWeRefuse from '@/components/career/whatwerefuse'
+import OpenPositions from '@/components/career/OpenPositions'
 import Reveal from '@/reusable/Reveal'
 import BuildYourFuture from '@/components/career/buildyourfuture'
 import { getJobPosts } from '@/sanity/lib/client'
@@ -15,7 +15,7 @@ const page = async () => {
         <Hero/>
       </Reveal>
       <BuildYourFuture/>
-      <WhatWeRefuse jobs={jobsFromSanity}/>
+      <OpenPositions jobs={jobsFromSanity}/>
       <Reveal>
         <Reachoutanyway/>
       </Reveal>

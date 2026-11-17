@@ -1,3 +1,5 @@
+import type { PortableTextBlock, TypedObject } from '@portabletext/types';
+
 export interface JobPost {
   _id: string;
   role: string;
@@ -33,5 +35,5 @@ export interface Post {
     alt?: string;
   };
   categories?: Category[];
-  body?: any;
+  body?: PortableTextBlock[] | TypedObject[] | null;
 }

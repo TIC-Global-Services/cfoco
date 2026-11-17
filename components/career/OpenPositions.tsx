@@ -118,11 +118,13 @@ const JobCard = ({ job }: { job: JobPost }) => {
 };
 
 // ── Main Section ─────────────────────────────────────────────────────────────
-interface WhatWeRefuseProps {
+export interface OpenPositionsProps {
   jobs?: JobPost[];
 }
 
-const WhatWeRefuse = ({ jobs: jobsProp }: WhatWeRefuseProps) => {
+export type WhatWeRefuseProps = OpenPositionsProps;
+
+const OpenPositions = ({ jobs: jobsProp }: OpenPositionsProps) => {
   const jobs = jobsProp && jobsProp.length > 0 ? jobsProp : FALLBACK_JOBS;
 
   const [activeSlide, setActiveSlide] = useState(0);
@@ -331,4 +333,5 @@ const WhatWeRefuse = ({ jobs: jobsProp }: WhatWeRefuseProps) => {
   );
 };
 
-export default WhatWeRefuse;
+export const WhatWeRefuse = OpenPositions;
+export default OpenPositions;

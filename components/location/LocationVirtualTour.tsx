@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
-import { Compass, X, Sparkles, RectangleGoggles } from "lucide-react";
+import { RectangleGoggles } from "lucide-react";
 import { LocationData } from "@/data/locations";
 
 interface LocationVirtualTourProps {
@@ -10,8 +10,6 @@ interface LocationVirtualTourProps {
 }
 
 export default function LocationVirtualTour({ location }: LocationVirtualTourProps) {
-  const [showTourModal, setShowTourModal] = useState(false);
-
   const backgroundImage = location.virtualTour?.backgroundImage || location.images?.virtualTour || "/cfc_ambience.jpg";
   const heading = location.virtualTour?.heading || location.tourTitle || "Step Inside The Crunch";
   const buttonText = location.virtualTour?.buttonText || location.tourSubtitle || "Take A Virtual Tour";
@@ -20,8 +18,6 @@ export default function LocationVirtualTour({ location }: LocationVirtualTourPro
   const handleTourClick = () => {
     if (virtualTourUrl && virtualTourUrl.startsWith("http")) {
       window.open(virtualTourUrl, "_blank", "noopener,noreferrer");
-    } else {
-      setShowTourModal(true);
     }
   };
 
@@ -29,8 +25,17 @@ export default function LocationVirtualTour({ location }: LocationVirtualTourPro
     <>
       {/* 3. VIRTUAL TOUR BANNER (Matches Bottom Card in Mockup) */}
       <div
+        role="button"
+        tabIndex={0}
         onClick={handleTourClick}
-        className="relative w-full aspect-[9/16] md:aspect-[16/8] rounded-[20px] sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl group cursor-pointer"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleTourClick();
+          }
+        }}
+        aria-label={`${heading} - ${buttonText}`}
+        className="relative w-full aspect-[9/16] md:aspect-[16/8] rounded-[20px] sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFBF00]"
       >
         <Image
           src={backgroundImage}
@@ -49,79 +54,15 @@ export default function LocationVirtualTour({ location }: LocationVirtualTourPro
               {heading}
             </h2>
 
-            <button
-              type="button"
+            <span
               className="mt-4 sm:mt-6 inline-flex items-center gap-2 text-base md:text-lg lg:text-xl font-semibold text-white group-hover:text-[#FFBF00] transition-colors"
             >
               <span>{buttonText}</span>
               <RectangleGoggles />
-            </button>
+            </span>
           </div>
         </div>
       </div>
-
-      {/* 4. VIRTUAL TOUR INTERACTIVE MODAL */}
-      {/* {showTourModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-4xl bg-neutral-950 border border-white/15 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8">
-            <button
-              type="button"
-              onClick={() => setShowTourModal(false)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-2 text-[#FFBF00] mb-2">
-              <Sparkles className="w-5 h-5" />
-              <span className="text-xs uppercase font-bold tracking-widest">360° Kitchen View</span>
-            </div>
-
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-              {location.name} Interactive Tour
-            </h3>
-            <p className="text-sm text-neutral-400 mt-1 mb-6">
-              Experience the energy, aromas, and craftsmanship that goes into every piece of CFC chicken.
-            </p>
-
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10">
-              <Image
-                src={location.images.virtualTour}
-                alt="360 Tour Preview"
-                fill
-                className="object-cover animate-pulse"
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-center p-4">
-                <div className="w-16 h-16 rounded-full bg-[#FFBF00] flex items-center justify-center text-black shadow-lg cursor-pointer transform hover:scale-110 transition">
-                  <Compass className="w-8 h-8 animate-spin" style={{ animationDuration: "12s" }} />
-                </div>
-                <p className="text-white font-bold mt-4 text-base">Virtual 3D Space Loaded</p>
-                <p className="text-xs text-neutral-300">Drag to look around or tap hotspots</p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                {location.features.map((feat) => (
-                  <span
-                    key={feat}
-                    className="text-xs px-3 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-300"
-                  >
-                    {feat}
-                  </span>
-                ))}
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowTourModal(false)}
-                className="text-xs font-semibold px-5 py-2 rounded-full bg-[#FFBF00] text-black hover:bg-[#F59E0B] transition"
-              >
-                Close Tour
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </>
   );
 }

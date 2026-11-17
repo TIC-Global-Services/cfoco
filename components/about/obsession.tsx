@@ -9,9 +9,6 @@ import {
   useTransform,
   useMotionValueEvent,
   MotionValue,
-  useAnimationFrame,
-  useMotionValue,
-  useInView,
   useSpring,
   Variants,
 } from "framer-motion";
@@ -115,16 +112,12 @@ export const ROAD_CONFIG = {
   shadowWidthDesktop: 64,
   shadowWidthMobile: 52,
 
-  // Road dashed divider line motion
-  lineSpeed: 52,         // Idle cruising speed (px/s)
-  lineScrollBoost: 2600, // Dynamic dash acceleration while scrolling
-  lineDirection: -1,     // Highway drive direction
+  // Road dashed divider line motion direction
+  lineDirection: -1,
 } as const;
 
 // Transition & pacing constants
-const DWELL_RATIO = 0.32;         // Scroll slice ratio spent docked at milestone
-const FADE_DISTANCE_THRESHOLD = 0.25; // Distance at which content begins fading in
-const FADE_DISTANCE_TARGET = 0.08;    // Distance at which content reaches 100% opacity
+const DWELL_RATIO = 0.38;             // Ratio of scroll spent docked at milestone station
 const ROAD_CANVAS_HEIGHT = 700;
 const ROAD_MEDIAN_Y = 255;
 
@@ -287,11 +280,13 @@ const pinBounceVariants: Variants = {
 
 const shadowPulseVariants: Variants = {
   inactive: {
-    opacity: 0.25,
+    opacity: 0.35,
+    scale: 0.85,
     transition: { duration: 0.3 },
   },
   active: {
     opacity: [0.55, 0.18, 0.6, 0.3, 0.58, 0.45, 0.55],
+    scale: [1, 0.7, 1, 0.8, 1, 0.9, 1],
     transition: {
       duration: 0.75,
       times: [0, 0.32, 0.58, 0.74, 0.86, 0.94, 1],
@@ -305,13 +300,13 @@ const shadowPulseVariants: Variants = {
    ───────────────────────────────────────────────────────────────────────── */
 
 /**
- * Pulsing neon charging ring around the active map pin
+ * Pulsing neon charging ring around the active map pin.
+ * Only illuminates when the pin has arrived and stopped at a milestone.
  */
 const PinChargingRing: React.FC<{
-  index: number;
   primaryColor: string;
   opacity: MotionValue<number>;
-}> = React.memo(({ index, primaryColor, opacity }) => (
+}> = React.memo(({ primaryColor, opacity }) => (
   <motion.div
     className="glow-ring absolute w-[70px] h-[70px] pointer-events-none z-0 transform-gpu"
     style={{
@@ -324,7 +319,7 @@ const PinChargingRing: React.FC<{
   >
     <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
       <defs>
-        <filter id={`milestoneRingGlow-${index}`} x="-60%" y="-60%" width="220%" height="220%">
+        <filter id="travelingPinRingGlow" x="-60%" y="-60%" width="220%" height="220%">
           <feGaussianBlur stdDeviation="3.5" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
@@ -340,7 +335,7 @@ const PinChargingRing: React.FC<{
         fill="none"
         stroke={primaryColor}
         strokeWidth="4"
-        filter={`url(#milestoneRingGlow-${index})`}
+        filter="url(#travelingPinRingGlow)"
       />
       <circle
         cx="50"
@@ -357,17 +352,16 @@ const PinChargingRing: React.FC<{
 PinChargingRing.displayName = "PinChargingRing";
 
 /**
- * Teardrop map pin housing the CFOCO chicken emblem
+ * Teardrop map pin housing the CFOCO chicken emblem.
  */
 const TeardropPinBody: React.FC<{
-  index: number;
   isRed: boolean;
   primaryColor: string;
-}> = React.memo(({ index, isRed, primaryColor }) => (
+}> = React.memo(({ isRed, primaryColor }) => (
   <div className="relative w-[64px] h-[82px] flex flex-col items-center z-10">
     <svg viewBox="-32 -32 64 82" className="w-full h-full overflow-visible">
       <defs>
-        <linearGradient id={`pinGrad-${index}`} x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="travelingPinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#141c2d" />
           <stop offset="60%" stopColor="#0d1422" />
           <stop offset="100%" stopColor={isRed ? "#3b0c10" : "#08263a"} />
@@ -376,7 +370,7 @@ const TeardropPinBody: React.FC<{
       {/* Teardrop contour */}
       <path
         d="M 0 -28 A 28 28 0 0 1 21 18.5 L 0 46 L -21 18.5 A 28 28 0 0 1 0 -28 Z"
-        fill={`url(#pinGrad-${index})`}
+        fill="url(#travelingPinGrad)"
         stroke={primaryColor}
         strokeWidth="1.8"
         filter="drop-shadow(0 6px 14px rgba(0,0,0,0.85))"
@@ -409,7 +403,7 @@ TeardropPinBody.displayName = "TeardropPinBody";
 
 /**
  * Milestone story content (Year, Title, Descriptions)
- * Reveals strictly when the user reaches each destination.
+ * Reveals strictly when the user reaches and stops at each destination.
  */
 const MilestoneStoryContent: React.FC<{
   data: Milestone;
@@ -464,9 +458,76 @@ const MilestoneStoryContent: React.FC<{
 MilestoneStoryContent.displayName = "MilestoneStoryContent";
 
 /**
- * Milestone Marker: Composes ground shadow, map pin, and destination story
+ * Single Traveling Pin: Rides along the highway spline with the scroll,
+ * docks and bounces at destinations, and only glows upon arrival.
  */
-const MilestoneMarker: React.FC<{
+const TravelingPin: React.FC<{
+  pinX: MotionValue<number>;
+  pinY: MotionValue<number>;
+  pinAngle: MotionValue<number>;
+  glowOpacity: MotionValue<number>;
+  isDocked: boolean;
+  isRed: boolean;
+  primaryColor: string;
+}> = React.memo(
+  ({ pinX, pinY, pinAngle, glowOpacity, isDocked, isRed, primaryColor }) => {
+    // Subtle banking angle along the road curvature (max ±10deg)
+    const bankAngle = useTransform(pinAngle, (a) => Math.max(-10, Math.min(10, a * 0.2)));
+
+    // Vertical offsets so pin tip touches pinY on the road
+    const pinTop = useTransform(pinY, (y) => y - 78);
+    const shadowTop = useTransform(pinY, (y) => y - 4);
+
+    return (
+      <>
+        {/* Ground Contact Shadow riding directly on asphalt surface */}
+        <motion.div
+          className="absolute -translate-x-1/2 pointer-events-none rounded-full z-20"
+          style={{
+            left: pinX,
+            top: shadowTop,
+            width: 34,
+            height: 9,
+            background:
+              "radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 75%)",
+          }}
+          variants={shadowPulseVariants}
+          animate={isDocked ? "active" : "inactive"}
+        />
+
+        {/* Traveling Map Pin */}
+        <motion.div
+          className="absolute -translate-x-1/2 flex flex-col items-center transform-gpu z-30 pointer-events-none"
+          style={{
+            left: pinX,
+            top: pinTop,
+            rotate: bankAngle,
+          }}
+          variants={pinBounceVariants}
+          animate={isDocked ? "active" : "inactive"}
+        >
+          {/* Neon Charging Ring: Glows in red/blue only when arrived and showing content */}
+          <PinChargingRing
+            primaryColor={primaryColor}
+            opacity={glowOpacity}
+          />
+          <TeardropPinBody
+            isRed={isRed}
+            primaryColor={primaryColor}
+          />
+        </motion.div>
+      </>
+    );
+  }
+);
+TravelingPin.displayName = "TravelingPin";
+
+/**
+ * Milestone Station: Destination story content.
+ * Content reveals strictly when the traveling pin stops at this station.
+ * No pinpoint dots are rendered on the road surface.
+ */
+const MilestoneStation: React.FC<{
   data: Milestone;
   index: number;
   point: MilestonePoint;
@@ -479,48 +540,26 @@ const MilestoneMarker: React.FC<{
   // Distance from this milestone station in float units
   const distMotion = useTransform(smoothMilestone, (m) => Math.abs(m - index));
 
-  const [isActive, setIsActive] = useState(index === 0);
-
-  useMotionValueEvent(distMotion, "change", (dist) => {
-    const active = dist < 0.16;
-    if (active !== isActive) {
-      setIsActive(active);
-    }
-  });
-
-  // Charging ring glow: active upon arrival
-  const ringOpacity = useTransform(distMotion, (dist) => {
-    if (dist >= 0.24) return 0;
-    if (dist <= 0.08) return 1;
-    return (0.24 - dist) / (0.24 - 0.08);
-  });
-
-  // Map pin opacity: subtle in distance, fully illuminated on approach
-  const pinOpacity = useTransform(distMotion, (dist) => {
-    if (dist >= 0.75) return 0.25;
-    if (dist <= 0.18) return 1;
-    return 0.25 + 0.75 * ((0.75 - dist) / (0.75 - 0.18));
-  });
-
-  // Content reveal: STRICTLY ONLY WHEN REACHING THE DESTINATION
+  // Content reveal: STRICTLY ONLY WHEN STOPPED AT THE DESTINATION
+  // Fades out immediately when scrolling starts so no content is shown while traveling
   const contentOpacity = useTransform(distMotion, (dist) => {
-    if (dist >= FADE_DISTANCE_THRESHOLD) return 0;
-    if (dist <= FADE_DISTANCE_TARGET) return 1;
-    const t = (FADE_DISTANCE_THRESHOLD - dist) / (FADE_DISTANCE_THRESHOLD - FADE_DISTANCE_TARGET);
+    if (dist >= 0.16) return 0;
+    if (dist <= 0.05) return 1;
+    const t = (0.16 - dist) / (0.16 - 0.05);
     return 0.5 - 0.5 * Math.cos(Math.PI * t);
   });
 
   const contentY = useTransform(distMotion, (dist) => {
-    if (dist >= FADE_DISTANCE_THRESHOLD) return 18;
-    if (dist <= FADE_DISTANCE_TARGET) return 0;
-    const t = (FADE_DISTANCE_THRESHOLD - dist) / (FADE_DISTANCE_THRESHOLD - FADE_DISTANCE_TARGET);
-    return (1 - t) * 18;
+    if (dist >= 0.16) return 20;
+    if (dist <= 0.05) return 0;
+    const t = (0.16 - dist) / (0.16 - 0.05);
+    return (1 - t) * 20;
   });
 
   const contentScale = useTransform(distMotion, (dist) => {
-    if (dist >= FADE_DISTANCE_THRESHOLD) return 0.88;
-    if (dist <= FADE_DISTANCE_TARGET) return 1;
-    const t = (FADE_DISTANCE_THRESHOLD - dist) / (FADE_DISTANCE_THRESHOLD - FADE_DISTANCE_TARGET);
+    if (dist >= 0.16) return 0.88;
+    if (dist <= 0.05) return 1;
+    const t = (0.16 - dist) / (0.16 - 0.05);
     return 0.88 + 0.12 * t;
   });
 
@@ -531,47 +570,20 @@ const MilestoneMarker: React.FC<{
         left: point.x,
         top: 0,
       }}
-      onClick={() => onSelect?.(index)}
     >
-      {/* Ground Contact Shadow */}
-      <motion.div
-        className="absolute -translate-x-1/2 pointer-events-none rounded-full"
-        style={{
-          top: point.y - 4,
-          left: 0,
-          width: 32,
-          height: 8,
-          background:
-            "radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 75%)",
+      {/* Story Content: Revealed strictly at destination (no pinpoint on road) */}
+      <div
+        style={{ position: "absolute", top: point.y + 44, left: 0 }}
+        onClick={() => onSelect?.(index)}
+        role="button"
+        tabIndex={0}
+        aria-label={`Milestone ${data.year}: ${data.title}`}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            onSelect?.(index);
+          }
         }}
-        variants={shadowPulseVariants}
-        animate={isActive ? "active" : "inactive"}
-      />
-
-      {/* Map Pin */}
-      <motion.div
-        className="absolute -translate-x-1/2 flex flex-col items-center transform-gpu cursor-pointer"
-        style={{
-          top: point.y - 78,
-          opacity: pinOpacity,
-        }}
-        variants={pinBounceVariants}
-        animate={isActive ? "active" : "inactive"}
       >
-        <PinChargingRing
-          index={index}
-          primaryColor={primaryColor}
-          opacity={ringOpacity}
-        />
-        <TeardropPinBody
-          index={index}
-          isRed={isRed}
-          primaryColor={primaryColor}
-        />
-      </motion.div>
-
-      {/* Story Content: Revealed strictly at destination */}
-      <div style={{ position: "absolute", top: point.y + 44, left: 0 }}>
         <MilestoneStoryContent
           data={data}
           primaryColor={primaryColor}
@@ -584,7 +596,7 @@ const MilestoneMarker: React.FC<{
     </div>
   );
 });
-MilestoneMarker.displayName = "MilestoneMarker";
+MilestoneStation.displayName = "MilestoneStation";
 
 /* ─────────────────────────────────────────────────────────────────────────
    MAIN OBSESSION HIGHWAY COMPONENT
@@ -595,27 +607,32 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
   const N = milestones.length;
 
   const targetRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(targetRef, { margin: "200px 0px" });
 
   const [viewportWidth, setViewportWidth] = useState<number>(1440);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   // Responsive viewport dimensions
   useEffect(() => {
-    let lastW = window.innerWidth;
-    setViewportWidth(lastW);
-    setIsMobile(lastW < 768);
+    let animationFrameId: number;
+    let lastW = typeof window !== "undefined" ? window.innerWidth : 1440;
 
     const handleResize = () => {
-      const w = window.innerWidth;
-      if (Math.abs(w - lastW) > 10) {
-        lastW = w;
-        setViewportWidth(w);
-        setIsMobile(w < 768);
-      }
+      animationFrameId = requestAnimationFrame(() => {
+        const w = window.innerWidth;
+        if (Math.abs(w - lastW) > 10) {
+          lastW = w;
+          setViewportWidth(w);
+          setIsMobile(w < 768);
+        }
+      });
     };
+
+    handleResize();
     window.addEventListener("resize", handleResize, { passive: true });
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -642,12 +659,56 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
   );
 
   const smoothMilestone = useSpring(rawMilestoneProgress, {
-    stiffness: 150,
+    stiffness: 140,
     damping: 24,
-    mass: 0.28,
+    mass: 0.3,
   });
 
-  // Camera tracking in X and Y to keep road smoothly centered
+  // Coordinates and angle for the single traveling pin
+  const pinX = useTransform(smoothMilestone, (m) => {
+    return getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness).x;
+  });
+
+  const pinY = useTransform(smoothMilestone, (m) => {
+    return getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness).y;
+  });
+
+  const pinAngle = useTransform(smoothMilestone, (m) => {
+    return getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness).angle;
+  });
+
+  // Pin glow opacity: NO GLOW while mobile/traveling; glows strictly when reached and showing content
+  const pinGlowOpacity = useTransform(smoothMilestone, (m) => {
+    const closest = Math.round(m);
+    const dist = Math.abs(m - closest);
+    if (dist >= 0.14) return 0;
+    if (dist <= 0.05) return 1;
+    const t = (0.14 - dist) / (0.14 - 0.05);
+    return 0.5 - 0.5 * Math.cos(Math.PI * t);
+  });
+
+  const [activeIdx, setActiveIdx] = useState<number>(0);
+  const [isDocked, setIsDocked] = useState<boolean>(true);
+
+  useMotionValueEvent(smoothMilestone, "change", (m) => {
+    const closest = Math.max(0, Math.min(N - 1, Math.round(m)));
+    const dist = Math.abs(m - closest);
+    const docked = dist < 0.08;
+
+    if (docked !== isDocked) {
+      setIsDocked(docked);
+    }
+    if (closest !== activeIdx) {
+      setActiveIdx(closest);
+    }
+  });
+
+  const currentMilestone = milestones[activeIdx] || milestones[0];
+  const isCurrentRed =
+    currentMilestone.theme === "red" || (!currentMilestone.theme && activeIdx % 2 === 0);
+  const currentPrimaryColor = isCurrentRed ? "#EF4444" : "#00D4FF";
+
+  // Camera tracking in X and Y to keep road and active pin smoothly centered
   const trackX = useTransform(smoothMilestone, (m) => {
     const pt = getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness);
     return viewportWidth / 2 - pt.x;
@@ -657,6 +718,12 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     const pt = getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness);
     return (ROAD_MEDIAN_Y - pt.y) * 0.42;
   });
+
+  // Center dashed divider line moves strictly when user scrolls (completely stationary when idle)
+  const activeDashOffset = useTransform(
+    smoothMilestone,
+    (m) => m * spacing * config.lineDirection
+  );
 
   // Continuous highway SVG spline that spans edge-to-edge
   const { roadPath, minX, maxX } = useMemo(() => {
@@ -696,33 +763,8 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     };
   }, [milestonePoints, spacing, startX, heights, config.curveSmoothness, isMobile]);
 
-  // Center dashed divider line cruising flow
-  const animDashOffset = useMotionValue(0);
-  const lastScrollProgressRef = useRef(0);
-
-  useAnimationFrame((_, delta) => {
-    if (isMobile || !isInView) return;
-
-    const safeDelta = Math.min(delta, 64);
-    const baseStep = (safeDelta / 1000) * config.lineSpeed * config.lineDirection;
-    const currentP = scrollYProgress.get();
-    const scrollDelta =
-      (currentP - lastScrollProgressRef.current) * config.lineScrollBoost * config.lineDirection;
-
-    lastScrollProgressRef.current = currentP;
-    animDashOffset.set(animDashOffset.get() + baseStep + scrollDelta);
-  });
-
-  const mobileDashOffset = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0, config.lineScrollBoost * config.lineDirection * 0.8]
-  );
-
-  const activeDashOffset = isMobile ? mobileDashOffset : animDashOffset;
-
   /**
-   * Smoothly drives directly to a specific milestone year when clicking a pin
+   * Smoothly drives directly to a specific milestone year when clicking a station
    */
   const scrollToMilestone = useCallback(
     (index: number) => {
@@ -820,7 +862,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 strokeLinejoin="round"
               />
 
-              {/* 4. Center Dashed Divider Line */}
+              {/* 4. Center Dashed Divider Line: Moves strictly when scrolling */}
               <motion.path
                 d={roadPath}
                 fill="none"
@@ -835,9 +877,9 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
               />
             </svg>
 
-            {/* Road Location Pins & Milestone Stories */}
+            {/* 1. Road Station Story Contents (No pinpoint dots on the road) */}
             {milestones.map((data, index) => (
-              <MilestoneMarker
+              <MilestoneStation
                 key={data.year}
                 data={data}
                 index={index}
@@ -846,6 +888,17 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
                 onSelect={scrollToMilestone}
               />
             ))}
+
+            {/* 2. Single Traveling Pin: Glides along the road, stops at milestones */}
+            <TravelingPin
+              pinX={pinX}
+              pinY={pinY}
+              pinAngle={pinAngle}
+              glowOpacity={pinGlowOpacity}
+              isDocked={isDocked}
+              isRed={isCurrentRed}
+              primaryColor={currentPrimaryColor}
+            />
           </motion.div>
         </div>
       </section>

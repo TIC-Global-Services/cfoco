@@ -16,21 +16,21 @@ export const client = createClient({
 export const SAMPLE_POSTS: Post[] = [
   {
     _id: 'sample-1',
-    title: 'The Art of Coffee Extraction: Crafting the Perfect Espresso Profile',
-    slug: 'the-art-of-coffee-extraction',
+    title: 'The Art of Buttermilk Brining: Crafting the Final Crunch',
+    slug: 'the-art-of-buttermilk-brining',
     publishedAt: '2025-05-12T10:00:00.000Z',
     excerpt:
-      'Discover how water temperature, pressure profiling, and grind geometry converge to reveal the hidden terroir in single-origin beans.',
+      'Discover how 24-hour buttermilk marinades, proprietary spice blends, and pressure frying converge to create our signature crunch.',
     mainImage: {
       asset: {
         _id: 'sample-img-1',
-        url: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=1200&q=80',
       },
-      alt: 'Artisan espresso extraction at CFOCO',
+      alt: 'Artisan fried chicken preparation at CFOCO',
     },
     categories: [
-      { _id: 'cat-1', title: 'Brewing & Craft', slug: 'brewing-craft' },
-      { _id: 'cat-2', title: 'Specialty Coffee', slug: 'specialty-coffee' },
+      { _id: 'cat-1', title: 'Kitchen & Craft', slug: 'kitchen-craft' },
+      { _id: 'cat-2', title: 'Secret Recipe', slug: 'secret-recipe' },
     ],
     body: [
       {
@@ -39,14 +39,14 @@ export const SAMPLE_POSTS: Post[] = [
         children: [
           {
             _type: 'span',
-            text: 'Espresso is more than just concentrated coffee; it is a rapid alchemy of physics and sensory balance. Every fraction of a second during pre-infusion alters the solubility of delicate aromatic lipids and bright organic acids.',
+            text: 'Crispy fried chicken is far more than fast food; it is an exacting culinary science of moisture retention and texture contrast. Every hour of our 24-hour buttermilk brine works to break down fibers and lock in natural juices before frying.',
           },
         ],
       },
       {
         _type: 'block',
         style: 'h2',
-        children: [{ _type: 'span', text: '1. The Crucial Role of Pressure Profiling' }],
+        children: [{ _type: 'span', text: '1. The 24-Hour Acid & Herb Infusion' }],
       },
       {
         _type: 'block',
@@ -54,7 +54,7 @@ export const SAMPLE_POSTS: Post[] = [
         children: [
           {
             _type: 'span',
-            text: 'By beginning extraction at a gentle 3-bar pre-infusion before ramping up to 9 bars, we prevent channel formation and ensure an impeccably uniform saturation across the puck.',
+            text: 'Buttermilk’s gentle lactic acid tenderizes the chicken without turning the texture soft or mushy. Submerged alongside crushed garlic, sea salt, and smoked paprika, each cut absorbs deep flavor all the way to the bone.',
           },
         ],
       },
@@ -64,14 +64,14 @@ export const SAMPLE_POSTS: Post[] = [
         children: [
           {
             _type: 'span',
-            text: '"Precision is not an obsession—it is the only respect we can pay to the farmers who nurtured the bean."',
+            text: '"Nothing frozen, nothing rushed. Great crunch takes time, patience, and a refusal to compromise on freshness."',
           },
         ],
       },
       {
         _type: 'block',
         style: 'h2',
-        children: [{ _type: 'span', text: '2. Dialing in Temperature Stability' }],
+        children: [{ _type: 'span', text: '2. The Double Dredge Technique' }],
       },
       {
         _type: 'block',
@@ -79,7 +79,7 @@ export const SAMPLE_POSTS: Post[] = [
         children: [
           {
             _type: 'span',
-            text: 'Fluctuations as small as 0.5°C can shift a shot from vibrant stone-fruit brightness to astringent bitterness. Our dual-boiler configurations ensure PID-governed thermal stability down to the tenth of a degree.',
+            text: 'Our signature craggy crust comes from a precise double-dredging technique in seasoned flour. When dipped and shaken, it forms delicate flakes that crisp into shatteringly light pockets upon hitting the hot oil.',
           },
         ],
       },
@@ -87,17 +87,17 @@ export const SAMPLE_POSTS: Post[] = [
   },
   {
     _id: 'sample-2',
-    title: 'Inside CFOCO Architecture: Minimalist Sanctuary & Amber Light',
+    title: 'Inside CFOCO Architecture: Industrial Warmth & Amber Glow',
     slug: 'inside-cfoco-architecture',
     publishedAt: '2025-05-02T14:30:00.000Z',
     excerpt:
-      'An exploration into how our brutalist raw textures and warm ambient lighting cultivate an elevated sensory sanctuary for community connection.',
+      'An exploration into how our contemporary street architecture, raw materials, and ambient amber lighting cultivate an elevated dining atmosphere across our French kitchens.',
     mainImage: {
       asset: {
         _id: 'sample-img-2',
         url: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80',
       },
-      alt: 'Atmospheric interior of CFOCO space',
+      alt: 'Atmospheric interior of CFOCO dining space',
     },
     categories: [
       { _id: 'cat-3', title: 'Design & Spaces', slug: 'design-spaces' },
@@ -109,14 +109,14 @@ export const SAMPLE_POSTS: Post[] = [
         children: [
           {
             _type: 'span',
-            text: 'When you step through our glass portal, the noise of the metropolis recedes. We designed our space with acoustic dampening clay-washed walls and low-frequency amber backlighting.',
+            text: 'When you step into a CFOCO restaurant, the hustle of the city shifts into a warm, energetic rhythm. We designed our kitchens with raw steel accents, acoustic wood paneling, and warm amber lighting.',
           },
         ],
       },
       {
         _type: 'block',
         style: 'h2',
-        children: [{ _type: 'span', text: 'Sculpting Shadows' }],
+        children: [{ _type: 'span', text: 'Open Kitchens & Visible Craft' }],
       },
       {
         _type: 'block',
@@ -124,7 +124,7 @@ export const SAMPLE_POSTS: Post[] = [
         children: [
           {
             _type: 'span',
-            text: 'Rather than flooding spaces with uniform lumens, our illumination embraces shadow. Each table has its own intimate pocket of light, focusing attention on conversations, notebooks, and the warmth of your cup.',
+            text: 'Rather than hiding food preparation behind closed doors, our kitchens remain openly visible. Guests can watch tenders being hand-breaded and tossed in house sauces in real time.',
           },
         ],
       },
@@ -132,21 +132,21 @@ export const SAMPLE_POSTS: Post[] = [
   },
   {
     _id: 'sample-3',
-    title: 'Sustainable Sourcing: Direct Trade Across High-Altitude Slopes',
-    slug: 'sustainable-sourcing-direct-trade',
+    title: 'Fresh Never Frozen: Our 100% French Poultry Commitment',
+    slug: 'fresh-never-frozen-french-poultry',
     publishedAt: '2025-04-18T09:15:00.000Z',
     excerpt:
-      'Tracing our direct-trade coffee journey across the volcanic slopes of Antigua to empower regenerative farming and micro-lot biodiversity.',
+      'Tracing our commitment to regionally sourced, fresh French chicken delivered daily to each of our five kitchens in Bordeaux and beyond.',
     mainImage: {
       asset: {
         _id: 'sample-img-3',
-        url: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=1200&q=80',
       },
-      alt: 'Freshly harvested coffee cherries on high altitude slope',
+      alt: 'Freshly prepared crispy chicken tenders at CFOCO',
     },
     categories: [
-      { _id: 'cat-4', title: 'Sustainability', slug: 'sustainability' },
-      { _id: 'cat-2', title: 'Specialty Coffee', slug: 'specialty-coffee' },
+      { _id: 'cat-4', title: 'Quality & Origins', slug: 'quality-origins' },
+      { _id: 'cat-1', title: 'Kitchen & Craft', slug: 'kitchen-craft' },
     ],
     body: [
       {
@@ -155,14 +155,14 @@ export const SAMPLE_POSTS: Post[] = [
         children: [
           {
             _type: 'span',
-            text: 'Our commitment to excellence begins at origin. We bypass traditional broker syndicates to work directly with farmer families cultivating heirloom Arabica varieties beneath native shade canopy.',
+            text: 'Our quality promise begins at the farm. We partner exclusively with certified French poultry producers who prioritize animal welfare, zero antibiotic misuse, and non-GMO vegetable feed.',
           },
         ],
       },
       {
         _type: 'block',
         style: 'h2',
-        children: [{ _type: 'span', text: 'Regenerative Agriculture' }],
+        children: [{ _type: 'span', text: 'Daily Morning Deliveries' }],
       },
       {
         _type: 'block',
@@ -170,7 +170,7 @@ export const SAMPLE_POSTS: Post[] = [
         children: [
           {
             _type: 'span',
-            text: 'By investing in organic composting and natural water filtration on farm sites, we help protect local watersheds while cultivating extraordinary clarity in cup profile.',
+            text: 'Every single piece of chicken in our stores is delivered chilled, never frozen. This guarantees that each bite keeps its natural tenderness and clean, honest flavor without artificial additives.',
           },
         ],
       },

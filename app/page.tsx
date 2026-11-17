@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Hero from "@/components/about/hero";
-import Obsession from "@/components/about/obssesion";
+import Obsession from "@/components/about/obsession";
 import NothingFrozen from "@/components/about/nothingFrozen";
 import WhatWeRefuse from "@/components/about/whatwerefuse";
 import Showreel from "@/components/about/showreel";

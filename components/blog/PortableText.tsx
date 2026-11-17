@@ -5,7 +5,28 @@ import { PortableText as PortableTextComponent, PortableTextComponents } from '@
 import Image from 'next/image';
 import { urlForImage } from '@/sanity/lib/image';
 
-function getImageDimensions(value: any) {
+interface PortableTextImageValue {
+  _type?: string;
+  asset?: {
+    _ref?: string;
+    _id?: string;
+    url?: string;
+    metadata?: {
+      dimensions?: {
+        width: number;
+        height: number;
+      };
+    };
+  };
+  alt?: string;
+  caption?: string;
+}
+
+interface PortableTextLinkValue {
+  href: string;
+}
+
+function getImageDimensions(value?: PortableTextImageValue) {
   const ref = value?.asset?._ref || value?.asset?._id;
   if (ref) {
     const match = ref.match(/-(\d+)x(\d+)-/);
@@ -24,7 +45,7 @@ function getImageDimensions(value: any) {
 
 const portableTextComponents: PortableTextComponents = {
   types: {
-    image: ({ value }: any) => {
+    image: ({ value }: { value: PortableTextImageValue }) => {
       const imageUrl = value?.asset?.url || (urlForImage(value)?.url() ?? null);
       if (!imageUrl) return null;
 
@@ -51,7 +72,8 @@ const portableTextComponents: PortableTextComponents = {
     },
   },
   marks: {
-    link: ({ children, value }: any) => {
+    link: ({ children, value }: { children?: React.ReactNode; value?: PortableTextLinkValue }) => {
+      if (!value?.href) return <>{children}</>;
       const rel = !value.href.startsWith('/') ? 'noreferrer noopener' : undefined;
       const target = !value.href.startsWith('/') ? '_blank' : undefined;
       return (
@@ -118,8 +140,10 @@ const portableTextComponents: PortableTextComponents = {
   },
 };
 
+import type { PortableTextBlock, TypedObject } from '@portabletext/types';
+
 interface PortableTextProps {
-  value: any;
+  value?: PortableTextBlock[] | TypedObject[] | Parameters<typeof PortableTextComponent>[0]['value'];
 }
 
 export default function PortableText({ value }: PortableTextProps) {

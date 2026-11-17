@@ -18,9 +18,8 @@ export const NAV_CTA: NavLink = { label: "Contact Us", href: "/contact" };
 /** footer navigation, shared by the site footer and the 3D home footer */
 export const FOOTER_LINKS: NavLink[] = [
   { label: "Menu", href: "/menu" },
-  { label: "Our Story", href: "/our-story" },
-  { label: "Franchise", href: "/franchise" },
-  { label: "Policies", href: "/policies" },
-  { label: "Contact Us", href: "/contact" },
+  { label: "Location", href: "/location" },
+  { label: "Career", href: "/career" },
   { label: "Blogs", href: "/blogs" },
+  { label: "Contact Us", href: "/contact" },
 ];
