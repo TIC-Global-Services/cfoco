@@ -375,13 +375,6 @@ export const locationType = defineType({
               rows: 3,
               validation: (Rule) => Rule.required(),
             }),
-            defineField({
-              name: 'avatarColor',
-              title: 'Avatar Gradient Color',
-              type: 'string',
-              description: 'Tailwind gradient classes e.g. "from-amber-400 to-orange-500"',
-              initialValue: 'from-amber-400 to-orange-500',
-            }),
           ],
           preview: {
             select: {

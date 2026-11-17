@@ -3,6 +3,15 @@ import { isSanityConfigured } from '../env';
 import { LOCATIONS_QUERY, LOCATION_BY_SLUG_QUERY, LOCATION_SLUGS_QUERY, LOCATION_REVIEWS_QUERY } from './queries';
 import { locationsData, LocationData } from '@/data/locations';
 
+export const AVATAR_GRADIENTS = [
+  "from-cyan-500 to-blue-600",
+  "from-amber-400 to-orange-500",
+  "from-emerald-400 to-teal-600",
+  "from-blue-500 to-indigo-600",
+  "from-rose-400 to-red-500",
+  "from-purple-500 to-pink-500",
+];
+
 /**
  * Fetch all locations from Sanity CMS with fallback to static locationsData.
  */
@@ -24,7 +33,13 @@ export async function getAllLocations(): Promise<LocationData[]> {
     );
 
     if (Array.isArray(locations) && locations.length > 0) {
-      return locations;
+      return locations.map((loc) => ({
+        ...loc,
+        reviews: loc.reviews?.map((rev, i) => ({
+          ...rev,
+          avatarColor: rev.avatarColor || AVATAR_GRADIENTS[i % AVATAR_GRADIENTS.length],
+        })),
+      }));
     }
   } catch (error) {
     console.error('Error fetching locations from Sanity, using fallback data:', error);
@@ -54,7 +69,13 @@ export async function getLocationBySlug(slug: string): Promise<LocationData | un
     );
 
     if (location && location.slug) {
-      return location;
+      return {
+        ...location,
+        reviews: location.reviews?.map((rev, i) => ({
+          ...rev,
+          avatarColor: rev.avatarColor || AVATAR_GRADIENTS[i % AVATAR_GRADIENTS.length],
+        })),
+      };
     }
   } catch (error) {
     console.error(`Error fetching location [${slug}] from Sanity, using fallback:`, error);
@@ -201,15 +222,6 @@ export const DEFAULT_REVIEWS: ReviewCardItem[] = [
     authorName: "Thomas Dubois",
     avatarColor: "from-purple-500 to-pink-500",
   },
-];
-
-const AVATAR_GRADIENTS = [
-  "from-cyan-500 to-blue-600",
-  "from-amber-400 to-orange-500",
-  "from-emerald-400 to-teal-600",
-  "from-blue-500 to-indigo-600",
-  "from-rose-400 to-red-500",
-  "from-purple-500 to-pink-500",
 ];
 
 function formatQuote(text: string): string {

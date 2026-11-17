@@ -70,7 +70,20 @@ const defaultRightReviews: ReviewCardItem[] = [
   },
 ];
 
-const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
+export const DEFAULT_AVATAR_GRADIENTS = [
+  "from-cyan-500 to-blue-600",
+  "from-amber-400 to-orange-500",
+  "from-emerald-400 to-teal-600",
+  "from-blue-500 to-indigo-600",
+  "from-rose-400 to-red-500",
+  "from-purple-500 to-pink-500",
+];
+
+const ReviewCard = ({ card, index = 0 }: { card: ReviewCardItem; index?: number }) => {
+  const avatarGradient =
+    card.avatarColor ||
+    DEFAULT_AVATAR_GRADIENTS[index % DEFAULT_AVATAR_GRADIENTS.length];
+
   return (
     <div className="relative overflow-hidden bg-[#1a1d2be6] border border-[#0000001A] rounded-[30px] py-10 px-5 sm:p-6 lg:p-10 shadow-[0_8px_24px_rgba(0,0,0,0.4)] w-[292px] xs:w-[250px] sm:w-[320px] md:w-[380px] lg:w-[420px] pointer-events-auto">
       <div className="flex items-center mb-6 sm:mb-4 text-[#FFBB00]">
@@ -92,9 +105,7 @@ const ReviewCard = ({ card }: { card: ReviewCardItem }) => {
 
       <div className="relative flex items-center gap-2.5 sm:gap-3 pt-2">
         <div
-          className={`w-[50px] h-[50px] sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${
-            card.avatarColor || "from-cyan-400 to-blue-600"
-          } p-[2px] shadow-sm shrink-0`}
+          className={`w-[50px] h-[50px] sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-tr ${avatarGradient} p-[2px] shadow-sm shrink-0`}
         >
           <div className="relative w-full h-full rounded-full overflow-hidden bg-[#111726]">
             <Image
@@ -305,7 +316,7 @@ const Reviews = ({
                 className="review-card-left absolute inset-0 flex items-center justify-start lg:justify-end pl-3 xs:pl-4 sm:pl-6 lg:pl-0 lg:pr-16 pointer-events-none invisible"
               >
                 <div className="pointer-events-auto">
-                  <ReviewCard card={card} />
+                  <ReviewCard card={card} index={i * 2} />
                 </div>
               </div>
             ))}
@@ -318,7 +329,7 @@ const Reviews = ({
                 className="review-card-right absolute inset-0 flex items-center justify-end lg:justify-start pr-3 xs:pr-4 sm:pr-6 lg:pr-0 lg:pl-16 pointer-events-none invisible"
               >
                 <div className="pointer-events-auto">
-                  <ReviewCard card={card} />
+                  <ReviewCard card={card} index={i * 2 + 1} />
                 </div>
               </div>
             ))}

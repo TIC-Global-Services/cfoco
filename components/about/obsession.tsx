@@ -241,14 +241,24 @@ function getRoadPointAndAngle(
  */
 function progressToMilestone(p: number, N: number): number {
   if (p <= 0) return 0;
-  if (p >= 1) return N - 1;
 
+  // The travel across all milestones completes at 76% of scroll progress.
+  // The remaining 24% is a dedicated dwell buffer where the location pin
+  // is stopped at the final milestone, glowing, and displaying the content
+  // before the section unlocks to scroll into the next section.
+  const END_TRAVEL_P = 0.76;
+
+  if (p >= END_TRAVEL_P) {
+    return N - 1;
+  }
+
+  const normP = p / END_TRAVEL_P;
   const totalSegments = N - 1;
-  const raw = p * totalSegments;
+  const raw = normP * totalSegments;
   const k = Math.min(Math.floor(raw), totalSegments - 1);
   const frac = raw - k;
 
-  // Dwell phase at the milestone
+  // Dwell phase at milestone k
   if (frac <= DWELL_RATIO) {
     return k;
   }
@@ -689,6 +699,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
 
   const [activeIdx, setActiveIdx] = useState<number>(0);
   const [isDocked, setIsDocked] = useState<boolean>(true);
+  const isAtEndMilestoneRef = useRef<boolean>(false);
 
   useMotionValueEvent(smoothMilestone, "change", (m) => {
     const closest = Math.max(0, Math.min(N - 1, Math.round(m)));
@@ -701,7 +712,37 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     if (closest !== activeIdx) {
       setActiveIdx(closest);
     }
+
+    // Unlock scrolling to next section ONLY after reaching the final milestone and docking
+    if (m >= N - 1 - 0.05 && docked) {
+      isAtEndMilestoneRef.current = true;
+    } else if (m < N - 1 - 0.25) {
+      isAtEndMilestoneRef.current = false;
+    }
   });
+
+  // Guard to lock scrolling until the location pin reaches the end and reveals the final content
+  useEffect(() => {
+    const handleScrollLock = () => {
+      if (!targetRef.current) return;
+      const rect = targetRef.current.getBoundingClientRect();
+      const currentScrollY = window.scrollY;
+      const sectionTop = currentScrollY + rect.top;
+      const maxScroll = sectionTop + targetRef.current.offsetHeight - window.innerHeight;
+
+      // If user attempts to scroll past the bottom into the next section
+      // before the location pin has arrived and finished revealing the final content:
+      if (currentScrollY > maxScroll && !isAtEndMilestoneRef.current) {
+        window.scrollTo({
+          top: maxScroll,
+          behavior: "instant",
+        });
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollLock, { passive: false });
+    return () => window.removeEventListener("scroll", handleScrollLock);
+  }, []);
 
   const currentMilestone = milestones[activeIdx] || milestones[0];
   const isCurrentRed =
@@ -772,7 +813,9 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
       const rect = targetRef.current.getBoundingClientRect();
       const scrollTop = window.scrollY + rect.top;
       const totalTravel = targetRef.current.offsetHeight - window.innerHeight;
-      const targetP = index / Math.max(1, N - 1);
+      const END_TRAVEL_P = 0.76;
+      const targetNormP = index / Math.max(1, N - 1);
+      const targetP = index === N - 1 ? END_TRAVEL_P + 0.05 : targetNormP * END_TRAVEL_P;
       const targetY = scrollTop + targetP * totalTravel;
 
       window.scrollTo({
@@ -787,7 +830,7 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
     <div
       ref={targetRef}
       className="relative w-full bg-transparent select-none overflow-clip"
-      style={{ height: `${N * 85 + 100}vh` }}
+      style={{ height: `${N * 90 + 130}vh` }}
     >
       <section
         className={`sticky top-0 w-full h-screen supports-[height:100svh]:h-[100svh] overflow-hidden flex flex-col justify-center ${matter.className} bg-transparent`}
