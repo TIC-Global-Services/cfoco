@@ -1,0 +1,47 @@
+{
+  "hero": {
+    "titleLine1": "Cinq restaurants.",
+    "titleLine2": "Une exigence. Trouvez le vôtre.",
+    "mobileTitleLine1": "Cinq restaurants.",
+    "mobileTitleLine2": "Une exigence.",
+    "mobileTitleLine3": "Trouvez le vôtre.",
+    "subtitleAcross": "À",
+    "bordeaux": "Bordeaux",
+    "subtitleAndBeyond": "et au-delà",
+    "subtitlePromise": "Chaque CFC porte la même promesse, préparé frais là où vous êtes.",
+    "subtitlePromiseLine1": "Chaque CFC porte la même promesse,",
+    "subtitlePromiseLine2": "préparé frais là où vous êtes."
+  },
+  "stepInside": {
+    "title": "Entrez.",
+    "subtitle": "Même recette, même standard de croustillant, mais chaque CFC prend le caractère de son quartier. Choisissez une ville, ou laissez-nous trouver le restaurant le plus proche.",
+    "subtitlePart1": "Même recette, même standard de croustillant, mais",
+    "subtitlePart2": "chaque CFC prend le caractère de son quartier. Choisissez une ville, ou laissez-nous trouver le restaurant le plus proche.",
+    "googleReviews": "avis Google",
+    "exploreMore": "Découvrir",
+    "prevLocation": "Restaurant précédent",
+    "nextLocation": "Restaurant suivant"
+  },
+  "locationHero": {
+    "getDirections": "Itinéraire",
+    "reviews": "avis"
+  },
+  "bento": {
+    "signature": "Plat",
+    "dish": "Signature",
+    "opening": "Horaires",
+    "hours": "d'ouverture",
+    "kiosksAlt": "Bornes de commande numériques CFC",
+    "diningAlt": "Salle de restaurant CFC",
+    "barStoolsAlt": "Places assises hautes CFC",
+    "counterAlt": "Comptoir de service CFC",
+    "friedChickenAlt": "Poulet frit"
+  },
+  "virtualTour": {
+    "defaultHeading": "Plongez dans le croustillant",
+    "defaultButtonText": "Faites une visite virtuelle"
+  },
+  "detail": {
+    "allKitchens": "Tous les restaurants"
+  }
+}

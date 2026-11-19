@@ -4,15 +4,15 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { NAV_ITEMS } from "@/data/navLinks";
+import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import SpecularButton from "./specularButton";
 
 interface NavItem {
   label: string;
   href: string;
 }
-
-const navItems: NavItem[] = NAV_ITEMS;
 
 interface NavbarProps {
   className?: string;
@@ -21,6 +21,20 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useTranslation("common");
+
+  const navKeyMap: Record<string, string> = {
+    Home: "nav.home",
+    Location: "nav.location",
+    Menu: "nav.menu",
+    Career: "nav.career",
+    Blogs: "nav.blogs",
+  };
+
+  const navItems = NAV_ITEMS.map((item) => ({
+    ...item,
+    label: navKeyMap[item.label] ? t(navKeyMap[item.label] as any, item.label) : item.label,
+  }));
 
   return (
     <header className={`absolute top-5 left-0 right-0 z-50 w-full transition-all duration-300 ${className}`}>
@@ -72,14 +86,15 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
             })}
           </nav>
 
-          {/* Contact Us CTA Button */}
-          <div className="hidden lg:flex items-center">
+          {/* Contact Us CTA Button & Language Switcher */}
+          <div className="hidden lg:flex items-center gap-4">
+            <LanguageSwitcher />
             <Link
               href="/contact"
               className="group flex items-center gap-3 pl-6 pr-1 py-1 rounded-full bg-[#FFFFFF99] hover:bg-[#8799a5]/45 border border-white/20 backdrop-blur-md text-white font-medium text-sm lg:text-lg transition-all duration-300 shadow-sm hover:shadow-md hover:border-white/40"
             >
               <span className="tracking-tight font-semibold text-[#232E45] group-hover:text-white transition-colors">
-                Contact Us
+                {t("nav.contact", "Contact Us")}
               </span>
               <div className="w-8 h-8 rounded-full bg-[#232E45] border border-white/10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
                 <svg
@@ -174,13 +189,13 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
             })}
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex items-center justify-between gap-3">
             <Link
               href="/contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between w-full pl-5 pr-2 py-2 rounded-full bg-[#8799a5]/30 hover:bg-[#8799a5]/45 border border-white/20 text-white font-medium text-base transition-all"
+              className="flex-1 flex items-center justify-between pl-5 pr-2 py-2 rounded-full bg-[#8799a5]/30 hover:bg-[#8799a5]/45 border border-white/20 text-white font-medium text-base transition-all"
             >
-              <span>Contact Us</span>
+              <span>{t("nav.contact", "Contact Us")}</span>
               <div className="w-8 h-8 rounded-full bg-[#101726] border border-white/10 flex items-center justify-center">
                 <svg
                   className="w-4 h-4 text-white"
@@ -197,6 +212,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
                 </svg>
               </div>
             </Link>
+            <LanguageSwitcher />
           </div>
         </div>
       )}

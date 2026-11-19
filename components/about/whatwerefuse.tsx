@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Users, Rabbit, Star } from "lucide-react";
 import { matter } from "@/font/fonts";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 interface PrincipleCard {
   id: string;
@@ -36,10 +37,32 @@ const CARDS: PrincipleCard[] = [
 const AUTOPLAY_INTERVAL = 4000; // 4 seconds per tab
 
 const WhatWeRefuse: React.FC = () => {
+  const { t } = useTranslation("about");
   // Default to 1 (Conviviality in the middle, matching the reference screenshot)
   const [activeIndex, setActiveIndex] = useState<number>(1);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  const cards: PrincipleCard[] = [
+    {
+      id: "speed",
+      icon: Rabbit,
+      title: t("whatWeRefuse.cards.speed.title", "Speed"),
+      description: t("whatWeRefuse.cards.speed.description", "Fast Food Should Be Fast And Still Be Food."),
+    },
+    {
+      id: "conviviality",
+      icon: Users,
+      title: t("whatWeRefuse.cards.conviviality.title", "Conviviality"),
+      description: t("whatWeRefuse.cards.conviviality.description", "Great Meals Are Meant To Be Shared. So Is A Good Time."),
+    },
+    {
+      id: "quality",
+      icon: Star,
+      title: t("whatWeRefuse.cards.quality.title", "Quality"),
+      description: t("whatWeRefuse.cards.quality.description", "If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen."),
+    },
+  ];
 
   // Check viewport width for responsive card spacing
   useEffect(() => {
@@ -56,19 +79,19 @@ const WhatWeRefuse: React.FC = () => {
     if (isPaused) return;
 
     const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % CARDS.length);
+      setActiveIndex((prev) => (prev + 1) % cards.length);
     }, AUTOPLAY_INTERVAL);
 
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, cards.length]);
 
   const handleNext = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % CARDS.length);
-  }, []);
+    setActiveIndex((prev) => (prev + 1) % cards.length);
+  }, [cards.length]);
 
   const handlePrev = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + CARDS.length) % CARDS.length);
-  }, []);
+    setActiveIndex((prev) => (prev - 1 + cards.length) % cards.length);
+  }, [cards.length]);
 
   const handleSelect = useCallback((idx: number) => {
     setActiveIndex(idx);
@@ -140,10 +163,10 @@ const WhatWeRefuse: React.FC = () => {
       {/* ── HEADER ── */}
       <header className="relative z-20 text-center max-w-3xl mx-auto flex flex-col items-center pointer-events-none">
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[#FFBF00] leading-none drop-shadow-[0_4px_16px_rgba(255,191,0,0.22)]">
-          What We Refuse
+          {t("whatWeRefuse.titleLine1", "What We Refuse")}
         </h2>
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[#FFBF00] leading-none mt-1 sm:mt-1.5 drop-shadow-[0_4px_16px_rgba(255,191,0,0.22)]">
-          To Compromise
+          {t("whatWeRefuse.titleLine2", "To Compromise")}
         </h2>
 
         {/* Ornamental Gold Divider with Center Diamond */}
@@ -154,40 +177,14 @@ const WhatWeRefuse: React.FC = () => {
         </div>
 
         {/* Subtitle */}
-        <p className="text-neutral-400 text-xs sm:text-sm md:text-base font-normal text-center leading-[1.2] max-w-md sm:max-w-lg">
-          We believe great food starts with non-negotiables.
-          <br className="hidden sm:inline" />
-          {" "}Here are the principles we stand by, every single day.
+        <p className="text-neutral-400 text-xs sm:text-sm md:text-base font-normal text-center leading-[1.2] max-w-md sm:max-w-lg whitespace-pre-line">
+          {t("whatWeRefuse.subtitle", "We believe great food starts with non-negotiables.\nHere are the principles we stand by, every single day.")}
         </p>
-
-        {/* Interactive Pill Tabs */}
-        {/* <nav
-          aria-label="Principles tabs"
-          className="pointer-events-auto flex items-center gap-1.5 sm:gap-2.5 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md mt-4 shadow-[0_8px_25px_rgba(0,0,0,0.5)]"
-        >
-          {CARDS.map((card, idx) => {
-            const isSelected = activeIndex === idx;
-            return (
-              <button
-                key={card.id}
-                type="button"
-                onClick={() => handleSelect(idx)}
-                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
-                  isSelected
-                    ? "bg-[#FFBF00] text-black shadow-[0_0_16px_rgba(255,191,0,0.6)] scale-105"
-                    : "text-neutral-400 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                {card.title}
-              </button>
-            );
-          })}
-        </nav> */}
       </header>
 
       {/* ── 3D OVERLAPPING CARDS CAROUSEL ── */}
       <div className="relative w-full max-w-6xl h-[420px] sm:h-[460px] md:h-[490px] flex items-center justify-center my-6 md:my-8">
-        {CARDS.map((card, i) => {
+        {cards.map((card, i) => {
           const Icon = card.icon;
           const slot = getSlot(i);
           const isSelected = slot === 0;

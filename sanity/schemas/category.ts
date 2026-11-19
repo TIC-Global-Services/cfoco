@@ -12,6 +12,12 @@ export const categoryType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'titleFr',
+      title: 'Title (French)',
+      type: 'string',
+      description: 'French translation of category title',
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',

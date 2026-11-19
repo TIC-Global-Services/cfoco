@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "home": "Home",
+    "location": "Location",
+    "menu": "Menu",
+    "career": "Career",
+    "blogs": "Blogs",
+    "contact": "Contact Us"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "tagline": "Crispy Since 2011",
+    "quickLinks": "Quick Links",
+    "contact": "Contact Us",
+    "followUs": "Follow Us"
+  },
+  "buttons": {
+    "orderNow": "Order Now",
+    "viewMenu": "View Menu",
+    "learnMore": "Learn More",
+    "stepInside": "Step Inside",
+    "contactUs": "Contact Us",
+    "switchLanguage": "Switch language"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français"
+  }
+}

@@ -5,18 +5,22 @@ import Image from "next/image";
 import { MapPinIcon } from "lucide-react";
 import { LocationData } from "@/data/locations";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import { getLocalized } from "@/sanity/lib/localized";
 
 interface LocationHeroProps {
   location: LocationData;
 }
 
 export default function LocationHero({ location }: LocationHeroProps) {
+  const { t, i18n } = useTranslation("location");
   const heroImage = location.hero?.backgroundImage || location.images?.storefront || "/location_details-hero.jpg";
-  const locationLabel = location.hero?.locationLabel || location.cityTag || location.city;
-  const heading = location.hero?.heading || location.name;
-  const description = location.hero?.description || (location.tagline ? `${location.tagline.prefix} ${location.tagline.highlight} ${location.tagline.description}` : "");
+  const locationLabel = location.hero?.locationLabel ? getLocalized(location.hero.locationLabel, i18n.language) : (location.cityTag || location.city);
+  const heading = location.hero?.heading ? getLocalized(location.hero.heading, i18n.language) : location.name;
+  const rawDesc = location.hero?.description || (location.tagline ? `${location.tagline.prefix} ${location.tagline.highlight} ${getLocalized(location.tagline.description, i18n.language)}` : "");
+  const description = getLocalized(rawDesc, i18n.language);
   const directionsUrl = location.hero?.directionsUrl || location.mapsUrl || "#";
-  const subheading = location.hero?.subheading || "CFC Tasty";
+  const subheading = location.hero?.subheading ? getLocalized(location.hero.subheading, i18n.language) : "CFC Tasty";
 
   return (
     <div className="relative w-full aspect-[9/16] lg:h-[800px] rounded-2xl sm:rounded-[20px] overflow-hidden border border-white/10 shadow-2xl group">
@@ -44,7 +48,7 @@ export default function LocationHero({ location }: LocationHeroProps) {
             <span>★ {location.rating.toFixed(1)}</span>
             {location.reviewCount && (
               <span className="text-white/80 font-normal">
-                ({location.reviewCount.toLocaleString()} avis)
+                ({location.reviewCount.toLocaleString()} {t("locationHero.reviews", "avis")})
               </span>
             )}
           </div>
@@ -72,7 +76,7 @@ export default function LocationHero({ location }: LocationHeroProps) {
           rel="noopener noreferrer"
           className="self-start md:self-end inline-flex items-center gap-2 bg-white text-[#232E45] hover:bg-neutral-100 font-semibold px-5 py-2.5 sm:px-8 sm:py-2.5 rounded-full text-xs md:text-lg transition-all duration-300 shadow-xl hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transform hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
         >
-          <span>Get Directions</span>
+          <span>{t("locationHero.getDirections", "Get Directions")}</span>
         </Link>
       </div>
     </div>

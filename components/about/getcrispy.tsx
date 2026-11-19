@@ -5,8 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { matter } from "@/font/fonts";
+import { useTranslation } from "react-i18next";
 
 const GetCrispy = () => {
+  const { t } = useTranslation("about");
   return (
     <section
       className={`relative w-full py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-transparent select-none overflow-hidden ${matter.className}`}
@@ -25,16 +27,18 @@ const GetCrispy = () => {
         >
           {/* Headlines */}
           <h2 className="text-2xl sm:text-5xl md:text-6xl lg:text-[3.75rem] font-bold tracking-tight text-white leading-[1.1]">
-            Enough Reading.
+            {t("getCrispy.titleLine1", "Enough Reading.")}
           </h2>
           <h2 className="text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[5.625rem] font-bold tracking-tight text-[#E5A823] leading-[1.1] mb-2 md:mb-6">
-            Go Get Crispy.
+            {t("getCrispy.titleLine2", "Go Get Crispy.")}
           </h2>
 
           {/* Description Paragraph */}
           <p className="text-base sm:text-base text-center md:text-left md:text-2xl text-neutral-300 font-normal leading-[1.2]  mb-6 sm:mb-10">
-            From The First Crunch To The Last Piece, Every Box Is Made To Create
-            Moments Worth Sharing With The People Who Matter Most.
+            {t(
+              "getCrispy.description",
+              "From The First Crunch To The Last Piece, Every Box Is Made To Create Moments Worth Sharing With The People Who Matter Most."
+            )}
           </p>
 
           {/* Action Buttons */}
@@ -44,7 +48,7 @@ const GetCrispy = () => {
               href="#order"
               className="inline-flex items-center justify-center px-4 sm:px-8 py-2 sm:py-2.5 rounded-full bg-white text-neutral-900 font-semibold text-sm sm:text-base hover:bg-neutral-200 transition-all duration-300 shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95 cursor-pointer"
             >
-              Order Now
+              {t("getCrispy.orderNow", "Order Now")}
             </Link>
 
             {/* Secondary Find Nearest Button */}
@@ -52,7 +56,7 @@ const GetCrispy = () => {
               href="#locations"
               className="inline-flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 rounded-full bg-white text-black hover:bg-[#252e42] border border-neutral-600/80 hover:border-neutral-400 font-medium text-sm sm:text-base transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
             >
-              Find Your Nearest
+              {t("getCrispy.findNearest", "Find Your Nearest")}
             </Link>
           </div>
         </motion.div>

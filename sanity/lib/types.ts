@@ -1,14 +1,15 @@
 import type { PortableTextBlock, TypedObject } from '@portabletext/types';
+import type { LocalizedValue } from './localized';
 
 export interface JobPost {
   _id: string;
-  role: string;
+  role: LocalizedValue<string>;
   location: string;
-  type?: string;
-  youare?: string;
-  nicetohave?: string;
-  hours?: string;
-  pay?: string;
+  type?: LocalizedValue<string>;
+  youare?: LocalizedValue<string>;
+  nicetohave?: LocalizedValue<string>;
+  hours?: LocalizedValue<string>;
+  pay?: LocalizedValue<string>;
   applyMethod: 'email' | 'link';
   applyEmail?: string;
   applySubject?: string;
@@ -17,16 +18,16 @@ export interface JobPost {
 
 export interface Category {
   _id: string;
-  title: string;
+  title: LocalizedValue<string>;
   slug?: string;
 }
 
 export interface Post {
   _id: string;
-  title: string;
+  title: LocalizedValue<string>;
   slug: string;
   publishedAt: string;
-  excerpt?: string;
+  excerpt?: LocalizedValue<string>;
   mainImage?: {
     asset?: {
       _id: string;
@@ -35,5 +36,5 @@ export interface Post {
     alt?: string;
   };
   categories?: Category[];
-  body?: PortableTextBlock[] | TypedObject[] | null;
+  body?: LocalizedValue<PortableTextBlock[] | TypedObject[]> | null;
 }

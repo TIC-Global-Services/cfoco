@@ -7,6 +7,8 @@ import { matter } from "@/font/fonts";
 import { locationsData, LocationData } from "@/data/locations";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useTranslation } from "react-i18next";
+import { getLocalized } from "@/sanity/lib/localized";
 
 import Globe from "./Globe";
 
@@ -24,6 +26,7 @@ interface StepInsideProps {
 }
 
 const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) => {
+  const { t, i18n } = useTranslation("location");
   const data = locations && locations.length > 0 ? locations : locationsData;
   const total = data.length;
 
@@ -63,8 +66,9 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
   const resolvedCardImage = activeLocation.cardImage || FALLBACK_LOCATION_IMAGE;
   const cardImageSrc =
     failedImageSrc === resolvedCardImage ? FALLBACK_LOCATION_IMAGE : resolvedCardImage;
-  const cardDescription =
+  const rawDescription =
     activeLocation.hero?.description || activeLocation.tagline?.description || "";
+  const cardDescription = getLocalized(rawDescription, i18n.language);
   // Constants for the carousel track
   const ITEM_WIDTH = isMobile ? 210 : 380; // px width of each slot
   const ITEM_GAP = 20;    // px gap between items
@@ -211,13 +215,13 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
         <div className="mb-4 sm:mb-6 md:mb-8 px-[5%] sm:px-0">
           {/* Title */}
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[70px] font-extrabold tracking-tight text-[#FFBF00] drop-shadow-sm">
-            Step Inside.
+            {t("stepInside.title", "Step Inside.")}
           </h2>
 
           {/* Subtitle - exactly 2 lines on desktop */}
           <p className="mt-3 md:max-w-5xl mx-auto text-base md:text-2xl text-neutral-300 font-normal leading-[1.3]">
-            Same Recipe, Same Crispy Standard, But <br className="sm:hidden"/> Every CFC Takes On The Character Of Its Neighbourhood.
-            Pick A City, Or Let Us Find The One Closest To You.
+            {t("stepInside.subtitlePart1", "Same Recipe, Same Crispy Standard, But")} <br className="sm:hidden"/>{" "}
+            {t("stepInside.subtitlePart2", "Every CFC Takes On The Character Of Its Neighbourhood. Pick A City, Or Let Us Find The One Closest To You.")}
           </p>
         </div>
 
@@ -296,7 +300,7 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
                               </span>
                               {activeLocation.reviewCount && (
                                 <span className="text-neutral-400 font-normal">
-                                  ({activeLocation.reviewCount.toLocaleString()} avis Google)
+                                  ({activeLocation.reviewCount.toLocaleString()} {t("stepInside.googleReviews", "avis Google")})
                                 </span>
                               )}
                             </div>
@@ -316,7 +320,7 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
                             href={`/location/${activeLocation.slug}`}
                             className="inline-flex items-center justify-center rounded-full bg-[#cfd6e2] hover:bg-white text-[#141923] font-bold text-[11px] sm:text-xs px-4 sm:px-5 py-1.5 sm:py-2 transition-all duration-200 shadow-sm hover:scale-[1.02] active:scale-[0.98] tracking-tight"
                           >
-                            Explore more
+                            {t("stepInside.exploreMore", "Explore more")}
                           </Link>
                         </div>
                       </div>
@@ -334,7 +338,7 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
           <button
             type="button"
             onClick={handlePrev}
-            aria-label="Previous Location"
+            aria-label={t("stepInside.prevLocation", "Previous Location")}
             className="hidden md:flex absolute left-2 sm:left-4 z-30 p-2 cursor-pointer rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
           >
             <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -343,7 +347,7 @@ const StepInside: React.FC<StepInsideProps> = ({ locations = locationsData }) =>
           <button
             type="button"
             onClick={handleNext}
-            aria-label="Next Location"
+            aria-label={t("stepInside.nextLocation", "Next Location")}
             className="hidden md:flex absolute right-2 sm:right-4 z-30 p-2 cursor-pointer rounded-full border border-white/10 hover:border-[#FFBF00]/50 bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-[#FFBF00] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 items-center justify-center"
           >
             <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />

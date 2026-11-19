@@ -6,10 +6,12 @@ import { matter } from "@/font/fonts";
 import menuData from "@/public/menu_data.json";
 import { MenuItem, MenuCategory } from "@/sanity/lib/menu";
 import { MenuItemModal } from "./MenuItemModal";
+import { useTranslation } from "react-i18next";
+import { getLocalized, LocalizedValue } from "@/sanity/lib/localized";
 
 interface CategoryItem {
   id: string;
-  name: string;
+  name: LocalizedValue<string>;
   icon?: string | React.ReactNode;
 }
 
@@ -45,6 +47,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
   categories: dynamicCategories,
   initialItems = defaultItems,
 }) => {
+  const { t, i18n } = useTranslation("menu");
   // Normalize categories from Sanity or fallback
   const resolvedCategories: CategoryItem[] =
     dynamicCategories && dynamicCategories.length > 0
@@ -69,12 +72,15 @@ const MenuSection: React.FC<MenuSectionProps> = ({
   // Check if item has modal/cardData configured in CMS
   const hasModalDetails = (item: MenuItem): boolean => {
     const cd = item.cardData;
+    const desc = cd?.detailedDescription || item.detailedDescription;
+    const hasDetailedDesc = Boolean(
+      typeof desc === "string" ? desc.trim().length > 0 : desc && (desc.en?.trim() || desc.fr?.trim())
+    );
     return Boolean(
-      (cd?.detailedDescription && cd.detailedDescription.trim().length > 0) ||
+      hasDetailedDesc ||
       (cd?.includes && cd.includes.length > 0) ||
       (cd?.gallery && cd.gallery.length > 0) ||
       (cd?.highlights && cd.highlights.length > 0) ||
-      (item.detailedDescription && item.detailedDescription.trim().length > 0) ||
       (item.includes && item.includes.length > 0) ||
       (item.gallery && item.gallery.length > 0) ||
       (item.highlights && item.highlights.length > 0)
@@ -162,7 +168,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
             scrollRef.current?.scrollBy({ left: -280, behavior: "smooth" });
           }}
           disabled={!canScrollLeft}
-          aria-label="Scroll categories left"
+          aria-label={t("section.scrollLeft", "Scroll categories left")}
           className={`absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
             canScrollLeft
               ? "opacity-100 scale-100 pointer-events-auto"
@@ -187,6 +193,9 @@ const MenuSection: React.FC<MenuSectionProps> = ({
           {resolvedCategories.map((cat) => {
             const isActive = activeCategory === cat.id;
             const iconSrc = typeof cat.icon === "string" ? cat.icon : "/cfc_bucket.png";
+            const catKey = cat.id.toLowerCase();
+            const rawCatName = getLocalized(cat.name, i18n.language);
+            const displayName = t(`categories.${catKey}`, { defaultValue: rawCatName });
 
             return (
               <button
@@ -204,7 +213,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                 >
                   <Image
                     src={iconSrc}
-                    alt={cat.name}
+                    alt={displayName}
                     width={140}
                     height={140}
                     className="object-contain drop-shadow-md w-full h-full"
@@ -217,7 +226,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                       : "font-medium text-neutral-500 group-hover:text-neutral-900"
                   }`}
                 >
-                  {cat.name}
+                  {displayName}
                 </span>
               </button>
             );
@@ -230,7 +239,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
             scrollRef.current?.scrollBy({ left: 280, behavior: "smooth" });
           }}
           disabled={!canScrollRight}
-          aria-label="Scroll categories right"
+          aria-label={t("section.scrollRight", "Scroll categories right")}
           className={`absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
             canScrollRight
               ? "opacity-100 scale-100 pointer-events-auto"
@@ -256,13 +265,17 @@ const MenuSection: React.FC<MenuSectionProps> = ({
           <svg className="w-20 h-20 mb-6 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          <p className="text-lg font-medium">No items yet for this category.</p>
-          <p className="text-sm mt-1 opacity-70">Add items to this category in Sanity Studio.</p>
+          <p className="text-lg font-medium">{t("section.emptyTitle", "No items yet for this category.")}</p>
+          <p className="text-sm mt-1 opacity-70">{t("section.emptySubtitle", "Add items to this category in Sanity Studio.")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-6 px-[5%]">
           {visible.map((item) => {
             const hasDetails = hasModalDetails(item);
+            const itemTitle = getLocalized(item.title, i18n.language);
+            const itemDesc = item.description ? getLocalized(item.description, i18n.language) : "";
+            const itemBadge = item.badge ? getLocalized(item.badge, i18n.language) : null;
+
             return (
               <div
                 key={item.id}
@@ -279,9 +292,9 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/5 opacity-60 pointer-events-none rounded-3xl" />
 
                 {/* Badge if present */}
-                {(item.badge || item.isBestSeller) && (
+                {(itemBadge || item.isBestSeller) && (
                   <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-white/90 text-[#CC1518] text-xs font-bold shadow-sm border border-neutral-100">
-                    {item.badge || "🔥 Best Selling"}
+                    {itemBadge || t("section.bestSelling", "🔥 Best Selling")}
                   </div>
                 )}
 
@@ -289,7 +302,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                 <div className="relative w-full aspect-square max-h-64 sm:max-h-[35dvh] mx-auto flex items-center justify-center mb-6 overflow-hidden rounded-2xl">
                   <Image
                     src={item.image || "/cfc_bucket.png"}
-                    alt={item.title}
+                    alt={itemTitle}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-contain transition-transform duration-500 group-hover:scale-105"
@@ -300,7 +313,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                 <div className="relative z-10 flex flex-col">
                   <div className="flex items-baseline justify-between gap-2">
                     <h3 className="text-2xl sm:text-3xl font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors">
-                      {item.title}
+                      {itemTitle}
                     </h3>
                     {item.price && (
                       <span className="text-lg sm:text-xl font-extrabold text-neutral-800 shrink-0">
@@ -309,7 +322,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                     )}
                   </div>
                   <p className="mt-1 text-sm sm:text-lg font-medium text-neutral-700/90 leading-snug">
-                    {item.description}
+                    {itemDesc}
                   </p>
                 </div>
               </div>
@@ -326,7 +339,12 @@ const MenuSection: React.FC<MenuSectionProps> = ({
             onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
             className="group flex items-center gap-2 px-8 py-3.5 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md border border-white/40 hover:border-white/70 text-neutral-900 font-semibold text-base sm:text-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105"
           >
-            <span>View More ({filtered.length - visibleCount} remaining)</span>
+            <span>
+              {t("section.viewMore", {
+                count: filtered.length - visibleCount,
+                defaultValue: `View More (${filtered.length - visibleCount} remaining)`,
+              })}
+            </span>
             <span className="text-lg transition-transform duration-300 group-hover:translate-y-1">&darr;</span>
           </button>
         ) : filtered.length > ITEMS_PER_PAGE ? (
@@ -335,7 +353,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
             onClick={() => setVisibleCount(ITEMS_PER_PAGE)}
             className="group flex items-center gap-2 px-8 py-3.5 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md border border-white/40 hover:border-white/70 text-neutral-900 font-semibold text-base sm:text-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105"
           >
-            <span>Show Less</span>
+            <span>{t("section.showLess", "Show Less")}</span>
             <span className="text-lg transition-transform duration-300 group-hover:-translate-y-1">&uarr;</span>
           </button>
         ) : null}

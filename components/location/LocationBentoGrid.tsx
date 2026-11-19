@@ -3,12 +3,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { LocationData } from "@/data/locations";
+import { useTranslation } from "react-i18next";
+import { getLocalized } from "@/sanity/lib/localized";
 
 interface LocationBentoGridProps {
   location: LocationData;
 }
 
 export default function LocationBentoGrid({ location }: LocationBentoGridProps) {
+  const { t, i18n } = useTranslation("location");
   const [activeSlide, setActiveSlide] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -18,6 +21,12 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
   const counterImg = location.experience?.interiorImages?.counter || location.images?.counter || "/locations/counter.jpg";
   const signatureDish = location.experience?.signatureDish || location.signatureDish;
   const openingHours = location.experience?.openingHours || location.openingHours;
+
+  const signatureTitle = signatureDish?.title ? getLocalized(signatureDish.title, i18n.language) : "";
+  const signatureSubtitle = signatureDish?.subtitle ? getLocalized(signatureDish.subtitle, i18n.language) : "";
+  const weekdayHours = openingHours?.weekday ? getLocalized(openingHours.weekday, i18n.language) : "";
+  const weekendHours = openingHours?.weekend ? getLocalized(openingHours.weekend, i18n.language) : "";
+  const sundayHours = openingHours?.sunday ? getLocalized(openingHours.sunday, i18n.language) : "";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -76,7 +85,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
             <div className="relative w-full h-[280px] rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src={kioskImg}
-                alt="CFC Digital Ordering Kiosks"
+                alt={t("bento.kiosksAlt", "CFC Digital Ordering Kiosks")}
                 fill
                 className="object-cover"
               />
@@ -88,7 +97,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
             <div className="relative w-full h-[300px] rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src={diningImg}
-                alt="CFC Dining Area"
+                alt={t("bento.diningAlt", "CFC Dining Area")}
                 fill
                 className="object-cover"
               />
@@ -100,7 +109,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
             <div className="relative w-full h-[280px] rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src={barStoolsImg}
-                alt="CFC High Top Seating"
+                alt={t("bento.barStoolsAlt", "CFC High Top Seating")}
                 fill
                 className="object-cover"
               />
@@ -112,7 +121,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
             <div className="relative w-full h-[300px] rounded-2xl overflow-hidden bg-[#2a2a2e] shadow-lg">
               <Image
                 src="/fried-chickens.png"
-                alt="Fried Chicken"
+                alt={t("bento.friedChickenAlt", "Fried Chicken")}
                 fill
                 className="object-cover w-full"
               />
@@ -120,18 +129,18 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
                 <div className="flex items-end gap-3">
                   <div className="text-right mb-[2px]">
                     <p className="text-[#CC1518] font-normal text-sm">
-                      {signatureDish.title}
+                      {signatureTitle}
                     </p>
                     <p className="text-white font-medium text-xs">
-                      {signatureDish.subtitle}
+                      {signatureSubtitle}
                     </p>
                   </div>
                   <div className="text-right">
                     <span className="block text-2xl font-bold text-white tracking-tight">
-                      Signature
+                      {t("bento.signature", "Signature")}
                     </span>
                     <span className="block text-2xl font-bold text-white tracking-tight">
-                      Dish
+                      {t("bento.dish", "Dish")}
                     </span>
                   </div>
                 </div>
@@ -144,7 +153,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
             <div className="relative w-full h-[300px] rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src={counterImg}
-                alt="CFC Service Counter"
+                alt={t("bento.counterAlt", "CFC Service Counter")}
                 fill
                 className="object-cover"
               />
@@ -153,17 +162,17 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
                 <div className="flex items-end gap-4">
                   <div className="text-left leading-none">
                     <h3 className="text-2xl font-bold text-[#F6B90B] tracking-tight">
-                      Opening
+                      {t("bento.opening", "Opening")}
                     </h3>
                     <h3 className="text-2xl font-bold text-[#F6B90B] tracking-tight">
-                      Hours
+                      {t("bento.hours", "Hours")}
                     </h3>
                   </div>
                   <div className="text-sm leading-snug text-white font-medium mb-[2px]">
                     <p>
-                      {openingHours.weekday} · {openingHours.weekend}
+                      {weekdayHours} · {weekendHours}
                     </p>
-                    <p>{openingHours.sunday}</p>
+                    <p>{sundayHours}</p>
                   </div>
                 </div>
               </div>
@@ -194,7 +203,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         <div className="relative w-full h-[260px] md:h-[300px] md:col-span-7 rounded-2xl sm:rounded-3xl overflow-hidden group shadow-lg">
           <Image
             src={kioskImg}
-            alt="CFC Digital Ordering Kiosks"
+            alt={t("bento.kiosksAlt", "CFC Digital Ordering Kiosks")}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
@@ -204,7 +213,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         <div className="relative w-full h-[260px] md:h-[300px] md:col-span-5 rounded-2xl sm:rounded-3xl overflow-hidden group shadow-lg">
           <Image
             src={diningImg}
-            alt="CFC Dining Area"
+            alt={t("bento.diningAlt", "CFC Dining Area")}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
@@ -214,7 +223,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         <div className="relative w-full h-[300px] md:h-full md:col-span-4 md:row-span-2 rounded-2xl sm:rounded-3xl overflow-hidden group shadow-lg">
           <Image
             src={barStoolsImg}
-            alt="CFC High Top Seating"
+            alt={t("bento.barStoolsAlt", "CFC High Top Seating")}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
@@ -224,7 +233,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         <div className="relative w-full h-[200px] md:h-[240px] md:col-span-8 rounded-2xl sm:rounded-3xl overflow-hidden bg-[#22242a] shadow-lg">
           <Image
             src="/fried-chickens.png"
-            alt="Fried Chicken"
+            alt={t("bento.friedChickenAlt", "Fried Chicken")}
             fill
             style={{objectPosition:"52% 50%"}}
             className="object-contain object-top pointer-events-none rotate-90 scale-[3.8] w-full"
@@ -233,18 +242,18 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
             <div className="flex items-end gap-3 md:gap-4 lg:gap-6">
               <div className="text-right mb-[2px] md:mb-1 lg:mb-1">
                 <p className="text-[#CC1518] font-normal text-sm md:text-lg lg:text-2xl">
-                  {signatureDish.title}
+                  {signatureTitle}
                 </p>
                 <p className="text-white font-medium text-xs md:text-lg lg:text-2xl">
-                  {signatureDish.subtitle}
+                  {signatureSubtitle}
                 </p>
               </div>
               <div className="text-right lg:leading-[12]">
                 <span className="block text-3xl lg:text-[2.5rem] font-bold text-white tracking-tight">
-                  Signature
+                  {t("bento.signature", "Signature")}
                 </span>
                 <span className="block text-3xl lg:text-[2.5rem] font-bold text-white tracking-tight">
-                  Dish
+                  {t("bento.dish", "Dish")}
                 </span>
               </div>
             </div>
@@ -255,7 +264,7 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
         <div className="relative w-full h-[200px] md:h-[240px] md:col-span-8 rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg group">
           <Image
             src={counterImg}
-            alt="CFC Service Counter"
+            alt={t("bento.counterAlt", "CFC Service Counter")}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
@@ -265,17 +274,17 @@ export default function LocationBentoGrid({ location }: LocationBentoGridProps) 
             <div className="flex items-end gap-4 sm:gap-4">
               <div className="text-left leading-none">
                 <h3 className="text-3xl md:text-4xl lg:text-[2.5rem] font-bold text-[#F6B90B] tracking-tight">
-                  Opening
+                  {t("bento.opening", "Opening")}
                 </h3>
                 <h3 className="text-3xl md:text-4xl lg:text-[2.5rem] font-bold text-[#F6B90B] tracking-tight">
-                  Hours
+                  {t("bento.hours", "Hours")}
                 </h3>
               </div>
               <div className="text-sm md:text-lg lg:text-2xl leading-snug text-white font-medium mb-[2px] sm:mb-1">
                 <p>
-                  {openingHours.weekday} · {openingHours.weekend}
+                  {weekdayHours} · {weekendHours}
                 </p>
-                <p>{openingHours.sunday}</p>
+                <p>{sundayHours}</p>
               </div>
             </div>
           </div>

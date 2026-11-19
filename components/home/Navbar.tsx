@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { NAV_CTA, NAV_ITEMS } from "@/data/navLinks";
 import { onProgress, smoothstep } from "@/lib/home/scroll";
+import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import { FOOTER_FROM, FOOTER_TO } from "./config";
 
 // Top navigation: plain DOM on top of the canvas (not drawn in 3D like the copy),
@@ -12,8 +14,17 @@ import { FOOTER_FROM, FOOTER_TO } from "./config";
 
 const LINKS = NAV_ITEMS;
 
+const navKeyMap: Record<string, string> = {
+  Home: "nav.home",
+  Location: "nav.location",
+  Menu: "nav.menu",
+  Career: "nav.career",
+  Blogs: "nav.blogs",
+};
+
 export function Navbar() {
   const root = useRef<HTMLElement>(null);
+  const { t } = useTranslation("common");
 
   // the footer has its own links: the navbar fades out as it comes in (SceneText reads the opacity / visibility, like the sections')
   useEffect(
@@ -50,6 +61,7 @@ export function Navbar() {
         <ul className="pointer-events-auto hidden items-center gap-1 lg:flex">
           {LINKS.map((l) => {
             const current = l.href === "/"; // this navbar only lives on the home page
+            const label = navKeyMap[l.label] ? t(navKeyMap[l.label] as any, l.label) : l.label;
             return (
               <li key={l.label}>
                 <Link
@@ -58,7 +70,7 @@ export function Navbar() {
                   className={`nav-link ${current ? "nav-link--current" : ""}`}
                 >
                   <span className="whitespace-nowrap">
-                    {l.label}
+                    {label}
                   </span>
                 </Link>
               </li>
@@ -66,12 +78,15 @@ export function Navbar() {
           })}
         </ul>
 
-        <Link href={NAV_CTA.href} className="nav-cta pointer-events-auto hidden lg:inline-flex">
-          <span className="whitespace-nowrap">{NAV_CTA.label}</span>
-          <span className="nav-cta-arrow" aria-hidden>
-            <Icon name="arrow-up-right" />
-          </span>
-        </Link>
+        <div className="hidden lg:flex items-center gap-3">
+          <LanguageSwitcher className="pointer-events-auto" />
+          <Link href={NAV_CTA.href} className="nav-cta pointer-events-auto">
+            <span className="whitespace-nowrap">{t("nav.contact", NAV_CTA.label)}</span>
+            <span className="nav-cta-arrow" aria-hidden>
+              <Icon name="arrow-up-right" />
+            </span>
+          </Link>
+        </div>
 
         <MobileMenu />
       </nav>
@@ -97,6 +112,7 @@ function Icon({ name }: { name: keyof typeof ICONS }) {
 function MobileMenu() {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     if (!open) return;
@@ -125,27 +141,33 @@ function MobileMenu() {
       </button>
       <div id="nav-mobile" className="nav-sheet" data-open={open}>
         <ul>
-          {LINKS.map((l) => (
-            <li key={l.label}>
-              <Link
-                href={l.href}
-                tabIndex={open ? 0 : -1}
-                onClick={() => setOpen(false)}
-                className="nav-sheet-link"
-              >
-                <span className="whitespace-nowrap">
-                  {l.label}
-                </span>
-              </Link>
-            </li>
-          ))}
+          {LINKS.map((l) => {
+            const label = navKeyMap[l.label] ? t(navKeyMap[l.label] as any, l.label) : l.label;
+            return (
+              <li key={l.label}>
+                <Link
+                  href={l.href}
+                  tabIndex={open ? 0 : -1}
+                  onClick={() => setOpen(false)}
+                  className="nav-sheet-link"
+                >
+                  <span className="whitespace-nowrap">
+                    {label}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
-        <Link href={NAV_CTA.href} tabIndex={open ? 0 : -1} className="nav-cta mt-4 w-full justify-between">
-          <span className="whitespace-nowrap">{NAV_CTA.label}</span>
-          <span className="nav-cta-arrow" aria-hidden>
-            <Icon name="arrow-up-right" />
-          </span>
-        </Link>
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <Link href={NAV_CTA.href} tabIndex={open ? 0 : -1} className="nav-cta flex-1 justify-between">
+            <span className="whitespace-nowrap">{t("nav.contact", NAV_CTA.label)}</span>
+            <span className="nav-cta-arrow" aria-hidden>
+              <Icon name="arrow-up-right" />
+            </span>
+          </Link>
+          <LanguageSwitcher className="pointer-events-auto" />
+        </div>
       </div>
     </div>
   );

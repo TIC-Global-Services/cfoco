@@ -4,15 +4,20 @@ import React from "react";
 import Image from "next/image";
 import { RectangleGoggles } from "lucide-react";
 import { LocationData } from "@/data/locations";
+import { useTranslation } from "react-i18next";
+import { getLocalized } from "@/sanity/lib/localized";
 
 interface LocationVirtualTourProps {
   location: LocationData;
 }
 
 export default function LocationVirtualTour({ location }: LocationVirtualTourProps) {
+  const { t, i18n } = useTranslation("location");
   const backgroundImage = location.virtualTour?.backgroundImage || location.images?.virtualTour || "/cfc_ambience.jpg";
-  const heading = location.virtualTour?.heading || location.tourTitle || "Step Inside The Crunch";
-  const buttonText = location.virtualTour?.buttonText || location.tourSubtitle || "Take A Virtual Tour";
+  const rawHeading = location.virtualTour?.heading || location.tourTitle;
+  const heading = rawHeading ? getLocalized(rawHeading, i18n.language) : t("virtualTour.defaultHeading", "Step Inside The Crunch");
+  const rawButtonText = location.virtualTour?.buttonText || location.tourSubtitle;
+  const buttonText = rawButtonText ? getLocalized(rawButtonText, i18n.language) : t("virtualTour.defaultButtonText", "Take A Virtual Tour");
   const virtualTourUrl = location.virtualTour?.virtualTourUrl;
 
   const handleTourClick = () => {

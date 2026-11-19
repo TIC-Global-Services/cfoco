@@ -6,7 +6,7 @@ import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
 import dynamic from "next/dynamic";
 import LazyMount from "./LazyMount";
-
+import { useTranslation } from "react-i18next";
 import { FOOTER_LINKS } from "@/data/navLinks";
 
 const FooterLogoCanvas = dynamic(() => import("@/reusable/FooterLogoCanvas"), {
@@ -17,8 +17,6 @@ interface FooterNavLink {
   label: string;
   href: string;
 }
-
-const navLinks: FooterNavLink[] = FOOTER_LINKS;
 
 const socialLinks = [
   {
@@ -73,6 +71,22 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ className = "" }) => {
+  const { t } = useTranslation("common");
+
+  const navKeyMap: Record<string, string> = {
+    Home: "nav.home",
+    Location: "nav.location",
+    Menu: "nav.menu",
+    Career: "nav.career",
+    Blogs: "nav.blogs",
+    "Contact Us": "nav.contact",
+  };
+
+  const navLinks = FOOTER_LINKS.map((link) => ({
+    ...link,
+    label: navKeyMap[link.label] ? t(navKeyMap[link.label] as any, link.label) : link.label,
+  }));
+
   return (
     <footer
       className={`relative w-full h-[460px] sm:h-[520px] md:h-[600px] overflow-hidden select-none ${matter.className} ${className}`}
@@ -97,7 +111,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
               <LazyMount className="h-full w-full">
-                <FooterLogoCanvas modelPath="/cfoco_black_logo.glb" /> 
+                <FooterLogoCanvas modelPath="/footer_logo.glb" /> 
               </LazyMount>
             </div>
           </div>
@@ -109,7 +123,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             <div className="text-center md:text-left order-2 md:order-1 font-semibold">
               <span>Copyright © 2026 </span>
               <span className="font-semibold text-[#E5A823]">CFOCO.</span>
-              <span> All rights reserved.</span>
+              <span> {t("footer.rights", "All rights reserved.")}</span>
             </div>
 
             {/* Social Media Icons */}

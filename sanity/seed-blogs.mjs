@@ -78,60 +78,70 @@ const categoriesData = [
   {
     _id: 'category-crispy-fried-chicken',
     title: 'Crispy Fried Chicken',
+    titleFr: 'Poulet Frit Croustillant',
     slug: 'crispy-fried-chicken',
     description: 'The science, craft, and culinary secrets behind achieving the ultimate golden crunch.',
   },
   {
     _id: 'category-secret-recipes-spices',
     title: 'Secret Recipes & Spices',
+    titleFr: 'Recettes Secrètes & Épices',
     slug: 'secret-recipes-spices',
     description: 'Discover the artisanal 14-spice blend, buttermilk brines, and herb marinades.',
   },
   {
     _id: 'category-signature-burgers',
     title: 'Signature Burgers',
+    titleFr: 'Burgers Signature',
     slug: 'signature-burgers',
     description: 'Stacked crispy fillets, toasted brioche buns, and gourmet melted French cheeses.',
   },
   {
     _id: 'category-craft-sauces-dips',
     title: 'Craft Sauces & Dips',
+    titleFr: 'Sauces Artisanales & Dips',
     slug: 'craft-sauces-dips',
     description: 'House-made sauces from Spicy Mayo to Truffle Garlic — the art of dip pairing.',
   },
   {
     _id: 'category-chefs-kitchen-stories',
     title: "Chef's Kitchen Stories",
+    titleFr: 'Secrets de Cuisine du Chef',
     slug: 'chefs-kitchen-stories',
     description: 'Culinary craftsmanship, kitchen life, and techniques direct from our head chefs.',
   },
   {
     _id: 'category-french-street-food',
     title: 'French Street Food',
+    titleFr: 'Street Food à la Française',
     slug: 'french-street-food',
     description: 'Reimagining classic American comfort food through refined Bordeaux gastronomy.',
   },
   {
     _id: 'category-farm-to-kitchen-quality',
     title: 'Farm-to-Kitchen Quality',
+    titleFr: "Qualité de la Ferme à l'Assiette",
     slug: 'farm-to-kitchen-quality',
     description: '100% French free-range poultry, ethical farm sourcing, and quality standards.',
   },
   {
     _id: 'category-tenders-wings-mastery',
     title: 'Tenders & Wings Mastery',
+    titleFr: "L'Art des Tenders & Wings",
     slug: 'tenders-wings-mastery',
     description: 'Hand-breaded tenders, fiery wings, and succulent cuts cooked to perfection.',
   },
   {
     _id: 'category-feasts-sharing-buckets',
     title: 'Feasts & Sharing Buckets',
+    titleFr: 'Buckets & Festins à Partager',
     slug: 'feasts-sharing-buckets',
     description: 'Family sharing boxes, game-day buckets, and party platters made for gatherings.',
   },
   {
     _id: 'category-behind-the-crunch',
     title: 'Behind The Crunch',
+    titleFr: 'Les Coulisses du Croustillant',
     slug: 'behind-the-crunch',
     description: 'Community stories, kitchen culture, and our expanding culinary journey across France.',
   },
@@ -209,6 +219,7 @@ async function seedBlogs() {
       _id: cat._id,
       _type: 'category',
       title: cat.title,
+      titleFr: cat.titleFr || cat.title,
       slug: { _type: 'slug', current: cat.slug },
       description: cat.description,
     };
@@ -435,9 +446,11 @@ async function seedBlogs() {
       _id: post._id,
       _type: 'post',
       title: post.title,
+      titleFr: post.titleFr || post.title,
       slug: { _type: 'slug', current: post.slug },
       publishedAt: post.publishedAt,
       excerpt: post.excerpt,
+      excerptFr: post.excerptFr || post.excerpt,
       categories: post.categoryIds.map((catId) => ({
         _type: 'reference',
         _ref: catId,
@@ -454,6 +467,7 @@ async function seedBlogs() {
         },
       }),
       body: post.body,
+      bodyFr: post.bodyFr || post.body,
     };
 
     let success = false;

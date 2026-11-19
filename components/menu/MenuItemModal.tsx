@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { MenuItem } from "@/sanity/lib/menu";
 import { X, Flame, Leaf, UtensilsCrossed } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { getLocalized } from "@/sanity/lib/localized";
 
 interface MenuItemModalProps {
   item: MenuItem | null;
@@ -11,6 +13,7 @@ interface MenuItemModalProps {
 }
 
 export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) => {
+  const { t, i18n } = useTranslation("menu");
   const [activeImage, setActiveImage] = useState<string>("");
 
   useEffect(() => {
@@ -39,15 +42,19 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
   if (!item) return null;
 
   const cardData = item.cardData || {};
-  const detailedText = cardData.detailedDescription || item.detailedDescription || item.description;
+  const rawDetailed = cardData.detailedDescription || item.detailedDescription || item.description;
+  const detailedText = rawDetailed ? getLocalized(rawDetailed, i18n.language) : "";
+
+  const itemTitle = getLocalized(item.title, i18n.language);
+  const itemBadge = item.badge ? getLocalized(item.badge, i18n.language) : null;
 
   const rawGallery = (cardData.gallery && cardData.gallery.length > 0) ? cardData.gallery : (item.gallery || []);
   const galleryItems = [
-    { image: item.image, alt: item.title },
+    { image: item.image, alt: itemTitle },
     ...rawGallery
       .map((g) => ({
         image: g.image || g.imageUrl || "",
-        alt: g.alt || item.title,
+        alt: g.alt ? getLocalized(g.alt, i18n.language) : itemTitle,
       }))
       .filter((g) => Boolean(g.image)),
   ];
@@ -56,11 +63,19 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
     ? cardData.includes
     : (item.includes || []);
 
-  const includesTitle = cardData.includesTitle || item.includesTitle || (item.category === "poulet" ? "Whats In Your Bucket?" : "Combo Includes");
+  const fallbackIncludesTitle =
+    (item.category || "").toLowerCase() === "poulet"
+      ? t("modal.whatsInYourBucket", "Whats In Your Bucket?")
+      : t("modal.comboIncludes", "Combo Includes");
+  const rawIncludesTitle = cardData.includesTitle || item.includesTitle;
+  const includesTitle = rawIncludesTitle ? getLocalized(rawIncludesTitle, i18n.language) : fallbackIncludesTitle;
 
   const highlightsList = (cardData.highlights && cardData.highlights.length > 0)
     ? cardData.highlights
     : (item.highlights || []);
+
+  const rawCategoryName = item.categoryName ? getLocalized(item.categoryName, i18n.language) : null;
+  const catDisplay = rawCategoryName || t(`categories.${(item.category || "").toLowerCase()}`, { defaultValue: item.category });
 
   return (
     <div
@@ -93,10 +108,10 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
         {/* ================= LEFT SIDE: Food Visuals & Gallery ================= */}
         <div className="w-full md:w-[48%] p-6 sm:p-8 flex flex-col justify-between relative bg-gradient-to-b from-[#e3dad5] to-[#d8cec8]">
           {/* Top-Left Badge */}
-          {item.badge && (
+          {itemBadge && (
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-[#CC1518] text-xs sm:text-sm font-bold shadow-sm border border-neutral-100 self-start">
               <Flame className="w-4 h-4 fill-[#CC1518] text-[#CC1518]" />
-              <span>{item.badge}</span>
+              <span>{itemBadge}</span>
             </div>
           )}
 
@@ -105,7 +120,7 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
             <div className="relative w-full h-full max-w-[280px] sm:max-w-[320px]">
               <Image
                 src={activeImage || item.image || "/cfc_bucket.png"}
-                alt={item.title}
+                alt={itemTitle}
                 fill
                 sizes="(max-width: 768px) 100vw, 400px"
                 className="object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.22)] transition-all duration-300"
@@ -154,12 +169,12 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
             {/* Top Bar with Category & Close Button */}
             <div className="flex items-center justify-between">
               <span className="text-xs sm:text-sm font-semibold text-neutral-400 capitalize tracking-wide">
-                {item.categoryName || item.category}
+                {catDisplay}
               </span>
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close modal"
+                aria-label={t("modal.close", "Close modal")}
                 className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4 stroke-[2.5]" />
@@ -168,7 +183,7 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
 
             {/* Title & Red Subtitle */}
             <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#CC1518] tracking-tight leading-tight mt-3">
-              {item.title}
+              {itemTitle}
             </h2>
 
             {detailedText && (
@@ -193,13 +208,15 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
                 }`}>
                   {includesList.map((inc, i) => {
                     const incImage = inc.image || inc.imageUrl;
+                    const incName = getLocalized(inc.name, i18n.language);
+                    const incQty = inc.quantity ? getLocalized(inc.quantity, i18n.language) : null;
                     return (
                       <div key={i} className="flex flex-col items-center text-center px-1.5 sm:px-2">
                         <div className="relative w-12 h-12 sm:w-14 sm:h-14 mb-2">
                           {incImage && (
                             <Image
                               src={incImage}
-                              alt={inc.name}
+                              alt={incName}
                               fill
                               sizes="60px"
                               className="object-contain"
@@ -207,11 +224,11 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
                           )}
                         </div>
                         <span className="text-[11px] sm:text-xs font-semibold text-neutral-800 leading-tight">
-                          {inc.name}
+                          {incName}
                         </span>
-                        {inc.quantity && (
+                        {incQty && (
                           <span className="text-[10px] sm:text-[11px] font-normal text-neutral-500 mt-0.5">
-                            {inc.quantity}
+                            {incQty}
                           </span>
                         )}
                       </div>
@@ -227,27 +244,31 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
             <div className={`grid gap-4 pt-6 sm:pt-8 mt-4 border-t border-neutral-100 ${
               highlightsList.length === 1 ? "grid-cols-1" : "grid-cols-2"
             }`}>
-              {highlightsList.map((hl, idx) => (
-                <div key={idx} className="flex items-start gap-2.5">
-                  <div className="mt-0.5 text-[#CC1518] shrink-0">
-                    {hl.icon === "recipe" ? (
-                      <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
-                    ) : (
-                      <Leaf className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
-                    )}
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-xs sm:text-sm font-bold text-neutral-900 leading-tight">
-                      {hl.title}
-                    </span>
-                    {hl.subtitle && (
-                      <span className="text-[11px] sm:text-xs text-neutral-500 mt-0.5">
-                        {hl.subtitle}
+              {highlightsList.map((hl, idx) => {
+                const hlTitle = getLocalized(hl.title, i18n.language);
+                const hlSubtitle = hl.subtitle ? getLocalized(hl.subtitle, i18n.language) : null;
+                return (
+                  <div key={idx} className="flex items-start gap-2.5">
+                    <div className="mt-0.5 text-[#CC1518] shrink-0">
+                      {hl.icon === "recipe" ? (
+                        <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
+                      ) : (
+                        <Leaf className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
+                      )}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs sm:text-sm font-bold text-neutral-900 leading-tight">
+                        {hlTitle}
                       </span>
-                    )}
+                      {hlSubtitle && (
+                        <span className="text-[11px] sm:text-xs text-neutral-500 mt-0.5">
+                          {hlSubtitle}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

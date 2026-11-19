@@ -1,0 +1,14 @@
+{
+  "hero": {
+    "tagline": "Croustillant Depuis 2011",
+    "title": "L'obsession dans chaque bouchée",
+    "subtitle": "Préparé avec nos épices secrètes, une friture dorée et jamais de poulet congelé.",
+    "cta": "Découvrir le Menu"
+  },
+  "features": {
+    "fresh": "Jamais Congelé",
+    "freshDesc": "Poulet frais préparé chaque jour avec des épices de qualité.",
+    "crispy": "Croustillant Signature",
+    "crispyDesc": "Double panure et friture sous pression pour un croustillant ultime."
+  }
+}

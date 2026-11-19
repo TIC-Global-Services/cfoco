@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "location": "Emplacements",
+    "menu": "Menu",
+    "career": "Carrières",
+    "blogs": "Blogs",
+    "contact": "Contactez-nous"
+  },
+  "footer": {
+    "rights": "Tous droits réservés.",
+    "tagline": "Croustillant Depuis 2011",
+    "quickLinks": "Liens Rapides",
+    "contact": "Contactez-nous",
+    "followUs": "Suivez-nous"
+  },
+  "buttons": {
+    "orderNow": "Commander",
+    "viewMenu": "Voir le Menu",
+    "learnMore": "En savoir plus",
+    "stepInside": "Entrer",
+    "contactUs": "Contactez-nous",
+    "switchLanguage": "Changer de langue"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français"
+  }
+}

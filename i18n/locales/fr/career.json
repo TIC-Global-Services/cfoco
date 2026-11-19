@@ -1,0 +1,54 @@
+{
+  "hero": {
+    "desktopLine1": "Construisez votre",
+    "desktopLine2": "Avenir avec nous",
+    "mobileLine1": "Construisez votre",
+    "mobileLine2": "Avenir avec nous.",
+    "description": "Rejoignez une équipe animée par l'innovation, la collaboration et une passion commune pour avoir un impact significatif",
+    "highlight": "chaque jour."
+  },
+  "buildFuture": {
+    "titleLine1": "Pourquoi construire",
+    "titleLine2": "votre avenir avec CFOCO ?",
+    "description": "Chez CFOCO, nous sommes bien plus que des burgers et du poulet frit. Nous sommes une équipe fondée sur l'énergie, la créativité, l'esprit d'équipe et une obsession partagée pour la qualité. Que vous preniez les commandes, gériez les opérations ou dirigiez la cuisine, chaque rôle façonne",
+    "highlight": "l'expérience que nous servons."
+  },
+  "positions": {
+    "titleLine1": "Ce sur quoi nous",
+    "titleLine2": "ne transigeons pas",
+    "marquee": "Votre meilleur job commence ici",
+    "applyNow": "Postuler",
+    "labels": {
+      "youAre": "Votre profil",
+      "niceToHave": "Un atout",
+      "hours": "Horaires",
+      "pay": "Rémunération"
+    },
+    "fallbackJobs": {
+      "fallback-1": {
+        "role": "Coordinateur Livraison",
+        "location": "Bordeaux Centre",
+        "type": "Temps plein & partiel",
+        "youare": "Un leader naturel, organisé, sur le terrain.",
+        "nicetohave": "Expérience en gestion d'équipe en restauration ou commerce.",
+        "hours": "Temps plein, horaires tournants.",
+        "pay": "Salaire attractif + évolution vers Manager de restaurant."
+      },
+      "fallback-2": {
+        "role": "Superviseur de Restaurant",
+        "location": "Mérignac",
+        "type": "Temps plein",
+        "youare": "Un leader naturel, organisé, sur le terrain.",
+        "nicetohave": "Expérience en gestion d'équipe en restauration ou commerce.",
+        "hours": "Temps plein, horaires tournants.",
+        "pay": "Salaire attractif + évolution vers Manager de restaurant."
+      }
+    }
+  },
+  "reachout": {
+    "titleLine1": "Vous ne trouvez pas votre poste ?",
+    "titleLine2": "Contactez-nous quand même.",
+    "description": "Nous sommes toujours ravis de rencontrer des personnes talentueuses qui partagent notre passion pour la cuisine et le service.",
+    "button": "Envoyer votre CV"
+  }
+}

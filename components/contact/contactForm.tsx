@@ -4,8 +4,10 @@ import React from "react";
 import Image from "next/image";
 import { Phone, Mail, MapPin, ArrowUpRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 const ContactForm = () => {
+  const { t } = useTranslation("contact");
   return (
     <section className="relative w-full px-4 sm:px-6 lg:px-[5%] pb-20 pt-10">
       <style>{`
@@ -170,10 +172,10 @@ const ContactForm = () => {
 
           <div className="mb-2 relative z-10">
             <h2 className="text-[#CC1518] text-2xl md:text-[1.750rem] font-bold mb-2 leading-none">
-              Contact Information
+              {t("info.title", "Contact Information")}
             </h2>
             <p className="text-white text-lg font-medium">
-              Say something to start a live chat!
+              {t("info.subtitle", "Say something to start a live chat!")}
             </p>
           </div>
 
@@ -181,21 +183,21 @@ const ContactForm = () => {
             <div className="flex items-start gap-5">
               <Phone className="w-5 h-5 text-white shrink-0 mt-0.5" />
               <span className="text-white font-light text-base">
-                +1012 3456 789
+                {t("info.phone", "+1012 3456 789")}
               </span>
             </div>
             <div className="flex items-start gap-5">
               <Mail className="w-5 h-5 text-white shrink-0 mt-0.5" />
               <Link href="mailto:Contact@cfoco.fr">
                 <span className="text-white font-light text-base">
-                  Contact@cfoco.fr
+                  {t("info.email", "Contact@cfoco.fr")}
                 </span>
               </Link>
             </div>
             <div className="flex items-start gap-5">
               <MapPin className="w-5 h-5 text-white shrink-0 mt-0.5" />
               <span className="text-white font-light text-base leading-[1.2] tracking-tight">
-                132 Dartmouth Street Boston, Massachusetts 02156 United States
+                {t("info.address", "132 Dartmouth Street Boston, Massachusetts 02156 United States")}
               </span>
             </div>
           </div>
@@ -208,46 +210,62 @@ const ContactForm = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
               {/* Name Field */}
               <div className="flex flex-col gap-2">
-                <label className="text-white font-medium text-sm ml-2">Name</label>
+                <label className="text-white font-medium text-sm ml-2">
+                  {t("form.name", "Name")}
+                </label>
                 <input
                   type="text"
-                  placeholder="john smith"
+                  placeholder={t("form.namePlaceholder", "john smith")}
                   className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
                 />
               </div>
 
               {/* Mail Field */}
               <div className="flex flex-col gap-2">
-                <label className="text-white font-medium text-sm ml-2">Mail</label>
+                <label className="text-white font-medium text-sm ml-2">
+                  {t("form.email", "Mail")}
+                </label>
                 <input
                   type="email"
-                  placeholder="john.smith@email.com"
+                  placeholder={t("form.emailPlaceholder", "john.smith@email.com")}
                   className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
                 />
               </div>
 
               {/* Phone Field */}
               <div className="flex flex-col gap-2">
-                <label className="text-white font-medium text-sm ml-2">phone</label>
+                <label className="text-white font-medium text-sm ml-2">
+                  {t("form.phone", "Phone")}
+                </label>
                 <input
                   type="tel"
-                  placeholder="+243545353"
+                  placeholder={t("form.phonePlaceholder", "+243545353")}
                   className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/50 focus:outline-none"
                 />
               </div>
 
               {/* Subject Field */}
               <div className="flex flex-col gap-2">
-                <label className="text-white font-medium text-sm ml-2">select subject</label>
+                <label className="text-white font-medium text-sm ml-2">
+                  {t("form.subject", "Select subject")}
+                </label>
                 <div className="relative w-full">
                   <select
                     defaultValue="general"
                     className="form-glow-input w-full bg-transparent border border-[#1e3a8a] rounded-2xl px-5 py-3.5 text-white text-sm focus:outline-none appearance-none cursor-pointer"
                   >
-                    <option value="" disabled className="bg-[#111113] text-white">General enquiry</option>
-                    <option value="general" className="bg-[#111113] text-white">General enquiry</option>
-                    <option value="support" className="bg-[#111113] text-white">Support</option>
-                    <option value="partnership" className="bg-[#111113] text-white">Partnership</option>
+                    <option value="" disabled className="bg-[#111113] text-white">
+                      {t("form.subjects.placeholder", "Select subject")}
+                    </option>
+                    <option value="general" className="bg-[#111113] text-white">
+                      {t("form.subjects.general", "General enquiry")}
+                    </option>
+                    <option value="support" className="bg-[#111113] text-white">
+                      {t("form.subjects.support", "Support")}
+                    </option>
+                    <option value="partnership" className="bg-[#111113] text-white">
+                      {t("form.subjects.partnership", "Partnership")}
+                    </option>
                   </select>
                   <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
                     <ChevronDown className="w-5 h-5 text-white/70" />
@@ -258,9 +276,11 @@ const ContactForm = () => {
 
             {/* Message Field */}
             <div className="flex flex-col gap-2 mt-2 flex-1">
-              <label className="text-white font-medium text-sm ml-2">your message</label>
+              <label className="text-white font-medium text-sm ml-2">
+                {t("form.message", "Your message")}
+              </label>
               <textarea
-                placeholder="tell us about your enquiry"
+                placeholder={t("form.messagePlaceholder", "tell us about your enquiry")}
                 className="form-glow-input w-full h-full bg-transparent border border-[#1e3a8a] rounded-xl p-5 text-white text-sm placeholder-white/50 focus:outline-none resize-none"
               ></textarea>
             </div>
@@ -275,7 +295,7 @@ const ContactForm = () => {
           form="contact-form"
           className="group flex items-center gap-3 bg-[#FFFFFF99] hover:bg-[#d4d4d4] text-white pl-7 pr-[4px] py-1 rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]"
         >
-          <span className="font-semibold text-base">Submit</span>
+          <span className="font-semibold text-base">{t("form.submit", "Submit")}</span>
           <div className="bg-[#232E45] group-hover:bg-[#232E45] p-2.5 rounded-full flex items-center justify-center transition-colors">
             <ArrowUpRight className="w-4 h-4 text-white" strokeWidth={1.5} />
           </div>

@@ -4,6 +4,8 @@ import { ArrowUpRight } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { matter } from "@/font/fonts";
 import { JobPost } from "@/sanity/lib/types";
+import { useTranslation } from "react-i18next";
+import { getLocalized } from "@/sanity/lib/localized";
 
 // ── Fallback static jobs (shown when Sanity returns nothing) ─────────────────
 const FALLBACK_JOBS: JobPost[] = [
@@ -35,31 +37,64 @@ const FALLBACK_JOBS: JobPost[] = [
   },
 ];
 
-const marqueetext = "Your Best Job Yet Starts Here";
 const AUTOPLAY_MS = 3500;
 const RESUME_AFTER_TOUCH_MS = 6000;
 
 // ── Build the href for the Apply Now button ──────────────────────────────────
-function buildApplyHref(job: JobPost): string {
+function buildApplyHref(job: JobPost, lang: string = "en"): string {
   if (job.applyMethod === "link" && job.applyLink) {
     return job.applyLink;
   }
   // email (default)
   const email = job.applyEmail ?? "careers@cfoco.fr";
   const rawSubject = job.applySubject ?? "Application for {role} at {location}";
+  const roleStr = getLocalized(job.role, lang);
+  const locationStr = typeof job.location === "string" ? job.location : getLocalized(job.location, lang);
   const subject = rawSubject
-    .replace("{role}", job.role)
-    .replace("{location}", job.location);
+    .replace("{role}", roleStr)
+    .replace("{location}", locationStr);
   return `mailto:${email}?subject=${encodeURIComponent(subject)}`;
 }
 
 // ── Job Card ─────────────────────────────────────────────────────────────────
 const JobCard = ({ job }: { job: JobPost }) => {
+  const { t, i18n } = useTranslation("career");
+
+  const resolvedRole = getLocalized(job.role, i18n.language);
+  const resolvedType = getLocalized(job.type, i18n.language);
+  const resolvedYouare = getLocalized(job.youare, i18n.language);
+  const resolvedNicetohave = getLocalized(job.nicetohave, i18n.language);
+  const resolvedHours = getLocalized(job.hours, i18n.language);
+  const resolvedPay = getLocalized(job.pay, i18n.language);
+  const resolvedLocation = typeof job.location === "string" ? job.location : getLocalized(job.location, i18n.language);
+
+  const translatedJob = job._id?.startsWith("fallback-")
+    ? {
+        ...job,
+        role: t(`positions.fallbackJobs.${job._id}.role` as any, { defaultValue: resolvedRole || "" }),
+        location: t(`positions.fallbackJobs.${job._id}.location` as any, { defaultValue: resolvedLocation || "" }),
+        type: t(`positions.fallbackJobs.${job._id}.type` as any, { defaultValue: resolvedType || "" }),
+        youare: t(`positions.fallbackJobs.${job._id}.youare` as any, { defaultValue: resolvedYouare || "" }),
+        nicetohave: t(`positions.fallbackJobs.${job._id}.nicetohave` as any, { defaultValue: resolvedNicetohave || "" }),
+        hours: t(`positions.fallbackJobs.${job._id}.hours` as any, { defaultValue: resolvedHours || "" }),
+        pay: t(`positions.fallbackJobs.${job._id}.pay` as any, { defaultValue: resolvedPay || "" }),
+      }
+    : {
+        ...job,
+        role: resolvedRole,
+        location: resolvedLocation,
+        type: resolvedType,
+        youare: resolvedYouare,
+        nicetohave: resolvedNicetohave,
+        hours: resolvedHours,
+        pay: resolvedPay,
+      };
+
   const details = [
-    { label: "You Are", value: job.youare },
-    { label: "Nice To Have", value: job.nicetohave },
-    { label: "Hours", value: job.hours },
-    { label: "Pay", value: job.pay },
+    { label: t("positions.labels.youAre", "You Are"), value: translatedJob.youare },
+    { label: t("positions.labels.niceToHave", "Nice To Have"), value: translatedJob.nicetohave },
+    { label: t("positions.labels.hours", "Hours"), value: translatedJob.hours },
+    { label: t("positions.labels.pay", "Pay"), value: translatedJob.pay },
   ].filter((item): item is { label: string; value: string } =>
     Boolean(item.value)
   );
@@ -71,13 +106,13 @@ const JobCard = ({ job }: { job: JobPost }) => {
       <div>
         {/* Location & Employment Type */}
         <p className="text-xs sm:text-sm font-medium text-white/75 tracking-tight leading-[1.3] mb-1.5">
-          {job.location}
-          {job.type ? ` · ${job.type}` : ""}
+          {translatedJob.location}
+          {translatedJob.type ? ` · ${translatedJob.type}` : ""}
         </p>
 
         {/* Role Title */}
         <h3 className="text-xl sm:text-2xl md:text-[1.75rem] font-bold text-[#F6B90B] tracking-tight leading-[1.3] mb-5 sm:mb-6">
-          {job.role}
+          {translatedJob.role}
         </h3>
 
         {/* Details */}
@@ -101,13 +136,15 @@ const JobCard = ({ job }: { job: JobPost }) => {
       {/* Footer */}
       <div className="mt-6 sm:mt-8 pt-4 border-t border-white/10 flex items-center justify-end">
         <a
-          href={buildApplyHref(job)}
+          href={buildApplyHref(job, i18n.language)}
           {...(isExternalLink
             ? { target: "_blank", rel: "noopener noreferrer" }
             : {})}
           className="group/btn inline-flex items-center gap-3 rounded-full bg-white/80 hover:bg-white py-1 pl-4 pr-1 text-xs sm:text-sm font-semibold text-[#232E45] transition-colors duration-200"
         >
-          <span className="tracking-tight leading-[1.3]">Apply Now</span>
+          <span className="tracking-tight leading-[1.3]">
+            {t("positions.applyNow", "Apply Now")}
+          </span>
           <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-[#1e293b] text-white transition-transform duration-200 group-hover/btn:scale-105">
             <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </span>
@@ -125,6 +162,8 @@ export interface OpenPositionsProps {
 export type WhatWeRefuseProps = OpenPositionsProps;
 
 const OpenPositions = ({ jobs: jobsProp }: OpenPositionsProps) => {
+  const { t } = useTranslation("career");
+  const marqueetext = t("positions.marquee", "Your Best Job Yet Starts Here");
   const jobs = jobsProp && jobsProp.length > 0 ? jobsProp : FALLBACK_JOBS;
 
   const [activeSlide, setActiveSlide] = useState(0);
@@ -232,10 +271,10 @@ const OpenPositions = ({ jobs: jobsProp }: OpenPositionsProps) => {
         <div className="text-center mb-12 sm:mb-16 md:mb-20">
           <h2 className="text-[#F6B90B] font-bold tracking-tight">
             <span className="block text-3xl md:text-[3.125rem] leading-[1.3]">
-              What We Refuse
+              {t("positions.titleLine1", "What We Refuse")}
             </span>
             <span className="block text-3xl md:text-[4.375rem] leading-[1.1]">
-              To Compromise
+              {t("positions.titleLine2", "To Compromise")}
             </span>
           </h2>
         </div>

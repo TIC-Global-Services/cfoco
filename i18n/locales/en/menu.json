@@ -1,0 +1,33 @@
+  {
+  "hero": {
+    "desktopTitleLine1": "One Menu.",
+    "desktopTitleLine2": "Endless Cravings.",
+    "descriptionPart1": "From signature favorites to bold new flavors, explore everything on the",
+    "brand": "CFOCO",
+    "descriptionPart2": "menu and find your next craving."
+  },
+  "section": {
+    "emptyTitle": "No items yet for this category.",
+    "emptySubtitle": "Add items to this category in Sanity Studio.",
+    "bestSelling": "🔥 Best Selling",
+    "viewMore": "View More ({{count}} remaining)",
+    "showLess": "Show Less",
+    "scrollLeft": "Scroll categories left",
+    "scrollRight": "Scroll categories right"
+  },
+  "modal": {
+    "close": "Close modal",
+    "whatsInYourBucket": "Whats In Your Bucket?",
+    "comboIncludes": "Combo Includes"
+  },
+  "categories": {
+    "poulet": "Chicken",
+    "burgers": "Burgers",
+    "riz-box": "Rice Box",
+    "tacos": "Tacos",
+    "wraps": "Wraps",
+    "desserts": "Desserts",
+    "sides": "Sides",
+    "boissons": "Drinks"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "hero": {
+    "desktopLine1": "Build Your",
+    "desktopLine2": "Future With Us",
+    "mobileLine1": "Build Your",
+    "mobileLine2": "Future With Us.",
+    "description": "Join a team driven by innovation, collaboration, and a shared passion for making a meaningful impact",
+    "highlight": "every day."
+  },
+  "buildFuture": {
+    "titleLine1": "Why Build Your",
+    "titleLine2": "Future With CFOCO?",
+    "description": "At CFOCO, We're More Than Just Burgers And Fried Chicken. We're A Team Built On Energy, Creativity, Teamwork, And A Shared Obsession With Quality. Whether You're Taking Orders, Managing Operations, Or Leading The Kitchen, Every Role Helps Shape",
+    "highlight": "The Experience We Serve."
+  },
+  "positions": {
+    "titleLine1": "What We Refuse",
+    "titleLine2": "To Compromise",
+    "marquee": "Your Best Job Yet Starts Here",
+    "applyNow": "Apply Now",
+    "labels": {
+      "youAre": "You Are",
+      "niceToHave": "Nice To Have",
+      "hours": "Hours",
+      "pay": "Pay"
+    },
+    "fallbackJobs": {
+      "fallback-1": {
+        "role": "Delivery Coordinator",
+        "location": "Bordeaux Centre",
+        "type": "Full & Part-Time",
+        "youare": "A Natural Leader, Organized, Not The Office.",
+        "nicetohave": "Team-Lead Or Supervisory Experience In Food/Retail.",
+        "hours": "Full-Time, Rotating Shifts.",
+        "pay": "Competitive Salary + Progression Path To Restaurant Manager."
+      },
+      "fallback-2": {
+        "role": "Store Supervisor",
+        "location": "Mérignac",
+        "type": "Full-Time",
+        "youare": "A Natural Leader, Organized, Not The Office.",
+        "nicetohave": "Team-Lead Or Supervisory Experience In Food/Retail.",
+        "hours": "Full-Time, Rotating Shifts.",
+        "pay": "Competitive Salary + Progression Path To Restaurant Manager."
+      }
+    }
+  },
+  "reachout": {
+    "titleLine1": "Don’t See Your Role?",
+    "titleLine2": "Reach Out Anyway.",
+    "description": "We're Always Open To Meeting Talented People Who Share Our Passion For Food And Service.",
+    "button": "Send Your Resume"
+  }
+}

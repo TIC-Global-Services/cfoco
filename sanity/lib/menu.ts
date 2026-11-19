@@ -2,39 +2,41 @@ import { client } from './client';
 import { isSanityConfigured } from '../env';
 import { MENU_ITEMS_QUERY, MENU_CATEGORIES_QUERY } from './queries';
 import fallbackMenuData from '@/public/menu_data.json';
+import fallbackMenuDataFr from '@/public/menu_data_fr.json';
+import type { LocalizedValue } from './localized';
 
 export interface MenuCategory {
   id: string;
-  name: string;
+  name: LocalizedValue<string>;
   slug?: string;
   icon?: string;
   order?: number;
-  description?: string;
+  description?: LocalizedValue<string>;
 }
 
 export interface MenuItem {
   id: number | string;
   _id?: string;
-  title: string;
+  title: LocalizedValue<string>;
   slug?: string;
-  description: string;
-  detailedDescription?: string;
+  description: LocalizedValue<string>;
+  detailedDescription?: LocalizedValue<string>;
   image: string;
   category: string;
-  categoryName: string;
+  categoryName: LocalizedValue<string>;
   price?: string;
-  badge?: string;
+  badge?: LocalizedValue<string>;
   isBestSeller?: boolean;
   cardData?: {
-    detailedDescription?: string;
-    includesTitle?: string;
-    includes?: Array<{ name: string; quantity?: string; imageUrl?: string; image?: string }>;
-    highlights?: Array<{ icon?: string; title: string; subtitle?: string }>;
+    detailedDescription?: LocalizedValue<string>;
+    includesTitle?: LocalizedValue<string>;
+    includes?: Array<{ name: LocalizedValue<string>; quantity?: string; imageUrl?: string; image?: string }>;
+    highlights?: Array<{ icon?: string; title: LocalizedValue<string>; subtitle?: LocalizedValue<string> }>;
     gallery?: Array<{ alt?: string; imageUrl?: string; image?: string }>;
   };
-  includesTitle?: string;
-  includes?: Array<{ name: string; quantity?: string; imageUrl?: string; image?: string }>;
-  highlights?: Array<{ icon?: string; title: string; subtitle?: string }>;
+  includesTitle?: LocalizedValue<string>;
+  includes?: Array<{ name: LocalizedValue<string>; quantity?: string; imageUrl?: string; image?: string }>;
+  highlights?: Array<{ icon?: string; title: LocalizedValue<string>; subtitle?: LocalizedValue<string> }>;
   gallery?: Array<{ alt?: string; imageUrl?: string; image?: string }>;
 }
 
@@ -43,11 +45,14 @@ const REVALIDATE_SECONDS =
 
 /**
  * Fetch all menu categories from Sanity CMS.
- * Falls back to local JSON if Sanity is unavailable.
+ * Always attempts to fetch live data from Sanity.
+ * If Sanity is unavailable, falls back symmetrically to French or English local JSON.
  */
-export async function getAllMenuCategories(): Promise<MenuCategory[]> {
+export async function getAllMenuCategories(lang: string = 'en'): Promise<MenuCategory[]> {
+  const fallback = (lang === 'fr' ? fallbackMenuDataFr.categories : fallbackMenuData.categories) as unknown as MenuCategory[];
+
   if (!isSanityConfigured) {
-    return (fallbackMenuData.categories as MenuCategory[]) || [];
+    return fallback || [];
   }
 
   try {
@@ -76,21 +81,24 @@ export async function getAllMenuCategories(): Promise<MenuCategory[]> {
     }));
   } catch (error) {
     console.error(
-      'Failed to fetch menu categories from Sanity. Using fallback data:',
+      `Failed to fetch menu categories from Sanity. Using ${lang} fallback data:`,
       error
     );
 
-    return (fallbackMenuData.categories as MenuCategory[]) || [];
+    return fallback || [];
   }
 }
 
 /**
  * Fetch all menu items from Sanity CMS.
- * Falls back to local JSON if Sanity is unavailable.
+ * Always attempts to fetch live data from Sanity.
+ * If Sanity is unavailable, falls back symmetrically to French or English local JSON.
  */
-export async function getAllMenuItems(): Promise<MenuItem[]> {
+export async function getAllMenuItems(lang: string = 'en'): Promise<MenuItem[]> {
+  const fallback = (lang === 'fr' ? fallbackMenuDataFr.items : fallbackMenuData.items) as unknown as MenuItem[];
+
   if (!isSanityConfigured) {
-    return (fallbackMenuData.items as MenuItem[]) || [];
+    return fallback || [];
   }
 
   try {
@@ -115,10 +123,10 @@ export async function getAllMenuItems(): Promise<MenuItem[]> {
     }));
   } catch (error) {
     console.error(
-      'Failed to fetch menu items from Sanity. Using fallback data:',
+      `Failed to fetch menu items from Sanity. Using ${lang} fallback data:`,
       error
     );
 
-    return (fallbackMenuData.items as MenuItem[]) || [];
+    return fallback || [];
   }
 }

@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { matter } from "@/font/fonts";
+import { useTranslation } from "react-i18next";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -17,6 +18,7 @@ if (typeof window !== "undefined") {
 const TOTAL_FRAMES = 68;
 
 const BuildYourFuture: React.FC = () => {
+  const { t } = useTranslation("career");
   const containerRef = useRef<HTMLElement>(null);
   const pinnedWrapperRef = useRef<HTMLDivElement>(null);
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
@@ -371,8 +373,8 @@ const BuildYourFuture: React.FC = () => {
         {/* Top Heading */}
         <div className="w-full z-10 text-center max-w-[340px] sm:max-w-[460px] pointer-events-auto lg:absolute lg:left-8 xl:left-16 lg:top-[22%] lg:translate-x-0 lg:text-left lg:max-w-[480px] xl:max-w-[580px] lg:px-0 transition-all duration-300">
           <h2 className="text-[2.1225rem] sm:text-4xl lg:text-[50px] xl:text-[60px] font-extrabold tracking-tight text-[#FFBF00] leading-[1.08] sm:leading-[1.02] drop-shadow-xl">
-            Why Build Your <br className="hidden sm:inline lg:block" />
-            Future With CFOCO?
+            {t("buildFuture.titleLine1", "Why Build Your")} <br className="hidden sm:inline lg:block" />
+            {t("buildFuture.titleLine2", "Future With CFOCO?")}
           </h2>
         </div>
 
@@ -394,12 +396,12 @@ const BuildYourFuture: React.FC = () => {
         {/* Bottom Paragraph */}
         <div className="w-full z-10 text-center max-w-[340px] sm:max-w-[460px] pointer-events-auto lg:absolute lg:right-8 xl:right-16 lg:bottom-[22%] lg:translate-x-0 lg:text-right lg:max-w-[400px] xl:max-w-[500px] lg:px-0 transition-all duration-300">
           <p className="text-base xs:text-[13px] sm:text-sm md:text-base lg:text-lg xl:text-xl text-neutral-200 font-normal leading-[1.3] sm:leading-[1.25] drop-shadow-md">
-            At CFOCO, We&apos;re More Than Just Burgers And Fried Chicken. We&apos;re
-            A Team Built On Energy, Creativity, Teamwork, And A Shared Obsession
-            With Quality. Whether You&apos;re Taking Orders, Managing Operations,
-            Or Leading The Kitchen, Every Role Helps Shape{" "}
+            {t(
+              "buildFuture.description",
+              "At CFOCO, We're More Than Just Burgers And Fried Chicken. We're A Team Built On Energy, Creativity, Teamwork, And A Shared Obsession With Quality. Whether You're Taking Orders, Managing Operations, Or Leading The Kitchen, Every Role Helps Shape"
+            )}{" "}
             <span className="text-[#E52320] font-bold">
-              The Experience We Serve
+              {t("buildFuture.highlight", "The Experience We Serve")}
             </span>
             .
           </p>

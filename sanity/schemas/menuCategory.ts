@@ -13,6 +13,12 @@ export const menuCategoryType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'nameFr',
+      title: 'Category Name (French)',
+      type: 'string',
+      description: 'French translation of category name, e.g. Poulet, Accompagnements',
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug (Identifier)',
       type: 'slug',
@@ -47,6 +53,12 @@ export const menuCategoryType = defineType({
     defineField({
       name: 'description',
       title: 'Short Description (Optional)',
+      type: 'text',
+      rows: 2,
+    }),
+    defineField({
+      name: 'descriptionFr',
+      title: 'Short Description (French)',
       type: 'text',
       rows: 2,
     }),

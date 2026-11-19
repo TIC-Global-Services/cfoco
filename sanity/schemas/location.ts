@@ -83,6 +83,13 @@ export const locationType = defineType({
       group: 'basicInfo',
     }),
     defineField({
+      name: 'badgeFr',
+      title: 'Badge (French)',
+      type: 'string',
+      description: 'e.g., Restaurant Phare, Campus Étudiant, Espace Gourmand',
+      group: 'basicInfo',
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',
@@ -156,10 +163,24 @@ export const locationType = defineType({
       group: 'hero',
     }),
     defineField({
+      name: 'heroSubheadingFr',
+      title: 'Hero Subheading (French)',
+      type: 'string',
+      description: 'e.g., CFC Savoureux',
+      group: 'hero',
+    }),
+    defineField({
       name: 'heroHeading',
       title: 'Heading',
       type: 'string',
       description: 'Main location title displayed in the hero banner (e.g., Bordeaux Centre)',
+      group: 'hero',
+    }),
+    defineField({
+      name: 'heroHeadingFr',
+      title: 'Heading (French)',
+      type: 'string',
+      description: 'Main location title in French',
       group: 'hero',
     }),
     defineField({
@@ -168,6 +189,14 @@ export const locationType = defineType({
       type: 'text',
       rows: 3,
       description: 'Tagline & description beneath the heading',
+      group: 'hero',
+    }),
+    defineField({
+      name: 'heroDescriptionFr',
+      title: 'Description (French)',
+      type: 'text',
+      rows: 3,
+      description: 'French description beneath the heading',
       group: 'hero',
     }),
     defineField({
@@ -250,16 +279,34 @@ export const locationType = defineType({
           initialValue: 'Signature Dish',
         }),
         defineField({
+          name: 'badgeFr',
+          title: 'Badge (French)',
+          type: 'string',
+          description: 'e.g., Plat Signature',
+        }),
+        defineField({
           name: 'title',
           title: 'Dish Title',
           type: 'string',
           description: 'e.g., The Original Tender Box.',
         }),
         defineField({
+          name: 'titleFr',
+          title: 'Dish Title (French)',
+          type: 'string',
+          description: 'e.g., La Box de Tenders Originale.',
+        }),
+        defineField({
           name: 'subtitle',
           title: 'Dish Subtitle',
           type: 'string',
           description: 'e.g., The Recipe That Started The Obsession',
+        }),
+        defineField({
+          name: 'subtitleFr',
+          title: 'Dish Subtitle (French)',
+          type: 'string',
+          description: 'e.g., La recette qui a déclenché l\'obsession',
         }),
         defineField({
           name: 'image',
@@ -286,13 +333,28 @@ export const locationType = defineType({
           type: 'string',
         }),
         defineField({
+          name: 'weekdayFr',
+          title: 'Weekday (French, e.g. Lun–Jeu 11h00–23h00)',
+          type: 'string',
+        }),
+        defineField({
           name: 'weekend',
           title: 'Weekend (e.g. Fri–Sat 11:00–01:00)',
           type: 'string',
         }),
         defineField({
+          name: 'weekendFr',
+          title: 'Weekend (French, e.g. Ven–Sam 11h00–01h00)',
+          type: 'string',
+        }),
+        defineField({
           name: 'sunday',
           title: 'Sunday (e.g. Sun 12:00–22:00)',
+          type: 'string',
+        }),
+        defineField({
+          name: 'sundayFr',
+          title: 'Sunday (French, e.g. Dim 12h00–22h00)',
           type: 'string',
         }),
       ],
@@ -325,11 +387,25 @@ export const locationType = defineType({
       group: 'virtualTour',
     }),
     defineField({
+      name: 'virtualTourHeadingFr',
+      title: 'Heading (French)',
+      type: 'string',
+      description: 'e.g., Plongez dans le croustillant',
+      group: 'virtualTour',
+    }),
+    defineField({
       name: 'virtualTourButtonText',
       title: 'Button Text',
       type: 'string',
       initialValue: 'Take A Virtual Tour',
       description: 'CTA button label',
+      group: 'virtualTour',
+    }),
+    defineField({
+      name: 'virtualTourButtonTextFr',
+      title: 'Button Text (French)',
+      type: 'string',
+      description: 'e.g., Faites une visite virtuelle',
       group: 'virtualTour',
     }),
     defineField({
@@ -374,6 +450,13 @@ export const locationType = defineType({
               type: 'text',
               rows: 3,
               validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'quoteFr',
+              title: 'Review Quote (French)',
+              type: 'text',
+              rows: 3,
+              description: 'Optional French translation of the review quote',
             }),
           ],
           preview: {

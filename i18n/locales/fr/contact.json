@@ -1,0 +1,33 @@
+{
+  "hero": {
+    "title": "Parlons de vos envies",
+    "description": "Une question, un retour, une idée de partenariat ou besoin d'aide ? Quoi que vous ayez en tête, l'équipe",
+    "brandName": "CFOCO",
+    "descriptionEnd": "est là pour vous écouter, vous aider et avancer."
+  },
+  "info": {
+    "title": "Coordonnées",
+    "subtitle": "Dites-nous tout pour démarrer la discussion !",
+    "phone": "+1012 3456 789",
+    "email": "Contact@cfoco.fr",
+    "address": "132 Dartmouth Street Boston, Massachusetts 02156 United States"
+  },
+  "form": {
+    "name": "Nom",
+    "namePlaceholder": "jean dupont",
+    "email": "E-mail",
+    "emailPlaceholder": "jean.dupont@email.com",
+    "phone": "Téléphone",
+    "phonePlaceholder": "+243545353",
+    "subject": "Sélectionnez un sujet",
+    "subjects": {
+      "placeholder": "Sélectionnez un sujet",
+      "general": "Demande générale",
+      "support": "Assistance",
+      "partnership": "Partenariat"
+    },
+    "message": "Votre message",
+    "messagePlaceholder": "parlez-nous de votre demande",
+    "submit": "Envoyer"
+  }
+}

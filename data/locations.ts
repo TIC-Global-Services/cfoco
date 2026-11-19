@@ -36,6 +36,8 @@
  * ============================================================================
  */
 
+import type { LocalizedValue } from "@/sanity/lib/localized";
+
 // ----------------------------------------------------------------------------
 // 1. SECTION INTERFACES (Mirrors CMS Schema)
 // ----------------------------------------------------------------------------
@@ -44,9 +46,9 @@
 export interface LocationHero {
   backgroundImage: string;
   locationLabel: string;
-  subheading?: string;
-  heading: string;
-  description: string;
+  subheading?: LocalizedValue<string>;
+  heading: LocalizedValue<string>;
+  description: LocalizedValue<string>;
   directionsUrl: string;
 }
 
@@ -58,16 +60,16 @@ export interface LocationInteriorImages {
 }
 
 export interface LocationSignatureDish {
-  badge: string;
-  title: string;
-  subtitle: string;
+  badge: LocalizedValue<string>;
+  title: LocalizedValue<string>;
+  subtitle: LocalizedValue<string>;
   image?: string;
 }
 
 export interface LocationOpeningHours {
-  weekday: string;
-  weekend: string;
-  sunday: string;
+  weekday: LocalizedValue<string>;
+  weekend: LocalizedValue<string>;
+  sunday: LocalizedValue<string>;
 }
 
 export interface LocationExperience {
@@ -80,8 +82,8 @@ export interface LocationExperience {
 /** Section 4: Virtual Tour Section */
 export interface LocationVirtualTourSection {
   backgroundImage: string;
-  heading: string;
-  buttonText: string;
+  heading: LocalizedValue<string>;
+  buttonText: LocalizedValue<string>;
   virtualTourUrl: string;
 }
 
@@ -126,7 +128,7 @@ export interface LocationReview {
   id?: string;
   authorName: string;
   rating: number;
-  quote: string;
+  quote: LocalizedValue<string>;
   avatarColor?: string;
 }
 
@@ -139,7 +141,7 @@ export interface LocationData {
   address: string;
   latitude: number;
   longitude: number;
-  badge?: string;
+  badge?: LocalizedValue<string>;
   order?: number;
   cardImage?: string;
   rating?: number;
@@ -164,8 +166,8 @@ export interface LocationData {
   mapsUrl: string;
   openingHours: LocationOpeningHours;
   signatureDish: LocationSignatureDish;
-  tourTitle: string;
-  tourSubtitle: string;
+  tourTitle: LocalizedValue<string>;
+  tourSubtitle: LocalizedValue<string>;
   images: LocationImages;
   features: string[];
   stats?: LocationStats;

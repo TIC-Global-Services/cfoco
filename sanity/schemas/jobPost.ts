@@ -19,6 +19,13 @@ export const jobPostType = defineType({
       group: 'details',
     }),
     defineField({
+      name: 'roleFr',
+      title: 'Role (French)',
+      type: 'string',
+      description: 'e.g. Superviseur de Restaurant',
+      group: 'details',
+    }),
+    defineField({
       name: 'location',
       title: 'Location',
       type: 'string',
@@ -35,6 +42,13 @@ export const jobPostType = defineType({
       group: 'details',
     }),
     defineField({
+      name: 'typeFr',
+      title: 'Employment Type (French)',
+      type: 'string',
+      description: 'e.g. Temps Plein, Temps Partiel',
+      group: 'details',
+    }),
+    defineField({
       name: 'youare',
       title: 'You Are',
       type: 'string',
@@ -42,8 +56,21 @@ export const jobPostType = defineType({
       group: 'details',
     }),
     defineField({
+      name: 'youareFr',
+      title: 'You Are (French)',
+      type: 'string',
+      description: 'Description du candidat idéal en français',
+      group: 'details',
+    }),
+    defineField({
       name: 'nicetohave',
       title: 'Nice To Have',
+      type: 'string',
+      group: 'details',
+    }),
+    defineField({
+      name: 'nicetohaveFr',
+      title: 'Nice To Have (French)',
       type: 'string',
       group: 'details',
     }),
@@ -54,8 +81,20 @@ export const jobPostType = defineType({
       group: 'details',
     }),
     defineField({
+      name: 'hoursFr',
+      title: 'Hours (French)',
+      type: 'string',
+      group: 'details',
+    }),
+    defineField({
       name: 'pay',
       title: 'Pay',
+      type: 'string',
+      group: 'details',
+    }),
+    defineField({
+      name: 'payFr',
+      title: 'Pay (French)',
       type: 'string',
       group: 'details',
     }),

@@ -1,0 +1,50 @@
+{
+  "header": {
+    "badge": "Chroniques CFOCO",
+    "title": "Histoires au",
+    "titleHighlight": "Cœur de CFOCO",
+    "subtitle": "Découvrez nos dernières aventures culinaires, nos terroirs d'exception, notre croustillant artisanal et nos espaces gourmands."
+  },
+  "search": {
+    "placeholder": "Rechercher des articles et actualités...",
+    "clear": "Effacer la recherche"
+  },
+  "category": {
+    "label": "Catégorie :",
+    "allStories": "Tous les articles",
+    "allCategories": "Toutes les catégories",
+    "selectCategory": "Sélectionner une catégorie",
+    "optionsCount": "{{count}} options",
+    "resetToAll": "Réinitialiser les catégories"
+  },
+  "filters": {
+    "active": "Filtres actifs :",
+    "category": "Catégorie : {{category}}",
+    "query": "Recherche : « {{query}} »",
+    "clearAll": "Tout effacer",
+    "removeCategory": "Supprimer le filtre de catégorie",
+    "removeSearch": "Supprimer le filtre de recherche"
+  },
+  "empty": {
+    "title": "Aucun article trouvé",
+    "description": "Essayez d'ajuster votre recherche ou de changer de catégorie.",
+    "reset": "Réinitialiser les filtres"
+  },
+  "list": {
+    "latestArticles": "Derniers articles ({{count}})",
+    "categoryArticles": "{{category}} ({{count}})"
+  },
+  "card": {
+    "readStory": "Lire l'article",
+    "readTime": "{{minutes}} min de lecture",
+    "recent": "Récent"
+  },
+  "detail": {
+    "back": "Retour aux articles",
+    "readTime": "4 min de lecture",
+    "noContent": "Aucun contenu rédigé pour le moment pour cet article.",
+    "moreStories": "Autres articles",
+    "moreStoriesSubtitle": "Poursuivez l'exploration de notre journal",
+    "viewAll": "Tout voir"
+  }
+}

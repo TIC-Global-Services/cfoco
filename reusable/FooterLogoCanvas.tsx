@@ -7,14 +7,14 @@ import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // Preload 3D model asset
-useGLTF.preload("/cfoco_black_logo.glb");
+useGLTF.preload("/footer_logo.glb");
 
-function LogoModel({ modelPath }: { modelPath: string }) {
+function LogoModel({ modelPath,rotationY = 0 }: { modelPath: string;rotationY?: number; }) {
   const { scene } = useGLTF(modelPath);
 
   return (
     // cfoco_black_logo.glb is upright but its front faces -Z: turn it to the camera
-    <group rotation={[0, Math.PI, 0]}>
+    <group rotation={[0, rotationY, 0]}>
       <primitive object={scene} />
     </group>
   );

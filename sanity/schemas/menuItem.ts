@@ -13,6 +13,12 @@ export const menuItemType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'titleFr',
+      title: 'Dish Title (French)',
+      type: 'string',
+      description: 'French translation of the dish title. e.g., Ailes Dynamiques',
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -69,6 +75,13 @@ export const menuItemType = defineType({
       description: 'Short enticing description shown on the menu card.',
     }),
     defineField({
+      name: 'descriptionFr',
+      title: 'Short Description (French)',
+      type: 'text',
+      rows: 2,
+      description: 'French description shown on the menu card.',
+    }),
+    defineField({
       name: 'price',
       title: 'Price (Optional)',
       type: 'string',
@@ -79,6 +92,12 @@ export const menuItemType = defineType({
       title: 'Badge (Optional)',
       type: 'string',
       description: 'e.g. 🔥 Best Selling, Signature, New, Spicy',
+    }),
+    defineField({
+      name: 'badgeFr',
+      title: 'Badge (French)',
+      type: 'string',
+      description: 'e.g. 🔥 Meilleures Ventes, Signature, Nouveau, Épicé',
     }),
     defineField({
       name: 'isBestSeller',
@@ -111,10 +130,23 @@ export const menuItemType = defineType({
           description: 'Extended description shown inside the popup modal.',
         }),
         defineField({
+          name: 'detailedDescriptionFr',
+          title: 'Detailed Description (French)',
+          type: 'text',
+          rows: 3,
+          description: 'Extended French description shown inside the popup modal.',
+        }),
+        defineField({
           name: 'includesTitle',
           title: 'Combo / Includes Title',
           type: 'string',
           description: 'e.g. "Combo Includes" or "Whats In Your Bucket?"',
+        }),
+        defineField({
+          name: 'includesTitleFr',
+          title: 'Combo / Includes Title (French)',
+          type: 'string',
+          description: 'e.g. "Le combo comprend :" or "Dans votre bucket :"',
         }),
         defineField({
           name: 'includes',
@@ -127,6 +159,7 @@ export const menuItemType = defineType({
               title: 'Included Item',
               fields: [
                 { name: 'name', title: 'Item Name', type: 'string' },
+                { name: 'nameFr', title: 'Item Name (French)', type: 'string' },
                 { name: 'quantity', title: 'Quantity / Size (Optional)', type: 'string', description: 'e.g. (3pcs), 350ml' },
                 {
                   name: 'image',
@@ -164,7 +197,9 @@ export const menuItemType = defineType({
               fields: [
                 { name: 'icon', title: 'Icon (e.g. leaf, recipe)', type: 'string' },
                 { name: 'title', title: 'Title', type: 'string' },
+                { name: 'titleFr', title: 'Title (French)', type: 'string' },
                 { name: 'subtitle', title: 'Subtitle', type: 'string' },
+                { name: 'subtitleFr', title: 'Subtitle (French)', type: 'string' },
               ],
               preview: {
                 select: {

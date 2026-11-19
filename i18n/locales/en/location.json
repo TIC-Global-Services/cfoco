@@ -1,0 +1,47 @@
+{
+  "hero": {
+    "titleLine1": "Five Kitchens.",
+    "titleLine2": "One Standard. Find Yours.",
+    "mobileTitleLine1": "Five Kitchens.",
+    "mobileTitleLine2": "One Standard.",
+    "mobileTitleLine3": "Find Yours.",
+    "subtitleAcross": "Across",
+    "bordeaux": "Bordeaux",
+    "subtitleAndBeyond": "And Beyond",
+    "subtitlePromise": "Every CFC Is The Same Promise, Cooked Fresh Where You Are.",
+    "subtitlePromiseLine1": "Every CFC Is The Same Promise,",
+    "subtitlePromiseLine2": "Cooked Fresh Where You Are."
+  },
+  "stepInside": {
+    "title": "Step Inside.",
+    "subtitle": "Same Recipe, Same Crispy Standard, But Every CFC Takes On The Character Of Its Neighbourhood. Pick A City, Or Let Us Find The One Closest To You.",
+    "subtitlePart1": "Same Recipe, Same Crispy Standard, But",
+    "subtitlePart2": "Every CFC Takes On The Character Of Its Neighbourhood. Pick A City, Or Let Us Find The One Closest To You.",
+    "googleReviews": "Google reviews",
+    "exploreMore": "Explore more",
+    "prevLocation": "Previous Location",
+    "nextLocation": "Next Location"
+  },
+  "locationHero": {
+    "getDirections": "Get Directions",
+    "reviews": "reviews"
+  },
+  "bento": {
+    "signature": "Signature",
+    "dish": "Dish",
+    "opening": "Opening",
+    "hours": "Hours",
+    "kiosksAlt": "CFC Digital Ordering Kiosks",
+    "diningAlt": "CFC Dining Area",
+    "barStoolsAlt": "CFC High Top Seating",
+    "counterAlt": "CFC Service Counter",
+    "friedChickenAlt": "Fried Chicken"
+  },
+  "virtualTour": {
+    "defaultHeading": "Step Inside The Crunch",
+    "defaultButtonText": "Take A Virtual Tour"
+  },
+  "detail": {
+    "allKitchens": "All Kitchens"
+  }
+}

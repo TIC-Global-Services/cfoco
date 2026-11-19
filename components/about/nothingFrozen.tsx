@@ -4,6 +4,7 @@ import React from "react";
 import { matter } from "@/font/fonts";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
 // Dynamically load the 3D canvas so it doesn't block the initial page load on mobile
 const ChickenBucketCanvas = dynamic(
@@ -39,12 +40,9 @@ const ChickenBucketCanvas = dynamic(
 );
 
 const NothingFrozen = () => {
-  const marqueePhrases = [
-    "Nothing Frozen. Nothing Fake.",
-    "Nothing Frozen. Nothing Fake.",
-    "Nothing Frozen. Nothing Fake.",
-    "Nothing Frozen. Nothing Fake.",
-  ];
+  const { t } = useTranslation("about");
+  const marqueePhrase = t("nothingFrozen.marquee", "Nothing Frozen. Nothing Fake.");
+  const marqueePhrases = [marqueePhrase, marqueePhrase, marqueePhrase, marqueePhrase];
 
   return (
     <section className={`relative w-full py-16 md:py-20 px-0 sm:px-0 lg:px-0 bg-transparent select-none overflow-hidden ${matter.className}`}>
@@ -68,17 +66,20 @@ const NothingFrozen = () => {
 
       {/* 3D Chicken Bucket Interactive Area */}
       <div className="relative z-10 flex justify-center items-center -mt-12 xs:-mt-16 sm:-mt-24 md:-mt-40 lg:-mt-40 xl:-mt-48 transform-gpu">
-        <ChickenBucketCanvas modelPath="/models/new-chicken-bucket.glb" />
+        <ChickenBucketCanvas modelPath="/chicken_buket_new.glb" />
       </div>
 
       {/* Narrative Description */}
       <div className="relative z-10 md:max-w-4xl mx-auto text-center px-[3%] md:px-4 mt-2 xs:-mt-4 sm:-mt-6 md:mt-1 lg:mt-1">
         <p className="text-base sm:text-lg md:text-xl font-normal leading-[1.2] text-neutral-200/95 max-w-4xl mx-auto">
-          Great Chicken Has Nowhere To Hide. That&apos;s <br className="md:hidden"/>Why We Start With Fresh Cuts, Marinate In-House, And Hand-Breade Every Piece To <br className="md:hidden"/> Order. Our Oil Is Filtered Daily — Because <br className="md:hidden"/> Crispy Is Chemistry, And Chemistry Has Standards.
+          {t(
+            "nothingFrozen.descP1",
+            "Great Chicken Has Nowhere To Hide. That's Why We Start With Fresh Cuts, Marinate In-House, And Hand-Breade Every Piece To Order. Our Oil Is Filtered Daily — Because Crispy Is Chemistry, And Chemistry Has Standards."
+          )}
         </p>
 
         <p className="text-base sm:text-lg md:text-xl font-medium tracking-wide text-[#E5A823] pt-5">
-          No Mystery. No Compromise. Just The Good Stuff, Done Right.
+          {t("nothingFrozen.descP2", "No Mystery. No Compromise. Just The Good Stuff, Done Right.")}
         </p>
       </div>
     </section>

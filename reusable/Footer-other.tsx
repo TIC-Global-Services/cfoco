@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
+import FooterLogoCanvas from "./FooterLogoCanvas";
+import LazyMount from "./LazyMount";
 
 interface FooterNavLink {
   label: string;
@@ -13,9 +15,9 @@ interface FooterNavLink {
 
 const navLinks: FooterNavLink[] = [
   { label: "Menu", href: "/menu" },
-   { label: "Our Story", href: "/our-story" },
+  { label: "Home", href: "/" },
   { label: "Franchise", href: "/franchise" },
-   { label: "Policies", href: "/policies" },
+  { label: "Policies", href: "/policies" },
   { label: "Contact Us", href: "/contact" },
   { label: "Blogs", href: "/blogs" },
 ];
@@ -96,13 +98,16 @@ const FooterOther: React.FC<FooterProps> = ({ className = "" }) => {
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[220px] sm:h-[280px] md:h-[450px] transition-transform duration-500 hover:scale-[1.02]">
-              <Image
+              {/* <Image
                 src="/cfc-footer-bg.png"
                 alt="CFOCO Logo"
                 fill
                 priority
                 className="object-contain"
-              />
+              /> */}
+              <LazyMount className="h-full w-full">
+                <FooterLogoCanvas modelPath="/footer_logo.glb" />
+              </LazyMount>
             </div>
           </div>
 
@@ -133,7 +138,7 @@ const FooterOther: React.FC<FooterProps> = ({ className = "" }) => {
 
             {/* Credits */}
             <div className="text-center text-base md:text-right text-[#B0B0B0] order-3 font-light">
-              <span>Designed &amp; Developed by </span><br className="md:hidden"/>
+              <span>Designed &amp; Developed by </span><br className="md:hidden" />
               <Link
                 href="https://ticglobalservices.com"
                 target="_blank"

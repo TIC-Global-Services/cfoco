@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { Post } from '@/sanity/lib/types';
 import { urlForImage } from '@/sanity/lib/image';
 import { Calendar, Clock, ArrowUpRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { getLocalized } from '@/sanity/lib/localized';
 
 interface BlogCardProps {
   post: Post;
@@ -13,6 +15,11 @@ interface BlogCardProps {
 }
 
 export default function BlogCard({ post, featured = false }: BlogCardProps) {
+  const { t, i18n } = useTranslation('blog');
+  const postTitle = getLocalized(post.title, i18n.language);
+  const postExcerpt = post.excerpt ? getLocalized(post.excerpt, i18n.language) : null;
+  const categoryTitle = post.categories?.[0]?.title ? getLocalized(post.categories[0].title, i18n.language) : null;
+
   // Resolve image URL
   const imageUrl =
     post.mainImage?.asset?.url ||
@@ -20,15 +27,15 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
     'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80';
 
   const formattedDate = post.publishedAt
-    ? new Date(post.publishedAt).toLocaleDateString('en-US', {
+    ? new Date(post.publishedAt).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
       })
-    : 'Recent';
+    : t('card.recent', 'Recent');
 
   // Estimate read time
-  const readTime = '4 min read';
+  const readTime = t('card.readTime', { minutes: 4, defaultValue: '4 min read' });
 
   return (
     <article
@@ -44,7 +51,7 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
       >
         <Image
           src={imageUrl}
-          alt={post.mainImage?.alt || post.title}
+          alt={post.mainImage?.alt || postTitle}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-contain transition-transform duration-700 ease-out group-hover:scale-105"
@@ -52,10 +59,10 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#121520] via-transparent to-transparent opacity-80" />
 
         {/* Category Pill */}
-        {post.categories && post.categories.length > 0 && (
+        {categoryTitle && (
           <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
             <span className="rounded-full border border-white/15 bg-black/60 px-3 py-1 text-xs font-medium uppercase tracking-wider text-[#e9b949] backdrop-blur-md">
-              {post.categories[0].title}
+              {categoryTitle}
             </span>
           </div>
         )}
@@ -89,18 +96,18 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
           >
             <Link href={`/blogs/${post.slug}`} className="focus:outline-none">
               <span className="absolute inset-0 z-0" aria-hidden="true" />
-              {post.title}
+              {postTitle}
             </Link>
           </h3>
 
           {/* Excerpt */}
-          {post.excerpt && (
+          {postExcerpt && (
             <p
               className={`text-neutral-400 font-light leading-relaxed ${
                 featured ? 'text-base sm:text-lg line-clamp-3 mb-6' : 'text-sm line-clamp-2 mb-6'
               }`}
             >
-              {post.excerpt}
+              {postExcerpt}
             </p>
           )}
         </div>
@@ -108,7 +115,7 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
         {/* Footer: Read more */}
         <div className="flex items-center justify-end border-t border-white/10 pt-4 mt-auto">
           <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-[#e9b949] transition-transform duration-300 group-hover:translate-x-1">
-            Read Story
+            {t('card.readStory', 'Read Story')}
             <ArrowUpRight className="w-4 h-4" />
           </div>
         </div>

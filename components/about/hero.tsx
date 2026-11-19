@@ -4,11 +4,13 @@ import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { matter } from "@/font/fonts";
+import { useTranslation } from "react-i18next";
 import MaskedVideoHeadline from "@/components/shared/MaskedVideoHeadline";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+  const { t } = useTranslation("about");
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
@@ -80,7 +82,7 @@ const Hero = () => {
                   refHeight={230}
                   fontSize={115}
                   letterSpacing="-3%"
-                  lines={[{ text: "Crispy Since 2011.", y: "58%" }]}
+                  lines={[{ text: t("hero.headlineDesktop", "Crispy Since 2011."), y: "58%" }]}
                 />
               </div>
             )}
@@ -95,8 +97,8 @@ const Hero = () => {
                   fontSize={160}
                   letterSpacing="-3%"
                   lines={[
-                    { text: "Crispy Since", y: "120" },
-                    { text: "2011.", y: "295", fontSize: 122 },
+                    { text: t("hero.headlineMobileLine1", "Crispy Since"), y: "120" },
+                    { text: t("hero.headlineMobileLine2", "2011."), y: "295", fontSize: 122 },
                   ]}
                 />
               </div>
@@ -105,11 +107,11 @@ const Hero = () => {
             {/* Subtitles */}
             <div className="mt-2 sm:mt-0 text-center">
               <p className="text-xl sm:text-xl md:text-2xl font-medium tracking-wide text-[#F2F2F2]">
-                A Recipe Born In{" "}
-                <span className="text-[#CC1518] font-medium">Bordeaux</span>.
+                {t("hero.recipeBorn", "A Recipe Born In")}{" "}
+                <span className="text-[#CC1518] font-medium">{t("hero.bordeaux", "Bordeaux")}</span>.
               </p>
               <p className="text-xl sm:text-xl md:text-2xl leading-none font-medium tracking-wide text-[#F2F2F2]">
-                An Obsession That Never Cooled.
+                {t("hero.neverCooled", "An Obsession That Never Cooled.")}
               </p>
             </div>
           </div>
@@ -122,9 +124,8 @@ const Hero = () => {
             style={{ opacity: textOpacity, y: headlineY }}
             className="max-w-2xl text-center md:text-left md:pt-10"
           >
-            <h2 className="text-4xl sm:text-5xl lg:text-[3.75rem] lg:text-[4.375rem] font-bold tracking-tight text-white leading-[1.08]">
-              It Started With <br />
-              A Simple Frustration.
+            <h2 className="text-4xl sm:text-5xl lg:text-[3.75rem] lg:text-[4.375rem] font-bold tracking-tight text-white leading-[1.08] whitespace-pre-line">
+              {t("hero.storyTitle", "It Started With \nA Simple Frustration.")}
             </h2>
           </motion.div>
         </div>
@@ -179,19 +180,15 @@ const Hero = () => {
             className="max-w-xl md:max-w-3xl lg:max-w-4xl text-center sm:text-right space-y-2 sm:space-y-3"
           >
             <p className="text-xs sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
-              In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:<br className="hidden md:block" />
-              Fried Chicken That Promised The World And Delivered Grease. So They Did The
-              Stubborn Thing{" "}
+              {t("hero.storyP1", "In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:\nFried Chicken That Promised The World And Delivered Grease. So They Did The Stubborn Thing")}{" "}
               <span className="text-[#E52320] font-medium">
-                They Started Over. Hundreds Of Tests.
+                {t("hero.storyP1Highlight", "They Started Over. Hundreds Of Tests.")}
               </span>
             </p>
-            <p className="text-xs sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium">
-              One Relentless Question: What Does Perfect Actually Taste Like? The
-              Answer Became{" "}
-              <span className="text-[#E5A823] font-semibold">CFC</span>. Fresh,
-              Never Frozen. Bold, Never Boring.<br className="hidden md:block" /> Crispy In A Way You Feel Before You
-              Taste.
+            <p className="text-xs sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
+              {t("hero.storyP2", "One Relentless Question: What Does Perfect Actually Taste Like? The Answer Became")}{" "}
+              <span className="text-[#E5A823] font-semibold">{t("hero.cfc", "CFC")}</span>.{" "}
+              {t("hero.storyP2End", "Fresh, Never Frozen. Bold, Never Boring.\nCrispy In A Way You Feel Before You Taste.")}
             </p>
           </motion.div>
         </div>

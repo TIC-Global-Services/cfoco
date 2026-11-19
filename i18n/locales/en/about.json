@@ -1,0 +1,91 @@
+{
+  "hero": {
+    "headlineDesktop": "Crispy Since 2011.",
+    "headlineMobileLine1": "Crispy Since",
+    "headlineMobileLine2": "2011.",
+    "recipeBorn": "A Recipe Born In",
+    "bordeaux": "Bordeaux",
+    "neverCooled": "An Obsession That Never Cooled.",
+    "storyTitle": "It Started With \nA Simple Frustration.",
+    "storyP1": "In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:\nFried Chicken That Promised The World And Delivered Grease. So They Did The Stubborn Thing",
+    "storyP1Highlight": "They Started Over. Hundreds Of Tests.",
+    "storyP2": "One Relentless Question: What Does Perfect Actually Taste Like? The Answer Became",
+    "cfc": "CFC",
+    "storyP2End": "Fresh, Never Frozen. Bold, Never Boring.\nCrispy In A Way You Feel Before You Taste."
+  },
+  "obsession": {
+    "headerLine1": "13 Years",
+    "headerLine2": "One Obsession",
+    "milestones": {
+      "2011": {
+        "title": "The First Fry",
+        "descLine1": "One Kitchen In Bordeaux.",
+        "descLine2": "One Recipe Worth Arguing Over."
+      },
+      "2014": {
+        "title": "Word Gets Out",
+        "descLine1": "Lines Out The Door. Turns Out We",
+        "descLine2": "Weren't The Ones Tired Of Average."
+      },
+      "2018": {
+        "title": "Beyond Bordeaux",
+        "descLine1": "Second, Third, Fourth. Same Recipe.",
+        "descLine2": "Same Standard. No Shortcuts."
+      },
+      "2019": {
+        "title": "The Cult Grows",
+        "descLine1": "Paris, Lyon, Marseille.",
+        "descLine2": "The Crunch Heard Across France."
+      },
+      "2020": {
+        "title": "The Secret Formula",
+        "descLine1": "Perfected The 24-Hour Brine.",
+        "descLine2": "Crispy Outside, Juicy Inside."
+      },
+      "2022": {
+        "title": "Going Global",
+        "descLine1": "New Continents, Same Obsession.",
+        "descLine2": "Never Freezing, Never Compromising."
+      }
+    }
+  },
+  "nothingFrozen": {
+    "marquee": "Nothing Frozen. Nothing Fake.",
+    "descP1": "Great Chicken Has Nowhere To Hide. That's Why We Start With Fresh Cuts, Marinate In-House, And Hand-Breade Every Piece To Order. Our Oil Is Filtered Daily — Because Crispy Is Chemistry, And Chemistry Has Standards.",
+    "descP2": "No Mystery. No Compromise. Just The Good Stuff, Done Right.",
+    "loading3d": "Loading 3D"
+  },
+  "whatWeRefuse": {
+    "titleLine1": "What We Refuse",
+    "titleLine2": "To Compromise",
+    "subtitle": "We believe great food starts with non-negotiables.\nHere are the principles we stand by, every single day.",
+    "cards": {
+      "speed": {
+        "title": "Speed",
+        "description": "Fast Food Should Be Fast And Still Be Food."
+      },
+      "conviviality": {
+        "title": "Conviviality",
+        "description": "Great Meals Are Meant To Be Shared. So Is A Good Time."
+      },
+      "quality": {
+        "title": "Quality",
+        "description": "If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen."
+      }
+    }
+  },
+  "showreel": {
+    "title": "Where The Magic Gets Loud.",
+    "watchShowreel": "Watch Showreel"
+  },
+  "reviews": {
+    "headingFallback": "Reviews Can't Be Wrong"
+  },
+  "getCrispy": {
+    "titleLine1": "Enough Reading.",
+    "titleLine2": "Go Get Crispy.",
+    "description": "From The First Crunch To The Last Piece, Every Box Is Made To Create Moments Worth Sharing With The People Who Matter Most.",
+    "orderNow": "Order Now",
+    "findNearest": "Find Your Nearest"
+  }
+}

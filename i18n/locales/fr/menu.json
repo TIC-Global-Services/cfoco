@@ -1,0 +1,33 @@
+{
+  "hero": {
+    "desktopTitleLine1": "Une carte.",
+    "desktopTitleLine2": "Des envies infinies.",
+    "descriptionPart1": "De nos incontournables à nos nouvelles saveurs audacieuses, découvrez tout sur la carte",
+    "brand": "CFOCO",
+    "descriptionPart2": "et trouvez votre prochaine envie."
+  },
+  "section": {
+    "emptyTitle": "Aucun article pour cette catégorie.",
+    "emptySubtitle": "Ajoutez des articles à cette catégorie dans Sanity Studio.",
+    "bestSelling": "🔥 Meilleures ventes",
+    "viewMore": "Voir plus ({{count}} restants)",
+    "showLess": "Voir moins",
+    "scrollLeft": "Défiler les catégories vers la gauche",
+    "scrollRight": "Défiler les catégories vers la droite"
+  },
+  "modal": {
+    "close": "Fermer",
+    "whatsInYourBucket": "Dans votre bucket :",
+    "comboIncludes": "Le combo comprend :"
+  },
+  "categories": {
+    "poulet": "Poulet",
+    "burgers": "Burgers",
+    "riz-box": "Riz-Box",
+    "tacos": "Tacos",
+    "wraps": "Wraps",
+    "desserts": "Desserts",
+    "sides": "Accompagnements",
+    "boissons": "Boissons"
+  }
+}

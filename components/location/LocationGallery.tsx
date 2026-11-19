@@ -262,11 +262,10 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({
                     handleSelect(index);
                   }
                 }}
-                className={`absolute top-1/2 left-1/2 w-[270px] xs:w-[320px] sm:w-[460px] md:w-[560px] lg:w-[640px] aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  isCenter
-                    ? "border-2 border-[#FFBF00] shadow-[0_0_35px_rgba(255,191,0,0.5),0_20px_50px_rgba(0,0,0,0.9)] cursor-default ring-1 ring-[#FFBF00]/50"
-                    : "border border-white/15 hover:border-white/35 shadow-[0_12px_36px_rgba(0,0,0,0.7)]"
-                }`}
+                className={`absolute top-1/2 left-1/2 w-[270px] xs:w-[320px] sm:w-[460px] md:w-[560px] lg:w-[640px] aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] ${isCenter
+                  ? "border-2 border-[#FFBF00] shadow-[0_0_35px_rgba(255,191,0,0.5),0_20px_50px_rgba(0,0,0,0.9)] cursor-default ring-1 ring-[#FFBF00]/50"
+                  : "border border-white/15 hover:border-white/35 shadow-[0_12px_36px_rgba(0,0,0,0.7)]"
+                  }`}
                 style={{
                   transform: `translate3d(calc(-50% + ${translateX}), -50%, ${translateZ}) scale(${scale}) rotateY(${rotateY})`,
                   zIndex,
@@ -327,11 +326,10 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({
               type="button"
               onClick={() => handleSelect(index)}
               aria-label={`Go to slide ${index + 1}: ${item.title || item.alt}`}
-              className={`transition-all duration-300 rounded-full cursor-pointer ${
-                isActive
-                  ? "w-8 sm:w-10 h-1.5 sm:h-2 bg-[#FFBF00] shadow-[0_0_12px_rgba(255,191,0,0.65)]"
-                  : "w-3 sm:w-3.5 h-1.5 sm:h-2 bg-neutral-600/70 hover:bg-neutral-500"
-              }`}
+              className={`transition-all duration-300 rounded-full cursor-pointer ${isActive
+                ? "w-8 sm:w-10 h-1.5 sm:h-2 bg-[#FFBF00] shadow-[0_0_12px_rgba(255,191,0,0.65)]"
+                : "w-3 sm:w-3.5 h-1.5 sm:h-2 bg-neutral-600/70 hover:bg-neutral-500"
+                }`}
             />
           );
         })}

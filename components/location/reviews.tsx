@@ -5,13 +5,15 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { matter } from "@/font/fonts";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
+import { getLocalized, LocalizedValue } from "@/sanity/lib/localized";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export interface ReviewCardItem {
   id: string;
   rating: number;
-  quote: string;
+  quote: LocalizedValue<string>;
   authorName: string;
   avatarColor?: string;
 }
@@ -20,24 +22,30 @@ const defaultLeftReviews: ReviewCardItem[] = [
   {
     id: "rev-1",
     rating: 5,
-    quote:
-      "“Formules interessantes à partager, on a pris la box wings-tenders cétait pas mal dutout et généreux. Service rapide et efficace.”",
+    quote: {
+      en: "“Great meal deals to share, we had the wings & tenders box, super generous and really tasty. Fast and efficient service.”",
+      fr: "“Formules intéressantes à partager, on a pris la box wings-tenders c'était pas mal du tout et généreux. Service rapide et efficace.”",
+    },
     authorName: "Yousra Djeddou",
     avatarColor: "from-cyan-500 to-blue-600",
   },
   {
     id: "rev-2",
     rating: 5,
-    quote:
-      "“A very nice, clean restaurant with fast service and a warm welcome. There's an outdoor terrace. The tacos are good and quite generous.”",
+    quote: {
+      en: "“A very nice, clean restaurant with fast service and a warm welcome. There's an outdoor terrace. The tacos are good and quite generous.”",
+      fr: "“Un restaurant très agréable et propre, avec un service rapide et un accueil chaleureux. Belle terrasse extérieure. Les tacos sont très bons et généreux.”",
+    },
     authorName: "Arm",
     avatarColor: "from-amber-400 to-orange-500",
   },
   {
     id: "rev-3",
     rating: 5,
-    quote:
-      "“Des tenders croustillants marinés au babeurre, des sauces maison qui font toute la différence. Accueil au top !”",
+    quote: {
+      en: "“Crispy buttermilk tenders, house sauces that make all the difference. Top-notch welcome!”",
+      fr: "“Des tenders croustillants marinés au babeurre, des sauces maison qui font toute la différence. Accueil au top !”",
+    },
     authorName: "Camille Roussel",
     avatarColor: "from-emerald-400 to-teal-600",
   },
@@ -47,24 +55,30 @@ const defaultRightReviews: ReviewCardItem[] = [
   {
     id: "rev-4",
     rating: 5,
-    quote:
-      "“Beautiful place!! The tacos were delicious, the music was great, and just for the service!”",
+    quote: {
+      en: "“Beautiful place!! The tacos were delicious, the music was great, and just for the service!”",
+      fr: "“Un endroit magnifique ! Les tacos étaient délicieux, la musique au top, et que dire du service !”",
+    },
     authorName: "Med saleck",
     avatarColor: "from-blue-500 to-indigo-600",
   },
   {
     id: "rev-5",
     rating: 5,
-    quote:
-      "“The staff were very pleasant and smiling, the food was excellent and served quickly, and the music created a great atmosphere. I highly recommend it.”",
+    quote: {
+      en: "“The staff were very pleasant and smiling, the food was excellent and served quickly, and the music created a great atmosphere. I highly recommend it.”",
+      fr: "“Un personnel très agréable et souriant, une cuisine excellente servie rapidement et une musique qui met une super ambiance. Je recommande vivement.”",
+    },
     authorName: "Timeo scerri",
     avatarColor: "from-rose-400 to-red-500",
   },
   {
     id: "rev-6",
     rating: 5,
-    quote:
-      "“Un vrai régal à chaque passage. Le bucket à partager et les frites croustillantes sont tout simplement incontournables.”",
+    quote: {
+      en: "“A real treat every single visit. The sharing bucket and crispy fries are simply must-haves.”",
+      fr: "“Un vrai régal à chaque passage. Le bucket à partager et les frites croustillantes sont tout simplement incontournables.”",
+    },
     authorName: "Thomas Dubois",
     avatarColor: "from-purple-500 to-pink-500",
   },
@@ -80,6 +94,7 @@ export const DEFAULT_AVATAR_GRADIENTS = [
 ];
 
 const ReviewCard = ({ card, index = 0 }: { card: ReviewCardItem; index?: number }) => {
+  const { i18n } = useTranslation();
   const avatarGradient =
     card.avatarColor ||
     DEFAULT_AVATAR_GRADIENTS[index % DEFAULT_AVATAR_GRADIENTS.length];
@@ -100,7 +115,7 @@ const ReviewCard = ({ card, index = 0 }: { card: ReviewCardItem; index?: number 
       </div>
 
       <p className="text-base sm:text-sm md:text-base text-neutral-200 font-normal leading-[1.2] mb-4 sm:mb-6">
-        {card.quote}
+        {getLocalized(card.quote, i18n.language)}
       </p>
 
       <div className="relative flex items-center gap-2.5 sm:gap-3 pt-2">
@@ -132,7 +147,7 @@ export interface ReviewsProps {
   reviews?: ReviewCardItem[];
   reviewCount?: number | string;
   rating?: number;
-  heading?: string;
+  heading?: LocalizedValue<string>;
 }
 
 const Reviews = ({
@@ -142,6 +157,7 @@ const Reviews = ({
   reviewCount,
   heading,
 }: ReviewsProps) => {
+  const { t, i18n } = useTranslation("about");
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -302,7 +318,7 @@ const Reviews = ({
               {displayCount}
             </h2>
             <h2 className="text-2xl sm:text-5xl md:text-6xl lg:text-[4.735rem] font-bold tracking-tight text-white leading-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-              {heading || "Reviews Can't Be Wrong"}
+              {heading ? getLocalized(heading, i18n.language) : t("reviews.headingFallback", "Reviews Can't Be Wrong")}
             </h2>
           </div>
         </div>

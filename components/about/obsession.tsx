@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { matter } from "@/font/fonts";
+import { useTranslation } from "react-i18next";
 import {
   motion,
   useScroll,
@@ -613,7 +614,19 @@ MilestoneStation.displayName = "MilestoneStation";
    ───────────────────────────────────────────────────────────────────────── */
 
 const Obsession: React.FC<ObsessionProps> = ({ items }) => {
-  const milestones = items && items.length > 0 ? items : defaultMilestones;
+  const { t } = useTranslation("about");
+  const baseMilestones = items && items.length > 0 ? items : defaultMilestones;
+  const milestones = useMemo(() => {
+    return baseMilestones.map((m) => {
+      const yearKey = m.year;
+      return {
+        ...m,
+        title: t(`obsession.milestones.${yearKey}.title` as any, m.title),
+        descLine1: t(`obsession.milestones.${yearKey}.descLine1` as any, m.descLine1),
+        descLine2: t(`obsession.milestones.${yearKey}.descLine2` as any, m.descLine2),
+      };
+    });
+  }, [baseMilestones, t]);
   const N = milestones.length;
 
   const targetRef = useRef<HTMLDivElement>(null);
@@ -838,10 +851,10 @@ const Obsession: React.FC<ObsessionProps> = ({ items }) => {
         {/* Section Header */}
         <header className="w-full text-center space-y-1 sm:space-y-2 px-4 absolute top-8 sm:top-12 md:top-14 left-0 right-0 z-20 pointer-events-none">
           <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-            13 Years
+            {t("obsession.headerLine1", "13 Years")}
           </h2>
           <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-            One Obsession
+            {t("obsession.headerLine2", "One Obsession")}
           </h2>
         </header>
 

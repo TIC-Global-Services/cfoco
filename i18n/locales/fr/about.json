@@ -1,0 +1,91 @@
+{
+  "hero": {
+    "headlineDesktop": "Croustillant depuis 2011.",
+    "headlineMobileLine1": "Croustillant depuis",
+    "headlineMobileLine2": "2011.",
+    "recipeBorn": "Une recette née à",
+    "bordeaux": "Bordeaux",
+    "neverCooled": "Une obsession qui ne s'est jamais refroidie.",
+    "storyTitle": "Tout a commencé par \nune simple frustration.",
+    "storyP1": "En 2011, nos fondateurs en avaient assez de la même chose que tout le monde :\ndu poulet frit qui promettait la lune et ne servait que du gras. Alors ils ont fait preuve d'obstination :",
+    "storyP1Highlight": "Ils ont tout recommencé. Des centaines d'essais.",
+    "storyP2": "Une question obsédante : à quoi ressemble vraiment la perfection ? La réponse s'appelle",
+    "cfc": "CFC",
+    "storyP2End": "Frais, jamais surgelé. Audacieux, jamais ennuyeux.\nCroustillant d'une façon qu'on ressent avant même de goûter."
+  },
+  "obsession": {
+    "headerLine1": "13 ans",
+    "headerLine2": "Une obsession",
+    "milestones": {
+      "2011": {
+        "title": "La première friture",
+        "descLine1": "Une cuisine à Bordeaux.",
+        "descLine2": "Une recette qui vaut bien une dispute."
+      },
+      "2014": {
+        "title": "Le bouche-à-oreille",
+        "descLine1": "La queue déborde dans la rue. Il faut croire que nous n'étions",
+        "descLine2": "pas les seuls lassés de la médiocrité."
+      },
+      "2018": {
+        "title": "Au-delà de Bordeaux",
+        "descLine1": "Un deuxième, un troisième, un quatrième. Même recette.",
+        "descLine2": "Même exigence. Aucun raccourci."
+      },
+      "2019": {
+        "title": "Le culte grandit",
+        "descLine1": "Paris, Lyon, Marseille.",
+        "descLine2": "Le croustillant qu'on entend dans toute la France."
+      },
+      "2020": {
+        "title": "La formule secrète",
+        "descLine1": "La saumure de 24 heures enfin parfaite.",
+        "descLine2": "Croustillant dehors, juteux dedans."
+      },
+      "2022": {
+        "title": "Cap sur le monde",
+        "descLine1": "De nouveaux continents, la même obsession.",
+        "descLine2": "Jamais surgelé, jamais de compromis."
+      }
+    }
+  },
+  "nothingFrozen": {
+    "marquee": "Rien de surgelé. Rien de factice.",
+    "descP1": "Un bon poulet n'a nulle part où se cacher. C'est pourquoi nous partons de morceaux frais, marinons sur place et panons à la main chaque pièce à la commande. Notre huile est filtrée chaque jour — car le croustillant, c'est de la chimie, et la chimie a ses exigences.",
+    "descP2": "Pas de mystère. Aucun compromis. Juste du bon, bien fait.",
+    "loading3d": "Chargement 3D"
+  },
+  "whatWeRefuse": {
+    "titleLine1": "Ce sur quoi nous",
+    "titleLine2": "ne transigeons pas",
+    "subtitle": "Nous croyons que la bonne cuisine commence par des principes non négociables.\nVoici ceux que nous défendons, chaque jour.",
+    "cards": {
+      "speed": {
+        "title": "Rapidité",
+        "description": "Le fast-food doit être rapide, et rester de la vraie nourriture."
+      },
+      "conviviality": {
+        "title": "Convivialité",
+        "description": "Les bons repas se partagent. Les bons moments aussi."
+      },
+      "quality": {
+        "title": "Qualité",
+        "description": "Si ce n'est pas assez croustillant pour s'entendre, ça ne quitte pas la cuisine."
+      }
+    }
+  },
+  "showreel": {
+    "title": "Là où la magie devient bruyante.",
+    "watchShowreel": "Voir le showreel"
+  },
+  "reviews": {
+    "headingFallback": "Les avis ne se trompent pas"
+  },
+  "getCrispy": {
+    "titleLine1": "Assez lu.",
+    "titleLine2": "Place au croustillant.",
+    "description": "Du premier croc jusqu'au dernier morceau, chaque box est pensée pour créer des moments à partager avec ceux qui comptent le plus.",
+    "orderNow": "Commander",
+    "findNearest": "Trouver le plus proche"
+  }
+}

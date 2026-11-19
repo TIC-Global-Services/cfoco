@@ -1,0 +1,33 @@
+{
+  "hero": {
+    "title": "Let’s Talk Cravings",
+    "description": "Got a question, feedback, partnership idea, or need a little help? Whatever’s on your mind, the",
+    "brandName": "CFOCO",
+    "descriptionEnd": "team is here to listen, help, and keep things moving."
+  },
+  "info": {
+    "title": "Contact Information",
+    "subtitle": "Say something to start a live chat!",
+    "phone": "+1012 3456 789",
+    "email": "Contact@cfoco.fr",
+    "address": "132 Dartmouth Street Boston, Massachusetts 02156 United States"
+  },
+  "form": {
+    "name": "Name",
+    "namePlaceholder": "john smith",
+    "email": "Mail",
+    "emailPlaceholder": "john.smith@email.com",
+    "phone": "Phone",
+    "phonePlaceholder": "+243545353",
+    "subject": "Select Subject",
+    "subjects": {
+      "placeholder": "Select Subject",
+      "general": "General enquiry",
+      "support": "Support",
+      "partnership": "Partnership"
+    },
+    "message": "Your Message",
+    "messagePlaceholder": "tell us about your enquiry",
+    "submit": "Submit"
+  }
+}

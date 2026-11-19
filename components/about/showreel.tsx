@@ -5,9 +5,11 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { CirclePlay } from "lucide-react";
 import { matter } from "@/font/fonts";
+import { useTranslation } from "react-i18next";
 
 const Showreel = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const { t } = useTranslation("about");
 
   return (
     <section
@@ -44,7 +46,7 @@ const Showreel = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-3xl sm:text-5xl md:text-6xl lg:text-[4.375rem] font-bold tracking-tight text-[#F6B90B] leading-tight"
             >
-              Where The Magic Gets Loud.
+              {t("showreel.title", "Where The Magic Gets Loud.")}
             </motion.h2>
 
             {/* Watch Showreel CTA Button */}
@@ -57,7 +59,7 @@ const Showreel = () => {
               className="mt-4 sm:mt-6 inline-flex items-center gap-2.5 px-5 sm:px-6 py-2.5 sm:py-3 text-white/90"
             >
               <span className="text-sm sm:text-base md:text-xl font-medium tracking-wide">
-                Watch Showreel
+                {t("showreel.watchShowreel", "Watch Showreel")}
               </span>
 
               {/* Play Circle Icon */}

@@ -1,0 +1,14 @@
+{
+  "hero": {
+    "tagline": "Crispy Since 2011",
+    "title": "Obsession in Every Crunch",
+    "subtitle": "Crafted with secret spices, golden perfection, and zero frozen chicken.",
+    "cta": "Explore Menu"
+  },
+  "features": {
+    "fresh": "Never Frozen",
+    "freshDesc": "Fresh chicken prepared daily with premium spices.",
+    "crispy": "Signature Crunch",
+    "crispyDesc": "Double-dredged and pressure-fried for maximum crunch."
+  }
+}

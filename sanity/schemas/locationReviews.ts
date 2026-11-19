@@ -21,6 +21,13 @@ export const locationReviewsType = defineType({
       initialValue: "Reviews Can't Be Wrong",
     }),
     defineField({
+      name: 'titleFr',
+      title: 'Section Heading (French)',
+      type: 'string',
+      description: 'e.g., Les avis ne mentent pas',
+      initialValue: "Les avis ne mentent pas",
+    }),
+    defineField({
       name: 'reviews',
       title: 'General Customer Reviews (6 Cards)',
       type: 'array',
@@ -89,6 +96,13 @@ export const locationReviewsType = defineType({
               type: 'text',
               rows: 3,
               validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'quoteFr',
+              title: 'Review Quote (French)',
+              type: 'text',
+              rows: 3,
+              description: 'Optional French translation of the review',
             }),
             defineField({
               name: 'avatarColor',

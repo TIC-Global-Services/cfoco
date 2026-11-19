@@ -2,6 +2,9 @@ import { client } from './client';
 import { isSanityConfigured } from '../env';
 import { LOCATIONS_QUERY, LOCATION_BY_SLUG_QUERY, LOCATION_SLUGS_QUERY, LOCATION_REVIEWS_QUERY } from './queries';
 import { locationsData, LocationData } from '@/data/locations';
+import { locationsDataFr, getLocationBySlugFr } from '@/data/locations_fr';
+import type { LocalizedValue } from './localized';
+import { getLocalized } from './localized';
 
 export const AVATAR_GRADIENTS = [
   "from-cyan-500 to-blue-600",
@@ -14,10 +17,14 @@ export const AVATAR_GRADIENTS = [
 
 /**
  * Fetch all locations from Sanity CMS with fallback to static locationsData.
+ * Always fetches live data from Sanity.
+ * If Sanity is unavailable, falls back symmetrically to French or English dataset.
  */
-export async function getAllLocations(): Promise<LocationData[]> {
+export async function getAllLocations(lang: string = "en"): Promise<LocationData[]> {
+  const fallback = lang === "fr" ? locationsDataFr : locationsData;
+
   if (!isSanityConfigured) {
-    return locationsData;
+    return fallback;
   }
 
   try {
@@ -42,18 +49,22 @@ export async function getAllLocations(): Promise<LocationData[]> {
       }));
     }
   } catch (error) {
-    console.error('Error fetching locations from Sanity, using fallback data:', error);
+    console.error(`Error fetching locations from Sanity, using ${lang} fallback:`, error);
   }
 
-  return locationsData;
+  return fallback;
 }
 
 /**
  * Fetch a single location by its slug with fallback.
+ * Always fetches live data from Sanity.
+ * If Sanity is unavailable, falls back symmetrically to French or English dataset.
  */
-export async function getLocationBySlug(slug: string): Promise<LocationData | undefined> {
+export async function getLocationBySlug(slug: string, lang: string = "en"): Promise<LocationData | undefined> {
+  const fallback = lang === "fr" ? getLocationBySlugFr(slug) : locationsData.find((loc) => loc.slug === slug);
+
   if (!isSanityConfigured) {
-    return locationsData.find((loc) => loc.slug === slug);
+    return fallback;
   }
 
   try {
@@ -78,10 +89,10 @@ export async function getLocationBySlug(slug: string): Promise<LocationData | un
       };
     }
   } catch (error) {
-    console.error(`Error fetching location [${slug}] from Sanity, using fallback:`, error);
+    console.error(`Error fetching location [${slug}] from Sanity, using ${lang} fallback:`, error);
   }
 
-  return locationsData.find((loc) => loc.slug === slug);
+  return fallback;
 }
 
 /**
@@ -117,14 +128,14 @@ export interface LocationReviewCard {
   id?: string;
   authorName: string;
   rating: number;
-  quote: string;
+  quote: LocalizedValue<string>;
   avatarColor?: string;
 }
 
 export interface LocationReviewsSectionData {
   _id?: string;
   overallReviewCount?: string | number;
-  title?: string;
+  title?: LocalizedValue<string>;
   reviews?: LocationReviewCard[];
 }
 
@@ -161,7 +172,7 @@ export async function getLocationReviewsSection(): Promise<LocationReviewsSectio
 export interface ReviewCardItem {
   id: string;
   rating: number;
-  quote: string;
+  quote: LocalizedValue<string>;
   authorName: string;
   avatarColor?: string;
 }
@@ -169,7 +180,7 @@ export interface ReviewCardItem {
 export interface ReviewsResponseData {
   reviewCount: string | number;
   rating: number;
-  heading: string;
+  heading: LocalizedValue<string>;
   reviews: ReviewCardItem[];
 }
 
@@ -177,60 +188,85 @@ export const DEFAULT_REVIEWS: ReviewCardItem[] = [
   {
     id: "rev-1",
     rating: 5,
-    quote:
-      "“Formules interessantes à partager, on a pris la box wings-tenders cétait pas mal dutout et généreux. Service rapide et efficace.”",
+    quote: {
+      en: "“Great meal deals to share, we had the wings & tenders box, super generous and really tasty. Fast and efficient service.”",
+      fr: "“Formules intéressantes à partager, on a pris la box wings-tenders c'était pas mal du tout et généreux. Service rapide et efficace.”",
+    },
     authorName: "Yousra Djeddou",
     avatarColor: "from-cyan-500 to-blue-600",
   },
   {
     id: "rev-2",
     rating: 5,
-    quote:
-      "“A very nice, clean restaurant with fast service and a warm welcome. There's an outdoor terrace. The tacos are good and quite generous.”",
+    quote: {
+      en: "“A very nice, clean restaurant with fast service and a warm welcome. There's an outdoor terrace. The tacos are good and quite generous.”",
+      fr: "“Un restaurant très agréable et propre, avec un service rapide et un accueil chaleureux. Belle terrasse extérieure. Les tacos sont très bons et généreux.”",
+    },
     authorName: "Arm",
     avatarColor: "from-amber-400 to-orange-500",
   },
   {
     id: "rev-3",
     rating: 5,
-    quote:
-      "“Des tenders croustillants marinés au babeurre, des sauces maison qui font toute la différence. Accueil au top !”",
+    quote: {
+      en: "“Crispy buttermilk tenders, house sauces that make all the difference. Top-notch welcome!”",
+      fr: "“Des tenders croustillants marinés au babeurre, des sauces maison qui font toute la différence. Accueil au top !”",
+    },
     authorName: "Camille Roussel",
     avatarColor: "from-emerald-400 to-teal-600",
   },
   {
     id: "rev-4",
     rating: 5,
-    quote:
-      "“Beautiful place!! The tacos were delicious, the music was great, and just for the service!”",
+    quote: {
+      en: "“Beautiful place!! The tacos were delicious, the music was great, and just for the service!”",
+      fr: "“Un endroit magnifique ! Les tacos étaient délicieux, la musique au top, et que dire du service !”",
+    },
     authorName: "Med saleck",
     avatarColor: "from-blue-500 to-indigo-600",
   },
   {
     id: "rev-5",
     rating: 5,
-    quote:
-      "“The staff were very pleasant and smiling, the food was excellent and served quickly, and the music created a great atmosphere. I highly recommend it.”",
+    quote: {
+      en: "“The staff were very pleasant and smiling, the food was excellent and served quickly, and the music created a great atmosphere. I highly recommend it.”",
+      fr: "“Un personnel très agréable et souriant, une cuisine excellente servie rapidement et une musique qui met une super ambiance. Je recommande vivement.”",
+    },
     authorName: "Timeo scerri",
     avatarColor: "from-rose-400 to-red-500",
   },
   {
     id: "rev-6",
     rating: 5,
-    quote:
-      "“Un vrai régal à chaque passage. Le bucket à partager et les frites croustillantes sont tout simplement incontournables.”",
+    quote: {
+      en: "“A real treat every single visit. The sharing bucket and crispy fries are simply must-haves.”",
+      fr: "“Un vrai régal à chaque passage. Le bucket à partager et les frites croustillantes sont tout simplement incontournables.”",
+    },
     authorName: "Thomas Dubois",
     avatarColor: "from-purple-500 to-pink-500",
   },
 ];
 
-function formatQuote(text: string): string {
+function formatSingleQuote(text: string): string {
   if (!text) return "";
   const trimmed = text.trim();
   if (trimmed.startsWith("“") || trimmed.startsWith('"')) {
     return trimmed;
   }
   return `“${trimmed}”`;
+}
+
+function formatQuote(text: LocalizedValue<string>): LocalizedValue<string> {
+  if (typeof text === 'string') {
+    return formatSingleQuote(text);
+  }
+  if (text && typeof text === 'object') {
+    return {
+      en: text.en ? formatSingleQuote(text.en) : '',
+      fr: text.fr ? formatSingleQuote(text.fr) : (text.en ? formatSingleQuote(text.en) : ''),
+    };
+  }
+  return "";
 }
 
 /**
@@ -240,9 +276,9 @@ function formatQuote(text: string): string {
  * 3. Dynamically calculates total review count across Sanity locations if overall count isn't specified
  * 4. Falls back gracefully to curated reviews & metrics
  */
-export async function getReviewsData(): Promise<ReviewsResponseData> {
+export async function getReviewsData(lang: string = "en"): Promise<ReviewsResponseData> {
   const [locations, reviewsSection] = await Promise.all([
-    getAllLocations(),
+    getAllLocations(lang),
     getLocationReviewsSection(),
   ]);
 
@@ -282,7 +318,10 @@ export async function getReviewsData(): Promise<ReviewsResponseData> {
     reviews = DEFAULT_REVIEWS;
   }
 
-  const heading = reviewsSection?.title || "Reviews Can't Be Wrong";
+  const heading: LocalizedValue<string> = reviewsSection?.title || {
+    en: "Reviews Can't Be Wrong",
+    fr: "Les avis ne se trompent pas",
+  };
 
   const avgRating =
     locations.length > 0

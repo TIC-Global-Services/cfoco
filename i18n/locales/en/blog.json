@@ -1,0 +1,50 @@
+{
+  "header": {
+    "badge": "CFOCO Chronicles",
+    "title": "Stories from the",
+    "titleHighlight": "Heart of CFOCO",
+    "subtitle": "Explore our latest journeys through high-altitude origins, artisan roasting refinements, sensory cafe spaces, and culinary culture."
+  },
+  "search": {
+    "placeholder": "Search stories & news...",
+    "clear": "Clear search"
+  },
+  "category": {
+    "label": "Category:",
+    "allStories": "All Stories",
+    "allCategories": "All Categories",
+    "selectCategory": "Select Category",
+    "optionsCount": "{{count}} options",
+    "resetToAll": "Reset to All Categories"
+  },
+  "filters": {
+    "active": "Active filters:",
+    "category": "Category: {{category}}",
+    "query": "Query: \"{{query}}\"",
+    "clearAll": "Clear all",
+    "removeCategory": "Remove category filter",
+    "removeSearch": "Remove search filter"
+  },
+  "empty": {
+    "title": "No stories found",
+    "description": "Try adjusting your search query or switching categories.",
+    "reset": "Reset Filters"
+  },
+  "list": {
+    "latestArticles": "Latest Articles ({{count}})",
+    "categoryArticles": "{{category}} ({{count}})"
+  },
+  "card": {
+    "readStory": "Read Story",
+    "readTime": "{{minutes}} min read",
+    "recent": "Recent"
+  },
+  "detail": {
+    "back": "Back to Stories",
+    "readTime": "4 min read",
+    "noContent": "No content written yet for this post.",
+    "moreStories": "More Stories",
+    "moreStoriesSubtitle": "Continue exploring our latest journal entries",
+    "viewAll": "View All"
+  }
+}
