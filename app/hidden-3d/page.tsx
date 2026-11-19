@@ -1,18 +1,27 @@
-import Experience from '@/components/home/Experience'
+import React from 'react';
+import type { Metadata } from 'next';
+import Experience from '@/components/home/Experience';
 import { Geist } from 'next/font/google';
 
-import React from 'react'
 const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
-const page = () => {
-    return (
-        <main className={`home-root ${geistSans.variable}`}>
-            <Experience />
-        </main>
-    )
-}
+export const metadata: Metadata = {
+  title: '3D Experience | CFOCO',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
-export default page
+const page = () => {
+  return (
+    <main className={`home-root ${geistSans.variable}`}>
+      <Experience />
+    </main>
+  );
+};
+
+export default page;
