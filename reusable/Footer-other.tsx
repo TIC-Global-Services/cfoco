@@ -106,7 +106,7 @@ const FooterOther: React.FC<FooterProps> = ({ className = "" }) => {
                 className="object-contain"
               /> */}
               <LazyMount className="h-full w-full">
-                <FooterLogoCanvas modelPath="/footer_logo.glb" />
+                <FooterLogoCanvas modelPath="/footer_logo2.glb" />
               </LazyMount>
             </div>
           </div>
