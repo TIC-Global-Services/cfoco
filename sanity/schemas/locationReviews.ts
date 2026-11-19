@@ -38,37 +38,31 @@ export const locationReviewsType = defineType({
           authorName: 'Yousra Djeddou',
           rating: 5,
           quote: 'Formules interessantes à partager, on a pris la box wings-tenders cétait pas mal dutout et généreux. Service rapide et efficace.',
-          avatarColor: 'from-cyan-500 to-blue-600',
         },
         {
           authorName: 'Arm',
           rating: 5,
           quote: "A very nice, clean restaurant with fast service and a warm welcome. There's an outdoor terrace. The tacos are good and quite generous",
-          avatarColor: 'from-amber-400 to-orange-500',
         },
         {
           authorName: 'Camille Roussel',
           rating: 5,
           quote: 'Des tenders croustillants marinés au babeurre, des sauces maison qui font toute la différence. Accueil au top !',
-          avatarColor: 'from-emerald-400 to-teal-600',
         },
         {
           authorName: 'Med saleck',
           rating: 5,
           quote: 'Beautiful place!! The tacos were delicious, the music was great, and just for the service',
-          avatarColor: 'from-blue-500 to-indigo-600',
         },
         {
           authorName: 'Timeo scerri',
           rating: 5,
           quote: 'The staff were very pleasant and smiling, the food was excellent and served quickly, and the music created a great atmosphere. I highly recommend it',
-          avatarColor: 'from-rose-400 to-red-500',
         },
         {
           authorName: 'Thomas Dubois',
           rating: 5,
           quote: 'Un vrai régal à chaque passage. Le bucket à partager et les frites croustillantes sont tout simplement incontournables.',
-          avatarColor: 'from-purple-500 to-pink-500',
         },
       ],
       of: [
@@ -103,13 +97,6 @@ export const locationReviewsType = defineType({
               type: 'text',
               rows: 3,
               description: 'Optional French translation of the review',
-            }),
-            defineField({
-              name: 'avatarColor',
-              title: 'Avatar Gradient Color',
-              type: 'string',
-              description: 'Tailwind gradient classes e.g. "from-cyan-500 to-blue-600"',
-              initialValue: 'from-cyan-500 to-blue-600',
             }),
           ],
           preview: {
