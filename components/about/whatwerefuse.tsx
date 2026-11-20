@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Users, Rabbit, Star } from "lucide-react";
+import Image from "next/image";
 import { matter } from "@/font/fonts";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 interface PrincipleCard {
   id: string;
-  icon: React.ComponentType<{ className?: string }>;
+  iconSrc: string;
   title: string;
   description: string;
 }
@@ -16,19 +16,19 @@ interface PrincipleCard {
 const CARDS: PrincipleCard[] = [
   {
     id: "speed",
-    icon: Rabbit,
+    iconSrc: "/speed_logo.svg",
     title: "Speed",
     description: "Fast Food Should Be Fast And Still Be Food.",
   },
   {
     id: "conviviality",
-    icon: Users,
+    iconSrc: "/conviviality_logo.svg",
     title: "Conviviality",
     description: "Great Meals Are Meant To Be Shared. So Is A Good Time.",
   },
   {
     id: "quality",
-    icon: Star,
+    iconSrc: "/quality_logo.svg",
     title: "Quality",
     description: "If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen.",
   },
@@ -46,19 +46,19 @@ const WhatWeRefuse: React.FC = () => {
   const cards: PrincipleCard[] = [
     {
       id: "speed",
-      icon: Rabbit,
+      iconSrc: "/speed_logo.svg",
       title: t("whatWeRefuse.cards.speed.title", "Speed"),
       description: t("whatWeRefuse.cards.speed.description", "Fast Food Should Be Fast And Still Be Food."),
     },
     {
       id: "conviviality",
-      icon: Users,
+      iconSrc: "/conviviality_logo.svg",
       title: t("whatWeRefuse.cards.conviviality.title", "Conviviality"),
       description: t("whatWeRefuse.cards.conviviality.description", "Great Meals Are Meant To Be Shared. So Is A Good Time."),
     },
     {
       id: "quality",
-      icon: Star,
+      iconSrc: "/quality_logo.svg",
       title: t("whatWeRefuse.cards.quality.title", "Quality"),
       description: t("whatWeRefuse.cards.quality.description", "If It's Not Crispy Enough To Hear, It Doesn't Leave The Kitchen."),
     },
@@ -185,7 +185,6 @@ const WhatWeRefuse: React.FC = () => {
       {/* ── 3D OVERLAPPING CARDS CAROUSEL ── */}
       <div className="relative w-full max-w-6xl h-[420px] sm:h-[460px] md:h-[490px] flex items-center justify-center my-6 md:my-8">
         {cards.map((card, i) => {
-          const Icon = card.icon;
           const slot = getSlot(i);
           const isSelected = slot === 0;
 
@@ -222,24 +221,17 @@ const WhatWeRefuse: React.FC = () => {
               >
                 {/* Circular Neumorphic Icon Badge with Ambient Glow */}
                 <div className="relative w-20 h-20 sm:w-34 sm:h-34 flex items-center justify-center my-2 shrink-0">
-                  {/* Ambient Glow Halo */}
-                  {/* <div
-                    className={`absolute -inset-4 sm:-inset-6 rounded-full transition-all duration-500 pointer-events-none ${
-                      isSelected
-                        ? "bg-gradient-to-tr from-amber-500/45 via-yellow-400/35 to-amber-600/30 blur-2xl opacity-100 scale-125"
-                        : "bg-amber-500/15 blur-xl opacity-40 scale-100"
-                    }`}
-                  /> */}
-
                   {/* Badge Disc */}
-                  <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#1d273a] via-[#121927] to-[#0a0e17]  shadow-[inset_0_2px_4px_rgba(255,255,255,0.16),inset_0_-3px_6px_rgba(0,0,0,0.65),0_12px_28px_rgba(0,0,0,0.7)] flex items-center justify-center">
-                    {/* Inner gold accent rim */}
-                    {/* <div className="absolute inset-[3px] rounded-full border border-amber-400/15 pointer-events-none" /> */}
-
-                    {/* Original Lucide Icon with Ambient Gold Color & Glow */}
+                  <div className="relative w-full h-full rounded-full bg-gradient-to-b from-[#1d273a] via-[#121927] to-[#0a0e17] shadow-[inset_0_2px_4px_rgba(255,255,255,0.16),inset_0_-3px_6px_rgba(0,0,0,0.65),0_12px_28px_rgba(0,0,0,0.7)] flex items-center justify-center">
+                    {/* SVG Logo with Ambient Glow */}
                     <div className={`transition-transform duration-500 ${isSelected ? "scale-105" : "scale-95"}`}>
-                      <Icon
-                        className={`w-10 h-10 sm:w-20 sm:h-20 stroke-[1.8] text-[#FFBF00] transition-colors duration-300`}
+                      <Image
+                        src={card.iconSrc}
+                        alt={card.title}
+                        width={80}
+                        height={80}
+                        className="w-10 h-10 sm:w-16 sm:h-16 object-contain drop-shadow-[0_4px_16px_rgba(255,191,0,0.3)] transition-transform duration-300"
+                        priority
                       />
                     </div>
                   </div>
