@@ -9,12 +9,21 @@ import * as THREE from "three";
 // Preload 3D model asset
 useGLTF.preload("/footer_logo.glb");
 
-function LogoModel({ modelPath,rotationY = 0 }: { modelPath: string;rotationY?: number; }) {
+function LogoModel({
+  modelPath,
+  position = [0, 0, 0],
+  rotation = [0, THREE.MathUtils.degToRad(-13), 0],
+  scale = 1,
+}: {
+  modelPath: string;
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+  scale?: number;
+}) {
   const { scene } = useGLTF(modelPath);
 
   return (
-    // cfoco_black_logo.glb is upright but its front faces -Z: turn it to the camera
-    <group rotation={[0, rotationY, 0]}>
+    <group position={position} rotation={rotation} scale={scale}>
       <primitive object={scene} />
     </group>
   );
@@ -23,37 +32,43 @@ function LogoModel({ modelPath,rotationY = 0 }: { modelPath: string;rotationY?: 
 /**
  * ResponsiveCamera calculates the exact camera distance to fit the CFOCO 3D logo
  * inside any viewport without ANY clipping on mobile, iPhone, tablet, or desktop.
- * It accounts for both width and height with safe padding.
+ * Tuned values: fov 12, modelWidth 1.65, modelHeight 0.54, paddingW 1.26, paddingH 1.25.
  */
 function ResponsiveCamera({
-  modelWidth = 1.9,
-  modelHeight = 0.69,
+  fov = 12,
+  modelWidth = 1.65,
+  modelHeight = 0.54,
+  paddingW = 1.26,
+  paddingH = 1.25,
 }: {
+  fov?: number;
   modelWidth?: number;
   modelHeight?: number;
+  paddingW?: number;
+  paddingH?: number;
 }) {
   const { camera, size, invalidate } = useThree();
 
   useEffect(() => {
     const aspect = size.width / Math.max(size.height, 1);
-    const fov = 38;
     const tanHalf = Math.tan((fov * Math.PI) / 360);
 
-    // Provide 18% breathing room on width, 25% on height
-    // Guarantees rooster comb, feet, and outer 'C'/'O' letters are NEVER cut off
-    const targetW = modelWidth * 1.18;
-    const targetH = modelHeight * 1.25;
+    const targetW = modelWidth * paddingW;
+    const targetH = modelHeight * paddingH;
 
     const zForW = targetW / (2 * tanHalf * aspect);
     const zForH = targetH / (2 * tanHalf);
     const z = Math.max(zForW, zForH, 1.2);
 
+    if ("fov" in camera) {
+      (camera as THREE.PerspectiveCamera).fov = fov;
+    }
     camera.position.set(0, 0, z);
     camera.lookAt(0, 0, 0);
     camera.updateProjectionMatrix();
     // Demand frameloop needs invalidate to paint on camera update
     invalidate();
-  }, [camera, size, modelWidth, modelHeight, invalidate]);
+  }, [camera, size, fov, modelWidth, modelHeight, paddingW, paddingH, invalidate]);
 
   return null;
 }
@@ -101,12 +116,9 @@ export default function FooterLogoCanvas({ modelPath }: { modelPath: string }) {
     >
       <Suspense fallback={<LogoFallback />}>
         <Canvas
-          // "demand" frameloop only redraws when mounted, resized, or updated,
-          // saving 100% idle GPU on iPhone/mobile and preventing thermal throttling
           frameloop="demand"
-          // Cap DPR at 1.5 to prevent massive 3x retina framebuffers that crash mobile Safari
           dpr={isMobile ? [1, 1.2] : [1, 1.5]}
-          camera={{ position: [0, 0, 5], fov: 38 }}
+          camera={{ position: [0, 0, 3.2], fov: 12 }}
           gl={{
             alpha: true,
             antialias: true,
@@ -116,9 +128,8 @@ export default function FooterLogoCanvas({ modelPath }: { modelPath: string }) {
           }}
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.ACESFilmicToneMapping;
-            gl.toneMappingExposure = 1.15;
+            gl.toneMappingExposure = 0.85;
 
-            // Graceful WebGL context recovery for iOS Safari low-memory scenarios
             const canvasEl = gl.domElement;
             canvasEl.addEventListener("webglcontextlost", (e) => {
               e.preventDefault();
@@ -131,13 +142,24 @@ export default function FooterLogoCanvas({ modelPath }: { modelPath: string }) {
           <directionalLight position={[3, 4, 5]} intensity={2.2} />
           <directionalLight position={[-3, -2, 2]} intensity={1.2} />
 
-          {/* Center component precisely centers the 3D model geometry at (0, 0, 0) */}
+          {/* Center component precisely centers the 3D model geometry */}
           <Center>
-            <LogoModel modelPath={modelPath} />
+            <LogoModel
+              modelPath={modelPath}
+              position={[0, 0, 0]}
+              rotation={[0, THREE.MathUtils.degToRad(-13), 0]}
+              scale={1}
+            />
           </Center>
 
           {/* Dynamically computes camera distance to prevent any edge or comb clipping */}
-          <ResponsiveCamera />
+          <ResponsiveCamera
+            fov={12}
+            modelWidth={1.65}
+            modelHeight={0.54}
+            paddingW={1.26}
+            paddingH={1.25}
+          />
         </Canvas>
       </Suspense>
     </div>
