@@ -9,7 +9,7 @@ import Image from "next/image";
 // models are Draco-compressed: use the bundled decoder instead of a CDN round-trip
 useGLTF.setDecoderPath("/draco/");
 
-interface ChickenBucketCanvasProps {
+interface ChickenBucketCanvasProps {  
   modelPath?: string;
   className?: string;
 }
@@ -196,10 +196,10 @@ export default function ChickenBucketCanvas({
   const [isMobile, setIsMobile] = useState(false);
 
   const controls = {
-    position: { x: 0, y: -0.05, z: 0 },
+    position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: -130, z: 0 },
     scale: 0.55,
-    camera: { x: 0, y: 1.25, z: 4.1 },
+    camera: { x: 0, y: 0.5, z: 4.1 },
     fov: 38,
     interactiveOrbit: true,
     autoRotate: true,

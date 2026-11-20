@@ -143,22 +143,22 @@ const WhatWeRefuse: React.FC = () => {
       onTouchEnd={handleTouchEnd}
     >
       {/* ── AMBIENT BACKGROUND GLOWS ── */}
-      <div
+      {/* <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse at 50% 20%, rgba(255,191,0,0.08) 0%, transparent 60%), radial-gradient(ellipse at 50% 55%, rgba(255,191,0,0.11) 0%, rgba(20,30,50,0.2) 45%, transparent 75%)",
         }}
-      />
+      /> */}
 
       {/* Glossy floor reflection like the reference studio lighting */}
-      <div
+      {/* <div
         className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[85%] max-w-5xl h-36 rounded-full pointer-events-none blur-3xl"
         style={{
           background:
             "radial-gradient(ellipse at center, rgba(255,191,0,0.2) 0%, rgba(30,58,138,0.22) 45%, transparent 75%)",
         }}
-      />
+      /> */}
 
       {/* ── HEADER ── */}
       <header className="relative z-20 text-center max-w-3xl mx-auto flex flex-col items-center pointer-events-none">

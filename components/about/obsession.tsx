@@ -661,18 +661,22 @@
 
       const targetRef = useRef<HTMLDivElement>(null);
 
-      const [viewportWidth, setViewportWidth] = useState<number>(1440);
-      const [isMobile, setIsMobile] = useState<boolean>(false);
+      const [viewportWidth, setViewportWidth] = useState<number>(() =>
+        typeof window !== "undefined" ? window.innerWidth : 1440
+      );
+      const [isMobile, setIsMobile] = useState<boolean>(() =>
+        typeof window !== "undefined" ? window.innerWidth < 768 : false
+      );
 
       // Responsive viewport dimensions
       useEffect(() => {
         let animationFrameId: number;
-        let lastW = typeof window !== "undefined" ? window.innerWidth : 1440;
+        let lastW = 0;
 
         const handleResize = () => {
           animationFrameId = requestAnimationFrame(() => {
             const w = window.innerWidth;
-            if (Math.abs(w - lastW) > 10) {
+            if (Math.abs(w - lastW) > 5) {
               lastW = w;
               setViewportWidth(w);
               setIsMobile(w < 768);
@@ -792,10 +796,10 @@
         currentMilestone.theme === "red" || (!currentMilestone.theme && activeIdx % 2 === 0);
       const currentPrimaryColor = isCurrentRed ? "#EF4444" : "#00D4FF";
 
-      // Camera tracking in X and Y to keep road and active pin smoothly centered
+      // Camera tracking in X and Y to keep road and active pin smoothly centered in viewport
       const trackX = useTransform(smoothMilestone, (m) => {
         const pt = getRoadPointAndAngle(m, milestonePoints, config.curveSmoothness);
-        return viewportWidth / 2 - pt.x;
+        return -pt.x;
       });
 
       const trackY = useTransform(smoothMilestone, (m) => {
@@ -891,7 +895,7 @@
             {/* Winding Highway Canvas */}
             <div className="relative w-full h-full flex flex-col justify-center overflow-visible pointer-events-none">
               <motion.div
-                className="absolute left-0 top-[26%] sm:top-[24%] md:top-[22%] h-[700px] pointer-events-none transform-gpu will-change-transform"
+                className="absolute left-1/2 top-[26%] sm:top-[24%] md:top-[22%] h-[700px] pointer-events-none transform-gpu will-change-transform"
                 style={{
                   x: trackX,
                   y: trackY,
