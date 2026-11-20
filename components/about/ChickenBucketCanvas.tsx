@@ -87,23 +87,21 @@ function BucketModel({
   useFrame((state) => {
     if (!groupRef.current) return;
     
-    // On desktop, add subtle mouse pointer tilt. Skip on mobile to save CPU cycles.
-    if (!isMobile) {
-      const targetX = baseRotX + (state.pointer.y * Math.PI) / 32;
-      const targetY = baseRotY + (state.pointer.x * Math.PI) / 32;
+    // Keep bucket strictly straight (zero tilt on X and Z axes)
+    groupRef.current.rotation.x = baseRotX;
+    groupRef.current.rotation.z = baseRotZ;
 
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        targetX,
-        0.08
-      );
+    // On desktop, add subtle horizontal rotation tracking
+    if (!isMobile) {
+      const targetY = baseRotY + (state.pointer.x * Math.PI) / 15;
       groupRef.current.rotation.y = THREE.MathUtils.lerp(
         groupRef.current.rotation.y,
         targetY,
         0.08
       );
+    } else {
+      groupRef.current.rotation.y = baseRotY;
     }
-    groupRef.current.rotation.z = baseRotZ;
   });
 
   const modelNode = (
@@ -198,8 +196,8 @@ export default function ChickenBucketCanvas({
   const [isMobile, setIsMobile] = useState(false);
 
   const controls = {
-    position: { x: 0.1, y: -0.05, z: 0 },
-    rotation: { x: -10, y: -130, z: -10 },
+    position: { x: 0, y: -0.05, z: 0 },
+    rotation: { x: 0, y: -130, z: 0 },
     scale: 0.55,
     camera: { x: 0, y: 1.25, z: 4.1 },
     fov: 38,
