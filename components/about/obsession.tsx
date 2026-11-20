@@ -92,26 +92,21 @@
 
     export const ROAD_CONFIG = {
       // Spacing between milestone pins (px)
-      spacingDesktop: 760,
-      spacingMobile: 420,
+      spacing: 760,
 
       // Start position for the first milestone (2011)
-      startXDesktop: 500,
-      startXMobile: 260,
+      startX: 500,
 
       // Y-axis height: Strictly alternates High and Low for a curvy highway ribbon
       // [2011 (High), 2014 (Low), 2018 (High), 2019 (Low), 2020 (High), 2022 (Low)]
-      milestoneHeightsDesktop: [170, 340, 170, 340, 170, 340],
-      milestoneHeightsMobile:  [200, 340, 200, 340, 200, 340],
+      milestoneHeights: [170, 340, 170, 340, 170, 340],
 
       // Curve smoothness factor (0.44 - 0.50 gives natural highway curvature)
       curveSmoothness: 0.48,
 
       // Road thickness & shadow widths
-      roadWidthDesktop: 54,
-      roadWidthMobile: 42,
-      shadowWidthDesktop: 64,
-      shadowWidthMobile: 52,
+      roadWidth: 54,
+      shadowWidth: 64,
 
       // Road dashed divider line motion direction
       lineDirection: -1,
@@ -698,9 +693,9 @@
       });
 
       const config = ROAD_CONFIG;
-      const spacing = isMobile ? config.spacingMobile : config.spacingDesktop;
-      const startX = isMobile ? config.startXMobile : config.startXDesktop;
-      const heights = isMobile ? config.milestoneHeightsMobile : config.milestoneHeightsDesktop;
+      const spacing = config.spacing;
+      const startX = config.startX;
+      const heights = config.milestoneHeights;
 
       // Milestone points with their precise X and Y coordinates
       const milestonePoints: MilestonePoint[] = useMemo(() => {
@@ -816,7 +811,7 @@
       // Continuous highway SVG spline that spans edge-to-edge
       const { roadPath, minX, maxX } = useMemo(() => {
         const pts: RoadPoint[] = [];
-        const EXTENSION = isMobile ? 650 : 2000;
+        const EXTENSION = 2000;
 
         // 1. Pre-road extension (to the left)
         const leftSteps = Math.ceil(EXTENSION / (spacing * 0.5));
@@ -849,7 +844,7 @@
           minX: minRoadX,
           maxX: maxRoadX,
         };
-      }, [milestonePoints, spacing, startX, heights, config.curveSmoothness, isMobile]);
+      }, [milestonePoints, spacing, startX, heights, config.curveSmoothness]);
 
       /**
        * Smoothly drives directly to a specific milestone year when clicking a station
@@ -895,7 +890,7 @@
             {/* Winding Highway Canvas */}
             <div className="relative w-full h-full flex flex-col justify-center overflow-visible pointer-events-none">
               <motion.div
-                className="absolute left-1/2 top-[26%] sm:top-[24%] md:top-[22%] h-[700px] pointer-events-none transform-gpu will-change-transform"
+                className="absolute left-1/2 top-[24%] sm:top-[24%] md:top-[22%] h-[700px] pointer-events-none transform-gpu will-change-transform"
                 style={{
                   x: trackX,
                   y: trackY,
@@ -924,10 +919,7 @@
                     d={roadPath}
                     fill="none"
                     stroke="rgba(0, 0, 0, 0.28)"
-                    strokeWidth={
-                      (isMobile ? config.shadowWidthMobile : config.shadowWidthDesktop) +
-                      (isMobile ? 10 : 16)
-                    }
+                    strokeWidth={config.shadowWidth + 16}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -937,7 +929,7 @@
                     d={roadPath}
                     fill="none"
                     stroke="rgba(0, 0, 0, 0.65)"
-                    strokeWidth={isMobile ? config.shadowWidthMobile : config.shadowWidthDesktop}
+                    strokeWidth={config.shadowWidth}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -947,7 +939,7 @@
                     d={roadPath}
                     fill="none"
                     stroke="url(#asphaltGrad)"
-                    strokeWidth={isMobile ? config.roadWidthMobile : config.roadWidthDesktop}
+                    strokeWidth={config.roadWidth}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -957,8 +949,8 @@
                     d={roadPath}
                     fill="none"
                     stroke="#e2e8f0"
-                    strokeWidth={isMobile ? "2.2" : "2.8"}
-                    strokeDasharray={isMobile ? "10 12" : "14 16"}
+                    strokeWidth="2.8"
+                    strokeDasharray="14 16"
                     style={{
                       strokeDashoffset: activeDashOffset,
                     }}
