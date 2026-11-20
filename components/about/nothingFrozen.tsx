@@ -45,9 +45,9 @@ const NothingFrozen = () => {
   const marqueePhrases = [marqueePhrase, marqueePhrase, marqueePhrase, marqueePhrase];
 
   return (
-    <section className={`relative w-full py-16 md:py-20 px-0 sm:px-0 lg:px-0 bg-transparent select-none overflow-hidden ${matter.className}`}>
+    <section className={`relative w-full py-10 sm:py-16 md:py-20 px-0 sm:px-0 lg:px-0 bg-transparent select-none overflow-hidden ${matter.className}`}>
       {/* Background Marquee Text */}
-      <div className="relative w-full overflow-hidden py-6 sm:py-10 pointer-events-none z-0">
+      <div className="relative w-full overflow-hidden py-4 sm:py-6 md:py-10 pointer-events-none z-0">
         <div className="animate-marquee flex items-center space-x-8 sm:space-x-16 will-change-transform transform-gpu">
           {marqueePhrases.concat(marqueePhrases).map((phrase, idx) => (
             <span
@@ -64,21 +64,21 @@ const NothingFrozen = () => {
         </div>
       </div>
 
-      {/* 3D Chicken Bucket Interactive Area */}
-      <div className="relative z-10 flex justify-center items-center -mt-12 xs:-mt-16 sm:-mt-24 md:-mt-40 lg:-mt-40 xl:-mt-48 transform-gpu">
+      {/* 3D Chicken Bucket Interactive Area: Overlaps top marquee text */}
+      <div className="relative z-10 flex justify-center items-center -mt-10 xs:-mt-20 sm:-mt-28 md:-mt-36 lg:-mt-44 xl:-mt-52 transform-gpu">
         <ChickenBucketCanvas modelPath="/chicken_buket_new.glb" />
       </div>
 
       {/* Narrative Description */}
-      <div className="relative z-10 md:max-w-4xl mx-auto text-center px-[3%] md:px-4 mt-2 xs:-mt-4 sm:-mt-6 md:mt-1 lg:mt-1">
-        <p className="text-base sm:text-lg md:text-xl font-normal leading-[1.2] text-neutral-200/95 max-w-4xl mx-auto">
+      <div className="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6 mt-4 xs:mt-5 sm:mt-6 md:mt-8">
+        <p className="text-sm xs:text-base sm:text-lg md:text-xl font-normal leading-[1.2] text-neutral-200/95 max-w-3xl mx-auto">
           {t(
             "nothingFrozen.descP1",
             "Great Chicken Has Nowhere To Hide. That's Why We Start With Fresh Cuts, Marinate In-House, And Hand-Breade Every Piece To Order. Our Oil Is Filtered Daily — Because Crispy Is Chemistry, And Chemistry Has Standards."
           )}
         </p>
 
-        <p className="text-base sm:text-lg md:text-xl font-medium tracking-wide text-[#E5A823] pt-5">
+        <p className="text-sm xs:text-base sm:text-lg md:text-xl font-medium tracking-wide text-[#E5A823] pt-3 sm:pt-4">
           {t("nothingFrozen.descP2", "No Mystery. No Compromise. Just The Good Stuff, Done Right.")}
         </p>
       </div>

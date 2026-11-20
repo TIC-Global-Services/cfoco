@@ -196,7 +196,7 @@ export default function ChickenBucketCanvas({
   const [isMobile, setIsMobile] = useState(false);
 
   const controls = {
-    position: { x: 0, y: 0, z: 0 },
+    position: { x: 0, y: isMobile ? 0.01 : 0, z: 0 },
     rotation: { x: 0, y: -130, z: 0 },
     scale: 0.55,
     camera: { x: 0, y: 0.5, z: 4.1 },
@@ -238,7 +238,7 @@ export default function ChickenBucketCanvas({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full max-w-[340px] xs:max-w-[380px] sm:max-w-[460px] md:max-w-[560px] lg:max-w-[660px] xl:max-w-[720px] aspect-[1/0.92] mx-auto select-none ${className}`}
+      className={`relative w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[420px] md:max-w-[520px] lg:max-w-[620px] xl:max-w-[700px] aspect-[1/0.92] mx-auto select-none ${className}`}
       style={{
         touchAction: "pan-y",
       }}

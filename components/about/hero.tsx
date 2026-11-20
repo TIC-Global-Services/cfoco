@@ -82,14 +82,14 @@ const Hero = () => {
                   refHeight={230}
                   fontSize={115}
                   letterSpacing="-3%"
-                  lines={[{ text: t("hero.headlineDesktop", "Crispy Since 2011."), y: "58%" }]}
+                  lines={[{ text: t("hero.headlineDesktop", "Crispy Since 2011."), y: "78%" }]}
                 />
               </div>
             )}
 
             {/* Mobile Headline - 2 lines */}
             {isDesktop !== true && (
-              <div className="relative w-full sm:max-w-md flex md:hidden items-center justify-center">
+              <div className="relative w-full sm:max-w-md flex md:hidden items-center justify-center mt-20">
                 <MaskedVideoHeadline
                   videoSrc="/bg_about_video.mp4"
                   refWidth={1000}
@@ -97,15 +97,15 @@ const Hero = () => {
                   fontSize={160}
                   letterSpacing="-3%"
                   lines={[
-                    { text: t("hero.headlineMobileLine1", "Crispy Since"), y: "120" },
-                    { text: t("hero.headlineMobileLine2", "2011."), y: "295", fontSize: 122 },
+                    { text: t("hero.headlineMobileLine1", "Crispy Since"), y: "220" },
+                    { text: t("hero.headlineMobileLine2", "2011."), y: "395", fontSize: 122 },
                   ]}
                 />
               </div>
             )}
 
             {/* Subtitles */}
-            <div className="mt-2 sm:mt-0 text-center">
+            <div className="mt-5 sm:mt-[2%] text-center">
               <p className="text-xl sm:text-xl md:text-2xl font-medium tracking-wide text-[#F2F2F2]">
                 {t("hero.recipeBorn", "A Recipe Born In")}{" "}
                 <span className="text-[#CC1518] font-medium">{t("hero.bordeaux", "Bordeaux")}</span>.

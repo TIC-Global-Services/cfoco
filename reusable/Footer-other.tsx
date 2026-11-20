@@ -81,18 +81,32 @@ const FooterOther: React.FC<FooterProps> = ({ className = "" }) => {
     >
       <Reveal className="h-full w-full">
         <div className="relative z-10 w-full h-full px-5 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 flex flex-col justify-between items-center">
-          {/* Top Navigation Links */}
-          <nav className="flex flex-wrap justify-center items-center px-10 md:px-0 gap-6 sm:gap-8 md:gap-10 lg:gap-14 text-lg sm:text-lg font-normal text-white shrink-0">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="transition-colors duration-200 hover:text-white relative leading-[0.9]  group"
-              >
-                <span>{link.label}</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E5A823] transition-all duration-300 group-hover:w-full" />
-              </Link>
-            ))}
+          {/* Top Navigation Links: 3 on top, 2 below on mobile; single row on desktop */}
+          <nav className="flex flex-col md:flex-row items-center justify-center gap-y-2.5 md:gap-10 lg:gap-14 text-sm sm:text-base md:text-lg font-medium tracking-wide text-white shrink-0 w-full mx-auto px-4">
+            <div className="flex items-center justify-center gap-x-6 sm:gap-x-8 md:contents">
+              {navLinks.slice(0, 3).map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="transition-colors duration-200 hover:text-[#E5A823] relative leading-normal whitespace-nowrap group text-center"
+                >
+                  <span>{link.label}</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E5A823] transition-all duration-300 group-hover:w-full" />
+                </Link>
+              ))}
+            </div>
+            <div className="flex items-center justify-center gap-x-6 sm:gap-x-8 md:contents">
+              {navLinks.slice(3, 5).map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="transition-colors duration-200 hover:text-[#E5A823] relative leading-normal whitespace-nowrap group text-center"
+                >
+                  <span>{link.label}</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E5A823] transition-all duration-300 group-hover:w-full" />
+                </Link>
+              ))}
+            </div>
           </nav>
 
           {/* Center 3D CFOCO Logo */}
