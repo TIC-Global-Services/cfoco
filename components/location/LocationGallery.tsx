@@ -162,14 +162,14 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({
       {/* Main 3D Cover Flow Carousel Container */}
       <div className="relative w-full max-w-7xl mx-auto flex items-center justify-center">
         {/* Previous Navigation Arrow Button */}
-        <button
+        {/* <button
           type="button"
           onClick={handlePrev}
           aria-label="Previous Slide"
           className="absolute left-2 sm:left-4 md:left-8 lg:left-12 z-40 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-[#FFBF00]/60 hover:border-[#FFBF00] bg-black/50 hover:bg-[#FFBF00]/15 text-[#FFBF00] backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
         >
           <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
-        </button>
+        </button> */}
 
         {/* 3D Viewport Stage */}
         <div
@@ -305,14 +305,14 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({
         </div>
 
         {/* Next Navigation Arrow Button */}
-        <button
-          type="button"
-          onClick={handleNext}
-          aria-label="Next Slide"
-          className="absolute right-2 sm:right-4 md:right-8 lg:right-12 z-40 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-[#FFBF00]/60 hover:border-[#FFBF00] bg-black/50 hover:bg-[#FFBF00]/15 text-[#FFBF00] backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
-        >
-          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
-        </button>
+          {/* <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Next Slide"
+            className="absolute right-2 sm:right-4 md:right-8 lg:right-12 z-40 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-[#FFBF00]/60 hover:border-[#FFBF00] bg-black/50 hover:bg-[#FFBF00]/15 text-[#FFBF00] backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
+          </button> */}
       </div>
 
       {/* Bottom Horizontal Pagination Indicators */}

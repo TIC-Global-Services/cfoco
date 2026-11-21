@@ -177,7 +177,7 @@ const WhatWeRefuse: React.FC = () => {
         </div>
 
         {/* Subtitle */}
-        <p className="text-neutral-400 text-xs sm:text-sm md:text-base font-normal text-center leading-[1.2] max-w-md sm:max-w-lg whitespace-pre-line">
+        <p className="text-neutral-400 text-sm sm:text-sm md:text-base font-normal text-center leading-[1.2] max-w-md sm:max-w-lg whitespace-pre-line">
           {t("whatWeRefuse.subtitle", "We believe great food starts with non-negotiables.\nHere are the principles we stand by, every single day.")}
         </p>
       </header>

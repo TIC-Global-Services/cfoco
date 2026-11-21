@@ -119,7 +119,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-neutral-300 hover:text-white hover:bg-white/10 focus:outline-none transition-colors"
+              className="p-2 rounded-lg text-[#CC1518] hover:text-white hover:bg-white/10 focus:outline-none transition-colors"
               aria-label="Toggle Navigation Menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -134,14 +134,29 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
+                // <svg
+                //   className="w-6 h-6"
+                //   fill="none"
+                //   viewBox="0 0 24 24"
+                //   stroke="currentColor"
+                //   strokeWidth="2"
+                // >
+                //   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                // </svg>
                 <svg
-                  className="w-6 h-6"
-                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
+                  fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  <path d="M3 12h18" />
+                  <path d="M3 19 L13 19" />
+                  <path d="M3 5h18" />
                 </svg>
               )}
             </button>

@@ -179,13 +179,13 @@ const Hero = () => {
             style={{ opacity: textOpacity, y: descY }}
             className="w-full md:max-w-3xl lg:max-w-4xl text-center sm:text-right space-y-2 sm:space-y-3 hidden md:block"
           >
-            <p className="text-base sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
+            <p className="text-base sm:text-base lg:text-xl xl:text-2xl leading-[1.2] text-[#E0E0E0] font-medium whitespace-pre-line">
               {t("hero.storyP1", "In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:\nFried Chicken That Promised The World And Delivered Grease. So They Did The Stubborn Thing")}{" "}
               <span className="text-[#E52320] font-medium">
                 {t("hero.storyP1Highlight", "They Started Over. Hundreds Of Tests.")}
               </span>
             </p>
-            <p className="text-base  sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
+            <p className="text-base  sm:text-base lg:text-xl xl:text-2xl leading-[1.2] text-[#E0E0E0] font-medium whitespace-pre-line">
               {t("hero.storyP2", "One Relentless Question: What Does Perfect Actually Taste Like? The Answer Became")}{" "}
               <span className="text-[#E5A823] font-semibold">{t("hero.cfc", "CFC")}</span>.{" "}
               {t("hero.storyP2End", "Fresh, Never Frozen. Bold, Never Boring.\nCrispy In A Way You Feel Before You Taste.")}

@@ -65,7 +65,7 @@ const NothingFrozen = () => {
       </div>
 
       {/* 3D Chicken Bucket Interactive Area: Overlaps top marquee text */}
-      <div className="relative z-10 flex justify-center items-center -mt-10 xs:-mt-20 sm:-mt-28 md:-mt-36 lg:-mt-44 xl:-mt-52 transform-gpu">
+      <div className="relative z-10 flex justify-center items-center -mt-5 xs:-mt-20 sm:-mt-28 md:-mt-36 lg:-mt-44 xl:-mt-52 transform-gpu">
         <ChickenBucketCanvas modelPath="/chicken_buket_new.glb" />
       </div>
 

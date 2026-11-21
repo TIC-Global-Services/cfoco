@@ -22,7 +22,7 @@ const ContactHero = () => {
         lines: [{ text: t("hero.title", "Let’s Talk Cravings"), y: "58%" }],
       }}
       description={
-        <p className="text-xl sm:text-xl md:text-2xl font-normal leading-[1.2] tracking-tight md:tracking-wide text-[#F2F2F2]">
+        <p className="text-xl sm:text-xl max-w-4xl md:text-2xl font-normal leading-[1.2] tracking-tight md:tracking-wide text-[#F2F2F2]">
           {t("hero.description", "Got a question, feedback, partnership idea, or need a little help? Whatever’s on your mind, the")}{" "}
           <span className="text-[#CC1518] font-medium">{t("hero.brandName", "CFOCO")}</span>{" "}
           {t("hero.descriptionEnd", "team is here to listen, help, and keep things moving.")}

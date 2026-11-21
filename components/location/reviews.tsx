@@ -253,7 +253,7 @@ const Reviews = ({
       // ── Touch / Small Screens (< 1024px) ──
       mm.add("(max-width: 1024px)", () => {
         const { left, right } = collect();
-        buildScrollTimeline(left, right, 2.4, 1.0, 1.2, 0.6);
+        buildScrollTimeline(left, right, 2.4, 0.9, 1.2, 0.6);
       });
 
       // ── Desktop Screens (>= 1025px) ──
