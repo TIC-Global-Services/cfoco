@@ -47,7 +47,7 @@ const NothingFrozen = () => {
   return (
     <section className={`relative w-full py-10 sm:py-16 md:py-20 px-0 sm:px-0 lg:px-0 bg-transparent select-none overflow-hidden ${matter.className}`}>
       {/* Background Marquee Text */}
-      <div className="relative w-full overflow-hidden py-4 sm:py-6 md:py-10 pointer-events-none z-0">
+      <div className="relative w-full overflow-hidden py-6 sm:py-6 md:py-10 pointer-events-none z-0">
         <div className="animate-marquee flex items-center space-x-8 sm:space-x-16 will-change-transform transform-gpu">
           {marqueePhrases.concat(marqueePhrases).map((phrase, idx) => (
             <span
@@ -64,14 +64,14 @@ const NothingFrozen = () => {
         </div>
       </div>
 
-      {/* 3D Chicken Bucket Interactive Area: Overlaps top marquee text */}
-      <div className="relative z-10 flex justify-center items-center -mt-5 xs:-mt-20 sm:-mt-28 md:-mt-36 lg:-mt-44 xl:-mt-52 transform-gpu">
+      {/* 3D Chicken Bucket Interactive Area: Balanced separation without overlapping upper or lower text on mobile */}
+      <div className="relative z-10 flex justify-center items-center mt-2 xs:-mt-12 sm:-mt-24 md:-mt-36 lg:-mt-44 xl:-mt-52 transform-gpu">
         <ChickenBucketCanvas modelPath="/chicken_buket_new.glb" />
       </div>
 
-      {/* Narrative Description */}
+      {/* Narrative Description: Safely positioned below the 3D model with clear separation */}
       <div className="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6 mt-4 xs:mt-5 sm:mt-6 md:mt-8">
-        <p className="text-sm xs:text-base sm:text-lg md:text-xl font-normal leading-[1.2] text-neutral-200/95 max-w-3xl mx-auto">
+        <p className="text-sm xs:text-base sm:text-lg md:text-xl font-normal leading-snug sm:leading-[1.2] text-neutral-200/95 max-w-xl sm:max-w-2xl md:max-w-3xl mx-auto">
           {t(
             "nothingFrozen.descP1",
             "Great Chicken Has Nowhere To Hide. That's Why We Start With Fresh Cuts, Marinate In-House, And Hand-Breade Every Piece To Order. Our Oil Is Filtered Daily — Because Crispy Is Chemistry, And Chemistry Has Standards."

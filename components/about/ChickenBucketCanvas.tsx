@@ -196,7 +196,7 @@ export default function ChickenBucketCanvas({
   const [isMobile, setIsMobile] = useState(false);
 
   const controls = {
-    position: { x: 0, y: isMobile ? 0.01 : 0, z: 0 },
+    position: { x: 0, y: isMobile ? 0.024 : 0, z: 0 },
     rotation: { x: 0, y: -130, z: 0 },
     scale: 0.55,
     camera: { x: 0, y: 0.5, z: 4.1 },
