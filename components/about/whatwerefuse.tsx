@@ -16,7 +16,7 @@ interface PrincipleCard {
 const CARDS: PrincipleCard[] = [
   {
     id: "speed",
-    iconSrc: "/speed_logo.svg",
+    iconSrc: "/speed_logo_new.svg",
     title: "Speed",
     description: "Fast Food Should Be Fast And Still Be Food.",
   },
@@ -46,7 +46,7 @@ const WhatWeRefuse: React.FC = () => {
   const cards: PrincipleCard[] = [
     {
       id: "speed",
-      iconSrc: "/speed_logo.svg",
+      iconSrc: "/speed_logo_new.svg",
       title: t("whatWeRefuse.cards.speed.title", "Speed"),
       description: t("whatWeRefuse.cards.speed.description", "Fast Food Should Be Fast And Still Be Food."),
     },
