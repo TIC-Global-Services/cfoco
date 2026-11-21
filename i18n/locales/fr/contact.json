@@ -1,6 +1,8 @@
 {
   "hero": {
     "title": "Parlons de vos envies",
+    "mobileTitleLine1": "Parlons de",
+    "mobileTitleLine2": "vos envies",
     "description": "Une question, un retour, une idée de partenariat ou besoin d'aide ? Quoi que vous ayez en tête, l'équipe",
     "brandName": "CFOCO",
     "descriptionEnd": "est là pour vous écouter, vous aider et avancer."

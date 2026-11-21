@@ -21,6 +21,16 @@ const ContactHero = () => {
         letterSpacing: "-3%",
         lines: [{ text: t("hero.title", "Let’s Talk Cravings"), y: "58%" }],
       }}
+      mobileTitle={{
+        refWidth: 1380,
+        refHeight: 380,
+        fontSize: 140,
+        letterSpacing: "-3%",
+        lines: [
+          { text: t("hero.mobileTitleLine1", "Let’s"), y: "34%" },
+          { text: t("hero.mobileTitleLine2", "Talk Cravings"), y: "72%" },
+        ],
+      }}
       description={
         <p className="text-xl sm:text-xl max-w-6xl md:text-2xl font-normal leading-[1.2] tracking-tight md:tracking-wide text-[#F2F2F2]">
           {t("hero.description", "Got a question, feedback, partnership idea, or need a little help? Whatever’s on your mind, the")}{" "}

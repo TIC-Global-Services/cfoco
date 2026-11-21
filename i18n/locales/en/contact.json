@@ -1,6 +1,8 @@
 {
   "hero": {
     "title": "Let’s Talk Cravings",
+    "mobileTitleLine1": "Let’s",
+    "mobileTitleLine2": "Talk Cravings",
     "description": "Got a question, feedback, partnership idea, or need a little help? Whatever’s on your mind, the",
     "brandName": "CFOCO",
     "descriptionEnd": "team is here to listen, help, and keep things moving."
