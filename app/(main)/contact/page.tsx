@@ -4,6 +4,7 @@ import ContactForm from '@/components/contact/contactForm';
 import Hero from '@/components/contact/hero';
 import Reveal from '@/reusable/Reveal';
 import JsonLd from '@/components/seo/JsonLd';
+import ContactHero from '@/components/contact/contactHero';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cfoco.com';
 
@@ -77,7 +78,7 @@ const ContactPage = () => {
     <div className="relative z-10 w-full flex-1 flex flex-col">
       <JsonLd data={[contactJsonLd, breadcrumbJsonLd]} />
       <Reveal>
-        <Hero />
+        <ContactHero  />
       </Reveal>
       <Reveal>
         <ContactForm />
