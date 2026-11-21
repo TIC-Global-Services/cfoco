@@ -56,7 +56,7 @@ const Hero = () => {
       className={`relative w-full h-[320vh] bg-transparent select-none ${matter.className}`}
     >
       {/* Pinned Viewport Container */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 md:pt-0  px-6 sm:px-10 lg:px-16 overflow-hidden">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 md:pt-0  px-3 sm:px-10 lg:px-16 overflow-hidden">
         {/* Ambient Atmosphere Glow */}
         {/* <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[850px] h-[600px] sm:h-[850px] bg-blue-600/10 rounded-full blur-[170px] pointer-events-none" />
         <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" /> */}
@@ -67,7 +67,7 @@ const Hero = () => {
             opacity: heroOpacity,
             willChange: "opacity",
           }}
-          className="absolute inset-0 flex flex-col items-center justify-between py-12 sm:py-16 px-4 pointer-events-none z-30"
+          className="absolute inset-0 flex flex-col items-center justify-between py-12 sm:py-16 px-6 pointer-events-none z-30"
         >
           {/* <div className="hidden sm:block h-6" /> */}
 
@@ -97,8 +97,8 @@ const Hero = () => {
                   fontSize={160}
                   letterSpacing="-3%"
                   lines={[
-                    { text: t("hero.headlineMobileLine1", "Crispy Since"), y: "220" },
-                    { text: t("hero.headlineMobileLine2", "2011."), y: "395", fontSize: 122 },
+                    { text: t("hero.headlineMobileLine1", "Crispy Since"), y: "210" },
+                    { text: t("hero.headlineMobileLine2", "2011."), y: "385", fontSize: 122 },
                   ]}
                 />
               </div>
@@ -177,15 +177,31 @@ const Hero = () => {
         <div className="w-full z-20 flex justify-end items-end pb-8 sm:pb-12 md:pb-14">
           <motion.div
             style={{ opacity: textOpacity, y: descY }}
-            className="max-w-xl md:max-w-3xl lg:max-w-4xl text-center sm:text-right space-y-2 sm:space-y-3"
+            className="w-full md:max-w-3xl lg:max-w-4xl text-center sm:text-right space-y-2 sm:space-y-3 hidden md:block"
           >
-            <p className="text-xs sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
+            <p className="text-base sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
               {t("hero.storyP1", "In 2011, Our Founders Were Tired Of The Same Thing Everyone Was Tired Of:\nFried Chicken That Promised The World And Delivered Grease. So They Did The Stubborn Thing")}{" "}
               <span className="text-[#E52320] font-medium">
                 {t("hero.storyP1Highlight", "They Started Over. Hundreds Of Tests.")}
               </span>
             </p>
-            <p className="text-xs sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
+            <p className="text-base  sm:text-base lg:text-xl xl:text-2xl leading-[1.3] text-[#E0E0E0] font-medium whitespace-pre-line">
+              {t("hero.storyP2", "One Relentless Question: What Does Perfect Actually Taste Like? The Answer Became")}{" "}
+              <span className="text-[#E5A823] font-semibold">{t("hero.cfc", "CFC")}</span>.{" "}
+              {t("hero.storyP2End", "Fresh, Never Frozen. Bold, Never Boring.\nCrispy In A Way You Feel Before You Taste.")}
+            </p>
+          </motion.div>
+          <motion.div
+            style={{ opacity: textOpacity, y: descY }}
+            className="w-full md:max-w-3xl lg:max-w-4xl text-center sm:text-right space-y-2 sm:space-y-3 md:hidden"
+          >
+            <p className="text-base sm:text-base lg:text-xl xl:text-2xl  leading-[1.2] text-[#E0E0E0] font-medium whitespace-pre-line">
+              {t("hero.storyP1", "In 2011, Our Founders Were Tired Of The Same \nThing Everyone Was Tired Of:Fried Chicken \nThat Promised The World And Delivered Grease. So They Did The Stubborn Thing")}{" "}
+              <span className="text-[#E52320] font-medium">
+                {t("hero.storyP1Highlight", "They Started Over. Hundreds Of Tests.")}
+              </span>
+            </p>
+            <p className="text-base  sm:text-base lg:text-xl xl:text-2xl leading-[1.2] text-[#E0E0E0] font-medium whitespace-pre-line">
               {t("hero.storyP2", "One Relentless Question: What Does Perfect Actually Taste Like? The Answer Became")}{" "}
               <span className="text-[#E5A823] font-semibold">{t("hero.cfc", "CFC")}</span>.{" "}
               {t("hero.storyP2End", "Fresh, Never Frozen. Bold, Never Boring.\nCrispy In A Way You Feel Before You Taste.")}

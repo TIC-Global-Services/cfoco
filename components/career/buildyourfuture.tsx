@@ -394,8 +394,8 @@ const BuildYourFuture: React.FC = () => {
         </div>
 
         {/* Bottom Paragraph */}
-        <div className="w-full z-10 text-center max-w-[340px] sm:max-w-[460px] pointer-events-auto lg:absolute lg:right-8 xl:right-16 lg:bottom-[22%] lg:translate-x-0 lg:text-right lg:max-w-[400px] xl:max-w-[500px] lg:px-0 transition-all duration-300">
-          <p className="text-base xs:text-[13px] sm:text-sm md:text-base lg:text-lg xl:text-xl text-neutral-200 font-normal leading-[1.3] sm:leading-[1.25] drop-shadow-md">
+        <div className="w-full z-10 text-center max-w-[330px] sm:max-w-[460px] pointer-events-auto lg:absolute lg:right-8 xl:right-16 lg:bottom-[22%] lg:translate-x-0 lg:text-right lg:max-w-[400px] xl:max-w-[500px] lg:px-0 transition-all duration-300">
+          <p className="text-base xs:text-sm  sm:text-sm md:text-base lg:text-lg xl:text-xl text-neutral-200 font-normal leading-[1.3] sm:leading-[1.25] drop-shadow-md">
             {t(
               "buildFuture.description",
               "At CFOCO, We're More Than Just Burgers And Fried Chicken. We're A Team Built On Energy, Creativity, Teamwork, And A Shared Obsession With Quality. Whether You're Taking Orders, Managing Operations, Or Leading The Kitchen, Every Role Helps Shape"
