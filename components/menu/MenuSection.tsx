@@ -269,7 +269,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
           <p className="text-sm mt-1 opacity-70">{t("section.emptySubtitle", "Add items to this category in Sanity Studio.")}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-6 px-[5%]">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6 md:px-[5%]">
           {visible.map((item) => {
             const hasDetails = hasModalDetails(item);
             const itemTitle = getLocalized(item.title, i18n.language);
@@ -312,7 +312,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                 {/* Content info */}
                 <div className="relative z-10 flex flex-col">
                   <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="text-2xl sm:text-3xl font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors">
+                    <h3 className="text-base sm:text-3xl font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors leading-[1.2]">
                       {itemTitle}
                     </h3>
                     {item.price && (
@@ -321,7 +321,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm sm:text-lg font-medium text-neutral-700/90 leading-snug">
+                  <p className="mt-1 text-xs sm:text-lg font-medium text-neutral-700/90 leading-[1.2] md:leading-snug">
                     {itemDesc}
                   </p>
                 </div>

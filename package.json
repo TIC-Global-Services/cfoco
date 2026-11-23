@@ -11,7 +11,8 @@
     "seed:categories": "node sanity/seed-categories.mjs",
     "seed:menu": "node sanity/seed-menu.mjs",
     "seed:locations": "node sanity/seed-locations.mjs",
-    "seed:all": "node sanity/seed-categories.mjs && node sanity/seed-menu.mjs && node sanity/seed-locations.mjs",
+    "seed:jobs": "node sanity/seed-jobs.mjs",
+    "seed:all": "node sanity/seed-categories.mjs && node sanity/seed-menu.mjs && node sanity/seed-locations.mjs && node sanity/seed-jobs.mjs",
     "export:menu": "node sanity/export-menu-ndjson.mjs"
   },
   "dependencies": {
