@@ -16,8 +16,9 @@ interface FooterNavLink {
 const navLinks: FooterNavLink[] = [
   { label: "Menu", href: "/menu" },
   { label: "Home", href: "/" },
-  { label: "Franchise", href: "/franchise" },
-  { label: "Policies", href: "/policies" },
+  {label:"Location",href:"/location"},
+  // { label: "Franchise", href: "/franchise" },
+  // { label: "Policies", href: "/policies" },
   { label: "Contact Us", href: "/contact" },
   { label: "Blogs", href: "/blogs" },
 ];
@@ -120,7 +121,7 @@ const FooterOther: React.FC<FooterProps> = ({ className = "" }) => {
                 className="object-contain"
               /> */}
               <LazyMount className="h-full w-full">
-                <FooterLogoCanvas modelPath="/footerlogo-2.glb" />
+                <FooterLogoCanvas modelPath="/footerlogo6.glb" />
               </LazyMount>
             </div>
           </div>
