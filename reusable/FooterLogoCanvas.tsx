@@ -6,13 +6,14 @@ import { Center, useGLTF } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-// Preload 3D model asset
+// Preload 3D model assets
+useGLTF.preload("/footerlogo.glb");
 useGLTF.preload("/footer_logo.glb");
 
 function LogoModel({
   modelPath,
-  position = [0, 1, 0],
-  rotation = [0, THREE.MathUtils.degToRad(13), 0],
+  position = [0, 0, 0],
+  rotation = [0, Math.PI, 0],
   scale = 1,
 }: {
   modelPath: string;
@@ -138,8 +139,9 @@ export default function FooterLogoCanvas({ modelPath }: { modelPath: string }) {
             });
           }}
         >
-          <ambientLight intensity={1.2} />
-          <directionalLight position={[3, 4, 5]} intensity={2.2} />
+          {/* Tuned Lighting Setup */}
+          <ambientLight intensity={4.4} />
+          <directionalLight position={[3, 4, 5]} intensity={3.6} />
           <directionalLight position={[-3, -2, 2]} intensity={1.2} />
 
           {/* Center component precisely centers the 3D model geometry */}
@@ -147,7 +149,7 @@ export default function FooterLogoCanvas({ modelPath }: { modelPath: string }) {
             <LogoModel
               modelPath={modelPath}
               position={[0, 0, 0]}
-              rotation={[0, Math.PI + THREE.MathUtils.degToRad(0), 0]}
+              rotation={[0, Math.PI, 0]}
               scale={1}
             />
           </Center>

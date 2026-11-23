@@ -24,18 +24,18 @@
       },
       "2014": {
         "title": "Le bouche-à-oreille",
-        "descLine1": "La queue déborde dans la rue. Il faut croire que nous n'étions",
-        "descLine2": "pas les seuls lassés de la médiocrité."
+        "descLine1": "La queue déborde dans la rue. Il faut",
+        "descLine2": "croire que nous n'étions   pas les seuls lassés de la médiocrité."
       },
       "2018": {
         "title": "Mascot",
-        "descLine1": "Un deuxième, un troisième, un quatrième. Même recette.",
-        "descLine2": "Même exigence. Aucun raccourci."
+        "descLine1": "Un deuxième, un troisième, un quatrième. ",
+        "descLine2": "Même recette. Même exigence. Aucun raccourci."
       },
       "2019": {
         "title": "Le culte grandit",
-        "descLine1": "Paris, Lyon, Marseille.",
-        "descLine2": "Le croustillant qu'on entend dans toute la France."
+        "descLine1": "Paris, Lyon, Marseille.Le croustillant",
+        "descLine2": "qu'on entend dans toute la France."
       },
       "2020": {
         "title": "La formule secrète",
@@ -44,8 +44,8 @@
       },
       "2022": {
         "title": "Cap sur le monde",
-        "descLine1": "De nouveaux continents, la même obsession.",
-        "descLine2": "Jamais surgelé, jamais de compromis."
+        "descLine1": "De nouveaux continents, la même",
+        "descLine2": "obsession.Jamais surgelé, jamais de compromis."
       }
     }
   },

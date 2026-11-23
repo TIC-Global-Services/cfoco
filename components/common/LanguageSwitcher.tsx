@@ -70,7 +70,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             type="button"
             onClick={() => handleSelect(lang.code)}
             aria-pressed={isActive}
-            className={`rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
+            className={`rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
               isActive
                 ? "bg-white text-[#101726] shadow-sm scale-100"
                 : "text-neutral-400 hover:text-white"
