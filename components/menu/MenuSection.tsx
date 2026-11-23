@@ -293,13 +293,13 @@ const MenuSection: React.FC<MenuSectionProps> = ({
 
                 {/* Badge if present */}
                 {(itemBadge || item.isBestSeller) && (
-                  <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-white/90 text-[#CC1518] text-xs font-bold shadow-sm border border-neutral-100">
+                  <div className="absolute top-2 md:top-4 left-2 md:left-4 z-10 px-3 py-1 rounded-full bg-white/90 text-[#CC1518] text-[10px] md:text-xs font-bold shadow-sm border border-neutral-100">
                     {itemBadge || t("section.bestSelling", "🔥 Best Selling")}
                   </div>
                 )}
 
                 {/* Food Image Container */}
-                <div className="relative w-full aspect-square max-h-64 sm:max-h-[35dvh] mx-auto flex items-center justify-center mb-6 overflow-hidden rounded-2xl">
+                <div className="relative w-full aspect-square max-h-60 sm:max-h-[35dvh] mx-auto flex items-center justify-center mb-4 md:mb-6 overflow-hidden rounded-2xl">
                   <Image
                     src={item.image || "/cfc_bucket.png"}
                     alt={itemTitle}
