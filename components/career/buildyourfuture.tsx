@@ -181,7 +181,7 @@ const BuildYourFuture: React.FC = () => {
         const img = new Image();
         img.decoding = "async";
         const frameNum = String(i + 1).padStart(3, "0");
-        img.src = `/burger-sequence/ezgif-frame-${frameNum}.webp`;
+        img.src = `/burger-sequence-1080/ezgif-frame-${frameNum}.webp`;
 
         const markReady = () => {
           if (isCancelled) return;
