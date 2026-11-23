@@ -41,6 +41,7 @@ const resolveY = (y: string | number, refHeight: number) => {
 const resolveLetterSpacingPx = (letterSpacing: string | undefined, fontSizePx: number) => {
   if (!letterSpacing) return 0;
   if (letterSpacing.endsWith("em")) return parseFloat(letterSpacing) * fontSizePx;
+  if (letterSpacing.endsWith("%")) return (parseFloat(letterSpacing) / 100) * fontSizePx;
   if (letterSpacing.endsWith("px")) return parseFloat(letterSpacing);
   return 0;
 };
@@ -97,8 +98,32 @@ const MaskedVideoHeadline = ({
     ctx.fillStyle = "white";
     ctx.strokeStyle = "white";
 
+    // Safe maximum width for text to avoid horizontal clipping at container edges.
+    // 94% provides a comfortable 3% safety margin on both left and right edges.
+    const maxAllowedWidth = width * 0.94;
+
+    // Check if any line overflows and calculate the global scale-down factor so
+    // all lines remain proportional, balanced, and fully visible without any clipping.
+    let fitScale = 1;
     lines.forEach((line) => {
-      const lineFontSizePx = (line.fontSize ?? fontSize) * scaleFactor;
+      if (!line.text) return;
+      const baseFontSize = (line.fontSize ?? fontSize) * scaleFactor;
+      ctx.font = `700 ${baseFontSize}px ${matter.style.fontFamily}`;
+      if ("letterSpacing" in ctx) {
+        ctx.letterSpacing = `${resolveLetterSpacingPx(letterSpacing, baseFontSize)}px`;
+      }
+      const measured = ctx.measureText(line.text).width;
+      if (measured > maxAllowedWidth && measured > 0) {
+        const lineScale = maxAllowedWidth / measured;
+        if (lineScale < fitScale) {
+          fitScale = lineScale;
+        }
+      }
+    });
+
+    lines.forEach((line) => {
+      if (!line.text) return;
+      const lineFontSizePx = (line.fontSize ?? fontSize) * scaleFactor * fitScale;
       ctx.font = `700 ${lineFontSizePx}px ${matter.style.fontFamily}`;
       if ("letterSpacing" in ctx) {
         ctx.letterSpacing = `${resolveLetterSpacingPx(letterSpacing, lineFontSizePx)}px`;

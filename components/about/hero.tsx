@@ -75,7 +75,7 @@ const Hero = () => {
           <div className="w-full flex flex-col items-center justify-center pt-28 sm:pt-32 md:pt-20 lg:pt-[8%]">
             {/* Desktop Headline */}
             {isDesktop !== false && (
-              <div className="relative w-full hidden md:flex items-center justify-center">
+              <div className="relative w-full max-w-7xl hidden md:flex items-center justify-center">
                 <MaskedVideoHeadline
                   videoSrc="/bg_about_video.mp4"
                   refWidth={1380}
@@ -89,15 +89,15 @@ const Hero = () => {
 
             {/* Mobile Headline - 2 lines */}
             {isDesktop !== true && (
-              <div className="relative w-full sm:max-w-md flex md:hidden items-center justify-center mt-20">
+              <div className="relative w-full max-w-lg flex md:hidden items-center justify-center mt-20">
                 <MaskedVideoHeadline
                   videoSrc="/bg_about_video.mp4"
                   refWidth={1000}
                   refHeight={440}
-                  fontSize={160}
+                  fontSize={120}
                   letterSpacing="-3%"
                   lines={[
-                    { text: t("hero.headlineMobileLine1", "Crispy Since"), y: "210" },
+                    { text: t("hero.headlineMobileLine1", "Crispy Since"), y: "260" },
                     { text: t("hero.headlineMobileLine2", "2011."), y: "385", fontSize: 122 },
                   ]}
                 />

@@ -125,7 +125,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
               <LazyMount className="h-full w-full">
-                <FooterLogoCanvas modelPath="/footer_logo2.glb" /> 
+                <FooterLogoCanvas modelPath="/footerlogo-2.glb" /> 
               </LazyMount>
             </div>
           </div>

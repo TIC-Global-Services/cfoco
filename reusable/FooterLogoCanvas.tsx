@@ -11,8 +11,8 @@ useGLTF.preload("/footer_logo.glb");
 
 function LogoModel({
   modelPath,
-  position = [0, 0, 0],
-  rotation = [0, THREE.MathUtils.degToRad(-13), 0],
+  position = [0, 1, 0],
+  rotation = [0, THREE.MathUtils.degToRad(13), 0],
   scale = 1,
 }: {
   modelPath: string;
@@ -147,7 +147,7 @@ export default function FooterLogoCanvas({ modelPath }: { modelPath: string }) {
             <LogoModel
               modelPath={modelPath}
               position={[0, 0, 0]}
-              rotation={[0, THREE.MathUtils.degToRad(-13), 0]}
+              rotation={[0, Math.PI + THREE.MathUtils.degToRad(0), 0]}
               scale={1}
             />
           </Center>
