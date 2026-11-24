@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
@@ -80,29 +80,11 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
     Blogs: "nav.blogs",
     "Contact Us": "nav.contact",
   };
-  const [mountLogo, setMountLogo] = useState(false);
 
   const navLinks = FOOTER_LINKS.map((link) => ({
     ...link,
     label: navKeyMap[link.label] ? t(navKeyMap[link.label] as any, link.label) : link.label,
   }));
-
-  // Preload footer 3D logo immediately so it is already loaded before scrolling
-  // useEffect(() => {
-  //   import("@/reusable/FooterLogoCanvas").then((mod) => {
-  //     mod.preloadFooterLogo?.("/footerlogo9.glb");
-  //   });
-  // }, []);
-  useEffect(() => {
-    // Wait until the browser is idle so we don't slow down the first paint
-    if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(() => setMountLogo(true), { timeout: 2000 });
-      return () => window.cancelIdleCallback(id);
-    }
-    // Safari fallback (no requestIdleCallback)
-    const id = window.setTimeout(() => setMountLogo(true), 1200);
-    return () => window.clearTimeout(id);
-  }, []);
 
   return (
     <footer
@@ -141,9 +123,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
-              <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
-                {mountLogo && <FooterLogoCanvas modelPath="/footerlogo9.glb" />}
-              </div>
+              <FooterLogoCanvas modelPath="/footerlogo9.glb" />
             </div>
           </div>
 
