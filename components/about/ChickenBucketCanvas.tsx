@@ -9,7 +9,16 @@ import Image from "next/image";
 // models are Draco-compressed: use the bundled decoder instead of a CDN round-trip
 useGLTF.setDecoderPath("/draco/");
 
-interface ChickenBucketCanvasProps {  
+// Camera start position
+const CAMERA_POS = { x: 0, y: 0.5, z: 4.1 };
+
+// Current vertical angle of the camera. Locking OrbitControls to this exact
+// angle blocks up/down dragging without changing how the bucket looks.
+const LOCKED_POLAR_ANGLE = Math.acos(
+  CAMERA_POS.y / Math.hypot(CAMERA_POS.x, CAMERA_POS.y, CAMERA_POS.z)
+);
+
+interface ChickenBucketCanvasProps {
   modelPath?: string;
   className?: string;
 }
@@ -86,7 +95,7 @@ function BucketModel({
 
   useFrame((state) => {
     if (!groupRef.current) return;
-    
+
     // Keep bucket strictly straight (zero tilt on X and Z axes)
     groupRef.current.rotation.x = baseRotX;
     groupRef.current.rotation.z = baseRotZ;
@@ -134,11 +143,11 @@ function BucketModel({
       <>
         {shadow}
         <Float
-        speed={1.5}
-        rotationIntensity={0.1}
-        floatIntensity={0.15}
-        floatingRange={[-0.03, 0.03]}
-      >
+          speed={1.5}
+          rotationIntensity={0.1}
+          floatIntensity={0.15}
+          floatingRange={[-0.03, 0.03]}
+        >
           {modelNode}
         </Float>
       </>
@@ -199,7 +208,7 @@ export default function ChickenBucketCanvas({
     position: { x: 0, y: isMobile ? 0.024 : 0, z: 0 },
     rotation: { x: 0, y: -130, z: 0 },
     scale: 0.55,
-    camera: { x: 0, y: 0.5, z: 4.1 },
+    camera: CAMERA_POS,
     fov: 38,
     interactiveOrbit: true,
     autoRotate: true,
@@ -337,9 +346,10 @@ export default function ChickenBucketCanvas({
 
             {/*
               Orbit Controls:
-              On mobile: Disable 1-finger touch rotation so native page scrolling is NEVER blocked.
-              Bucket auto-rotates smoothly on its own.
-              On desktop: Keep interactive mouse drag rotation enabled.
+              - Vertical (up/down) movement is LOCKED: min and max polar angle are the same.
+              - Horizontal drag rotation still works on desktop.
+              - On mobile: 1-finger rotation is disabled so native page scrolling is never blocked.
+              - Auto-rotate keeps working because it only changes the horizontal angle.
             */}
             {controls.interactiveOrbit && (
               <OrbitControls
@@ -352,8 +362,8 @@ export default function ChickenBucketCanvas({
                 enableDamping={true}
                 dampingFactor={0.05}
                 rotateSpeed={0.7}
-                minPolarAngle={Math.PI / 4}
-                maxPolarAngle={Math.PI / 1.75}
+                minPolarAngle={LOCKED_POLAR_ANGLE}
+                maxPolarAngle={LOCKED_POLAR_ANGLE}
               />
             )}
           </Suspense>
