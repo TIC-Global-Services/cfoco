@@ -73,7 +73,7 @@ export default function Experience() {
       <Leva
         hidden={process.env.NODE_ENV === "production"}
         collapsed
-        titleBar={{ title: "Scene controls", filter: true }}
+        titleBar={{ title: "Scene controls", filter: true, position: { x: 0, y: 90 } }}
         theme={{ sizes: { rootWidth: "320px", controlWidth: "170px" } }}
       />
       {/* scroll length: one SECTION_VH per section after the first, plus the outro */}

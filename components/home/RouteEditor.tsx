@@ -6,25 +6,24 @@ import { button, useControls } from "leva";
 import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { bumpRoutes } from "@/lib/home/scroll";
-import { KITCHEN_STOP, ROBOT_RUN } from "./config";
+import { ROBOT_RUN, ROBOT_STOP } from "./config";
 
 /**
  * ?debug only: the robot's routes on the floor, to shape them by hand. Click a waypoint and drag it (the arrows move
  * it along the floor); the robot follows the new curve straight away (scroll to watch it). The two outlines are the
  * robot's width (0.9 m): keep furniture outside them. Edits stay in this browser until "reset"; "copy routes" puts
- * them on the clipboard as code, to paste over the three arrays in ROBOT_RUN (config.ts).
+ * them on the clipboard as code, to paste over the array in ROBOT_RUN (config.ts).
  */
 
 const ROUTES = [
-  { key: "route", label: "parked → kitchen doorway", color: "#33d1ff" },
-  { key: "leadRoute", label: "kitchen → logo wall", color: "#ffb020" },
+  { key: "route", label: "parked → middle of the room", color: "#33d1ff" },
 ] as const;
 type RouteKey = (typeof ROUTES)[number]["key"];
 
 /** points two routes share: moving one moves it in both, and the code keeps their names */
 const NAMED = new Map<THREE.Vector3, string>([
   [ROBOT_RUN.start, "ROBOT_START"],
-  [KITCHEN_STOP, "KITCHEN_STOP"],
+  [ROBOT_STOP, "ROBOT_STOP"],
 ]);
 const STORE = "cfoco.robot-routes";
 /** half the robot's width, metres */

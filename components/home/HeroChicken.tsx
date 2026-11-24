@@ -304,6 +304,7 @@ export function HeroChicken() {
       rawMeshes,
       friedMeshes,
       bucketMats,
+      bucketAll: [...bucketMats, ...pileMats] as THREE.Material[],
       dropMixer,
       dropActions,
       faller,
@@ -551,20 +552,31 @@ export function HeroChicken() {
     const wb = smoothstep(WALL.panFrom + 0.05, WALL.panTo, p);
     rig.bucket.quaternion.copy(tmp.camQuat);
     scrollState.screenWhite = 0;
+    let alpha = 1; // the bucket's opacity
     if (wb > 0) {
-      // straight from the hero spot into the middle kiosk's screen, shrinking away…
+      // straight from the hero spot to just in front of the middle kiosk's screen, shrinking…
       tmp.wallPos.copy(WALL.screen);
-      tmp.wallPos.y -= BUCKET_HEIGHT * b.s * WALL.screenScale * 0.7; // the bucket's base: half its height (cup + pile) below the screen's centre
+      tmp.wallPos.y -= BUCKET_HEIGHT * b.s * WALL.screenScale * 0.7; // the bucket's base: half its height below the screen's centre
+      tmp.wallPos.x += WALL.hoverOff; // the screen faces +x, into the room
       rig.bucket.position.lerp(tmp.wallPos, wb);
       rig.bucket.scale.multiplyScalar(1 + (WALL.screenScale - 1) * wb);
       rig.bucket.quaternion.slerp(tmp.wallQuat, wb);
+      // …where, once the camera has settled, it fades away while the screen shows its flat picture (the 3D one is never seen going in)
       // once the camera has swung away from the wall, the bucket is on the robot's tray (unseen: no hop across the room)
       const onRobot = p >= ROBOT_RUN.loadAt && robotRide.ready;
-      scrollState.screenWhite = onRobot ? 0 : wb;
+      alpha = onRobot ? 1 : 1 - smoothstep(WALL.enterFrom, WALL.enterTo, p);
+      if (alpha < 0.01) rig.bucket.visible = false;
+      scrollState.screenWhite = onRobot ? 0 : smoothstep(0.35, 0.65, 1 - alpha);
       if (onRobot) {
+        rig.bucket.visible = true;
         rig.bucket.position.copy(robotRide.tray);
         rig.bucket.scale.multiplyScalar(ROBOT_RUN.bucketScale); // tray size, relative to its size in the screen
       }
+    }
+    for (const m of rig.bucketAll) {
+      if (m.opacity === alpha) continue;
+      m.opacity = alpha;
+      m.depthWrite = alpha > 0.999;
     }
     tmp.baseQuat.copy(rig.bucket.quaternion);
     tmp.lr.set(1, 0, 0).applyQuaternion(tmp.baseQuat);

@@ -149,7 +149,8 @@ function MobileMenu() {
                   href={l.href}
                   tabIndex={open ? 0 : -1}
                   onClick={() => setOpen(false)}
-                  className="nav-sheet-link"
+                  aria-current={l.href === "/" ? "page" : undefined}
+                  className={`nav-sheet-link ${l.href === "/" ? "nav-sheet-link--current" : ""}`}
                 >
                   <span className="whitespace-nowrap">
                     {label}
