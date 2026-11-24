@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
@@ -87,6 +87,13 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
     label: navKeyMap[link.label] ? t(navKeyMap[link.label] as any, link.label) : link.label,
   }));
 
+  // Preload footer 3D logo immediately so it is already loaded before scrolling
+  useEffect(() => {
+    import("@/reusable/FooterLogoCanvas").then((mod) => {
+      mod.preloadFooterLogo?.("/footerlogo9.glb");
+    });
+  }, []);
+
   return (
     <footer
       className={`relative w-full h-[460px] sm:h-[520px] md:h-[600px] overflow-hidden select-none ${matter.className} ${className}`}
@@ -124,7 +131,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
-              <LazyMount className="h-full w-full">
+              <LazyMount rootMargin="800px" className="h-full w-full">
                 <FooterLogoCanvas modelPath="/footerlogo9.glb" /> 
               </LazyMount>
             </div>

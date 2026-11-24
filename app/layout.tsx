@@ -166,6 +166,12 @@ export default function RootLayout({
     >
       <head>
         <JsonLd data={[organizationSchema, webSiteSchema]} />
+        <link
+          rel="preload"
+          href="/footerlogo9.glb"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="min-h-screen bg-[#0b0d14] flex flex-col text-white relative">
         <I18nProvider>

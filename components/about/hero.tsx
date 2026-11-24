@@ -79,7 +79,7 @@ const Hero = () => {
                 <MaskedVideoHeadline
                   videoSrc="/bg_about_video.mp4"
                   refWidth={1380}
-                  refHeight={230}
+                  refHeight={260}
                   fontSize={115}
                   letterSpacing="-3%"
                   lines={[{ text: t("hero.headlineDesktop", "Crispy Since 2011."), y: "78%" }]}
