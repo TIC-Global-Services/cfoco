@@ -154,7 +154,7 @@ export default function FooterLogoCanvas({
               modelPath={modelPath}
               position={[0, 0, 0]}
               rotation={[0, Math.PI, 0]}
-              scale={1}
+              scale={0.90}
             />
           </Center>
           <Preload all />

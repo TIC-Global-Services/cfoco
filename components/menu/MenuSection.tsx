@@ -52,10 +52,10 @@ const MenuSection: React.FC<MenuSectionProps> = ({
   const resolvedCategories: CategoryItem[] =
     dynamicCategories && dynamicCategories.length > 0
       ? dynamicCategories.map((c) => ({
-          id: c.slug || c.id,
-          name: c.name,
-          icon: c.icon || categoryIcons[c.slug || c.id] || "/cfc_bucket.png",
-        }))
+        id: c.slug || c.id,
+        name: c.name,
+        icon: c.icon || categoryIcons[c.slug || c.id] || "/cfc_bucket.png",
+      }))
       : defaultCategories;
 
   const allItems = initialItems && initialItems.length > 0 ? initialItems : defaultItems;
@@ -140,12 +140,12 @@ const MenuSection: React.FC<MenuSectionProps> = ({
     setActiveCategory(catId);
     setVisibleCount(ITEMS_PER_PAGE);
 
-    if (event?.currentTarget) {
-      event.currentTarget.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
+    const container = scrollRef.current;
+    const btn = event?.currentTarget;
+    if (container && btn) {
+      const targetScroll =
+        btn.offsetLeft - container.clientWidth / 2 + btn.offsetWidth / 2;
+      container.scrollTo({ left: targetScroll, behavior: "smooth" });
     }
   };
 
@@ -157,9 +157,8 @@ const MenuSection: React.FC<MenuSectionProps> = ({
       <div className="relative w-full mb-10 sm:mb-16 group/nav">
         {/* Left Edge Gradient Fade */}
         <div
-          className={`absolute left-0 top-0 bottom-0 w-12 sm:w-40 bg-gradient-to-r from-white via-white/5 blur-[5px] to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
-            canScrollLeft ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute left-0 top-0 bottom-0 w-12 sm:w-40 bg-gradient-to-r from-white via-white/5 blur-[5px] to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollLeft ? "opacity-100" : "opacity-0"
+            }`}
         />
 
         {/* Left Arrow Button */}
@@ -169,11 +168,10 @@ const MenuSection: React.FC<MenuSectionProps> = ({
           }}
           disabled={!canScrollLeft}
           aria-label={t("section.scrollLeft", "Scroll categories left")}
-          className={`absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
-            canScrollLeft
-              ? "opacity-100 scale-100 pointer-events-auto"
-              : "opacity-0 scale-75 pointer-events-none"
-          }`}
+          className={`absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${canScrollLeft
+            ? "opacity-100 scale-100 pointer-events-auto"
+            : "opacity-0 scale-75 pointer-events-none"
+            }`}
         >
           <svg className="w-5 h-5 stroke-[2.4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -183,12 +181,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
         {/* Scrollable Categories Strip */}
         <div
           ref={scrollRef}
-          className="w-full flex items-end overflow-x-auto py-6 gap-6 sm:gap-8 md:gap-12 px-[0%] scroll-smooth"
-          style={{
-            scrollSnapType: "x mandatory",
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
+          className="no-scrollbar w-full flex items-end overflow-x-auto py-10 gap-6 sm:gap-8 md:gap-12 px-4 scroll-smooth"
         >
           {resolvedCategories.map((cat) => {
             const isActive = activeCategory === cat.id;
@@ -200,31 +193,29 @@ const MenuSection: React.FC<MenuSectionProps> = ({
             return (
               <button
                 key={cat.id}
+                type="button"
                 onClick={(e) => handleCategoryChange(cat.id, e)}
-                style={{ scrollSnapAlign: "center" }}
-                className="relative flex flex-col items-center justify-end group flex-shrink-0 focus:outline-none transition-all duration-300 w-[120px] sm:w-[15vw] md:w-[15vw] cursor-pointer pb-2"
+                className="relative flex flex-col items-center justify-end group shrink-0 focus:outline-none transition-transform duration-300 w-[120px] sm:w-[15vw] md:w-[15vw] cursor-pointer pb-2"
               >
                 <div
-                  className={`flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px] transition-all duration-300 ${
-                    isActive
-                      ? "grayscale-0 opacity-100 scale-110 drop-shadow-xl"
+                  className={`transform-gpu flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px] transition-all duration-300 ${isActive
+                      ? "grayscale-0 opacity-100 scale-110"
                       : "grayscale opacity-55 contrast-125 group-hover:grayscale-0 group-hover:opacity-90 group-hover:scale-105"
-                  }`}
+                    }`}
                 >
                   <Image
                     src={iconSrc}
                     alt={displayName}
                     width={140}
                     height={140}
-                    className="object-contain drop-shadow-md w-full h-full"
+                    className="object-contain w-full h-full pointer-events-none"
                   />
                 </div>
                 <span
-                  className={`mt-4 text-base sm:text-lg md:text-xl lg:text-2xl transition-all duration-200 tracking-tight text-center whitespace-nowrap ${
-                    isActive
+                  className={`mt-4 text-base sm:text-lg md:text-xl lg:text-2xl transition-colors duration-200 tracking-tight text-center whitespace-nowrap ${isActive
                       ? "font-extrabold text-neutral-900"
                       : "font-medium text-neutral-500 group-hover:text-neutral-900"
-                  }`}
+                    }`}
                 >
                   {displayName}
                 </span>
@@ -240,11 +231,10 @@ const MenuSection: React.FC<MenuSectionProps> = ({
           }}
           disabled={!canScrollRight}
           aria-label={t("section.scrollRight", "Scroll categories right")}
-          className={`absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
-            canScrollRight
-              ? "opacity-100 scale-100 pointer-events-auto"
-              : "opacity-0 scale-75 pointer-events-none"
-          }`}
+          className={`absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${canScrollRight
+            ? "opacity-100 scale-100 pointer-events-auto"
+            : "opacity-0 scale-75 pointer-events-none"
+            }`}
         >
           <svg className="w-5 h-5 stroke-[2.4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -253,9 +243,8 @@ const MenuSection: React.FC<MenuSectionProps> = ({
 
         {/* Right Edge Gradient Fade */}
         <div
-          className={`absolute right-0 top-2 bottom-0 h-70 w-12 sm:w-40 bg-gradient-to-l blur-[10px] from-white via-white/5 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
-            canScrollRight ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute right-0 top-2 bottom-0 h-70 w-12 sm:w-40 bg-gradient-to-l blur-[10px] from-white via-white/5 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollRight ? "opacity-100" : "opacity-0"
+            }`}
         />
       </div>
 
@@ -284,9 +273,8 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                     setSelectedItem(item);
                   }
                 }}
-                className={`group relative rounded-3xl p-6 sm:p-7 bg-white/10 hover:bg-white/30 backdrop-blur-xs border-2 border-white/10 hover:border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 overflow-hidden ${
-                  hasDetails ? "cursor-pointer" : ""
-                }`}
+                className={`group relative rounded-3xl p-6 sm:p-7 bg-white/10 hover:bg-white/30 backdrop-blur-xs border-2 border-white/10 hover:border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 overflow-hidden ${hasDetails ? "cursor-pointer" : ""
+                  }`}
               >
                 {/* Ambient Card Glow */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/5 opacity-60 pointer-events-none rounded-3xl" />
