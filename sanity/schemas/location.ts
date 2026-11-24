@@ -495,6 +495,11 @@ export const locationType = defineType({
       defineField({ name: 'highlight', type: 'string' }),
       defineField({ name: 'description', type: 'text' }),
     ]}),
+    defineField({ name: 'taglineFr', title: 'Legacy Tagline (French)', type: 'object', hidden: true, fields: [
+      defineField({ name: 'prefix', type: 'string' }),
+      defineField({ name: 'highlight', type: 'string' }),
+      defineField({ name: 'description', type: 'text' }),
+    ]}),
     defineField({ name: 'images', title: 'Legacy Images', type: 'object', hidden: true, fields: [
       defineField({ name: 'storefrontUrl', type: 'string' }),
       defineField({ name: 'kiosksUrl', type: 'string' }),
@@ -504,9 +509,17 @@ export const locationType = defineType({
       defineField({ name: 'virtualTourUrl', type: 'string' }),
     ]}),
     defineField({ name: 'tourTitle', title: 'Legacy Tour Title', type: 'string', hidden: true }),
+    defineField({ name: 'tourTitleFr', title: 'Legacy Tour Title (French)', type: 'string', hidden: true }),
     defineField({ name: 'tourSubtitle', title: 'Legacy Tour Subtitle', type: 'string', hidden: true }),
+    defineField({ name: 'tourSubtitleFr', title: 'Legacy Tour Subtitle (French)', type: 'string', hidden: true }),
     defineField({ name: 'features', title: 'Legacy Features', type: 'array', of: [{ type: 'string' }], hidden: true }),
+    defineField({ name: 'featuresFr', title: 'Legacy Features (French)', type: 'array', of: [{ type: 'string' }], hidden: true }),
     defineField({ name: 'stats', title: 'Legacy Stats', type: 'object', hidden: true, fields: [
+      defineField({ name: 'established', type: 'string' }),
+      defineField({ name: 'capacity', type: 'string' }),
+      defineField({ name: 'averageWait', type: 'string' }),
+    ]}),
+    defineField({ name: 'statsFr', title: 'Legacy Stats (French)', type: 'object', hidden: true, fields: [
       defineField({ name: 'established', type: 'string' }),
       defineField({ name: 'capacity', type: 'string' }),
       defineField({ name: 'averageWait', type: 'string' }),
