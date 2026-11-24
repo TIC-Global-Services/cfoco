@@ -1,12 +1,12 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
-import { Center, useGLTF } from "@react-three/drei";
+import { Center, Preload, useGLTF } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // Preload 3D model asset immediately so it downloads when the user opens the page
-useGLTF.preload("/footerlogo9.glb");
+// useGLTF.preload("/footerlogo9.glb");
 
 export function preloadFooterLogo(path: string = "/footerlogo9.glb") {
   if (typeof window !== "undefined") {
@@ -157,6 +157,7 @@ export default function FooterLogoCanvas({
               scale={1}
             />
           </Center>
+          <Preload all />
           <SceneReady />
         </Suspense>
 

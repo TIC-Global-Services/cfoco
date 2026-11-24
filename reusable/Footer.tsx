@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { matter } from "@/font/fonts";
 import Reveal from "@/reusable/Reveal";
 import dynamic from "next/dynamic";
-import LazyMount from "./LazyMount";
 import { useTranslation } from "react-i18next";
 import { FOOTER_LINKS } from "@/data/navLinks";
 
@@ -81,6 +80,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
     Blogs: "nav.blogs",
     "Contact Us": "nav.contact",
   };
+  const [mountLogo, setMountLogo] = useState(false);
 
   const navLinks = FOOTER_LINKS.map((link) => ({
     ...link,
@@ -88,10 +88,20 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
   }));
 
   // Preload footer 3D logo immediately so it is already loaded before scrolling
+  // useEffect(() => {
+  //   import("@/reusable/FooterLogoCanvas").then((mod) => {
+  //     mod.preloadFooterLogo?.("/footerlogo9.glb");
+  //   });
+  // }, []);
   useEffect(() => {
-    import("@/reusable/FooterLogoCanvas").then((mod) => {
-      mod.preloadFooterLogo?.("/footerlogo9.glb");
-    });
+    // Wait until the browser is idle so we don't slow down the first paint
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => setMountLogo(true), { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    // Safari fallback (no requestIdleCallback)
+    const id = window.setTimeout(() => setMountLogo(true), 1200);
+    return () => window.clearTimeout(id);
   }, []);
 
   return (
@@ -131,12 +141,12 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           {/* Center 3D CFOCO Logo */}
           <div className="relative w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl flex-1 flex justify-center items-center my-auto">
             <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
-              <LazyMount rootMargin="800px" className="h-full w-full">
-                <FooterLogoCanvas modelPath="/footerlogo9.glb" /> 
-              </LazyMount>
+              <div className="relative w-full h-[180px] sm:h-[280px] md:h-[420px]">
+                {mountLogo && <FooterLogoCanvas modelPath="/footerlogo9.glb" />}
+              </div>
             </div>
           </div>
-          
+
 
           {/* Bottom Footer Bar */}
           <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-2 sm:gap-6 text-xs sm:text-sm md:text-base text-[#B0B0B0] shrink-0">
