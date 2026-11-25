@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { NAV_ITEMS } from "@/data/navLinks";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
-import SpecularButton from "./specularButton";
+import SpecularButton from "./SpecularButton";
 
 interface NavItem {
   label: string;

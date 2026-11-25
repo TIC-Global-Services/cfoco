@@ -82,8 +82,10 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
       role="dialog"
       aria-modal="true"
       onClick={onClose}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 md:p-8 bg-black/70 backdrop-blur-md transition-all duration-300"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 md:p-8 bg-black/70 backdrop-blur-md transition-all duration-300 isolate"
       style={{
+        WebkitBackdropFilter: "blur(12px)",
+        transform: "translate3d(0, 0, 0)",
         animation: "modal-bg-in 0.25s ease-out forwards",
       }}
     >
@@ -100,13 +102,13 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
       {/* Modal Card */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-4xl bg-[#dfd6d1] border border-white/50 shadow-[0_24px_70px_rgba(0,0,0,0.4)] rounded-[28px] sm:rounded-[36px] overflow-hidden flex flex-col md:flex-row transition-all duration-300 max-h-[92vh] overflow-y-auto md:overflow-hidden"
+        className="relative w-full max-w-4xl bg-[#dfd6d1] border border-white/50 shadow-[0_24px_70px_rgba(0,0,0,0.4)] rounded-[28px] sm:rounded-[36px] overflow-hidden flex flex-col md:flex-row transition-all duration-300 max-h-[90dvh] sm:max-h-[88dvh] overflow-y-auto md:overflow-hidden"
         style={{
           animation: "modal-card-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         }}
       >
         {/* ================= LEFT SIDE: Food Visuals & Gallery ================= */}
-        <div className="w-full md:w-[48%] p-6 sm:p-8 flex flex-col justify-between relative bg-gradient-to-b from-[#e3dad5] to-[#d8cec8]">
+        <div className="w-full md:w-[48%] p-6 sm:p-8 flex flex-col justify-between relative bg-gradient-to-b from-[#e3dad5] to-[#d8cec8] shrink-0">
           {/* Top-Left Badge */}
           {itemBadge && (
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-[#CC1518] text-xs sm:text-sm font-bold shadow-sm border border-neutral-100 self-start">
@@ -116,14 +118,15 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
           )}
 
           {/* Main Hero Food Image */}
-          <div className="relative w-full h-[220px] sm:h-[280px] md:h-[310px] my-4 flex items-center justify-center">
-            <div className="relative w-full h-full max-w-[280px] sm:max-w-[320px]">
+          <div className="relative w-full h-[200px] sm:h-[260px] md:h-[300px] my-3 sm:my-4 flex items-center justify-center shrink-0">
+            <div className="relative w-full h-full max-w-[260px] sm:max-w-[300px]">
               <Image
                 src={activeImage || item.image || "/cfc_bucket.png"}
                 alt={itemTitle}
                 fill
+                draggable={false}
                 sizes="(max-width: 768px) 100vw, 400px"
-                className="object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.22)] transition-all duration-300"
+                className="object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.22)] transition-all duration-300 pointer-events-none select-none"
                 priority
               />
             </div>
@@ -131,7 +134,7 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
 
           {/* Bottom Thumbnails (Only show if multiple images exist) */}
           {galleryItems.length > 1 && (
-            <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto py-1 mt-2">
+            <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto py-1 mt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
               {galleryItems.map((thumb, idx) => {
                 const isSelected = activeImage === thumb.image;
                 return (
@@ -151,8 +154,9 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
                           src={thumb.image}
                           alt={thumb.alt || `thumbnail ${idx + 1}`}
                           fill
+                          draggable={false}
                           sizes="64px"
-                          className="object-contain p-1"
+                          className="object-contain p-1 pointer-events-none select-none"
                         />
                       )}
                     </div>
@@ -164,7 +168,7 @@ export const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, onClose }) =
         </div>
 
         {/* ================= RIGHT SIDE: Product Info & Included Items ================= */}
-        <div className="w-full md:w-[52%] bg-white rounded-t-[28px] md:rounded-t-none md:rounded-l-[32px] p-6 sm:p-8 flex flex-col justify-between relative shadow-[-12px_0_30px_rgba(0,0,0,0.03)]">
+        <div className="w-full md:w-[52%] bg-white rounded-t-[28px] md:rounded-t-none md:rounded-l-[32px] p-6 sm:p-8 flex flex-col justify-between relative shadow-[-12px_0_30px_rgba(0,0,0,0.03)] md:overflow-y-auto max-h-full [scrollbar-width:thin]">
           <div>
             {/* Top Bar with Category & Close Button */}
             <div className="flex items-center justify-between">

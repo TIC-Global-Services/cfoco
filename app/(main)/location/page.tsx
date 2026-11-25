@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Hero from '@/components/location/hero';
-import StepInside from '@/components/location/stepinside';
+import StepInside from '@/components/location/StepInside';
 import Reviews from '@/components/location/reviews';
 import Reveal from '@/reusable/Reveal';
 import JsonLd from '@/components/seo/JsonLd';

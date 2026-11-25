@@ -14,7 +14,7 @@ interface FooterNavLink {
 }
 
 const navLinks: FooterNavLink[] = [
-  { label: "Menu", href: "/menu" },
+  // { label: "Menu", href: "/menu" },
   { label: "Home", href: "/" },
   {label:"Location",href:"/location"},
   // { label: "Franchise", href: "/franchise" },

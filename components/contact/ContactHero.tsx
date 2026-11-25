@@ -3,7 +3,7 @@ import React from 'react'
 import Hero from "@/components/shared/Hero";
 import { useTranslation } from "react-i18next";
 
-const contactHero = () => {
+const ContactHero = () => {
      const { t } = useTranslation("contact");
     return (
         <>
@@ -60,4 +60,4 @@ const contactHero = () => {
     )
 }
 
-export default contactHero
+export default ContactHero;

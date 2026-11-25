@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Hero from "@/components/about/hero";
-import Obsession from "@/components/about/obsession";
-import NothingFrozen from "@/components/about/nothingFrozen";
-import WhatWeRefuse from "@/components/about/whatwerefuse";
-import Showreel from "@/components/about/showreel";
+import Obsession from "@/components/about/Obsession";
+import NothingFrozen from "@/components/about/NothingFrozen";
+import WhatWeRefuse from "@/components/about/WhatWeRefuse";
+import Showreel from "@/components/about/Showreel";
 import Reviews from "@/components/about/reviews";
-import GetCrispy from "@/components/about/getcrispy";
+import GetCrispy from "@/components/about/GetCrispy";
 import Reveal from "@/reusable/Reveal";
 import JsonLd from "@/components/seo/JsonLd";
 import "./home.css";

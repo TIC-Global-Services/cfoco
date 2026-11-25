@@ -1,10 +1,10 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Hero from '@/components/career/hero';
-import Reachoutanyway from '@/components/career/reachout';
+import Reachoutanyway from '@/components/career/ReachOut';
 import OpenPositions from '@/components/career/OpenPositions';
 import Reveal from '@/reusable/Reveal';
-import BuildYourFuture from '@/components/career/buildyourfuture';
+import BuildYourFuture from '@/components/career/BuildYourFuture';
 import JsonLd from '@/components/seo/JsonLd';
 import { getJobPosts } from '@/sanity/lib/client';
 import { getLocalized } from '@/sanity/lib/localized';

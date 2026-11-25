@@ -1,10 +1,10 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import ContactForm from '@/components/contact/contactForm';
+import ContactForm from '@/components/contact/ContactForm';
 import Hero from '@/components/contact/hero';
 import Reveal from '@/reusable/Reveal';
 import JsonLd from '@/components/seo/JsonLd';
-import ContactHero from '@/components/contact/contactHero';
+import ContactHero from '@/components/contact/ContactHero';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cfoco.com';
 
