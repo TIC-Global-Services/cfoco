@@ -245,17 +245,11 @@ export function useMachineLightControls() {
   );
 }
 
-/** the kitchen's point lights (Kitchen) and the robot's follow spot (ServeRobot) */
+/** the robot's follow spot (ServeRobot) */
 export function useKitchenLightControls() {
   return useControls(
-    "Kitchen + robot light",
+    "Robot light",
     {
-      // the kitchen is shown as baked (unlit): these scale / tint its textures
-      kitchenSaturation: { value: 0.35, min: 0, max: 1.5, step: 0.05, label: "kitchen colour" },
-      kitchenIntensity: { value: 1.5, min: 0, max: 2, step: 0.05, label: "kitchen brightness" },
-      kitchenColor: { value: "#f3f6ff", label: "kitchen tint" },
-      // …except its plain-colour and metal parts, lit by a studio environment: how strong their reflections are
-      kitchenReflection: { value: 0.7, min: 0, max: 4, step: 0.05, label: "kitchen reflections" },
       robotIntensity: { value: 0, min: 0, max: 150, step: 1, label: "robot spot" },
       robotColor: { value: "#fff1e0", label: "robot spot color" },
     },

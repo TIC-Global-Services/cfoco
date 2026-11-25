@@ -6,10 +6,9 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
 import { scrollState } from "@/lib/home/scroll";
-import { createStudioEnv } from "@/lib/home/studio";
 import { sharpen } from "@/lib/home/textures";
 import { EXPORT_NAMES, KITCHEN } from "./config";
-import { useKitchenLightControls, useRoomControls } from "./controls";
+import { useRoomControls } from "./controls";
 
 const URL = "/models/kitchen_animate.glb";
 
@@ -21,71 +20,28 @@ export function Kitchen() {
   const { scene, animations } = useGLTF(URL);
   const gl = useThree((s) => s.gl);
   const room = useRoomControls();
-  const kl = useKitchenLightControls();
-  // Its lighting is baked into its textures (the warm pools on the walls, the shine on the steel), so it is shown as
-  // baked: unlit, the texture as it is. Lit again on top (the scene's lights and environment) it went gold and glared.
+  // Lit like the rest of the room: its own materials under the scene's default lights and environment.
   // Two-sided: its walls are single planes, and from the restaurant's side they vanished (the way in showed black).
-  const studio = useMemo(() => createStudioEnv(gl), [gl]);
-  useEffect(() => () => studio.dispose(), [studio]);
   const model = useMemo(() => {
-    const tint = new THREE.Color(kl.kitchenColor).multiplyScalar(kl.kitchenIntensity);
-    const baked = new Map<THREE.Material, THREE.Material>();
+    const done = new Map<THREE.Material, THREE.Material>();
     const m = scene.clone(true);
     m.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
       const mats = (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).map((x) => {
-        let b = baked.get(x);
-        if (!b) {
-          const src = x as THREE.MeshStandardMaterial;
-          if (src.map) {
-            // textured parts carry their light in the picture (baked): shown as it is
-            const basic = new THREE.MeshBasicMaterial({
-              name: src.name,
-              map: src.map,
-              color: src.color.clone().multiply(tint),
-              transparent: src.transparent,
-              opacity: src.opacity,
-              alphaTest: src.alphaTest,
-              side: THREE.DoubleSide,
-            });
-            // the pictures are all one gold: pull their colour back toward grey by `kitchenSaturation`
-            basic.onBeforeCompile = (shader) => {
-              shader.uniforms.uSat = { value: kl.kitchenSaturation };
-              shader.fragmentShader = shader.fragmentShader
-                .replace("void main() {", "uniform float uSat;\nvoid main() {")
-                .replace(
-                  "#include <map_fragment>",
-                  `#include <map_fragment>
-                  float lum = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-                  // bright orange (the fried chicken: green about half the red) keeps its colour; the gold of the walls, floor and steel doesn't
-                  float hue = diffuseColor.g / max(diffuseColor.r, 1e-3);
-                  float food = (1.0 - smoothstep(0.55, 0.72, hue)) * smoothstep(0.3, 0.5, diffuseColor.r) * step(diffuseColor.b, diffuseColor.g);
-                  diffuseColor.rgb = mix(vec3(lum), diffuseColor.rgb, mix(uSat, 1.0, food));
-                  // lift the dark walls and floor without blowing out the whites
-                  diffuseColor.rgb = pow(diffuseColor.rgb, vec3(0.78));`,
-                );
-            };
-            b = basic;
-          } else {
-            // plain colours and metals (steel, black fittings) have nothing baked: they are lit by the studio environment,
-            // which gives them their reflections instead of one flat grey
-            const lit = src.clone();
-            lit.envMap = studio;
-            lit.envMapIntensity = kl.kitchenReflection;
-            lit.color.multiply(tint);
-            lit.side = THREE.DoubleSide;
-            b = lit;
-          }
-          baked.set(x, b);
+        let c = done.get(x);
+        if (!c) {
+          c = x.clone();
+          c.side = THREE.DoubleSide;
+          done.set(x, c);
         }
-        return b;
+        return c;
       });
       mesh.material = Array.isArray(mesh.material) ? mats : mats[0];
     });
     sharpen(m, gl);
     return m;
-  }, [scene, gl, studio, kl.kitchenColor, kl.kitchenIntensity, kl.kitchenReflection, kl.kitchenSaturation]);
+  }, [scene, gl]);
 
   // the model's own animation: plays once as the camera comes into the kitchen, then holds its last pose (no loop).
   // Scrolling back out of the kitchen rewinds it, so it plays again on the way back in
