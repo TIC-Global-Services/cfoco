@@ -154,12 +154,11 @@ const MenuSection: React.FC<MenuSectionProps> = ({
       className={`relative w-full px-4 sm:px-6 lg:px-[0%] pb-20 select-none ${matter.className}`}
     >
       {/* Category Navigation Bar - Scrollable with Dynamic Arrows */}
-      <div className="relative w-full mb-8 sm:mb-14 group/nav">
+      <div className="relative w-full mb-10 sm:mb-16 group/nav">
         {/* Left Edge Gradient Fade */}
         <div
-          className={`absolute left-0 top-0 bottom-0 w-8 sm:w-16 md:w-24 bg-gradient-to-r from-white/95 via-white/50 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
-            canScrollLeft ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute left-0 top-0 bottom-0 w-12 sm:w-40 bg-gradient-to-r from-white via-white/5 blur-[5px] to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollLeft ? "opacity-100" : "opacity-0"
+            }`}
         />
 
         {/* Left Arrow Button */}
@@ -169,11 +168,10 @@ const MenuSection: React.FC<MenuSectionProps> = ({
           }}
           disabled={!canScrollLeft}
           aria-label={t("section.scrollLeft", "Scroll categories left")}
-          className={`absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
-            canScrollLeft
-              ? "opacity-100 scale-100 pointer-events-auto"
-              : "opacity-0 scale-75 pointer-events-none"
-          }`}
+          className={`absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${canScrollLeft
+            ? "opacity-100 scale-100 pointer-events-auto"
+            : "opacity-0 scale-75 pointer-events-none"
+            }`}
         >
           <svg className="w-5 h-5 stroke-[2.4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -183,10 +181,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
         {/* Scrollable Categories Strip */}
         <div
           ref={scrollRef}
-          className="w-full flex items-end overflow-x-auto py-6 sm:py-8 gap-4 sm:gap-6 md:gap-8 px-6 sm:px-12 md:px-16 scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
-          style={{
-            WebkitOverflowScrolling: "touch",
-          }}
+          className="no-scrollbar w-full flex items-end overflow-x-auto py-10 gap-6 sm:gap-8 md:gap-12 px-4 scroll-smooth"
         >
           {resolvedCategories.map((cat) => {
             const isActive = activeCategory === cat.id;
@@ -200,40 +195,30 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                 key={cat.id}
                 type="button"
                 onClick={(e) => handleCategoryChange(cat.id, e)}
-                className="relative flex flex-col items-center justify-end group shrink-0 flex-none appearance-none bg-transparent border-0 p-0 focus:outline-none transition-all duration-300 w-28 sm:w-36 md:w-44 lg:w-48 cursor-pointer pb-2"
+                className="relative flex flex-col items-center justify-end group shrink-0 focus:outline-none transition-transform duration-300 w-[120px] sm:w-[15vw] md:w-[15vw] cursor-pointer pb-2"
               >
                 <div
-                  className={`flex items-center justify-center w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 transition-all duration-300 ${
-                    isActive
-                      ? "grayscale-0 opacity-100 scale-105 sm:scale-110 drop-shadow-xl"
+                  className={`transform-gpu flex items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[180px] md:h-[180px] transition-all duration-300 ${isActive
+                      ? "grayscale-0 opacity-100 scale-110"
                       : "grayscale opacity-55 contrast-125 group-hover:grayscale-0 group-hover:opacity-90 group-hover:scale-105"
-                  }`}
+                    }`}
                 >
                   <Image
                     src={iconSrc}
                     alt={displayName}
-                    width={160}
-                    height={160}
-                    priority={isActive}
-                    draggable={false}
-                    className="object-contain drop-shadow-md w-full h-full pointer-events-none select-none"
+                    width={140}
+                    height={140}
+                    className="object-contain w-full h-full pointer-events-none"
                   />
                 </div>
                 <span
-                  className={`mt-3 sm:mt-4 text-xs sm:text-base md:text-lg lg:text-xl transition-all duration-200 tracking-tight text-center max-w-full px-1 truncate ${
-                    isActive
+                  className={`mt-4 text-base sm:text-lg md:text-xl lg:text-2xl transition-colors duration-200 tracking-tight text-center whitespace-nowrap ${isActive
                       ? "font-extrabold text-neutral-900"
                       : "font-medium text-neutral-500 group-hover:text-neutral-900"
-                  }`}
+                    }`}
                 >
                   {displayName}
                 </span>
-                {/* Active category indicator */}
-                <div
-                  className={`mt-1.5 h-1 rounded-full transition-all duration-300 ${
-                    isActive ? "w-8 bg-[#CC1518]" : "w-0 bg-transparent"
-                  }`}
-                />
               </button>
             );
           })}
@@ -246,11 +231,10 @@ const MenuSection: React.FC<MenuSectionProps> = ({
           }}
           disabled={!canScrollRight}
           aria-label={t("section.scrollRight", "Scroll categories right")}
-          className={`absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
-            canScrollRight
-              ? "opacity-100 scale-100 pointer-events-auto"
-              : "opacity-0 scale-75 pointer-events-none"
-          }`}
+          className={`absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-[#CC1518] shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_6px_25px_rgba(204,21,24,0.2)] border border-neutral-200/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${canScrollRight
+            ? "opacity-100 scale-100 pointer-events-auto"
+            : "opacity-0 scale-75 pointer-events-none"
+            }`}
         >
           <svg className="w-5 h-5 stroke-[2.4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -259,9 +243,8 @@ const MenuSection: React.FC<MenuSectionProps> = ({
 
         {/* Right Edge Gradient Fade */}
         <div
-          className={`absolute right-0 top-0 bottom-0 w-8 sm:w-16 md:w-24 bg-gradient-to-l from-white/95 via-white/50 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
-            canScrollRight ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute right-0 top-2 bottom-0 h-70 w-12 sm:w-40 bg-gradient-to-l blur-[10px] from-white via-white/5 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollRight ? "opacity-100" : "opacity-0"
+            }`}
         />
       </div>
 
@@ -275,7 +258,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({
           <p className="text-sm mt-1 opacity-70">{t("section.emptySubtitle", "Add items to this category in Sanity Studio.")}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 md:px-[5%]">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6 md:px-[5%]">
           {visible.map((item) => {
             const hasDetails = hasModalDetails(item);
             const itemTitle = getLocalized(item.title, i18n.language);
@@ -290,51 +273,45 @@ const MenuSection: React.FC<MenuSectionProps> = ({
                     setSelectedItem(item);
                   }
                 }}
-                className={`group relative rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 md:p-6 lg:p-7 bg-white/15 hover:bg-white/30 backdrop-blur-sm border-2 border-white/20 hover:border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 overflow-hidden ${
-                  hasDetails ? "cursor-pointer" : ""
-                }`}
+                className={`group relative rounded-3xl p-6 sm:p-7 bg-white/10 hover:bg-white/30 backdrop-blur-xs border-2 border-white/10 hover:border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 overflow-hidden ${hasDetails ? "cursor-pointer" : ""
+                  }`}
               >
                 {/* Ambient Card Glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/5 opacity-60 pointer-events-none rounded-2xl sm:rounded-3xl" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/5 opacity-60 pointer-events-none rounded-3xl" />
 
                 {/* Badge if present */}
                 {(itemBadge || item.isBestSeller) && (
-                  <div className="absolute top-2 sm:top-3 md:top-4 left-2 sm:left-3 md:left-4 z-10 px-2.5 sm:px-3 py-1 rounded-full bg-white/95 text-[#CC1518] text-[9px] sm:text-[10px] md:text-xs font-bold shadow-sm border border-neutral-100">
+                  <div className="absolute top-2 md:top-4 left-2 md:left-4 z-10 px-3 py-1 rounded-full bg-white/90 text-[#CC1518] text-[10px] md:text-xs font-bold shadow-sm border border-neutral-100">
                     {itemBadge || t("section.bestSelling", "🔥 Best Selling")}
                   </div>
                 )}
 
-                {/* Food Image Container - Stable height for Safari */}
-                <div className="relative w-full h-36 sm:h-48 md:h-56 mx-auto flex items-center justify-center mb-3 sm:mb-4 md:mb-6 overflow-hidden rounded-xl sm:rounded-2xl shrink-0">
+                {/* Food Image Container */}
+                <div className="relative w-full aspect-square max-h-60 sm:max-h-[35dvh] mx-auto flex items-center justify-center mb-4 md:mb-6 overflow-hidden rounded-2xl">
                   <Image
                     src={item.image || "/cfc_bucket.png"}
                     alt={itemTitle}
                     fill
-                    draggable={false}
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-contain transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
 
                 {/* Content info */}
-                <div className="relative z-10 flex flex-col flex-1 justify-between">
-                  <div>
-                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-2">
-                      <h3 className="text-sm sm:text-xl md:text-2xl font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors leading-tight">
-                        {itemTitle}
-                      </h3>
-                      {item.price && (
-                        <span className="text-sm sm:text-lg md:text-xl font-extrabold text-neutral-900 shrink-0">
-                          {item.price}
-                        </span>
-                      )}
-                    </div>
-                    {itemDesc && (
-                      <p className="mt-1 text-[11px] sm:text-sm md:text-base font-medium text-neutral-700/90 leading-tight md:leading-snug line-clamp-2 sm:line-clamp-3">
-                        {itemDesc}
-                      </p>
+                <div className="relative z-10 flex flex-col">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h3 className="text-base sm:text-3xl font-bold text-[#CC1518] tracking-tight group-hover:text-[#B01215] transition-colors leading-[1.2]">
+                      {itemTitle}
+                    </h3>
+                    {item.price && (
+                      <span className="text-lg sm:text-xl font-extrabold text-neutral-800 shrink-0">
+                        {item.price}
+                      </span>
                     )}
                   </div>
+                  <p className="mt-1 text-xs sm:text-lg font-medium text-neutral-700/90 leading-[1.2] md:leading-snug">
+                    {itemDesc}
+                  </p>
                 </div>
               </div>
             );
