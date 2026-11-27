@@ -253,9 +253,29 @@ export function useKitchenRigControls() {
   return useControls(
     "Kitchen light",
     {
-      envIntensity: { value: 1.15, min: 0, max: 4, step: 0.05, label: "reflections" },
-      steelGrey: { value: 0.85, min: 0, max: 1, step: 0.01, label: "steel: grey" },
-      steelLift: { value: 1.25, min: 0.5, max: 2.5, step: 0.05, label: "steel: brightness" },
+      envIntensity: { value: 0.5, min: 0, max: 4, step: 0.05, label: "reflections" },
+      steelGrey: { value: 0.6, min: 0, max: 1, step: 0.01, label: "steel: grey" },
+      steelLift: { value: 0.9, min: 0.5, max: 2.5, step: 0.05, label: "steel: brightness" },
+      screenGlow: { value: 1, min: 0, max: 3, step: 0.05, label: "screens: glow" },
+      overhead: folder({
+        overColor: { value: "#ffe2c0", label: "color" },
+        prepIntensity: { value: 30, min: 0, max: 300, step: 1, label: "prep station" },
+        fryIntensity: { value: 140, min: 0, max: 300, step: 1, label: "fryer line" },
+        hoodIntensity: { value: 90, min: 0, max: 300, step: 1, label: "centre hood" },
+        overAngle: { value: 0.75, min: 0.2, max: 1.5, step: 0.01, label: "cone" },
+      }),
+      room: folder({
+        wallTone: { value: 0.5, min: 0, max: 1, step: 0.01, label: "walls / ceiling" },
+        wallEnv: { value: 0.15, min: 0, max: 2, step: 0.01, label: "walls: reflections" },
+        floorTone: { value: 0.18, min: 0, max: 1, step: 0.01, label: "floor" },
+        floorRough: { value: 1, min: 0, max: 1, step: 0.01, label: "floor roughness" },
+        floorEnv: { value: 0.2, min: 0, max: 2, step: 0.01, label: "floor: reflections" },
+      }),
+      ambient: folder({
+        kHemiSky: { value: "#dfe8ff", label: "sky" },
+        kHemiGround: { value: "#3a2c22", label: "ground" },
+        kHemiIntensity: { value: 0.08, min: 0, max: 3, step: 0.01, label: "intensity" },
+      }),
     },
     { collapsed: true },
   );
