@@ -13,6 +13,7 @@ import { Overlay } from "./Overlay";
 import { Sound } from "./Sound";
 
 const Scene = dynamic(() => import("./Scene"), { ssr: false });
+// over the 3D scene, so only ever on the client with it
 
 export default function Experience() {
   useEffect(() => {
@@ -27,12 +28,14 @@ export default function Experience() {
       setProgress(Math.min(lenis.scroll / perSection, PROGRESS_MAX));
     };
     lenis.on("scroll", update);
+
     scrollApi.toSection = (i, immediate = false) =>
       lenis.scrollTo(i * window.innerHeight * SECTION_VH, { immediate, force: true, duration: 1.6 });
     if (process.env.NODE_ENV !== "production") {
       (window as unknown as { __lenis: Lenis }).__lenis = lenis;
     }
-    window.addEventListener("resize", update);
+    const onResize = () => update();
+    window.addEventListener("resize", onResize);
     update();
 
     // read every frame: the "scroll" event stops firing before velocity settles to 0
@@ -54,7 +57,7 @@ export default function Experience() {
     return () => {
       cancelAnimationFrame(raf);
       lenis.destroy();
-      window.removeEventListener("resize", update);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointer);
     };
   }, []);

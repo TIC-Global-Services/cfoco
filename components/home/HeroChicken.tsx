@@ -14,10 +14,12 @@ import {
   ANIM_FROM,
   ANIM_TO,
   BUCKET_HEIGHT,
+  BUCKET_URL,
   BUCKET_KEYS,
   BUCKET_YAW,
   CAMERA,
   CHICKEN_KEYS,
+  BUCKET_UP_Y,
   CHICKEN_LAND_Y,
   CHICKEN_LENGTH,
   DROP_SIM,
@@ -41,7 +43,6 @@ import {
 
 const RAW_URL = "/models/new_raw_chicken_photoreal_v2.glb";
 const FRIED_URL = "/models/new_fried_chicken.glb";
-const BUCKET_URL = "/models/bucket_drop_new.glb";
 /** the fried crust: × its roughness map (≈0.82, matte) — a little oil sheen on the ridges */
 const CRUST_ROUGHNESS = 0.8;
 
@@ -393,7 +394,7 @@ export function HeroChicken() {
   }, [it]);
 
   const chickenFree = () => scrollState.progress < DROP_START && scrollState.progress > FADE_IN * 0.4;
-  const inBucket = () => scrollState.progress >= TOSS_OUT && scrollState.progress < BUCKET_KEYS[2].p + 0.2;
+  const inBucket = () => scrollState.progress >= TOSS_OUT && scrollState.progress < BUCKET_KEYS[BUCKET_KEYS.length - 2].p + 0.2;
 
   const chickenEvents = {
     onPointerOver: () => {
@@ -430,7 +431,7 @@ export function HeroChicken() {
 
   const bucketEvents = {
     onPointerOver: () => {
-      if (scrollState.progress < BUCKET_KEYS[0].p + 0.4 || scrollState.progress > BUCKET_KEYS[3].p - 0.2) return;
+      if (scrollState.progress < BUCKET_KEYS[0].p + 0.4 || scrollState.progress > BUCKET_KEYS[BUCKET_KEYS.length - 1].p - 0.2) return;
       it.bucketHover = true;
       it.bucketWobble.kick(1.6 * (Math.random() < 0.5 ? -1 : 1));
       setCursor("pointer");
@@ -598,7 +599,9 @@ export function HeroChicken() {
     const cx = free.x + tmp.pointer.x * 0.1 * drift;
     // gravity: the chicken falls from its hover into the cup, landing exactly when the pile is hit
     const fall = THREE.MathUtils.clamp((it.simT - DROP_SIM.from) / (DROP_SIM.impact - DROP_SIM.from), 0, 1);
-    const cy = free.y + (CHICKEN_LAND_Y - free.y) * fall * fall + tmp.pointer.y * 0.06 * drift + idle + hop * 0.08;
+    // (the cup is still rising and settling as it falls: it lands where the cup actually is)
+    const landY = CHICKEN_LAND_Y + (b.y - BUCKET_UP_Y);
+    const cy = free.y + (landY - free.y) * fall * fall + tmp.pointer.y * 0.06 * drift + idle + hop * 0.08;
     const cd = free.d;
     const cs = free.s;
 
@@ -640,7 +643,7 @@ export function HeroChicken() {
     it.dragDX = it.dragDY = 0;
 
     rig.spin.visible = fade > 0.002 && it.simT < DROP_SIM.impact;
-    tmp.yawQ.setFromAxisAngle(tmp.up, yaw.current + it.yaw + Math.min(p, DROP_START) * 1.6 + deg(hero.spin) - (1 - fade) * 2.2);
+    tmp.yawQ.setFromAxisAngle(tmp.up, yaw.current + it.yaw + Math.min(p, DROP_START) * 1.6 + deg(hero.spin) - (1 - fade) * 2.2 + 1.3 * fall * fall * fall);
 
     // lean: toward the cursor, into the path's motion (banking), idle sway, drag pitch
     const pitch = it.pitch.step(dragging ? it.pitchTarget : 0, delta, 90, 0.42);
@@ -656,9 +659,12 @@ export function HeroChicken() {
       60,
       0.5,
     );
-    tmp.leanQ.setFromAxisAngle(tmp.back, leanRoll);
+    // letting go: it tips over and starts to tumble as it falls — the lean grows with the square of the fall, like the
+    // fall itself (constant acceleration), so the slant is felt gaining speed and it hits the pile on its side
+    const tumble = fall * fall;
+    tmp.leanQ.setFromAxisAngle(tmp.back, leanRoll + 0.75 * tumble);
     rig.spin.quaternion.copy(tmp.leanQ);
-    tmp.leanQ.setFromAxisAngle(tmp.right, leanPitch + pitch);
+    tmp.leanQ.setFromAxisAngle(tmp.right, leanPitch + pitch + 0.45 * tumble);
     rig.spin.quaternion.multiply(tmp.leanQ).multiply(tmp.yawQ);
     rig.fix.rotation.set(deg(chickenC.rotation[0]), deg(chickenC.rotation[1]), deg(chickenC.rotation[2]));
     rig.fix.scale.setScalar(chickenC.scale);
@@ -705,7 +711,7 @@ export function HeroChicken() {
       if ((m as THREE.MeshPhysicalMaterial).isMeshPhysicalMaterial) (m as THREE.MeshPhysicalMaterial).clearcoat = heroL.bucketGloss;
     }
     // only lit while there is a hero in frame (no light pools on an empty floor)
-    const presence = fade * (1 - smoothstep(BUCKET_KEYS[3].p - 0.35, HERO_HIDDEN[0][0], p));
+    const presence = fade * (1 - smoothstep(BUCKET_KEYS[BUCKET_KEYS.length - 1].p - 0.35, HERO_HIDDEN[0][0], p));
     const S = k * hero.scale; // rig scales with the hero
     // the rig follows the chicken, then settles on the pile once it is tossed
     const bh = BUCKET_HEIGHT * b.s * fit * bucketC.scale * S;
@@ -737,7 +743,7 @@ export function HeroChicken() {
     // the chicken and spills onto the room around it
     lights.glow.position.copy(c).addScaledVector(tmp.fwd, 0.7 * S).addScaledVector(tmp.camUp, -0.3 * S);
     // bucket key: from the camera side, above and right, aimed at the printed band
-    const bucketIn = smoothstep(BUCKET_KEYS[0].p, BUCKET_KEYS[1].p, p) * (1 - smoothstep(BUCKET_KEYS[2].p, BUCKET_KEYS[3].p, p));
+    const bucketIn = smoothstep(BUCKET_KEYS[0].p, BUCKET_KEYS[1].p, p) * (1 - smoothstep(BUCKET_KEYS[BUCKET_KEYS.length - 2].p, BUCKET_KEYS[BUCKET_KEYS.length - 1].p, p));
     tmp.pos.copy(rig.bucket.position).addScaledVector(tmp.lu, bh * 0.55);
     lights.bucketKey.target.position.copy(tmp.pos);
     lights.bucketKey.position.copy(tmp.pos).addScaledVector(tmp.lr, 1.6 * S).addScaledVector(tmp.lu, 2.2 * S).addScaledVector(tmp.lb, 3.2 * S);

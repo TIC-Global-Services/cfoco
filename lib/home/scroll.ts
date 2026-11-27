@@ -53,7 +53,10 @@ export function routesChanged() {
 
 /** set by Experience once Lenis exists — lets dev tools jump to a section */
 /** set by Sound — lets the 3D turntable flip the sound like the button does */
-export const soundApi: { toggle: () => void } = { toggle: () => {} };
+export const soundApi: { toggle: () => void; play: (voice: "blip") => void } = {
+  toggle: () => {},
+  play: () => {},
+};
 
 export const scrollApi: { toSection: (index: number, immediate?: boolean) => void } = {
   toSection: () => {},

@@ -245,6 +245,22 @@ export function useMachineLightControls() {
   );
 }
 
+/**
+ * The kitchen's look (Kitchen): how strongly its materials take the scene's environment, and how far its steel is
+ * pulled from its baked-in warm tint toward grey. (No extra lights: every light costs every lit material in the scene.)
+ */
+export function useKitchenRigControls() {
+  return useControls(
+    "Kitchen light",
+    {
+      envIntensity: { value: 1.15, min: 0, max: 4, step: 0.05, label: "reflections" },
+      steelGrey: { value: 0.85, min: 0, max: 1, step: 0.01, label: "steel: grey" },
+      steelLift: { value: 1.25, min: 0.5, max: 2.5, step: 0.05, label: "steel: brightness" },
+    },
+    { collapsed: true },
+  );
+}
+
 /** the robot's follow spot (ServeRobot) */
 export function useKitchenLightControls() {
   return useControls(

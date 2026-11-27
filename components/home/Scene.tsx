@@ -52,8 +52,8 @@ export default function Scene() {
   // the machine can't keep up, back up when it can
   const cap = useMemo(() => {
     const area = window.innerWidth * window.innerHeight;
-    const byPixels = Math.sqrt((lite ? 2.5e6 : 7e6) / Math.max(area, 1));
-    return Math.max(0.75, Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2, byPixels));
+    const byPixels = Math.sqrt((lite ? 2.2e6 : 4.5e6) / Math.max(area, 1));
+    return Math.max(0.75, Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 1.75, byPixels));
   }, [lite]);
   const [dpr, setDpr] = useState(cap);
 
@@ -101,7 +101,7 @@ export default function Scene() {
       {scrollState.debug && <RouteEditor />}
       {scrollState.debug && <EditorExport />}
       {post.enabled && (
-        <EffectComposer multisampling={lite ? 0 : 2} frameBufferType={THREE.HalfFloatType}>
+        <EffectComposer multisampling={0} frameBufferType={THREE.HalfFloatType}>
           {/* own pass: the glass re-samples its input, so bloom has to be baked in before it */}
           <EffectGroup enabled={!touch}>
             <Bloom

@@ -206,6 +206,24 @@ export function createSfx(ctx: AudioContext) {
       smooth(whooshBand.frequency, freq, 0.05);
     },
 
+    /** a friendly two-note chirp (the robot, the kiosks) */
+    blip: (vol = 1) => {
+      const t = ctx.currentTime + 0.005;
+      [880, 1320].forEach((f, i) => {
+        const o = ctx.createOscillator();
+        o.type = "sine";
+        o.frequency.setValueAtTime(f, t + i * 0.09);
+        o.frequency.exponentialRampToValueAtTime(f * 1.06, t + i * 0.09 + 0.08);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0.0001, t + i * 0.09);
+        g.gain.exponentialRampToValueAtTime(0.18 * vol, t + i * 0.09 + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.09 + 0.14);
+        o.connect(g).connect(master);
+        o.start(t + i * 0.09);
+        o.stop(t + i * 0.09 + 0.16);
+      });
+    },
+
     /** chicken lands in the bucket: thump + cardboard knock + crunch, then a small bounce knock */
     land: (vol = 1) => {
       const t = ctx.currentTime + 0.005;

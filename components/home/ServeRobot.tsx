@@ -1,12 +1,12 @@
 "use client";
 
 import { useGLTF } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo } from "react";
+import { type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
 import { sharpen } from "@/lib/home/textures";
-import { clamp, robotRide, routesChanged, scrollState, smoothstep } from "@/lib/home/scroll";
+import { Spring, clamp, robotRide, routesChanged, scrollState, smoothstep, soundApi } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
 import { useKitchenLightControls } from "./controls";
 import { EXPORT_NAMES, ROBOT_FACING, ROBOT_HEIGHT, ROBOT_RUN, ROBOT_URL } from "./config";
@@ -26,6 +26,7 @@ export function ServeRobot() {
   const kl = useKitchenLightControls();
   const trayGltfs = useGLTF(ROBOT_RUN.trays.map((t) => t.url));
   const gl = useThree((s) => s.gl);
+  const clock = useThree((s) => s.clock);
   const studio = useMemo(() => createStudioEnv(gl), [gl]);
   useEffect(() => () => studio.dispose(), [studio]);
 
@@ -110,8 +111,15 @@ export function ServeRobot() {
     [],
   );
 
+  // tapped: it chirps, does a little hop and a full turn on the spot (the bucket on its tray goes round with it)
+  const tap = useRef({ spin: new Spring(), to: 0, hopAt: -10 });
+
   // runs before the camera rig and the hero (they read where the tray is)
   useFrame((state, delta) => {
+    const T = tap.current;
+    const spin = T.spin.step(T.to, delta, 30, 0.7);
+    const since = state.clock.elapsedTime - T.hopAt;
+    const hop = since >= 0 && since < 0.45 ? Math.sin((since / 0.45) * Math.PI) * 0.12 : 0;
     const p = scrollState.progress;
     const R = ROBOT_RUN;
     // the route editor (?debug) moves the waypoints in place: re-measure the curve
@@ -133,8 +141,8 @@ export function ServeRobot() {
     const yaw = faceRoom + (aim - faceRoom) * swing;
     tmp.yaw = Number.isNaN(tmp.yaw) ? yaw : tmp.yaw + (turnTo(tmp.yaw, yaw) - tmp.yaw) * (1 - Math.exp(-delta * 8));
 
-    rig.pivot.position.set(onRoute.x, 0, onRoute.z);
-    rig.pivot.rotation.set(0, tmp.yaw + ROBOT_FACING, 0);
+    rig.pivot.position.set(onRoute.x, hop, onRoute.z);
+    rig.pivot.rotation.set(0, tmp.yaw + ROBOT_FACING + spin, 0);
     rig.shadow.position.set(onRoute.x, 0.012, onRoute.z);
     (rig.shadow.material as THREE.MeshBasicMaterial).opacity = 0.55;
 
@@ -142,10 +150,10 @@ export function ServeRobot() {
     const back = ROBOT_RUN.trayBack;
     robotRide.tray.set(
       onRoute.x - Math.sin(tmp.yaw + ROBOT_FACING) * back,
-      ROBOT_HEIGHT * ROBOT_RUN.trayY,
+      ROBOT_HEIGHT * ROBOT_RUN.trayY + hop,
       onRoute.z - Math.cos(tmp.yaw + ROBOT_FACING) * back,
     );
-    robotRide.quaternion.setFromAxisAngle(tmp.up, tmp.yaw);
+    robotRide.quaternion.setFromAxisAngle(tmp.up, tmp.yaw + spin);
 
     rig.key.position.set(onRoute.x - 1.2, 3.4, onRoute.z + 2.0);
     rig.key.target.position.set(onRoute.x, ROBOT_HEIGHT * 0.5, onRoute.z);
@@ -153,7 +161,23 @@ export function ServeRobot() {
     rig.key.intensity = kl.robotIntensity;
   }, -2);
 
-  return <primitive object={rig.group} />;
+  return (
+    <primitive
+      object={rig.group}
+      onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={() => (document.body.style.cursor = "")}
+      onClick={(e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation();
+        const T = tap.current;
+        T.to += Math.PI * 2;
+        T.hopAt = clock.elapsedTime;
+        soundApi.play("blip");
+      }}
+    />
+  );
 }
 
 useGLTF.preload(ROBOT_URL);

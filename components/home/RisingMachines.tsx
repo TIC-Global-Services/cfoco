@@ -6,48 +6,109 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import "@/lib/home/draco";
 import { sharpen } from "@/lib/home/textures";
-import { Spring, clamp, damp, easeInBack, easeInOutOvershoot, easeOutCubic, scrollState, smoothstep } from "@/lib/home/scroll";
+import { Spring, clamp, damp, easeInBack, easeInOutOvershoot, easeOutCubic, scrollState, smoothstep, soundApi } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
 import { portraitness } from "./CameraRig";
 import { useMachineLightControls } from "./controls";
-import { CAMERA, EXPORT_NAMES, KIOSK_URL, type RisingMachine } from "./config";
+import { BUCKET_URL, BUCKET_YAW, CAMERA, DROP_SIM, EXPORT_NAMES, KIOSK_URL, type RisingMachine } from "./config";
 
 /** a soft dark blob, fading to nothing at the edge */
 /**
- * The flat bucket picture, on white, swapped in for the centre kiosk's screen image (base colour and emissive: both are the
+ * The bucket's picture, on white, swapped in for the centre kiosk's screen image (base colour and emissive: both are the
  * model's 1080 × 1350 "screen" texture, of which the glass uses only this rectangle of its uv space) once the 3D bucket has
- * gone into the machine.
+ * gone into the machine. It is the same bucket: the 3D one (bucket_drop_new.glb, its pile settled), rendered once,
+ * standing straight up with its logo to the front (see paintBucket).
  */
 const SCREEN_UV = { u0: 0.1914, u1: 0.7808, v0: 0.1471, v1: 0.8621 };
+const flatCanvas = document.createElement("canvas");
+flatCanvas.width = 1080;
+flatCanvas.height = 1350;
 const flatTex = (() => {
-  const c = document.createElement("canvas");
-  c.width = 1080;
-  c.height = 1350;
-  const g = c.getContext("2d")!;
+  const g = flatCanvas.getContext("2d")!;
   g.fillStyle = "#fff";
-  g.fillRect(0, 0, c.width, c.height);
-  const t = new THREE.CanvasTexture(c);
+  g.fillRect(0, 0, flatCanvas.width, flatCanvas.height);
+  const t = new THREE.CanvasTexture(flatCanvas);
   t.colorSpace = THREE.SRGBColorSpace;
   t.flipY = false; // glTF uv convention, like the screen's own image
   t.anisotropy = 8;
-  const img = new Image();
-  img.onload = () => {
-    const x = SCREEN_UV.u0 * c.width;
-    const y = SCREEN_UV.v0 * c.height;
-    const rw = (SCREEN_UV.u1 - SCREEN_UV.u0) * c.width;
-    const rh = (SCREEN_UV.v1 - SCREEN_UV.v0) * c.height;
-    const k = Math.min((rw * 0.86) / img.width, (rh * 0.86) / img.height);
-    const w = img.width * k;
-    const h = img.height * k;
-    g.fillStyle = "#fff";
-    g.fillRect(0, 0, c.width, c.height);
-    g.drawImage(img, x + (rw - w) / 2, y + (rh - h) / 2, w, h);
-    t.needsUpdate = true;
-  };
-  img.src = "/cfc_bucket.png";
-  t.needsUpdate = true;
   return t;
 })();
+let bucketPainted = false;
+
+/** renders the 3D bucket (settled, upright, logo to the front) into the screen picture; once per page */
+function paintBucket(gl: THREE.WebGLRenderer, gltf: { scene: THREE.Object3D; animations: THREE.AnimationClip[] }, env: THREE.Texture) {
+  if (bucketPainted) return;
+  bucketPainted = true;
+
+  const rw = (SCREEN_UV.u1 - SCREEN_UV.u0) * flatCanvas.width;
+  const rh = (SCREEN_UV.v1 - SCREEN_UV.v0) * flatCanvas.height;
+  const SS = 2; // rendered at twice the size and scaled down: smooth edges without a multisampled target
+  const W = Math.round(rw * SS);
+  const H = Math.round(rh * SS);
+
+  // the bucket with its pile as it lies once the drop has settled
+  const model = gltf.scene.clone(true);
+  const mixer = new THREE.AnimationMixer(model);
+  for (const clip of gltf.animations) {
+    const a = mixer.clipAction(clip);
+    a.setLoop(THREE.LoopOnce, 1);
+    a.clampWhenFinished = true;
+    a.play();
+  }
+  mixer.setTime(DROP_SIM.settle);
+  const spin = new THREE.Group();
+  spin.rotation.y = BUCKET_YAW; // the printed logo to the lens, as in the hero
+  spin.add(model);
+  model.updateMatrixWorld(true);
+  const c = new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3());
+  model.position.set(-c.x, 0, -c.z); // stood on its own axis, straight up
+  spin.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(spin);
+  const size = box.getSize(new THREE.Vector3());
+  const mid = box.getCenter(new THREE.Vector3());
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color("#ffffff");
+  scene.environment = env;
+  scene.environmentIntensity = 0.9;
+  const key = new THREE.DirectionalLight("#fff4e6", 2.2);
+  key.position.set(2, 3, 4);
+  const fill = new THREE.DirectionalLight("#ffffff", 0.8);
+  fill.position.set(-3, 1, 2);
+  scene.add(spin, key, fill);
+
+  // straight on, a long lens (little perspective), the whole bucket filling most of the screen rectangle
+  const cam = new THREE.PerspectiveCamera(18, W / H, 0.1, 200);
+  const half = THREE.MathUtils.degToRad(cam.fov / 2);
+  const fitH = size.y / 0.8 / 2 / Math.tan(half);
+  const fitW = size.x / 1.0 / 2 / (Math.tan(half) * cam.aspect);
+  cam.position.set(mid.x, mid.y, mid.z + size.z / 2 + Math.max(fitH, fitW));
+  cam.lookAt(mid);
+
+  const rt = new THREE.WebGLRenderTarget(W, H);
+  rt.texture.colorSpace = THREE.SRGBColorSpace;
+  const prev = gl.getRenderTarget();
+  gl.setRenderTarget(rt);
+  gl.render(scene, cam);
+  const px = new Uint8Array(W * H * 4);
+  gl.readRenderTargetPixels(rt, 0, 0, W, H, px);
+  gl.setRenderTarget(prev);
+  rt.dispose();
+
+  // gl rows run bottom-up; the canvas top-down
+  const shot = document.createElement("canvas");
+  shot.width = W;
+  shot.height = H;
+  const img = new ImageData(W, H);
+  const row = W * 4;
+  for (let y = 0; y < H; y++) img.data.set(px.subarray((H - 1 - y) * row, (H - y) * row), y * row);
+  shot.getContext("2d")!.putImageData(img, 0, 0);
+
+  const g = flatCanvas.getContext("2d")!;
+  g.imageSmoothingQuality = "high";
+  g.drawImage(shot, SCREEN_UV.u0 * flatCanvas.width, SCREEN_UV.v0 * flatCanvas.height, rw, rh);
+  flatTex.needsUpdate = true;
+}
 
 export function shadowTexture() {
   const c = document.createElement("canvas");
@@ -115,6 +176,12 @@ export function RisingMachines({
 
   const studio = useMemo(() => createStudioEnv(gl), [gl]);
   useEffect(() => () => studio.dispose(), [studio]);
+
+  // the centre kiosk's screen shows the very bucket that went into it (world: the ordering wall only)
+  const bucketGltf = useGLTF(BUCKET_URL);
+  useEffect(() => {
+    if (world) paintBucket(gl, bucketGltf, studio);
+  }, [world, gl, bucketGltf, studio]);
 
   const rig = useMemo(() => {
     const src = gltf.scene;
@@ -381,6 +448,7 @@ export function RisingMachines({
       it.spinTo += Math.PI * 2 * (Math.random() < 0.5 ? -1 : 1);
       it.hop.kick(2.4);
       it.squash.kick(-3);
+      soundApi.play("blip");
     },
   });
 

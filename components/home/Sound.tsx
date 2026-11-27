@@ -53,8 +53,12 @@ export function Sound() {
   // the turntable in the room toggles through this
   useEffect(() => {
     soundApi.toggle = () => set(stateRef.current === "on" ? "off" : "on");
+    soundApi.play = (voice) => {
+      if (stateRef.current === "on") sfx.current?.[voice]();
+    };
     return () => {
       soundApi.toggle = () => {};
+      soundApi.play = () => {};
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

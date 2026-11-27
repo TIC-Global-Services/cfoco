@@ -129,7 +129,7 @@ export const PROGRESS_MAX = OUTRO_AT + OUTRO_LENGTH;
 /** camera travel */
 export const ZOOM_FROM = OUTRO_AT + 0.3;
 export const ZOOM_TO = OUTRO_AT + 1.2;
-/** footer reveal, overlapping the end of the travel */
+/** footer reveal, as the camera settles in front of the logo */
 export const FOOTER_FROM = OUTRO_AT + 0.85;
 export const FOOTER_TO = OUTRO_AT + 1.3;
 
@@ -165,6 +165,8 @@ export const CAMERA = {
 // ---------------------------------------------------------------------------
 
 export const CHICKEN_LENGTH = 1.6; // long axis of the chicken, metres
+/** the bucket the chicken drops into (HeroChicken), also pictured on the centre kiosk's screen (RisingMachines) */
+export const BUCKET_URL = "/models/bucket_drop_new.glb";
 export const BUCKET_HEIGHT = 2.4;
 /** turns the printed logo to face the lens */
 export const BUCKET_YAW = 4.7;
@@ -187,8 +189,8 @@ export const SWAP_TO = 2.5;
 
 export const WALL = {
   /** the camera swings over… */
-  panFrom: 4.6,
-  panTo: 5.4,
+  panFrom: 4.95, // …only once the bucket has shrunk and been seen (BUCKET_KEYS)
+  panTo: 5.6,
   /** the view of the wall: the kiosks run along it, the bucket in front of the middle one */
   /** square on to the wall: looking straight along -x */
   eye: new THREE.Vector3(-0.2, 1.8, 6.7),
@@ -200,8 +202,8 @@ export const WALL = {
   screen: new THREE.Vector3(-5.85, 1.9, 6.7),
   /** the bucket waits this far (metres) in front of the screen while the camera settles, then fades out over enterFrom → enterTo (the screen shows its flat picture instead) */
   hoverOff: 0.2,
-  enterFrom: 5.55,
-  enterTo: 5.68,
+  enterFrom: 5.7,
+  enterTo: 5.82,
   /** bucket size while in front of the screen, relative to its hero size (the wall size is 0.62) */
   screenScale: 0.31,
 };
@@ -209,20 +211,24 @@ export const WALL = {
 /** `ease` (optional) shapes the segment that ends on this key */
 export type Pose = { p: number; x: number; y: number; d: number; s: number; ease?: (t: number) => number };
 
-/** bucket size on screen (1 = BUCKET_HEIGHT, the cup without its pile) */
+/** bucket size on screen (1 = BUCKET_HEIGHT, the cup without its pile) once the chicken is in and it heads for the kiosks */
 const BUCKET_S = 0.6;
+/** …and while the chicken drops in: big, in proportion to the chicken at its full size (the cup shrinks after, not the chicken before) */
+const BUCKET_BIG = 1.0;
 /** the pose keys below stop here: the bucket then belongs to the robot (ROBOT_RUN) */
 const ROBOT_RUN_FROM = 6.0;
 /** where the cup's rim sits when the bucket is "up": the whole bucket (cup, logo and pile) is in frame, centred, with room above for the hovering chicken */
-const BUCKET_RIM_Y = -0.35;
+const BUCKET_RIM_Y = -0.6;
 /** bucket base-centre height when it is "up" */
-const BUCKET_UP_Y = BUCKET_RIM_Y - BUCKET_HEIGHT * BUCKET_S;
+export const BUCKET_UP_Y = BUCKET_RIM_Y - BUCKET_HEIGHT * BUCKET_BIG;
+/** base-centre height once it has shrunk (its rim stays where it was) */
+const BUCKET_SMALL_Y = BUCKET_UP_Y + BUCKET_HEIGHT * (BUCKET_BIG - BUCKET_S);
 /** the hovering chicken sits a little behind the bucket (4.0), so it drops into the back half of the cup */
 const CHICKEN_HOVER_D = 4.4;
 /** where the falling chicken ends, sunk into the cup (its top just below the rim) */
-export const CHICKEN_LAND_Y = BUCKET_RIM_Y - 0.65;
+export const CHICKEN_LAND_Y = BUCKET_RIM_Y - 1.1;
 /** low enough that even the top of the pile (≈0.4 × the cup above the rim) is out of frame */
-const HIDDEN_Y = -2.4 - BUCKET_HEIGHT * BUCKET_S * 1.4;
+const HIDDEN_Y = -2.4 - BUCKET_HEIGHT * BUCKET_BIG * 1.4;
 /** below the bottom of the frame at the chicken's distance, with its full length clear */
 const CHICKEN_HIDDEN_Y = -3.2;
 /** the chicken starts rising after "The Final Crunch"… */
@@ -231,8 +237,8 @@ export const RISE_FROM = 3.35;
 export const HOVER_AT = 3.7;
 /** bucket fully up */
 const BUCKET_UP_AT = 4.25;
-/** the chicken lets go (spin stops) and drops into the bucket… */
-export const DROP_START = 4.3;
+/** the chicken lets go (spin stops) and drops into the bucket — while it is still rising the last stretch, so the chicken meets it on the way up (not after it has stopped) */
+export const DROP_START = 4.05;
 /** …and has landed; the pile has settled by the end of the drop clock */
 export const TOSS_OUT = 4.5;
 
@@ -258,18 +264,21 @@ export const CHICKEN_KEYS: Pose[] = [
   // …and keeps holding through "The Final Crunch" (section 3, text visible ≈2.6–3.4)
   { p: RISE_FROM, x: 0, y: 0.0, d: 4.0, s: 1.05 },
   // shrinks to fit the cup, where it is (no rise)…
-  { p: HOVER_AT, x: 0, y: 0.0, d: CHICKEN_HOVER_D, s: 0.62 },
+  { p: HOVER_AT, x: 0, y: 0.0, d: CHICKEN_HOVER_D, s: 1.05 },
   // …and waits there while the bucket comes up from below; from DROP_START it falls straight
   // into the cup in real time (HeroChicken, driven by the bucket's drop clock)
-  { p: TOSS_OUT, x: 0, y: 0.0, d: CHICKEN_HOVER_D, s: 0.62 },
+  { p: TOSS_OUT, x: 0, y: 0.0, d: CHICKEN_HOVER_D, s: 1.05 },
 ];
 
 /** bucket base-centre. Rises from below the frame once the chicken is up; from WALL.panFrom it travels to the kiosks (HeroChicken), where the robot takes it. */
 export const BUCKET_KEYS: Pose[] = [
-  { p: HOVER_AT, x: 0, y: HIDDEN_Y, d: 4.0, s: BUCKET_S },
-  { p: BUCKET_UP_AT, x: 0, y: BUCKET_UP_Y, d: 4.0, s: BUCKET_S, ease: easeInOutOvershoot }, // pops up, settles
-  { p: ROBOT_RUN_FROM, x: 0, y: BUCKET_UP_Y, d: 4.0, s: BUCKET_S },
-  { p: 99, x: 0, y: BUCKET_UP_Y, d: 4.0, s: BUCKET_S }, // it stays: on the robot for the rest of the page
+  { p: HOVER_AT, x: 0, y: HIDDEN_Y, d: 4.0, s: BUCKET_BIG },
+  { p: BUCKET_UP_AT, x: 0, y: BUCKET_UP_Y, d: 4.0, s: BUCKET_BIG, ease: easeInOutOvershoot }, // pops up big, settles
+  // the chicken drops in (DROP_START → TOSS_OUT); only then does the bucket shrink, rim fixed, as it sets off for the kiosks
+  { p: TOSS_OUT + 0.1, x: 0, y: BUCKET_UP_Y, d: 4.0, s: BUCKET_BIG },
+  { p: TOSS_OUT + 0.4, x: 0, y: BUCKET_SMALL_Y, d: 4.0, s: BUCKET_S, ease: (t) => t * t * (3 - 2 * t) },
+  { p: ROBOT_RUN_FROM, x: 0, y: BUCKET_SMALL_Y, d: 4.0, s: BUCKET_S },
+  { p: 99, x: 0, y: BUCKET_SMALL_Y, d: 4.0, s: BUCKET_S }, // it stays: on the robot for the rest of the page
 ];
 
 /** progress ranges where the hero is out of frame and can skip rendering */
@@ -319,10 +328,10 @@ export const KIOSKS: RisingMachine[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Kitchen (kitchen_animate.glb), on the restaurant's open side, where it was
+// Kitchen (new_kitchen_animate.glb), on the restaurant's open side, where it was
 // built. It always stands there. For its step the camera leaves its locked spot
-// for the kitchen's own authored camera (the "Camera" node in the model) and
-// comes back.
+// for the kitchen's authored camera view, looks round the whole kitchen, and
+// comes back out through the doorway.
 // ---------------------------------------------------------------------------
 
 /**
@@ -380,11 +389,11 @@ export const ROBOT_FACING = 0;
 const ROBOT_START = new THREE.Vector3(-3.4, 0, 5.0);
 /** where it waits from the start: parked beside the first kiosk (z 4.7), facing into the room */
 const ROBOT_PARK = new THREE.Vector3(-5.4, 0, 3.2);
-/** where it waits, in the middle of the room, facing the camera (+z): the camera comes out of the kitchen to it (KITCHEN.exitPath) */
+/** where it waits, in the middle of the room, facing the camera (+z): the camera comes out of the kitchen to it (see JOURNEY) */
 export const ROBOT_STOP = new THREE.Vector3(0, 0, 6.4);
 
 export const ROBOT_RUN = {
-  /** the bucket changes from the kiosk screen to the robot's tray, unseen, once the camera has swung away from the wall (it is turning into the kitchen: KITCHEN.outFrom → outTo) */
+  /** the bucket changes from the kiosk screen to the robot's tray, unseen, once the camera has swung away from the wall (it is backing into the kitchen, see JOURNEY) */
   loadAt: 6.8,
   /** …the robot drives to the middle of the room, while the camera is in the kitchen */
   driveFrom: 6.5,
