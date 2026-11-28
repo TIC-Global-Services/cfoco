@@ -54,14 +54,14 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
           alt={post.mainImage?.alt || postTitle}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121520] via-transparent to-transparent opacity-80" />
 
         {/* Category Pill */}
         {categoryTitle && (
-          <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
-            <span className="rounded-full border border-white/15 bg-black/60 px-3 py-1 text-xs font-medium uppercase tracking-wider text-[#e9b949] backdrop-blur-md">
+          <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 flex flex-wrap gap-2">
+            <span className="rounded-full border border-white/20 bg-black/70 px-3 py-1 text-xs font-medium uppercase tracking-wider text-[#e9b949] backdrop-blur-md shadow-sm">
               {categoryTitle}
             </span>
           </div>
@@ -81,11 +81,11 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
               <Calendar className="w-3.5 h-3.5 text-[#e9b949]" />
               {formattedDate}
             </span>
-            <span className="text-white/20">•</span>
+            {/* <span className="text-white/20">•</span>
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-neutral-400" />
               {readTime}
-            </span>
+            </span> */}
           </div>
 
           {/* Title */}

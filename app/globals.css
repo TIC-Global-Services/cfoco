@@ -41,6 +41,9 @@ body {
     transform: translate3d(-50%, 0, 0);
   }
 }
+button{
+  cursor: pointer;
+}
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;

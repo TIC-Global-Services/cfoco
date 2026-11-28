@@ -104,7 +104,7 @@ export default function BlogListClient({ initialPosts, isLive: _isLive }: BlogLi
             onClick={() => setIsDropdownOpen((prev) => !prev)}
             aria-haspopup="listbox"
             aria-expanded={isDropdownOpen}
-            className={`group inline-flex items-center justify-between gap-3 min-w-[240px] px-4 py-2.5 rounded-full border text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
+            className={`group inline-flex items-center justify-between gap-3 min-w-[240px] cursor-pointer px-4 py-2.5 rounded-full border text-xs font-medium tracking-wider uppercase transition-all duration-300 ${
               selectedCategory !== 'all'
                 ? 'border-[#e9b949] bg-[#e9b949]/10 text-white shadow-[0_0_20px_rgba(233,185,73,0.18)]'
                 : 'border-white/10 bg-white/[0.04] text-neutral-200 hover:border-white/25 hover:bg-white/[0.07]'
