@@ -1,10 +1,9 @@
 "use client";
 
-import { useGLTF } from "@react-three/drei";
 import { type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import "@/lib/home/draco";
+import { useModel, useModels, preloadModel } from "@/lib/home/models";
 import { sharpen } from "@/lib/home/textures";
 import { Spring, clamp, robotRide, routesChanged, scrollState, smoothstep, soundApi } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
@@ -22,9 +21,9 @@ const turnTo = (a: number, b: number) => a + Math.atan2(Math.sin(b - a), Math.co
  * `robotRide`) it drives to the middle of the room and waits there facing the camera — scrubbed by scroll, so it rewinds too.
  */
 export function ServeRobot() {
-  const gltf = useGLTF(ROBOT_URL);
+  const gltf = useModel(ROBOT_URL);
   const kl = useKitchenLightControls();
-  const trayGltfs = useGLTF(ROBOT_RUN.trays.map((t) => t.url));
+  const trayGltfs = useModels(ROBOT_RUN.trays.map((t) => t.url));
   const gl = useThree((s) => s.gl);
   const clock = useThree((s) => s.clock);
   const studio = useMemo(() => createStudioEnv(gl), [gl]);
@@ -180,5 +179,5 @@ export function ServeRobot() {
   );
 }
 
-useGLTF.preload(ROBOT_URL);
-for (const t of ROBOT_RUN.trays) useGLTF.preload(t.url);
+preloadModel(ROBOT_URL);
+for (const t of ROBOT_RUN.trays) preloadModel(t.url);

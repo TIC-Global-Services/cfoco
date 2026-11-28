@@ -1,10 +1,9 @@
 "use client";
 
-import { useGLTF } from "@react-three/drei";
 import { type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import "@/lib/home/draco";
+import { useModel, preloadModel } from "@/lib/home/models";
 import { sharpen } from "@/lib/home/textures";
 import { Spring, clamp, damp, easeInBack, easeInOutOvershoot, easeOutCubic, scrollState, smoothstep, soundApi } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
@@ -165,7 +164,7 @@ export function RisingMachines({
   /** world only: the way the camera looks at them, on the floor (x, z) — [-1, 0]: down -x (the left wall's kiosks), [0, 1]: down +z (the vending machine against the kitchen wall) */
   viewDir?: readonly [number, number];
 }) {
-  const gltf = useGLTF(url);
+  const gltf = useModel(url);
   const ml = useMachineLightControls();
   /** first / last scroll progress any of them can be in frame */
   const shownFrom = Math.min(...machines.map((k) => k.from));
@@ -178,7 +177,7 @@ export function RisingMachines({
   useEffect(() => () => studio.dispose(), [studio]);
 
   // the centre kiosk's screen shows the very bucket that went into it (world: the ordering wall only)
-  const bucketGltf = useGLTF(BUCKET_URL);
+  const bucketGltf = useModel(BUCKET_URL);
   useEffect(() => {
     if (world) paintBucket(gl, bucketGltf, studio);
   }, [world, gl, bucketGltf, studio]);
@@ -470,4 +469,4 @@ export function RisingMachines({
   );
 }
 
-useGLTF.preload(KIOSK_URL);
+preloadModel(KIOSK_URL);

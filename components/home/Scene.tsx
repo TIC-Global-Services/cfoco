@@ -7,6 +7,7 @@ import { PerformanceMonitor } from "@react-three/drei";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { initModels } from "@/lib/home/models";
 import { scrollState } from "@/lib/home/scroll";
 import { CameraRig } from "./CameraRig";
 import { GlassEffect } from "./GlassEffect";
@@ -69,6 +70,7 @@ export default function Scene() {
       onCreated={(state) => {
         state.gl.outputColorSpace = THREE.SRGBColorSpace;
         state.gl.toneMapping = THREE.NeutralToneMapping;
+        initModels(state.gl); // KTX2 textures need the renderer before any model loads
         if (process.env.NODE_ENV !== "production") {
           (window as unknown as { __three: typeof state }).__three = state;
         }

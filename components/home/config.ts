@@ -328,7 +328,7 @@ export const KIOSKS: RisingMachine[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Kitchen (new_kitchen_animate.glb), on the restaurant's open side, where it was
+// Kitchen (final_kitchen.glb), on the restaurant's open side, where it was
 // built. It always stands there. For its step the camera leaves its locked spot
 // for the kitchen's authored camera view, looks round the whole kitchen, and
 // comes back out through the doorway.

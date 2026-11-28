@@ -1,11 +1,10 @@
 "use client";
 
-import { useGLTF } from "@react-three/drei";
 import { type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { useModel, preloadModel } from "@/lib/home/models";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
-import "@/lib/home/draco";
 import { normalizeByPrincipalAxes } from "@/lib/home/shape";
 import { Spring, damp, robotRide, sampleTrack, scrollState, smoothstep } from "@/lib/home/scroll";
 import { createStudioEnv } from "@/lib/home/studio";
@@ -26,6 +25,8 @@ import {
   DROP_START,
   FADE_IN,
   HERO_HIDDEN,
+  HOVER_AT,
+  RISE_FROM,
   SWAP_FROM,
   SWAP_TO,
   TOSS_OUT,
@@ -113,6 +114,51 @@ function applyDissolve(mat: THREE.MeshStandardMaterial, u: Dissolve, side: "raw"
   mat.customProgramCacheKey = () => `dissolve-${side}`;
 }
 
+// ---------------------------------------------------------------------------
+// Food grade. The scans' colour maps came out flat and over-saturated under the studio: the raw skin a uniform
+// yellow, the crust a single neon orange. Applied to the sampled colour, before lighting: saturation pulled back,
+// a contrast curve, and the darker tones tinted (deep brown in the crust's crevices, a pink-grey in the raw skin's
+// folds), so the peaks read golden / pale and the hollows cooked / fleshy. Set from the panel (Hero light → raw/fried).
+// ---------------------------------------------------------------------------
+
+type Grade = { gSat: { value: number }; gContrast: { value: number }; gShadow: { value: THREE.Color }; gHigh: { value: THREE.Color } };
+const grade = (): Grade => ({
+  gSat: { value: 1 },
+  gContrast: { value: 1 },
+  gShadow: { value: new THREE.Color(1, 1, 1) },
+  gHigh: { value: new THREE.Color(1, 1, 1) },
+});
+const RAW_GRADE = grade();
+const FRIED_GRADE = grade();
+
+function applyGrade(mat: THREE.MeshStandardMaterial, g: Grade, key: string) {
+  const prev = mat.onBeforeCompile;
+  const prevKey = mat.customProgramCacheKey();
+  mat.onBeforeCompile = (shader, renderer) => {
+    prev.call(mat, shader, renderer);
+    Object.assign(shader.uniforms, g);
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "void main() {",
+        "uniform float gSat;\nuniform float gContrast;\nuniform vec3 gShadow;\nuniform vec3 gHigh;\nvoid main() {",
+      )
+      .replace(
+        "#include <map_fragment>",
+        /* glsl */ `#include <map_fragment>
+        {
+          vec3 c = diffuseColor.rgb;
+          float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
+          c = mix(vec3(l), c, gSat);
+          c = pow(max(c, 0.0), vec3(gContrast));
+          float t = smoothstep(0.0, 0.45, l);
+          c *= mix(gShadow, gHigh, t);
+          diffuseColor.rgb = c;
+        }`,
+      );
+  };
+  mat.customProgramCacheKey = () => `${prevKey}-grade-${key}`;
+}
+
 const lerpPose = (keys: Pose[], p: number) => {
   const [a, b, k] = sampleTrack(keys, p);
   return {
@@ -130,9 +176,9 @@ const setCursor = (c: string) => {
 // ---------------------------------------------------------------------------
 
 export function HeroChicken() {
-  const raw = useGLTF(RAW_URL);
-  const fried = useGLTF(FRIED_URL);
-  const bucketGltf = useGLTF(BUCKET_URL);
+  const raw = useModel(RAW_URL);
+  const fried = useModel(FRIED_URL);
+  const bucketGltf = useModel(BUCKET_URL);
   const gl = useThree((s) => s.gl);
 
   const root = useRef<THREE.Group>(null);
@@ -178,6 +224,7 @@ export function HeroChicken() {
       mat.transparent = true; // drawn in the transparent pass, like the bucket (see SceneText)
       mat.envMap = studio;
       applyDissolve(mat, dissolve, "raw");
+      applyGrade(mat, RAW_GRADE, "raw");
       m.material = mat;
       fadeMats.push(mat);
       rawMats.push(mat);
@@ -205,6 +252,7 @@ export function HeroChicken() {
       mat.envMap = studio;
       mat.roughness = CRUST_ROUGHNESS;
       applyDissolve(mat, dissolve, "fried");
+      applyGrade(mat, FRIED_GRADE, "fried");
       m.material = mat;
       fadeMats.push(mat);
       friedMats.push(mat);
@@ -260,6 +308,7 @@ export function HeroChicken() {
         // fried pieces: lit like the hero
         mat = src.clone();
         mat.roughness = CRUST_ROUGHNESS;
+        applyGrade(mat, FRIED_GRADE, "pile"); // the same crust as the hero's
         pileMats.push(mat);
       }
       mat.envMap = studio;
@@ -306,6 +355,7 @@ export function HeroChicken() {
       friedMeshes,
       bucketMats,
       bucketAll: [...bucketMats, ...pileMats] as THREE.Material[],
+      pileMats,
       dropMixer,
       dropActions,
       faller,
@@ -498,7 +548,11 @@ export function HeroChicken() {
     const k = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)) / Math.tan(THREE.MathUtils.degToRad(CAMERA.fov / 2));
     // …but that sizes by height: on a phone the (wide) bucket would overflow the width — shrink it there
     const portrait = portraitness(state.size.width / state.size.height);
-    const fit = 1 - 0.42 * portrait;
+    const fit = 1 - 0.5 * portrait;
+    // phones: the cup (rim kept, base raised by what it lost) still sat with its base and logo below the frame, so the
+    // whole drop is lifted, chicken and cup together, from when the chicken starts rising to the cup
+    const cupPhase = smoothstep(RISE_FROM, HOVER_AT, p);
+    const lift = 0.6 * portrait * cupPhase;
 
     const deg = THREE.MathUtils.degToRad;
     const place = (obj: THREE.Object3D, x: number, y: number, d: number, s: number, off: number[]) => {
@@ -547,7 +601,7 @@ export function HeroChicken() {
     // only drawn while it can be in frame
     rig.bucket.visible = p > BUCKET_KEYS[0].p && p < BUCKET_KEYS[BUCKET_KEYS.length - 1].p;
     // smaller, but with its rim kept where it was (base raised by what the cup lost)
-    place(rig.bucket, b.x, b.y + BUCKET_HEIGHT * b.s * (1 - fit) + dip * 0.12, b.d, b.s * fit, bucketC.offset);
+    place(rig.bucket, b.x, b.y + BUCKET_HEIGHT * b.s * (1 - fit) + lift + dip * 0.12, b.d, b.s * fit, bucketC.offset);
     // …then, once the chicken is in, it travels to the ordering wall (world space) and stands in front of the middle kiosk,
     // turned to the camera's view of the wall; then it slips into that kiosk's screen, shrinking (see WALL)
     const wb = smoothstep(WALL.panFrom + 0.05, WALL.panTo, p);
@@ -609,8 +663,9 @@ export function HeroChicken() {
     const fade = smoothstep(0, FADE_IN, p);
     const hoverAmt = it.hoverS.step((it.hover && p < DROP_START) || it.dragging ? 1 : 0, delta, 140, 0.45);
     const grow = 1 + (ix.hoverScale - 1) * hoverAmt;
-    // a touch smaller on phones, so it clears the title above and the copy below
-    place(rig.spin, cx, cy, cd, cs * grow * (1 - 0.15 * portrait), chickenC.offset);
+    // a touch smaller on phones, so it clears the title above and the copy below; on its way to the cup, the cup's size
+    const phoneSize = THREE.MathUtils.lerp(1 - 0.15 * portrait, fit, cupPhase);
+    place(rig.spin, cx, cy + lift, cd, cs * grow * phoneSize, chickenC.offset);
 
     // squash & stretch: stretch along the fall, squash on impact
     const vy = Number.isNaN(it.prevY) ? 0 : (cy - it.prevY) / Math.max(delta, 1e-3);
@@ -706,6 +761,16 @@ export function HeroChicken() {
     };
     tune(rig.rawMats, heroL.rawRough, heroL.rawMetal, heroL.rawNormal, heroL.rawTint, heroL.rawBright, heroL.rawEnv);
     tune(rig.friedMats, heroL.friedRough, heroL.friedMetal, heroL.friedNormal, heroL.friedTint, heroL.friedBright, heroL.friedEnv);
+    // the pile in the bucket is the same crust: lit and graded like the hero's
+    tune(rig.pileMats, heroL.friedRough, heroL.friedMetal, heroL.friedNormal, heroL.friedTint, heroL.friedBright, heroL.friedEnv);
+    RAW_GRADE.gSat.value = heroL.rawSat;
+    RAW_GRADE.gContrast.value = heroL.rawContrast;
+    RAW_GRADE.gShadow.value.set(heroL.rawShadow);
+    RAW_GRADE.gHigh.value.set(heroL.rawHigh);
+    FRIED_GRADE.gSat.value = heroL.friedSat;
+    FRIED_GRADE.gContrast.value = heroL.friedContrast;
+    FRIED_GRADE.gShadow.value.set(heroL.friedShadow);
+    FRIED_GRADE.gHigh.value.set(heroL.friedHigh);
     for (const m of rig.bucketMats) {
       m.envMapIntensity = heroL.bucketEnv;
       if ((m as THREE.MeshPhysicalMaterial).isMeshPhysicalMaterial) (m as THREE.MeshPhysicalMaterial).clearcoat = heroL.bucketGloss;
@@ -776,6 +841,6 @@ export function HeroChicken() {
   );
 }
 
-useGLTF.preload(RAW_URL);
-useGLTF.preload(FRIED_URL);
-useGLTF.preload(BUCKET_URL);
+preloadModel(RAW_URL);
+preloadModel(FRIED_URL);
+preloadModel(BUCKET_URL);

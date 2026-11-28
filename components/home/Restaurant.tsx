@@ -1,10 +1,9 @@
 "use client";
 
-import { useGLTF } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import "@/lib/home/draco";
+import { useModel, preloadModel } from "@/lib/home/models";
 import { sharpen } from "@/lib/home/textures";
 import { EXPORT_NAMES, LOGO } from "./config";
 import { useLogoControls, useRoomControls } from "./controls";
@@ -29,7 +28,7 @@ const LOGO_CENTER = LOGO.center.clone();
 
 /** The room, as authored. Only the camera/helper nodes are dropped; the neon logo is tunable (Logo panel). */
 export function Restaurant() {
-  const { scene } = useGLTF(URL);
+  const { scene } = useModel(URL);
   const gl = useThree((s) => s.gl);
   const room = useRoomControls();
   const logoC = useLogoControls();
@@ -137,4 +136,4 @@ export function Restaurant() {
   );
 }
 
-useGLTF.preload(URL);
+preloadModel(URL);

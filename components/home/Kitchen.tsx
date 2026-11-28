@@ -1,16 +1,16 @@
 "use client";
 
-import { useAnimations, useGLTF } from "@react-three/drei";
+import { useAnimations } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import "@/lib/home/draco";
+import { useModel, preloadModel } from "@/lib/home/models";
 import { scrollState, smoothstep } from "@/lib/home/scroll";
 import { sharpen } from "@/lib/home/textures";
 import { EXPORT_NAMES, KITCHEN } from "./config";
 import { useKitchenRigControls, useRoomControls } from "./controls";
 
-const URL = "/models/new_kitchen_animate.glb";
+const URL = "/models/final_kitchen.glb";
 /** scroll position (sections) from which the kitchen can be in frame */
 const KITCHEN_SEEN_FROM = 4.0;
 
@@ -174,7 +174,7 @@ function lightKitchen(lights: KitchenLights, surf: Surfaces, rig: Rig, p: number
  * It always stands there; the camera goes over to it for its step and comes back.
  */
 export function Kitchen() {
-  const { scene, animations } = useGLTF(URL);
+  const { scene, animations } = useModel(URL);
   const gl = useThree((s) => s.gl);
   const room = useRoomControls();
   const rig = useKitchenRigControls();
@@ -235,7 +235,7 @@ export function Kitchen() {
   useFrame(() => lightKitchen(lights, surf, rig, scrollState.progress, three));
 
   useFrame(() => {
-    // the camera only sees the kitchen from the wall pan on: before that none of its 26 MB is drawn (or animated)
+    // the camera only sees the kitchen from the wall pan on: before that none of its 25 MB is drawn (or animated)
     if (holder.current) holder.current.visible = scrollState.progress > KITCHEN_SEEN_FROM;
     STEEL.amount.value = rig.steelGrey;
     STEEL.lift.value = rig.steelLift;
@@ -295,4 +295,4 @@ export function Kitchen() {
   );
 }
 
-useGLTF.preload(URL);
+preloadModel(URL);
