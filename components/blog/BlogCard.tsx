@@ -53,14 +53,14 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
           src={imageUrl}
           alt={post.mainImage?.alt || postTitle}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-contain mt-5 p-5"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121520] via-transparent to-transparent opacity-80" />
 
         {/* Category Pill */}
         {categoryTitle && (
-          <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 flex flex-wrap gap-2">
+          <div className="absolute top-3 left-3 sm:top-3   sm:left-4 z-10 flex flex-wrap gap-2">
             <span className="rounded-full border border-white/20 bg-black/70 px-3 py-1 text-xs font-medium uppercase tracking-wider text-[#e9b949] backdrop-blur-md shadow-sm">
               {categoryTitle}
             </span>
